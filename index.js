@@ -7,6 +7,10 @@ dotenv.config();
 const bot = new TeleBot(process.env.TOKEN);
 const users = [
     {
+        link: 'adi',
+        username: 'madrigals1',
+    },
+    {
         link: 'almaz',
         username: 'pheonix97al',
     },
@@ -21,7 +25,11 @@ const users = [
     {
         link: 'sabyr',
         username: 'megasaab',
-    }
+    },
+    {
+        link: 'maxmut',
+        username: 'makhmudgaly2',
+    },
 ];
 
 async function getSolvedFromUsername(username) {
@@ -75,16 +83,14 @@ users.forEach(user => {
 });
 
 bot.on(['/rating'], async msg => {
-    const usersProcessed = await users.map(
-        async user => {
-            return await getSolvedFromUsername(user.username).then(
-                data => {
-                    return data.error ? data.error : data;
-                }
-            );
-        });
-    console.log(usersProcessed);
-    return msg.reply.text("ASD");
+    msg.reply.text("Processing may take a while, please wait...");
+    const usersProcessed = [];
+    for (const user of users) {
+        usersProcessed.push(await getSolvedFromUsername(user.username));
+    }
+    const rating = usersProcessed.sort((a, b) => b.solved - a.solved)
+        .map((user, index) => (index + 1) + ". " + user.username + ":\t" + user.solved + "\n").join('');
+    return msg.reply.text(rating);
 });
 
 bot.start();
