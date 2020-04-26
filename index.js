@@ -24,8 +24,8 @@ const users = [
     }
 ];
 
-async function getSolvedFromUsername (username) {
-    const defaultData = await axios('https://leetcode.com/' + username)
+async function getSolvedFromUsername(username) {
+    return await axios('https://leetcode.com/' + username)
         .then((response) => {
             const $ = cheerio.load(response.data);
             const body = $('body');
@@ -41,10 +41,8 @@ async function getSolvedFromUsername (username) {
         })
         .catch((e) => {
             console.log('Error on the server: ' + e);
-            return { error: e };
+            return {error: e};
         });
-    console.log(defaultData);
-    return defaultData;
 }
 
 const capitalize = (s) => {
@@ -53,7 +51,6 @@ const capitalize = (s) => {
 };
 
 ratingText = users.map(user => '/' + user.link + ' Rating of ' + capitalize(user.link) + '\n').join('');
-console.log(ratingText);
 
 bot.on(['/start'], (msg) => msg.reply.text(
     'Welcome!\n' +
@@ -62,7 +59,7 @@ bot.on(['/start'], (msg) => msg.reply.text(
 
 users.forEach(user => {
     bot.on(['/' + user.link], (msg) => {
-        getSolvedFromUsername(user.username).then(data =>{
+        getSolvedFromUsername(user.username).then(data => {
             const {name, username, solved, all, error} = data;
             if (error) {
                 return msg.reply.text('Error is encountered: ' + error);
@@ -75,6 +72,19 @@ users.forEach(user => {
             );
         });
     });
+});
+
+bot.on(['/rating'], async msg => {
+    const usersProcessed = await users.map(
+        async user => {
+            return await getSolvedFromUsername(user.username).then(
+                data => {
+                    return data.error ? data.error : data;
+                }
+            );
+        });
+    console.log(usersProcessed);
+    return msg.reply.text("ASD");
 });
 
 bot.start();
