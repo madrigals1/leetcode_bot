@@ -15,6 +15,10 @@ const users = [
         username: 'pheonix97al',
     },
     {
+        link: 'aqjol',
+        username: 'aertayuly',
+    },
+    {
         link: 'aibek',
         username: 'dmndcrow',
     },
@@ -66,6 +70,7 @@ ratingText = users.map(user => '/' + user.link + ' Rating of ' + capitalize(user
 
 bot.on(['/start'], (msg) => msg.reply.text(
     'Welcome!\n' +
+    '/rating - Overall rating\n\n' +
     ratingText
 ));
 
