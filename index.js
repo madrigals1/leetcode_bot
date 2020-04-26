@@ -1,8 +1,10 @@
-const token = '1091477375:AAGYgqMHKKNfpKIA84wgaiRzGPv7bYaA6w8';
+const dotenv = require('dotenv');
 const TeleBot = require('telebot');
-const bot = new TeleBot(token);
 const axios = require('axios');
 const cheerio = require('cheerio');
+
+dotenv.config();
+const bot = new TeleBot(process.env.TOKEN);
 
 async function getSolvedFromUsername (username) {
     const defaultData = await axios('https://leetcode.com/' + username)
