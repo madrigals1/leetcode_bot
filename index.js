@@ -19,6 +19,10 @@ const users = [
         username: 'dmndcrow',
     },
     {
+        link: 'meir',
+        username: 'meiirzhan_yerzhanov',
+    },
+    {
         link: 'nartay',
         username: 'zhanybekovv',
     },
