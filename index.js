@@ -1,5 +1,6 @@
+const token = '1091477375:AAGYgqMHKKNfpKIA84wgaiRzGPv7bYaA6w8';
 const TeleBot = require('telebot');
-const bot = new TeleBot('1091477375:AAGYgqMHKKNfpKIA84wgaiRzGPv7bYaA6w8');
+const bot = new TeleBot(token);
 const axios = require('axios');
 const cheerio = require('cheerio');
 
