@@ -1,7 +1,17 @@
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const TeleBot = require('telebot');
 const axios = require('axios');
 const cheerio = require('cheerio');
+
+const db_link = 'mongodb://localhost:27017/leetbot_db';
+mongoose.connect(db_link, (err) => {
+    if (err) {
+        console.error('Error occurred while connecting to DB!');
+    } else {
+        console.log('Database connection established successfully');
+    }
+});
 
 dotenv.config();
 const bot = new TeleBot(process.env.TOKEN);
