@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
 let userSchema = new mongoose.Schema({
-    username: String,
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
     name: String,
     link: String,
     solved: Number,
