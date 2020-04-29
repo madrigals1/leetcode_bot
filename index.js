@@ -1,12 +1,27 @@
-require('./config');
+require('./src/config');
 const TeleBot = require('telebot');
 
-const Database = require('./database');
-const { getLeetcodeDataFromUsername } = require("./scraper/functions");
-const { capitalize } = require("./utils/helper");
+const Database = require('./src/database');
+const { getLeetcodeDataFromUsername } = require("./src/scraper/functions");
+const { capitalize } = require("./src/utils/helper");
 
 const bot = new TeleBot(process.env.TOKEN);
 let users = null;
+let addedListeners = false;
+
+function callbackForUser(msg, username) {
+    Database.loadUser(username).then(data => {
+        const {name, username, solved, error} = data;
+        if (error) {
+            return msg.reply.text('Error is encountered: ' + error);
+        }
+        return msg.reply.text(
+            'Name: ' + name + '\n' +
+            'Username: ' + username + '\n' +
+            'Solved: ' + solved + '\n'
+        );
+    });
+}
 
 async function refreshUsers () {
     await Database.refreshUsers()
@@ -14,22 +29,12 @@ async function refreshUsers () {
             users = res;
         })
         .catch(err => console.error(err));
-    users.forEach(user => {
-        bot.on(['/' + user.username.toLowerCase()], (msg) => {
-            getLeetcodeDataFromUsername(user.username).then(data => {
-                const {name, username, solved, all, error} = data;
-                if (error) {
-                    return msg.reply.text('Error is encountered: ' + error);
-                }
-                return msg.reply.text(
-                    'Name: ' + name + '\n' +
-                    'Username: ' + username + '\n' +
-                    'Solved: ' + solved + '\n' +
-                    'All: ' + all + '\n'
-                );
-            });
+    if (!addedListeners) {
+        users.forEach(user => {
+            bot.on(['/' + user.username.toLowerCase()], (msg) => callbackForUser(msg, user.username));
         });
-    });
+        addedListeners = true;
+    }
 }
 
 refreshUsers();
@@ -53,6 +58,7 @@ bot.on(['/add'], async (msg) => {
     for(let i = 1; i < userNameList.length; i++){
         await Database.addUser(userNameList[i]).then(() => {
             userNameListText += userNameList[i] + "\n";
+            bot.on(['/' + userNameList[i].toLowerCase()], (msg) => callbackForUser(msg, userNameList[i]));
         });
     }
     refreshUsers();

@@ -36,6 +36,17 @@ class Database {
             })
     }
 
+    async loadUser(username) {
+        return await UserModel.findOne({ username: username })
+            .then(doc => {
+                return doc;
+            })
+            .catch(err => {
+                console.error(err);
+                return null;
+            });
+    }
+
     async findUsers() {
         return await UserModel.find().sort({"solved": -1})
             .then(doc => {
