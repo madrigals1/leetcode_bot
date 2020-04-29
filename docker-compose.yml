@@ -14,7 +14,7 @@ services:
       - mongo
     command: npm start
     environment:
-      - MONGO_URL
+      - MONGO_URL=1
   mongo:
     container_name: mongo
     image: mongo
