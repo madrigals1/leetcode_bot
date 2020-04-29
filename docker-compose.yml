@@ -7,7 +7,6 @@ services:
     build: .
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules
     ports:
       - 8080:8000
       - 9229:9229
@@ -18,4 +17,4 @@ services:
     container_name: mongo
     image: mongo
     ports:
-      - "27018:27017"
+      - "27017:27017"
