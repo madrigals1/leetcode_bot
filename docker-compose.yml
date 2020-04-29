@@ -13,6 +13,8 @@ services:
     links:
       - mongo
     command: npm start
+    environment:
+      - MONGO_URL
   mongo:
     container_name: mongo
     image: mongo
