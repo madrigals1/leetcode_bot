@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const {mongoURL} = require('./config');
 const {getLeetcodeDataFromUsername} = require("./scraper/functions");
 
-const server = 'mongo:27017';
+const server =  `${mongoURL}:27017`;
 const database = 'leetbot_db';
 const UserModel = require('./models/user');
 

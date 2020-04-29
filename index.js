@@ -1,13 +1,19 @@
-require('./src/config');
+const {token} = require('./src/config');
 const TeleBot = require('telebot');
 
 const Database = require('./src/database');
-const { getLeetcodeDataFromUsername } = require("./src/scraper/functions");
 const { capitalize } = require("./src/utils/helper");
 
-const bot = new TeleBot(process.env.TOKEN);
+const bot = new TeleBot(token);
 let users = null;
-let addedListeners = false;
+let addedListeners = [];
+
+function addListenerIfNotExist(username) {
+    if(!addedListeners.includes(username)){
+        bot.on(['/' + username.toLowerCase()], (msg) => callbackForUser(msg, username));
+        addedListeners.push(username);
+    }
+}
 
 function callbackForUser(msg, username) {
     Database.loadUser(username).then(data => {
@@ -29,12 +35,9 @@ async function refreshUsers () {
             users = res;
         })
         .catch(err => console.error(err));
-    if (!addedListeners) {
-        users.forEach(user => {
-            bot.on(['/' + user.username.toLowerCase()], (msg) => callbackForUser(msg, user.username));
-        });
-        addedListeners = true;
-    }
+    users.forEach(user => {
+        addListenerIfNotExist(user.username);
+    });
 }
 
 refreshUsers();
@@ -58,7 +61,9 @@ bot.on(['/add'], async (msg) => {
     for(let i = 1; i < userNameList.length; i++){
         await Database.addUser(userNameList[i]).then(() => {
             userNameListText += userNameList[i] + "\n";
-            bot.on(['/' + userNameList[i].toLowerCase()], (msg) => callbackForUser(msg, userNameList[i]));
+            addListenerIfNotExist(userNameList[i]);
+        }).catch(err => {
+            console.error(err);
         });
     }
     refreshUsers();
