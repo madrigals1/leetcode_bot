@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import {mongoURL} from './config';
 import {getLeetcodeDataFromUsername} from "./scraper/functions";
 import UserModel from './models/user';
+import system from './models/system';
 
 const server = `${mongoURL}:27017`;
 const database = 'leetbot_db';
@@ -15,7 +16,7 @@ class Database {
         mongoose.connect(`mongodb://${server}/${database}`, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            useFindAndModify: true,
+            useFindAndModify: false,
         })
             .then(() => {
                 console.log('Database connection successful');
@@ -29,44 +30,35 @@ class Database {
         const userData = await getLeetcodeDataFromUsername(username);
         if (!userData) return;
         const user = new UserModel(userData);
-        user.save()
-            .then(doc => {
-                console.log(doc);
-            })
+        return user.save()
+            .then(user => user)
             .catch(err => {
                 console.error(err);
             })
     }
 
     async loadUser(username) {
-        return await UserModel.findOne({ username: username })
-            .then(doc => {
-                return doc;
-            })
-            .catch(err => {
-                console.error(err);
-                return null;
-            });
+        return await UserModel.findOne({ username: username });
     }
 
     async findUsers() {
-        return await UserModel.find().sort({'solved': -1})
-            .then(doc => {
-                return doc;
-            })
-            .catch(err => {
-                console.error(err);
-                return null;
-            });
+        return await UserModel.find().sort({'solved': -1});
     }
 
     async refreshUsers() {
-        let users = await this.findUsers();
-        if (!users) return {};
-        for (let user of users) {
-            UserModel.findOneAndUpdate({ _id: user._id }, await getLeetcodeDataFromUsername(user.username));
+        let users = [];
+        if (system.users.length === 0) {
+            users = await this.findUsers();
+            for(let user of users){
+                system.users.push(await getLeetcodeDataFromUsername(user.username));
+            }
+        } else {
+            let sc = [];
+            for(let user of system.users){
+                sc.push(await getLeetcodeDataFromUsername(user.username));
+            }
+            system.users = sc;
         }
-        return await this.findUsers();
     };
 }
 

@@ -25,16 +25,13 @@ function callbackForUser(msg, username) {
 
 async function refreshUsers () {
     await Database.refreshUsers()
-        .then(res => {
-            system.users = res;
-            res.forEach(user => {
+        .then(() => {
+            system.users.forEach(user => {
                 addListenerIfNotExist(user.username);
             });
         })
         .catch(err => console.error(err));
 }
-
-refreshUsers();
 
 bot.on(['/start'], (msg) => {
     return msg.reply.text(system.welcomeText, { parseMode: 'HTML' });
@@ -46,20 +43,22 @@ bot.on(['/add'], async (msg) => {
     let userNameListText = '';
     for(let i = 1; i < userNameList.length; i++){
         await Database.addUser(userNameList[i])
-            .then(() => {
-                userNameListText += `${userNameList[i]}\n`;
-                addListenerIfNotExist(userNameList[i]);
+            .then(user => {
+                if (user) {
+                    system.users.push(user);
+                    userNameListText += `${user.username}\n`;
+                    addListenerIfNotExist(user.username);
+                }
             })
             .catch(err => {
                 console.error(err);
             });
     }
-    refreshUsers();
-    return msg.reply.text(`Users that were added:\n ${userNameListText}`);
+    refreshUsers().then(() => msg.reply.text(`Users that were added:\n ${userNameListText}`));
 });
 
 bot.on(['/refresh'], (msg) => {
-    refreshUsers();
+    refreshUsers().then(() => {});
     msg.reply.text('Database will be refreshed');
 });
 
@@ -68,3 +67,5 @@ bot.on(['/rating'], async msg => {
 });
 
 bot.start();
+
+refreshUsers().then(() => console.log('Database is refreshed'));
