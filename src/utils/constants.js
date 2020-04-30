@@ -1,4 +1,4 @@
-import {mongoURL} from "./config";
+import {mongoURL} from './config';
 
 const url = 'https://leetcode.com/';
 const database = 'leetbot_db';

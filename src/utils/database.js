@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import {getLeetcodeDataFromUsername} from '../scraper/functions';
 import UserModel from '../models/user';
 import system from '../models/system';
-import {database, server} from "./constants";
+import {database, server} from './constants';
 
 class Database {
     constructor() {
