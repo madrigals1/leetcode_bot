@@ -1,14 +1,12 @@
 import {capitalize} from '../utils/helper';
+import {welcome_message} from "../utils/constants"
 
 const system = {
     users: [],
     addedListeners: [],
     get welcomeText() {
         return (`
-Welcome! This is Leetcode Rating bot Elite Boys.
-<b><i>/rating</i></b> - Overall rating
-<b><i>/refresh</i></b>  - Manual refresh of database.
-<b><i>/add username1 username2</i></b>  ... - adding users 
+${welcome_message}
 
 ${this.usersText}
 `)},
