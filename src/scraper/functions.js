@@ -13,8 +13,8 @@ async function getLeetcodeDataFromUsername(username) {
       return {
         name: body.find('.realname').attr('title'),
         username: body.find('.username').attr('title'),
-        solved: solved.trim(),
-        all: all.trim()
+        solved: parseInt(solved.trim()),
+        all: parseInt(all.trim()),
       }
     },
     (err) => {

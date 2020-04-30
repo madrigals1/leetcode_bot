@@ -47,6 +47,7 @@ bot.on(['/add'], async (msg) => {
             .then(user => {
                 if (user) {
                     system.users.push(user);
+                    system.users.sort((user1, user2) => parseInt(user2.solved) - parseInt(user1.solved));
                     userNameListText += `${user.username}\n`;
                     addListenerIfNotExist(user.username);
                 }
@@ -55,7 +56,8 @@ bot.on(['/add'], async (msg) => {
                 console.error(err);
             });
     }
-    refreshUsers().then(() => msg.reply.text(`Users that were added:\n ${userNameListText}`));
+    msg.reply.text(`Users that were added:\n ${userNameListText}`);
+    refreshUsers().then(() => {});
 });
 
 bot.on(['/refresh'], (msg) => {

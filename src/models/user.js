@@ -9,6 +9,7 @@ let userSchema = new mongoose.Schema({
     name: String,
     link: String,
     solved: Number,
+    all: Number,
 });
 
 export default mongoose.model('User', userSchema);
