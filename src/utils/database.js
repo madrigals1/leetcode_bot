@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 import {mongoURL} from './config';
-import {getLeetcodeDataFromUsername} from "./scraper/functions";
-import UserModel from './models/user';
-import system from './models/system';
+import {getLeetcodeDataFromUsername} from "../scraper/functions";
+import UserModel from '../models/user';
+import system from '../models/system';
+import {database as db, port} from "./constants"
 
-const server = `${mongoURL}:27017`;
-const database = 'leetbot_db';
+const server = `${mongoURL}:${port}`;
+const database = db;
 
 class Database {
     constructor() {

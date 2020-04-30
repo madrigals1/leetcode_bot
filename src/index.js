@@ -1,7 +1,7 @@
-import {token} from './config';
+import {token} from './utils/config';
 import TeleBot from 'telebot';
 
-import Database from './database';
+import Database from './utils/database';
 import system from './models/system';
 import schedule from 'node-schedule';
 
