@@ -24,4 +24,4 @@ async function getLeetcodeDataFromUsername(username) {
   )
 }
 
-export {getLeetcodeDataFromUsername}
+export {getLeetcodeDataFromUsername};
