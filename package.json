@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "start": "npm run build && node dist/index.js",
-    "deploy": "node_modules/@babel/cli/bin/babel.js src/ -d dist/"
+    "deploy": "node_modules/@babel/cli/bin/babel.js src --out-dir dist"
   },
   "keywords": [],
   "author": "Adi Sabyrbayev",
