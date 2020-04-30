@@ -1,12 +1,8 @@
 import mongoose from 'mongoose';
-import {mongoURL} from './config';
-import {getLeetcodeDataFromUsername} from "../scraper/functions";
+import {getLeetcodeDataFromUsername} from '../scraper/functions';
 import UserModel from '../models/user';
 import system from '../models/system';
-import {database as db, port} from "./constants"
-
-const server = `${mongoURL}:${port}`;
-const database = db;
+import {database, server} from "./constants";
 
 class Database {
     constructor() {
@@ -39,7 +35,7 @@ class Database {
     }
 
     async loadUser(username) {
-        return await UserModel.findOne({ username: username });
+        return UserModel.findOne({username: username});
     }
 
     async findUsers() {

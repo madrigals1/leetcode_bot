@@ -1,5 +1,5 @@
 import {capitalize} from '../utils/helper';
-import {welcome_message} from "../utils/constants"
+import {welcome_message} from '../utils/constants';
 
 const system = {
     users: [],
