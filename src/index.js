@@ -1,9 +1,10 @@
 import {token} from './utils/config';
 import TeleBot from 'telebot';
-
+import moment from 'moment';
 import Database from './utils/database';
 import system from './models/system';
 import schedule from 'node-schedule';
+import {refreshLog} from "./utils/helper";
 
 const bot = new TeleBot(token);
 
@@ -25,13 +26,20 @@ function callbackForUser(msg, username) {
 }
 
 async function refreshUsers () {
-    await Database.refreshUsers()
-        .then(() => {
-            system.users.forEach(user => {
-                addListenerIfNotExist(user.username);
-            });
-        })
-        .catch(err => console.error(err));
+    const now = moment();
+    if (!system.lastRefresh || now.diff(system.lastRefresh, 'seconds') > 60) {
+        system.lastRefresh = now;
+        console.log('Database started refresh', now.format('YYYY-MM-DD hh:mm a'));
+        await Database.refreshUsers()
+            .then(() => {
+                system.users.forEach(user => {
+                    addListenerIfNotExist(user.username);
+                });
+            })
+            .catch(err => console.error(err));
+    } else {
+        console.log('Cant refresh more than once in a minute');
+    }
 }
 
 bot.on(['/start'], (msg) => {
@@ -71,7 +79,8 @@ bot.on(['/rating'], async msg => {
 
 bot.start();
 
-refreshUsers().then(() => console.log('Database is refreshed'));
-schedule.scheduleJob('*/15 * * * *', function(fireDate){
-    refreshUsers().then(() => console.log(`Database is refreshed ${fireDate}`));
+refreshUsers().then(refreshLog);
+
+schedule.scheduleJob('*/15 * * * *', function(){
+    refreshUsers().then(refreshLog);
 });

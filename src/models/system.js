@@ -4,6 +4,7 @@ import {welcome_message} from '../utils/constants';
 const system = {
     users: [],
     addedListeners: [],
+    lastRefresh: null,
     get welcomeText() {
         return (`
 ${welcome_message}
