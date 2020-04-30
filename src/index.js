@@ -3,6 +3,7 @@ import TeleBot from 'telebot';
 
 import Database from './database';
 import system from './models/system';
+import schedule from 'node-schedule';
 
 const bot = new TeleBot(token);
 
@@ -69,3 +70,6 @@ bot.on(['/rating'], async msg => {
 bot.start();
 
 refreshUsers().then(() => console.log('Database is refreshed'));
+schedule.scheduleJob('*/15 * * * *', function(fireDate){
+    refreshUsers().then(() => console.log(`Database is refreshed ${fireDate}`));
+});
