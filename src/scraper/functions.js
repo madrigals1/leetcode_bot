@@ -2,7 +2,7 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 
 async function getLeetcodeDataFromUsername(username) {
-    return axios('https://leetcode.com/' + username)
+    return await axios('https://leetcode.com/' + username)
         .then((response) => {
             const $ = cheerio.load(response.data);
             const body = $('body');

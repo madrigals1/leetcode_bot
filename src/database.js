@@ -14,7 +14,8 @@ class Database {
     _connect() {
         mongoose.connect(`mongodb://${server}/${database}`, {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+            useFindAndModify: true,
         })
             .then(() => {
                 console.log('Database connection successful');
@@ -49,7 +50,7 @@ class Database {
     }
 
     async findUsers() {
-        return await UserModel.find().sort({"solved": -1})
+        return await UserModel.find().sort({'solved': -1})
             .then(doc => {
                 return doc;
             })
@@ -61,15 +62,10 @@ class Database {
 
     async refreshUsers() {
         let users = await this.findUsers();
-
-        if (!users) {
-            return {};
-        }
-
+        if (!users) return {};
         for (let user of users) {
             UserModel.findOneAndUpdate({ _id: user._id }, await getLeetcodeDataFromUsername(user.username));
         }
-
         return await this.findUsers();
     };
 }
