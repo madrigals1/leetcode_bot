@@ -1,8 +1,8 @@
-const {token} = require('./src/config');
-const TeleBot = require('telebot');
+import {token} from './config';
+import TeleBot from 'telebot';
 
-const Database = require('./src/database');
-const { capitalize } = require("./src/utils/helper");
+import Database from './database';
+import { capitalize } from "./utils/helper";
 
 const bot = new TeleBot(token);
 let users = null;

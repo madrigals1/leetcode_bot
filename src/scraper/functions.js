@@ -1,5 +1,5 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
+import axios from 'axios';
+import cheerio from 'cheerio';
 
 async function getLeetcodeDataFromUsername(username) {
     return axios('https://leetcode.com/' + username)
@@ -22,4 +22,4 @@ async function getLeetcodeDataFromUsername(username) {
         });
 }
 
-module.exports = { getLeetcodeDataFromUsername };
+export { getLeetcodeDataFromUsername };

@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
-const {mongoURL} = require('./config');
-const {getLeetcodeDataFromUsername} = require("./scraper/functions");
+import mongoose from 'mongoose';
+import {mongoURL} from './config';
+import {getLeetcodeDataFromUsername} from "./scraper/functions";
+import UserModel from './models/user';
 
-const server =  `${mongoURL}:27017`;
+const server = `${mongoURL}:27017`;
 const database = 'leetbot_db';
-const UserModel = require('./models/user');
 
 class Database {
     constructor() {
@@ -67,12 +67,11 @@ class Database {
         }
 
         for (let user of users) {
-            const userData = await getLeetcodeDataFromUsername(user.username);
-            UserModel.findOneAndUpdate({ _id: user._id }, userData);
+            UserModel.findOneAndUpdate({ _id: user._id }, await getLeetcodeDataFromUsername(user.username));
         }
 
         return await this.findUsers();
     };
 }
 
-module.exports = new Database();
+export default new Database();
