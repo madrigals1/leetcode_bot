@@ -1,6 +1,6 @@
-import axios from 'axios'
-import cheerio from 'cheerio'
-import {url} from "../utils/constants"
+import axios from 'axios';
+import cheerio from 'cheerio';
+import {url} from '../utils/constants';
 
 async function getLeetcodeDataFromUsername(username) {
   return await axios.get(url + username).then(
