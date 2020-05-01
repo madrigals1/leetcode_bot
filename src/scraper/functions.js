@@ -1,6 +1,6 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-import {url} from '../utils/constants';
+import { url } from '../utils/constants';
 
 async function getLeetcodeDataFromUsername(username) {
   return await axios.get(url + username).then(
@@ -15,13 +15,13 @@ async function getLeetcodeDataFromUsername(username) {
         username: body.find('.username').attr('title'),
         solved: parseInt(solved.trim()),
         all: parseInt(all.trim()),
-      }
+      };
     },
     (err) => {
       console.log('Error on the server: ' + err);
       return null;
-    }
-  )
+    },
+  );
 }
 
-export {getLeetcodeDataFromUsername};
+export { getLeetcodeDataFromUsername };

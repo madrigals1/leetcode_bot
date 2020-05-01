@@ -1,8 +1,8 @@
-import moment from "moment";
+import moment from 'moment';
 
 const capitalize = (s) => {
-    if (typeof s !== 'string') return '';
-    return s.charAt(0).toUpperCase() + s.slice(1);
+  if (typeof s !== 'string') return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
 const refreshLog = () => {
@@ -10,4 +10,4 @@ const refreshLog = () => {
   console.log(`Database is refreshed ${date}`);
 };
 
-export {capitalize, refreshLog};
+export { capitalize, refreshLog };

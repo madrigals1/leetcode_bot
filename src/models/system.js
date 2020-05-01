@@ -1,24 +1,25 @@
-import {capitalize} from '../utils/helper';
-import {welcome_message} from '../utils/constants';
+import { capitalize } from '../utils/helper';
+import { welcome_message } from '../utils/constants';
 
 const system = {
-    users: [],
-    addedListeners: [],
-    lastRefresh: null,
-    get welcomeText() {
-        return (`
+  users: [],
+  addedListeners: [],
+  lastRefresh: null,
+  get welcomeText() {
+    return (`
 ${welcome_message}
 
 ${this.usersText}
-`)},
-    get ratingText() {
-        return this.users.map((user, index) => `${index + 1}. *${user.username}* ${user.solved}\n`)
-            .join('');
-    },
-    get usersText() {
-        return this.users.map(user => `<b><i>/${user.username.toLowerCase()}</i></b> Rating of ${capitalize(user.name)} \n`)
-            .join('');
-    },
+`);
+  },
+  get ratingText() {
+    return this.users.map((user, index) => `${index + 1}. *${user.username}* ${user.solved}\n`)
+      .join('');
+  },
+  get usersText() {
+    return this.users.map(user => `<b><i>/${user.username.toLowerCase()}</i></b> Rating of ${capitalize(user.name)} \n`)
+      .join('');
+  },
 };
 
 export default system;
