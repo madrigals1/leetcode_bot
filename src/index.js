@@ -76,6 +76,10 @@ bot.on(['/refresh'], (msg) => {
 });
 
 bot.on(['/rating'], async msg => {
+  // Added refresh Users function so that every time, 
+  // when rating command is called, users could see the correct information
+  refreshUsers().then(() => {
+  });
   return msg.reply.text(system.ratingText, { parseMode: 'Markdown' });
 });
 
