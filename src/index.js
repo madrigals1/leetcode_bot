@@ -35,6 +35,7 @@ async function refreshUsers() {
         system.users.forEach(user => {
           addListenerIfNotExist(user.username);
         });
+        system.users.sort((user1, user2) => parseInt(user2.solved) - parseInt(user1.solved));
       })
       .catch(err => console.error(err));
   } else {
