@@ -7,7 +7,6 @@ Make sure you have installed these:
 - [MongoDB]('https://www.mongodb.com/download-center') - cross-platform document-oriented database program. 
 Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema.
 - [Node.js](https://nodejs.org/en/) - JavaScript runtime built on Chrome's V8 JavaScript engine.
-- [Yarn](https://classic.yarnpkg.com/en/) - package manager for node.js.
 
 ## Installation
 1) Make a copy of .env.example file named .env
@@ -21,7 +20,7 @@ TELEGRAM_TOKEN=**************************
 ```
 3) Run
 ```
-yarn install
+npm install
 ```
 
 ## Running
@@ -31,7 +30,7 @@ mongod
 ```
 - Open another terminal tab and run
 ```
-yarn start
+npm start
 ```
 
 ### Author
