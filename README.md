@@ -14,10 +14,10 @@ Classified as a NoSQL database program, MongoDB uses JSON-like documents with sc
 ```
 cp .env.example .env
 ```
-2) Inside `.env` file change TOKEN variable value to token you get from [BotFather](https://telegram.me/BotFather "BotFather")
+2) Inside `.env` file change TELEGRAM_TOKEN variable value to token you get from [BotFather](https://telegram.me/BotFather "BotFather")
 ```
-# Change token to your own token you get from BotFather
-TOKEN=**************************
+# Change TELEGRAM_TOKEN to your own token you get from BotFather
+TELEGRAM_TOKEN=**************************
 ```
 3) Run
 ```

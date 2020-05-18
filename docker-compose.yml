@@ -14,7 +14,11 @@ services:
       - mongo
     command: npm start
     environment:
-      - MONGO_URL=1
+      - MONGO_URL=mongo
+      - TELEGRAM_TOKEN=*************************
+      - DB_NAME=leetbot_db
+      - DB_PORT=27017
+      - LEETCODE_URL=https://leetcode.com/
   mongo:
     container_name: mongo
     image: mongo

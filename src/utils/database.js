@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 import { getLeetcodeDataFromUsername } from '../scraper/functions';
 import UserModel from '../models/user';
 import system from '../models/system';
-import { database, server } from './constants';
+import { DB_NAME, DB_PORT, MONGO_URL } from './constants';
+const server = `${MONGO_URL}:${DB_PORT}`;
 
 class Database {
   constructor() {
@@ -11,7 +12,7 @@ class Database {
 
   _connect() {
     mongoose
-      .connect(`mongodb://${server}/${database}`, {
+      .connect(`mongodb://${server}/${DB_NAME}`, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,

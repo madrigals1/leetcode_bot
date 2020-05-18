@@ -1,9 +1,9 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-import { url } from '../utils/constants';
+import { LEETCODE_URL } from '../utils/constants';
 
 async function getLeetcodeDataFromUsername(username) {
-  return await axios.get(url + username).then(
+  return await axios.get(LEETCODE_URL + username).then(
     (response) => {
       const $ = cheerio.load(response.data);
       const body = $('body');

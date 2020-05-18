@@ -1,10 +1,12 @@
+import { BABEL_ESLINT_PATH } from 'src/utils/constants';
+
 module.exports = {
   env: {
     browser: true,
     node: true,
   },
   extends: ['eslint:recommended', 'plugin:prettier/recommended'],
-  parser: '/Users/madrigals1/WebstormProjects/leetcode_bot/node_modules/babel-eslint',
+  parser: BABEL_ESLINT_PATH,
   plugins: ['babel'],
   rules: {
     quotes: ['error', 'single'],

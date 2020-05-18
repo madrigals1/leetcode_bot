@@ -1,4 +1,4 @@
-import { token } from './utils/config';
+import { TELEGRAM_TOKEN } from './utils/constants';
 import TeleBot from 'telebot';
 import moment from 'moment';
 import Database from './utils/database';
@@ -6,7 +6,7 @@ import system from './models/system';
 import schedule from 'node-schedule';
 import { refreshLog } from './utils/helper';
 
-const bot = new TeleBot(token);
+const bot = new TeleBot(TELEGRAM_TOKEN);
 
 function addListenerIfNotExist(username) {
   if (!system.addedListeners.includes(username)) {
