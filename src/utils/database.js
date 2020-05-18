@@ -10,15 +10,16 @@ class Database {
   }
 
   _connect() {
-    mongoose.connect(`mongodb://${server}/${database}`, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    })
+    mongoose
+      .connect(`mongodb://${server}/${database}`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+      })
       .then(() => {
         console.log('Database connection successful');
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('Database connection error', err);
       });
   }
@@ -27,9 +28,10 @@ class Database {
     const userData = await getLeetcodeDataFromUsername(username);
     if (!userData) return;
     const user = new UserModel(userData);
-    return user.save()
-      .then(user => user)
-      .catch(err => {
+    return user
+      .save()
+      .then((user) => user)
+      .catch((err) => {
         console.error(err);
       });
   }
@@ -39,7 +41,7 @@ class Database {
   }
 
   async findUsers() {
-    return await UserModel.find().sort({ 'solved': -1 });
+    return await UserModel.find().sort({ solved: -1 });
   }
 
   async refreshUsers() {
@@ -56,7 +58,7 @@ class Database {
       }
       system.users = sc;
     }
-  };
+  }
 }
 
 export default new Database();

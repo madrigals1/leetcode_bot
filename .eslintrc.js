@@ -1,22 +1,16 @@
 module.exports = {
-  parser: 'babel-eslint',
   env: {
-    es6: true,
+    browser: true,
     node: true,
   },
-  extends: [
-    'airbnb-base',
-  ],
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
-  },
-  parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: 'module',
-  },
+  extends: ['eslint:recommended', 'plugin:prettier/recommended'],
+  parser: '/Users/madrigals1/WebstormProjects/leetcode_bot/node_modules/babel-eslint',
+  plugins: ['babel'],
   rules: {
-    'import/no-cycle': 0,
-    'default-param-last': 0,
+    quotes: ['error', 'single'],
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'no-console': 'off',
+    'babel/no-unused-expressions': 'error',
+    'no-unused-expressions': 'off',
   },
 };

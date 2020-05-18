@@ -3,14 +3,39 @@ Project for checking ratings of users in Leetcode
 
 ## Prerequisites
 
-Make sure you have done these:
-- Install [MongoDB]('https://www.mongodb.com/download-center') 
+Make sure you have installed these:
+- [MongoDB]('https://www.mongodb.com/download-center') - cross-platform document-oriented database program. 
+Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema.
+- [Node.js](https://nodejs.org/en/) - JavaScript runtime built on Chrome's V8 JavaScript engine.
+- [Yarn](https://classic.yarnpkg.com/en/) - package manager for node.js.
 
 ## Installation
-- Create a copy of file `env.example` and name it `.env`
-- Inside `.env` file change TOKEN variable value to token you get from [BotFather](https://telegram.me/BotFather "BotFather")
-- Run `npm install`
+1) Make a copy of .env.example file named .env
+```
+cp .env.example .env
+```
+2) Inside `.env` file change TOKEN variable value to token you get from [BotFather](https://telegram.me/BotFather "BotFather")
+```
+# Change token to your own token you get from BotFather
+TOKEN=**************************
+```
+3) Run
+```
+yarn install
+```
 
 ## Running
-- Run `mongod` in terminal and don't close the terminal tab
-- Run `npm start` in project folder
+- Open terminal and run, don't close this terminal tab
+```
+mongod
+```
+- Open another terminal tab and run
+```
+yarn start
+```
+
+### Author
+- Adi Sabyrbayev [Github](https://github.com/Madrigals1), [LinkedIn](https://www.linkedin.com/in/madrigals1/)
+
+### Contributors
+- Aibek Ziyashev [Github](https://github.com/dmndcrow), [LinkedIn](https://www.linkedin.com/in/dmndcrow)

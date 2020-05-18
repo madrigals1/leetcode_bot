@@ -16,7 +16,7 @@ function addListenerIfNotExist(username) {
 }
 
 function callbackForUser(msg, username) {
-  Database.loadUser(username).then(data => {
+  Database.loadUser(username).then((data) => {
     const { name, username, solved, error } = data;
     if (error) {
       return msg.reply.text(`Error is encountered: ${error}`);
@@ -32,12 +32,12 @@ async function refreshUsers() {
     console.log('Database started refresh', now.format('YYYY-MM-DD hh:mm a'));
     await Database.refreshUsers()
       .then(() => {
-        system.users.forEach(user => {
+        system.users.forEach((user) => {
           addListenerIfNotExist(user.username);
         });
         system.users.sort((user1, user2) => parseInt(user2.solved) - parseInt(user1.solved));
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   } else {
     console.log('Cant refresh more than once in a minute');
   }
@@ -49,11 +49,12 @@ bot.on(['/start'], (msg) => {
 
 bot.on(['/add'], async (msg) => {
   const userNameList = msg.text.split(' ');
-  if (userNameList.length === 1) return msg.reply.text('Please, enter at least 1 username after /add command');
+  if (userNameList.length === 1)
+    return msg.reply.text('Please, enter at least 1 username after /add command');
   let userNameListText = '';
   for (let i = 1; i < userNameList.length; i++) {
     await Database.addUser(userNameList[i])
-      .then(user => {
+      .then((user) => {
         if (user) {
           system.users.push(user);
           system.users.sort((user1, user2) => parseInt(user2.solved) - parseInt(user1.solved));
@@ -61,22 +62,20 @@ bot.on(['/add'], async (msg) => {
           addListenerIfNotExist(user.username);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
       });
   }
   msg.reply.text(`Users that were added:\n ${userNameListText}`);
-  refreshUsers().then(() => {
-  });
+  refreshUsers().then(() => {});
 });
 
 bot.on(['/refresh'], (msg) => {
-  refreshUsers().then(() => {
-  });
+  refreshUsers().then(() => {});
   msg.reply.text('Database will be refreshed');
 });
 
-bot.on(['/rating'], async msg => {
+bot.on(['/rating'], async (msg) => {
   return msg.reply.text(system.ratingText, { parseMode: 'Markdown' });
 });
 
@@ -84,6 +83,6 @@ bot.start();
 
 refreshUsers().then(refreshLog);
 
-schedule.scheduleJob('*/15 * * * *', function() {
+schedule.scheduleJob('*/15 * * * *', function () {
   refreshUsers().then(refreshLog);
 });
