@@ -1,6 +1,6 @@
 {
-  "name": "telegram_bot",
-  "version": "1.2.5",
+  "name": "leetcode_bot",
+  "version": "1.2.6",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
