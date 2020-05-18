@@ -1,10 +1,10 @@
-import { TELEGRAM_TOKEN } from './utils/constants';
-import TeleBot from 'telebot';
-import moment from 'moment';
-import Database from './utils/database';
-import system from './models/system';
-import schedule from 'node-schedule';
-import { refreshLog } from './utils/helper';
+const { TELEGRAM_TOKEN } = require('./utils/constants');
+const TeleBot = require('telebot');
+const moment = require('moment');
+const Database = require('./utils/database');
+const system = require('./models/system');
+const schedule = require('node-schedule');
+const { refreshLog } = require('./utils/helper');
 
 const bot = new TeleBot(TELEGRAM_TOKEN);
 

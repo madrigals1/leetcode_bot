@@ -1,8 +1,9 @@
-import mongoose from 'mongoose';
-import { getLeetcodeDataFromUsername } from '../scraper/functions';
-import UserModel from '../models/user';
-import system from '../models/system';
-import { DB_NAME, DB_PORT, MONGO_URL } from './constants';
+const mongoose = require('mongoose');
+const { getLeetcodeDataFromUsername } = require('../scraper/functions');
+const UserModel = require('../models/user');
+const system = require('../models/system');
+const { DB_NAME, DB_PORT, MONGO_URL } = require('./constants');
+
 const server = `${MONGO_URL}:${DB_PORT}`;
 
 class Database {
@@ -62,4 +63,5 @@ class Database {
   }
 }
 
-export default new Database();
+
+module.exports = new Database();

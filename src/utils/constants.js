@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ const welcome_message = `Welcome! This is Leetcode Rating bot Elite Boys.
 <b><i>/refresh</i></b>  - Manual refresh of database.
 <b><i>/add username1 username2</i></b>  ... - adding users`;
 
-export {
+module.exports = {
   TELEGRAM_TOKEN,
   MONGO_URL,
   BABEL_ESLINT_PATH,

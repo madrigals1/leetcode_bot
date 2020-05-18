@@ -1,5 +1,5 @@
-import { capitalize } from '../utils/helper';
-import { welcome_message } from '../utils/constants';
+const { capitalize } = require('../utils/helper');
+const { welcome_message } = require('../utils/constants');
 
 const system = {
   users: [],
@@ -27,4 +27,4 @@ ${this.usersText}
   },
 };
 
-export default system;
+module.exports = system;

@@ -1,4 +1,4 @@
-import moment from 'moment';
+const moment = require('moment');
 
 const capitalize = (s) => {
   if (typeof s !== 'string') return '';
@@ -10,4 +10,4 @@ const refreshLog = () => {
   console.log(`Database is refreshed ${date}`);
 };
 
-export { capitalize, refreshLog };
+module.exports = { capitalize, refreshLog };
