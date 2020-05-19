@@ -8,10 +8,11 @@ const server = `${MONGO_URL}:${DB_PORT}`;
 
 class Database {
   constructor() {
-    this._connect();
+    this.connect();
   }
 
-  _connect() {
+  // eslint-disable-next-line class-methods-use-this
+  connect() {
     mongoose
       .connect(`mongodb://${server}/${DB_NAME}`, {
         useNewUrlParser: true,
@@ -26,6 +27,7 @@ class Database {
       });
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async addUser(username) {
     const userData = await getLeetcodeDataFromUsername(username);
     if (!userData) return;
@@ -38,24 +40,25 @@ class Database {
       });
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async loadUser(username) {
-    return UserModel.findOne({ username: username });
+    return UserModel.findOne({ username });
   }
 
   async findUsers() {
-    return await UserModel.find().sort({ solved: -1 });
+    return UserModel.find().sort({ solved: -1 });
   }
 
   async refreshUsers() {
     let users = [];
     if (system.users.length === 0) {
       users = await this.findUsers();
-      for (let user of users) {
+      for (const user of users) {
         system.users.push(await getLeetcodeDataFromUsername(user.username));
       }
     } else {
-      let sc = [];
-      for (let user of system.users) {
+      const sc = [];
+      for (const user of system.users) {
         sc.push(await getLeetcodeDataFromUsername(user.username));
       }
       system.users = sc;

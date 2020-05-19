@@ -1,5 +1,5 @@
 const { capitalize } = require('../utils/helper');
-const { welcome_message } = require('../utils/constants');
+const { welcomeMessage } = require('../utils/constants');
 
 const system = {
   users: [],
@@ -7,7 +7,7 @@ const system = {
   lastRefresh: null,
   get welcomeText() {
     return `
-${welcome_message}
+${welcomeMessage}
 
 ${this.usersText}
 `;
@@ -20,10 +20,15 @@ ${this.usersText}
   get usersText() {
     return this.users
       .map(
-        (user) =>
-          `<b><i>/${user.username.toLowerCase()}</i></b> Rating of ${capitalize(user.name)} \n`,
+        (user) => `<b><i>/${user.username.toLowerCase()}</i></b> Rating of ${capitalize(user.name)} \n`,
       )
       .join('');
+  },
+
+  resort() {
+    this.users.sort(
+      (user1, user2) => parseInt(user2.solved, 10) - parseInt(user1.solved, 10),
+    );
   },
 };
 

@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 const { LEETCODE_URL } = require('../utils/constants');
 
 async function getLeetcodeDataFromUsername(username) {
-  return await axios.get(LEETCODE_URL + username).then(
+  return axios.get(LEETCODE_URL + username).then(
     (response) => {
       const $ = cheerio.load(response.data);
       const body = $('body');
@@ -20,12 +20,12 @@ async function getLeetcodeDataFromUsername(username) {
       return {
         name: body.find('.realname').attr('title'),
         username: body.find('.username').attr('title'),
-        solved: parseInt(solved.trim()),
-        all: parseInt(all.trim()),
+        solved: parseInt(solved.trim(), 10),
+        all: parseInt(all.trim(), 10),
       };
     },
     (err) => {
-      console.log('Error on the server: ' + err);
+      console.log(`Error on the server: ${err}`);
       return null;
     },
   );

@@ -1,29 +1,32 @@
-const { TELEGRAM_TOKEN } = require('./utils/constants');
 const TeleBot = require('telebot');
+const schedule = require('node-schedule');
 const moment = require('moment');
+const { TELEGRAM_TOKEN } = require('./utils/constants');
 const Database = require('./utils/database');
 const system = require('./models/system');
-const schedule = require('node-schedule');
 const { refreshLog } = require('./utils/helper');
 
 const bot = new TeleBot(TELEGRAM_TOKEN);
 
-function addListenerIfNotExist(username) {
-  if (!system.addedListeners.includes(username)) {
-    bot.on(['/' + username.toLowerCase()], (msg) => callbackForUser(msg, username));
-    system.addedListeners.push(username);
-  }
-}
-
-function callbackForUser(msg, username) {
-  Database.loadUser(username).then((data) => {
-    const { name, username, solved, error } = data;
+function callbackForUser(msg, uname) {
+  Database.loadUser(uname).then((data) => {
+    const {
+      name, username, solved, error,
+    } = data;
     if (error) {
       return msg.reply.text(`Error is encountered: ${error}`);
     }
     return msg.reply.text(`Name: ${name} \nUsername: ${username} \nSolved: ${solved} \n`);
   });
 }
+
+function addListenerIfNotExist(username) {
+  if (!system.addedListeners.includes(username)) {
+    bot.on([`/${username.toLowerCase()}`], (msg) => callbackForUser(msg, username));
+    system.addedListeners.push(username);
+  }
+}
+
 
 async function refreshUsers() {
   const now = moment();
@@ -35,7 +38,7 @@ async function refreshUsers() {
         system.users.forEach((user) => {
           addListenerIfNotExist(user.username);
         });
-        system.users.sort((user1, user2) => parseInt(user2.solved) - parseInt(user1.solved));
+        system.users.resort();
       })
       .catch((err) => console.error(err));
   } else {
@@ -43,31 +46,30 @@ async function refreshUsers() {
   }
 }
 
-bot.on(['/start'], (msg) => {
-  return msg.reply.text(system.welcomeText, { parseMode: 'HTML' });
-});
+bot.on(['/start'], (msg) => msg.reply.text(system.welcomeText, { parseMode: 'HTML' }));
 
 bot.on(['/add'], async (msg) => {
   const userNameList = msg.text.split(' ');
-  if (userNameList.length === 1)
-    return msg.reply.text('Please, enter at least 1 username after /add command');
+  if (userNameList.length === 1) return msg.reply.text('Please, enter at least 1 username after /add command');
   let userNameListText = '';
+  const results = [];
   for (let i = 1; i < userNameList.length; i++) {
-    await Database.addUser(userNameList[i])
+    results.push(Database.addUser(userNameList[i])
       .then((user) => {
         if (user) {
           system.users.push(user);
-          system.users.sort((user1, user2) => parseInt(user2.solved) - parseInt(user1.solved));
+          system.users.resort();
           userNameListText += `${user.username}\n`;
           addListenerIfNotExist(user.username);
         }
       })
       .catch((err) => {
         console.error(err);
-      });
+      }));
   }
-  msg.reply.text(`Users that were added:\n ${userNameListText}`);
+  await Promise.all(results);
   refreshUsers().then(() => {});
+  return msg.reply.text(`Users that were added:\n ${userNameListText}`);
 });
 
 bot.on(['/refresh'], (msg) => {
@@ -75,14 +77,12 @@ bot.on(['/refresh'], (msg) => {
   msg.reply.text('Database will be refreshed');
 });
 
-bot.on(['/rating'], async (msg) => {
-  return msg.reply.text(system.ratingText, { parseMode: 'Markdown' });
-});
+bot.on(['/rating'], async (msg) => msg.reply.text(system.ratingText, { parseMode: 'Markdown' }));
 
 bot.start();
 
 refreshUsers().then(refreshLog);
 
-schedule.scheduleJob('*/15 * * * *', function () {
+schedule.scheduleJob('*/15 * * * *', () => {
   refreshUsers().then(refreshLog);
 });
