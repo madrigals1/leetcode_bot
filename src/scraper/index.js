@@ -26,7 +26,12 @@ async function getLeetcodeDataFromUsername(username) {
     },
     (err) => {
       console.log(`Error on the server: ${err}`);
-      return null;
+      return {
+        name: 'Error',
+        username: 'Error',
+        solved: 0,
+        all: 0,
+      };
     },
   );
 }

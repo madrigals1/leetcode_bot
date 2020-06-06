@@ -14,6 +14,7 @@ const {
 // Static variables
 const welcomeMessage = `Welcome! This is Leetcode Rating bot Elite Boys.
 <b><i>/rating</i></b> - Overall rating
+<b><i>/rating username</i></b> - Rating for separate user
 <b><i>/refresh</i></b>  - Manual refresh of database.
 <b><i>/add username1 username2</i></b>  ... - adding users`;
 
