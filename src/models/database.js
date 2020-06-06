@@ -45,6 +45,10 @@ class Database {
 
   // eslint-disable-next-line class-methods-use-this
   async addUser(username) {
+    const tempUser = await this.loadUser(username);
+    if (tempUser) {
+      return null;
+    }
     return getLeetcodeDataFromUsername(username)
       .then(async (userData) => {
         const user = await this.createOrUpdate(userData);

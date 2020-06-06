@@ -62,7 +62,7 @@ const listeners = [
       userNameList.forEach((username) => {
         promiseList.push(Database.addUser(username)
           .then((user) => {
-            if (user.username !== 'Error') {
+            if (user && user.username !== 'Error') {
               users.push(user);
               return `- ${username} was added\n`;
             }
