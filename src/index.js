@@ -2,7 +2,7 @@ const TeleBot = require('telebot');
 const schedule = require('node-schedule');
 const moment = require('moment');
 const { TELEGRAM_TOKEN } = require('./utils/constants');
-const Database = require('./utils/database');
+const Database = require('./models/database');
 const system = require('./models/system');
 const { refreshLog } = require('./utils/helper');
 

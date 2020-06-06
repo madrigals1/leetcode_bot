@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const { getLeetcodeDataFromUsername } = require('../scraper/functions');
-const UserModel = require('../models/user');
-const system = require('../models/system');
-const { DB_NAME, DB_PORT, MONGO_URL } = require('./constants');
+const { getLeetcodeDataFromUsername } = require('../scraper');
+const UserModel = require('./user');
+const system = require('./system');
+const { DB_NAME, DB_PORT, MONGO_URL } = require('../utils/constants');
 
 const server = `${MONGO_URL}:${DB_PORT}`;
 
