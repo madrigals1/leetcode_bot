@@ -23,10 +23,7 @@ async function getLeetcodeDataFromUsername(username) {
         .text()
         .split('/');
 
-      const submissionsDOM = row
-        .eq(7)
-        .find('.list-group-item');
-
+      const submissionsDOM = row.last().find('.list-group-item');
       const submissions = [];
 
       for (let i = 0; i < Math.min(submissionsDOM.length, SUBMISSION_COUNT); i++) {
@@ -43,7 +40,7 @@ async function getLeetcodeDataFromUsername(username) {
 
       return {
         name: realname,
-        link: `https://leetcode.com/${realname}`,
+        link: `${LEETCODE_URL}${realname}`,
         username: body.find('.username').attr('title'),
         solved: parseInt(solved.trim(), 10),
         all: parseInt(all.trim(), 10),
