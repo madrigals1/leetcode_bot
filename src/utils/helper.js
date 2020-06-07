@@ -1,13 +1,16 @@
 const moment = require('moment');
 
-const capitalize = (s) => {
-  if (typeof s !== 'string') return '';
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
+function log(...args) {
+  console.log(...args);
+}
+
+function error(...args) {
+  console.error(...args);
+}
 
 const refreshLog = () => {
   const date = moment().format('YYYY-MM-DD hh:mm a');
   console.log(`Database is refreshed ${date}`);
 };
 
-module.exports = { capitalize, refreshLog };
+module.exports = { log, error, refreshLog };

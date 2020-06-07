@@ -1,6 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { LEETCODE_URL } = require('../utils/constants');
+const { error } = require('../utils/helper');
 
 async function getLeetcodeDataFromUsername(username) {
   return axios.get(LEETCODE_URL + username).then(
@@ -25,7 +26,7 @@ async function getLeetcodeDataFromUsername(username) {
       };
     },
     (err) => {
-      console.log(`Error on the server: ${err}`);
+      error(`Error on the server: ${err}`);
       return {
         name: 'Error',
         username: 'Error',
