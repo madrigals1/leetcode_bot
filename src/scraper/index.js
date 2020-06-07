@@ -13,8 +13,6 @@ async function getLeetcodeDataFromUsername(username) {
         .first()
         .find('.panel-default');
 
-      const realname = body.find('.realname').attr('title');
-
       const [solved, all] = row
         .eq(2)
         .find('ul > li')
@@ -39,8 +37,8 @@ async function getLeetcodeDataFromUsername(username) {
       }
 
       return {
-        name: realname,
-        link: `${LEETCODE_URL}${realname}`,
+        name: body.find('.realname').attr('title'),
+        link: `${LEETCODE_URL}${username}`,
         username: body.find('.username').attr('title'),
         solved: parseInt(solved.trim(), 10),
         all: parseInt(all.trim(), 10),

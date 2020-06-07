@@ -16,6 +16,7 @@ const welcomeText = () => `Welcome! This is Leetcode Rating bot Elite Boys.
 
 const userText = (user) => `<b>Name:</b> ${user.name}
 <b>Username:</b> ${user.username}
+<b>Link:</b> ${user.link}
 <b>Solved:</b> ${user.solved} / ${user.all}
 
 <b>Last ${user.submissions.length} Submissions:</b>
