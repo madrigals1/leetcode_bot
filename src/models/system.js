@@ -104,6 +104,9 @@ const listeners = [
       if (userNameList.length === 2) {
         const userName = userNameList[1].toLowerCase();
         const user = users.find((u) => u.username.toLowerCase() === userName);
+        if (!user) {
+          return msg.reply.text('Error, caused by these:\n- Username is not added to database\n- Username does not exist');
+        }
         return msg.reply.text(userText(user), { parseMode: 'HTML' });
       }
       return msg.reply.text(ratingText(), { parseMode: 'Markdown' });
