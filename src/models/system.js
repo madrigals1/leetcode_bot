@@ -102,8 +102,8 @@ const listeners = [
       }
 
       if (userNameList.length === 2) {
-        const userName = userNameList[1];
-        const user = users.find((u) => u.username === userName);
+        const userName = userNameList[1].toLowerCase();
+        const user = users.find((u) => u.username.toLowerCase() === userName);
         return msg.reply.text(userText(user), { parseMode: 'HTML' });
       }
       return msg.reply.text(ratingText(), { parseMode: 'Markdown' });
