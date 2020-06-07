@@ -11,7 +11,7 @@ const welcomeText = () => `${welcomeMessage}`;
 
 const userText = (user) => `*Name:* ${user.name}
 *Username:* ${user.username}
-*Solved:* ${user.solved}`;
+*Solved:* ${user.solved} / ${user.all}`;
 
 const ratingText = () => users
   .map((user, index) => `${index + 1}. *${user.username}* ${user.solved}\n`)
