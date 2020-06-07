@@ -41,11 +41,12 @@ const add = async (username) => {
 
   return getLeetcodeDataFromUsername(username)
     .then(async (userData) => {
+      const { submissions } = userData;
       const user = await createOrUpdate(userData);
 
       await user.save();
 
-      return user;
+      return { ...user, submissions };
     });
 };
 
