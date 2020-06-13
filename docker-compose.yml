@@ -15,6 +15,7 @@ services:
     command: npm start
     environment:
       - TELEGRAM_TOKEN=*************************
+      - MASTER_PASSWORD=************************
       - MONGO_URL=mongo
       - DB_NAME=leetbot_db
       - DB_PORT=27017
