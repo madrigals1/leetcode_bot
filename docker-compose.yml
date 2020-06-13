@@ -13,14 +13,6 @@ services:
     links:
       - mongo
     command: npm start
-    environment:
-      - TELEGRAM_TOKEN=*************************
-      - MASTER_PASSWORD=************************
-      - MONGO_URL=mongo
-      - DB_NAME=leetbot_db
-      - DB_PORT=27017
-      - LEETCODE_URL=https://leetcode.com/
-      - SUBMISSION_COUNT=5
   mongo:
     container_name: mongo
     image: mongo
