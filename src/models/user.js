@@ -58,7 +58,14 @@ const refresh = async () => {
   for (let i = 0; i < users.length; i++) {
     log('Refreshing', users[i].username);
     // eslint-disable-next-line no-await-in-loop
-    users[i] = await getLeetcodeDataFromUsername(users[i].username);
+    const userData = await getLeetcodeDataFromUsername(users[i].username);
+
+    if (userData.username !== 'Error') {
+      users[i] = userData;
+      log('Successfully refreshed', users[i].username);
+    } else {
+      log('Failed refreshing', users[i].username);
+    }
   }
 
   log('Finished refresh');
