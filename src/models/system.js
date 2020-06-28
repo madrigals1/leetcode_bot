@@ -5,7 +5,7 @@ const userModel = require('./user');
 const { log } = require('../utils/helper');
 const { LEETCODE_URL, MASTER_PASSWORD } = require('../utils/constants');
 
-let lastRefresh = null;
+let isRefreshing = false;
 const url = LEETCODE_URL.slice(0, -1);
 
 const welcomeText = () => `Welcome! This is Leetcode Rating bot Elite Boys.
@@ -40,13 +40,12 @@ const resort = () => users.sort(
 
 const refreshUsers = async () => {
   const now = moment();
-  if (!lastRefresh || now.diff(lastRefresh, 'seconds') > 60) {
-    lastRefresh = now;
+  if (!isRefreshing) {
+    isRefreshing = true;
     log('Database started refresh', now.format('YYYY-MM-DD hh:mm a'));
-    await userModel.refresh()
-      .then(() => resort());
+    await userModel.refresh().then(() => resort());
   } else {
-    log('Cant refresh more than once in a minute');
+    log('Database is already refreshing');
   }
 };
 
