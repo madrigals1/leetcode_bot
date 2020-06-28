@@ -16,6 +16,6 @@
     },
     "rules": {
         "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-        "no-console": 0
+        "no-console": 2
     }
 }
