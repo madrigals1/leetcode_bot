@@ -28,9 +28,11 @@ ${user.submissions.map((submission) => `
 <b>Time:</b> ${submission.time}
 `).join('\n')}`;
 
-const ratingText = () => users
-  .map((user, index) => `${index + 1}. *${user.username}* ${user.solved}\n`)
-  .join('');
+const ratingText = () => (
+  users
+    ? users.map((user, index) => `${index + 1}. *${user.username}* ${user.solved}\n`).join('')
+    : 'No users found in database!'
+);
 
 const resort = () => users.sort(
   (user1, user2) => parseInt(user2.solved, 10) - parseInt(user1.solved, 10),
