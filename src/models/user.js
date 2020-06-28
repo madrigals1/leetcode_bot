@@ -10,10 +10,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  name: String,
-  link: String,
-  solved: Number,
-  all: Number,
 });
 
 const UserModel = mongoose.model('User', userSchema);
