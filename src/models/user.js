@@ -50,10 +50,19 @@ const add = async (username) => {
     });
 };
 
+const remove = async (userId) => {
+  UserModel.deleteOne({ id: userId }, (err) => {
+    if (err) log(err);
+  });
+  return { result: 'success' };
+};
+
 const refresh = async () => {
-  if (users.length === 0) {
-    users.push(...await findAll());
-  }
+  // Clearing the users
+  users.length = 0;
+
+  // Loading all users from DB and adding to users
+  users.push(...await findAll());
 
   for (let i = 0; i < users.length; i++) {
     log('Refreshing', users[i].username);
@@ -77,4 +86,5 @@ module.exports = {
   createOrUpdate,
   add,
   refresh,
+  remove,
 };

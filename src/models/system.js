@@ -3,7 +3,7 @@ const moment = require('moment');
 const { users } = require('./database');
 const userModel = require('./user');
 const { log } = require('../utils/helper');
-const { LEETCODE_URL } = require('../utils/constants');
+const { LEETCODE_URL, MASTER_PASSWORD } = require('../utils/constants');
 
 let lastRefresh = null;
 const url = LEETCODE_URL.slice(0, -1);
@@ -50,11 +50,11 @@ const refreshUsers = async () => {
 
 const listeners = [
   {
-    types: ['/start'],
+    types: ['/start', '/s'],
     callback: (msg) => msg.reply.text(welcomeText(), { parseMode: 'HTML' }),
   },
   {
-    types: ['/add'],
+    types: ['/add', '/a'],
     callback: async (msg) => {
       // Getting all users list from /add username1 username2
       const userNameList = msg.text.split(' ');
@@ -88,14 +88,14 @@ const listeners = [
     },
   },
   {
-    types: ['/refresh'],
+    types: ['/refresh', '/r'],
     callback: async (msg) => {
       await refreshUsers();
       return msg.reply.text('Database is refreshed');
     },
   },
   {
-    types: ['/rating'],
+    types: ['/rating', '/rt'],
     callback: (msg) => {
       const userNameList = msg.text.split(' ');
       if (userNameList.length > 2 || userNameList.length === 0) {
@@ -111,6 +111,35 @@ const listeners = [
         return msg.reply.text(userText(user), { parseMode: 'HTML' });
       }
       return msg.reply.text(ratingText(), { parseMode: 'Markdown' });
+    },
+  },
+  {
+    types: ['/remove', '/rm'],
+    callback: async (msg) => {
+      const userNameList = msg.text.split(' ');
+
+      // Correct input for removing should be /rm <username> <master_password>
+      // If length of the input is not 3, throw error
+      if (userNameList.length !== 3) {
+        return msg.reply.text('Incorrect input');
+      }
+
+      const userName = userNameList[1].toLowerCase();
+      const password = userNameList[2];
+      const user = users.find((u) => u.username.toLowerCase() === userName);
+
+      if (!user) {
+        return msg.reply.text('Error, caused by these:\n- Username is not added to database\n- Username does not exist');
+      }
+
+      if (password !== MASTER_PASSWORD) {
+        return msg.reply.text('Password is incorrect');
+      }
+
+      await userModel.remove(user.id);
+      msg.reply.text(`User ${userName} will be deleted`);
+      await refreshUsers();
+      return msg.reply.text(`User ${userName} was deleted`);
     },
   },
 ];
