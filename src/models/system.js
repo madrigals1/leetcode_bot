@@ -82,7 +82,7 @@ const listeners = [
 
       const userListFromPromise = await Promise.all(promiseList);
       const text = userListFromPromise.join('');
-      msg.reply.text(`User List:\n ${text}`);
+      msg.reply.text(`User List:\n${text}`);
       await refreshUsers();
       return msg.reply.text('Users refreshed');
     },
