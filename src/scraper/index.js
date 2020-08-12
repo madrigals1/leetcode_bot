@@ -4,7 +4,8 @@ const { LEETCODE_URL, SUBMISSION_COUNT } = require('../utils/constants');
 const { error } = require('../utils/helper');
 
 async function getLeetcodeDataFromUsername(username) {
-  return axios.get(LEETCODE_URL + username).then(
+  const leetcodeLink = `${LEETCODE_URL}${username}`;
+  return axios.get(leetcodeLink).then(
     (response) => {
       const $ = cheerio.load(response.data);
       const body = $('body');
@@ -38,7 +39,7 @@ async function getLeetcodeDataFromUsername(username) {
 
       return {
         name: body.find('.realname').attr('title'),
-        link: `${LEETCODE_URL}${username}`,
+        link: leetcodeLink,
         username: body.find('.username').attr('title'),
         solved: parseInt(solved.trim(), 10),
         all: parseInt(all.trim(), 10),
