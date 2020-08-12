@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { DICT } = require('./constants');
 
 function log(...args) {
   // eslint-disable-next-line no-console
@@ -12,7 +13,7 @@ function error(...args) {
 
 const refreshLog = () => {
   const date = moment().format('YYYY-MM-DD hh:mm a');
-  log(`Database is refreshed ${date}`);
+  log(`${DICT.DATABASE.IS_REFRESHED} ${date}`);
 };
 
 module.exports = { log, error, refreshLog };

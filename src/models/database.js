@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
-const { DB_NAME, DB_PORT, MONGO_URL } = require('../utils/constants');
+const {
+  DB_NAME,
+  DB_PORT,
+  MONGO_URL,
+  DICT,
+} = require('../utils/constants');
 const { log, error } = require('../utils/helper');
 
 const server = `${MONGO_URL}:${DB_PORT}`;
@@ -14,10 +19,10 @@ const connect = () => {
       useFindAndModify: false,
     })
     .then(() => {
-      log('Database connection successful');
+      log(DICT.DATABASE.CONNECTION_STATUS.SUCCESSFUL);
     })
     .catch((err) => {
-      error('Database connection error', err);
+      error(DICT.DATABASE.CONNECTION_STATUS.ERROR, err);
     });
 };
 

@@ -3,7 +3,11 @@ const moment = require('moment');
 const { users } = require('./database');
 const userModel = require('./user');
 const { log } = require('../utils/helper');
-const { LEETCODE_URL, MASTER_PASSWORD } = require('../utils/constants');
+const {
+  LEETCODE_URL,
+  MASTER_PASSWORD,
+  DICT,
+} = require('../utils/constants');
 
 let isRefreshing = false;
 const url = LEETCODE_URL.slice(0, -1);
@@ -31,7 +35,7 @@ ${user.submissions.map((submission) => `
 const ratingText = () => (
   users
     ? users.map((user, index) => `${index + 1}. *${user.username}* ${user.solved}\n`).join('')
-    : 'No users found in database!'
+    : DICT.DATABASE.NO_USERS
 );
 
 const resort = () => users.sort(
@@ -42,10 +46,10 @@ const refreshUsers = async () => {
   const now = moment();
   if (!isRefreshing) {
     isRefreshing = true;
-    log('Database started refresh', now.format('YYYY-MM-DD hh:mm a'));
+    log(DICT.DATABASE.STARTED_REFRESH, now.format('YYYY-MM-DD hh:mm a'));
     await userModel.refresh().then(() => resort());
   } else {
-    log('Database is already refreshing');
+    log(DICT.DATABASE.IS_ALREADY_REFRESHING);
   }
 };
 
@@ -61,7 +65,7 @@ const listeners = [
       const userNameList = msg.text.split(' ');
 
       // If no username is set, return exception
-      if (userNameList.length === 1) return msg.reply.text('Please, enter at least 1 username after /add command');
+      if (userNameList.length === 1) return msg.reply.text(DICT.MESSAGE.AT_LEAST_1_USERNAME);
 
       // Removing /add
       userNameList.shift();
@@ -71,11 +75,11 @@ const listeners = [
       userNameList.forEach((username) => {
         promiseList.push(userModel.add(username)
           .then((user) => {
-            if (user && user.username !== 'Error') {
+            if (user && user.username !== DICT.STATUS.ERROR.DEFAULT) {
               users.push(user);
-              return `- ${username} was added\n`;
+              return DICT.MESSAGE.USERNAME_WAS_ADDED(username);
             }
-            return `- ${username} was not added\n`;
+            return DICT.MESSAGE.USERNAME_WAS_NOT_ADDED(username);
           }));
       });
 
@@ -83,16 +87,16 @@ const listeners = [
 
       const userListFromPromise = await Promise.all(promiseList);
       const text = userListFromPromise.join('');
-      msg.reply.text(`User List:\n${text}`);
+      msg.reply.text(`${DICT.MESSAGE.USER_LIST}${text}`);
       await refreshUsers();
-      return msg.reply.text('Users refreshed');
+      return msg.reply.text(DICT.DATABASE.USERS_ARE_REFRESHED);
     },
   },
   {
     types: ['/refresh', '/r'],
     callback: async (msg) => {
       await refreshUsers();
-      return msg.reply.text('Database is refreshed');
+      return msg.reply.text(DICT.DATABASE.IS_REFRESHED);
     },
   },
   {
@@ -100,14 +104,14 @@ const listeners = [
     callback: (msg) => {
       const userNameList = msg.text.split(' ');
       if (userNameList.length > 2 || userNameList.length === 0) {
-        return msg.reply('Incorrect input');
+        return msg.reply(DICT.STATUS.ERROR.INCORRECT_INPUT);
       }
 
       if (userNameList.length === 2) {
         const userName = userNameList[1].toLowerCase();
         const user = users.find((u) => u.username.toLowerCase() === userName);
         if (!user) {
-          return msg.reply.text('Error, caused by these:\n- Username is not added to database\n- Username does not exist');
+          return msg.reply.text(DICT.DATABASE.NO_USERS);
         }
         return msg.reply.text(userText(user), { parseMode: 'HTML' });
       }
@@ -122,25 +126,25 @@ const listeners = [
       // Correct input for removing should be /rm <username> <master_password>
       // If length of the input is not 3, throw error
       if (userNameList.length !== 3) {
-        return msg.reply.text('Incorrect input');
+        return msg.reply.text(DICT.STATUS.ERROR.INCORRECT_INPUT);
       }
 
-      const userName = userNameList[1].toLowerCase();
+      const username = userNameList[1].toLowerCase();
       const password = userNameList[2];
-      const user = users.find((u) => u.username.toLowerCase() === userName);
+      const user = users.find((u) => u.username.toLowerCase() === username);
 
       if (!user) {
-        return msg.reply.text('Error, caused by these:\n- Username is not added to database\n- Username does not exist');
+        return msg.reply.text(DICT.DATABASE.NO_USERS);
       }
 
       if (password !== MASTER_PASSWORD) {
-        return msg.reply.text('Password is incorrect');
+        return msg.reply.text(DICT.STATUS.ERROR.PASSWORD_IS_INCORRECT);
       }
 
       await userModel.remove(user.id);
-      msg.reply.text(`User ${userName} will be deleted`);
+      msg.reply.text(DICT.MESSAGE.USERNAME_WILL_BE_DELETED(username));
       await refreshUsers();
-      return msg.reply.text(`User ${userName} was deleted`);
+      return msg.reply.text(DICT.MESSAGE.USERNAME_WAS_DELETED(username));
     },
   },
 ];

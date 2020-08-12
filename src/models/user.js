@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { getLeetcodeDataFromUsername } = require('../scraper');
 const { users } = require('./database');
 const { log } = require('../utils/helper');
+const { DICT } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -50,7 +51,7 @@ const remove = async (userId) => {
   UserModel.deleteOne({ id: userId }, (err) => {
     if (err) log(err);
   });
-  return { result: 'success' };
+  return { result: DICT.STATUS.SUCCESS };
 };
 
 const refresh = async () => {
@@ -61,19 +62,19 @@ const refresh = async () => {
   users.push(...await findAll());
 
   for (let i = 0; i < users.length; i++) {
-    log('Refreshing', users[i].username);
+    log(DICT.REFRESH.IN_PROCESS, users[i].username);
     // eslint-disable-next-line no-await-in-loop
     const userData = await getLeetcodeDataFromUsername(users[i].username);
 
-    if (userData.username !== 'Error') {
+    if (userData.username !== DICT.STATUS.ERROR) {
       users[i] = userData;
-      log('Successfully refreshed', users[i].username);
+      log(DICT.REFRESH.SUCCESS, users[i].username);
     } else {
-      log('Failed refreshing', users[i].username);
+      log(DICT.REFRESH.FAILURE, users[i].username);
     }
   }
 
-  log('Finished refresh');
+  log(DICT.REFRESH.FINISHED);
 };
 
 module.exports = {
