@@ -1,11 +1,11 @@
 const schedule = require('node-schedule');
 
 const { refreshLog } = require('./helper');
-const { refreshUsers } = require('../models/system');
+const User = require('../repository/user');
 
 const startScheduler = () => {
-  schedule.scheduleJob('*/15 * * * *', () => {
-    refreshUsers().then(refreshLog);
+  schedule.scheduleJob('*/30 * * * *', () => {
+    User.refresh().then(refreshLog);
   });
 };
 

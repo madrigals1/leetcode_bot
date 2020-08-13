@@ -48,12 +48,7 @@ async function getLeetcodeDataFromUsername(username) {
     },
     (err) => {
       error(`${DICT.STATUS.ERROR.ON_THE_SERVER} ${err}`);
-      return {
-        name: DICT.STATUS.ERROR.DEFAULT,
-        username: DICT.STATUS.ERROR.DEFAULT,
-        solved: 0,
-        all: 0,
-      };
+      return null;
     },
   );
 }

@@ -1,17 +1,35 @@
 const dotenv = require('dotenv');
+const path = require('path');
 
 dotenv.config();
+
+// ENV Variables
+const {
+  TELEGRAM_TOKEN,
+  MASTER_PASSWORD,
+  DB_NAME,
+  DB_PORT,
+  LEETCODE_URL,
+  MONGO_URL,
+  SUBMISSION_COUNT,
+} = process.env;
 
 const STATUS = {
   ERROR: {
     DEFAULT: 'Error',
     ON_THE_SERVER: 'Error on the server:',
+    USERNAME_ALREADY_EXISTS: 'Username already exists in database',
     INCORRECT_INPUT: 'Incorrect input',
     USERNAME_NOT_FOUND: 'Error, caused by these:\n- Username is not added to database\n- Username'
     + 'does not exist',
+    USERNAME_NOT_FOUND_ON_LEETCODE: 'Error, username is not found on LeetCode',
     PASSWORD_IS_INCORRECT: 'Password is incorrect',
   },
-  SUCCESS: 'Success',
+  SUCCESS: {
+    DEFAULT: 'Success',
+    ADDED_USER: 'Successfully added user',
+    DELETED_USER: 'Successfully deleted user',
+  },
 };
 const REFRESH = {
   IN_PROCESS: 'Refreshing',
@@ -29,6 +47,7 @@ const MESSAGE = {
 };
 const DATABASE = {
   NO_USERS: 'No users found in database!',
+  USER_NOT_FOUND: 'User was not found!',
   USERS_ARE_REFRESHED: 'Users are refreshed',
   STARTED_REFRESH: 'Database started refresh',
   IS_REFRESHED: 'Database is refreshed',
@@ -39,23 +58,41 @@ const DATABASE = {
   },
 };
 
+const WELCOME_TEXT = () => `Welcome! This is Leetcode Rating bot Elite Boys.
+<b><i>/rating</i></b> - Overall rating
+<b><i>/rating username</i></b> - Rating for separate user
+<b><i>/refresh</i></b>  - Manual refresh of database.
+<b><i>/add username1 username2</i></b>  ... - adding users`;
+const USER_TEXT = (user) => `<b>Name:</b> ${user.name}
+<b>Username:</b> ${user.username}
+<b>Link:</b> ${user.link}
+<b>Solved:</b> ${user.solved} / ${user.all}
+
+<b>Last ${user.submissions.length} Submissions:</b>
+${user.submissions.map((submission) => `
+<b>${submission.name}</b>
+<b>Link:</b> ${path.join(LEETCODE_URL, submission.link)}
+<b>Status:</b> ${submission.status}
+<b>Language:</b> ${submission.language}
+<b>Time:</b> ${submission.time}
+`).join('\n')}`;
+const RATING_TEXT = (users) => (
+  users
+    ? users.map((user, index) => `${index + 1}. *${user.username}* ${user.solved}\n`).join('')
+    : DATABASE.NO_USERS
+);
+
 const DICT = {
   STATUS,
   REFRESH,
   MESSAGE,
   DATABASE,
+  WELCOME_TEXT,
+  USER_TEXT,
+  RATING_TEXT,
 };
 
-// ENV Variables
-const {
-  TELEGRAM_TOKEN,
-  MASTER_PASSWORD,
-  DB_NAME,
-  DB_PORT,
-  LEETCODE_URL,
-  MONGO_URL,
-  SUBMISSION_COUNT,
-} = process.env;
+const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
 
 module.exports = {
   TELEGRAM_TOKEN,
@@ -66,4 +103,5 @@ module.exports = {
   LEETCODE_URL,
   SUBMISSION_COUNT,
   DICT,
+  DATE_FORMAT,
 };

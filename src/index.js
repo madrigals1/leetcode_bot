@@ -1,24 +1,24 @@
-const { listeners } = require('./models/system');
-const bot = require('./models/bot');
+const listeners = require('./listeners');
+const bot = require('./objects/bot');
 const startScheduler = require('./utils/scheduler');
-const Listener = require('./models/listener');
-const { connect } = require('./models/database');
-const { refresh } = require('./models/user');
+const Listener = require('./objects/listener');
+const Database = require('./database');
+const User = require('./repository/user');
 
 // Connecting to Database
-connect();
+Database.connect().then(() => {
+  // Refreshing the users
+  User.refresh()
+    .then(() => {
+      // Adding listeners for the bot
+      listeners.forEach((listener) => {
+        new Listener(listener.types, listener.callback).init(bot);
+      });
 
-// Refreshing the users
-refresh()
-  .then(() => {
-    // Adding listeners for the bot
-    listeners.forEach((listener) => {
-      new Listener(listener.types, listener.callback).init(bot);
+      // Starting the bot
+      bot.start();
+
+      // Starting the scheduler for database refresher
+      startScheduler();
     });
-
-    // Starting the bot
-    bot.start();
-
-    // Starting the scheduler for database refresher
-    startScheduler();
-  });
+});
