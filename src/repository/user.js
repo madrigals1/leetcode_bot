@@ -51,7 +51,7 @@ class User {
       Database.lastRefreshFinishedAt = moment();
 
       // Log when refresh started
-      log(DICT.DATABASE.STARTED_REFRESH, Database.lastRefreshFinishedAt.format(DATE_FORMAT));
+      log(DICT.DATABASE.IS_REFRESHED, Database.lastRefreshFinishedAt.format(DATE_FORMAT));
     } else {
       log(DICT.DATABASE.IS_ALREADY_REFRESHING);
     }
