@@ -12,11 +12,8 @@ Database.connect().then(() => {
     .then(() => {
       // Adding listeners for the bot
       listeners.forEach((listener) => {
-        new Listener(listener.types, listener.callback).init(bot);
+        new Listener(listener.actionType, listener.types, listener.callback).init(bot);
       });
-
-      // Starting the bot
-      bot.start();
 
       // Starting the scheduler for database refresher
       startScheduler();

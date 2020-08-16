@@ -1,11 +1,14 @@
 class Listener {
-  constructor(types = null, callback = null) {
+  constructor(actionType, types, callback) {
+    this.actionType = actionType;
     this.types = types;
     this.callback = callback;
   }
 
   init(bot) {
-    bot.on(this.types, this.callback);
+    this.types.forEach((type) => {
+      bot[this.actionType](type, this.callback);
+    });
   }
 }
 
