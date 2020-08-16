@@ -5,7 +5,7 @@ const DICT = require('../utils/dictionary');
 const { error } = require('../utils/helper');
 
 async function getLeetcodeDataFromUsername(username) {
-  const leetcodeLink = `${LEETCODE_URL}${username}`;
+  const leetcodeLink = `${LEETCODE_URL}/${username}`;
   return axios.get(leetcodeLink).then(
     (response) => {
       const $ = cheerio.load(response.data);

@@ -1,4 +1,3 @@
-const path = require('path');
 const { LEETCODE_URL } = require('./constants');
 
 const STATUS = {
@@ -64,7 +63,7 @@ const USER_TEXT = (user) => `<b>Name:</b> ${user.name}
 <b>Last ${user.submissions.length} Submissions:</b>
 ${user.submissions.map((submission) => `
 <b>${submission.name}</b>
-<b>Link:</b> ${path.join(LEETCODE_URL, submission.link)}
+<b>Link:</b> ${LEETCODE_URL}${submission.link}
 <b>Status:</b> ${submission.status}
 <b>Language:</b> ${submission.language}
 <b>Time:</b> ${submission.time}
