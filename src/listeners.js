@@ -2,9 +2,67 @@ const User = require('./repository/user');
 const { MASTER_PASSWORD } = require('./utils/constants');
 const DICT = require('./utils/dictionary');
 const bot = require('./objects/bot');
-const { log } = require('./utils/helper');
+const { log, isRegexMatchInArray } = require('./utils/helper');
 
-module.exports = [
+const ratingTypes = [/\/rating/g];
+const ratingCallback = async (msg, callbackQuery = false, data = null) => {
+  let text;
+
+  if (!callbackQuery) {
+    text = msg.text;
+  } else {
+    text = data;
+  }
+
+  const userNameList = text.split(' ');
+
+  // If more than 1 User was sent
+  if (userNameList.length > 2) bot.sendMessage(msg.chat.id, DICT.STATUS.ERROR.INCORRECT_INPUT);
+
+  // If 1 User was sent
+  if (userNameList.length === 2) {
+    const username = userNameList[1].toLowerCase();
+    const user = User.load(username);
+
+    let result;
+
+    if (user) {
+      result = bot.sendMessage(msg.chat.id, DICT.USER_TEXT(user), { parse_mode: 'HTML' });
+    } else {
+      result = bot.sendMessage(msg.chat.id, DICT.DATABASE.NO_USERS);
+    }
+
+    return result;
+  }
+
+  // Retrieve users from repo
+  const users = User.all();
+
+  // Create menu for users
+  const usersInlineKeyboard = users.map((user) => (
+    [
+      {
+        text: `${user.username}`,
+        callback_data: `/rating ${user.username}`,
+      },
+    ]
+  ));
+
+  const replyMarkup = JSON.stringify({
+    inline_keyboard: usersInlineKeyboard,
+  });
+
+  // Options for be.sendMessage
+  const options = {
+    parse_mode: 'Markdown',
+    reply_markup: replyMarkup,
+  };
+
+  // If 0 User was sent
+  return bot.sendMessage(msg.chat.id, DICT.RATING_TEXT(users), options);
+};
+
+const listeners = [
   {
     actionType: 'onText',
     types: [/\/start/g],
@@ -44,41 +102,16 @@ module.exports = [
     actionType: 'onText',
     types: [/\/refresh/g],
     callback: async (msg) => {
-      bot.sendMessage(msg.chat.id, DICT.DATABASE.STARTED_REFRESH).then(() => {});
+      bot.sendMessage(msg.chat.id, DICT.DATABASE.STARTED_REFRESH).then(() => {
+      });
       await User.refresh();
       return bot.sendMessage(msg.chat.id, DICT.DATABASE.IS_REFRESHED);
     },
   },
   {
     actionType: 'onText',
-    types: [/\/rating/g],
-    callback: async (msg) => {
-      const userNameList = msg.text.split(' ');
-
-      // If more than 1 User was sent
-      if (userNameList.length > 2) bot.sendMessage(msg.chat.id, DICT.STATUS.ERROR.INCORRECT_INPUT);
-
-      // If 1 User was sent
-      if (userNameList.length === 2) {
-        const username = userNameList[1].toLowerCase();
-        const user = User.load(username);
-
-        let result;
-
-        if (user) {
-          result = bot.sendMessage(msg.chat.id, DICT.USER_TEXT(user), { parse_mode: 'HTML' });
-        } else {
-          result = bot.sendMessage(msg.chat.id, DICT.DATABASE.NO_USERS);
-        }
-
-        return result;
-      }
-
-      // If 0 User was sent
-      return bot.sendMessage(
-        msg.chat.id, DICT.RATING_TEXT(User.all()), { parse_mode: 'Markdown' },
-      );
-    },
+    types: ratingTypes,
+    callback: (msg) => ratingCallback(msg),
   },
   {
     actionType: 'onText',
@@ -108,4 +141,19 @@ module.exports = [
     types: ['polling_error'],
     callback: (err) => log(err),
   },
+  {
+    actionType: 'on',
+    types: ['callback_query'],
+    callback: (query) => {
+      const { message, data } = query;
+
+      let result;
+
+      if (isRegexMatchInArray(data, ratingTypes)) result = ratingCallback(message, true, data);
+
+      return result;
+    },
+  },
 ];
+
+module.exports = listeners;

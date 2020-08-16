@@ -1,6 +1,10 @@
 const moment = require('moment');
 const DICT = require('./dictionary');
 
+function isRegexMatchInArray(value, array) {
+  return array.filter((regex) => value.match(regex)).length > 0;
+}
+
 function log(...args) {
   // eslint-disable-next-line no-console
   console.log(...args);
@@ -16,4 +20,6 @@ const refreshLog = () => {
   log(`${DICT.DATABASE.IS_REFRESHED} ${date}`);
 };
 
-module.exports = { log, error, refreshLog };
+module.exports = {
+  log, error, refreshLog, isRegexMatchInArray,
+};
