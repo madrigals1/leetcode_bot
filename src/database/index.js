@@ -30,6 +30,7 @@ class Database {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
+        useCreateIndex: true,
       })
       .then(() => {
         log(DICT.DATABASE.CONNECTION_STATUS.SUCCESSFUL);
