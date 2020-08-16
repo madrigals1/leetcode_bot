@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { DICT } = require('./constants');
+const DICT = require('./dictionary');
 
 function log(...args) {
   // eslint-disable-next-line no-console

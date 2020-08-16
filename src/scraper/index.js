@@ -1,6 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const { LEETCODE_URL, SUBMISSION_COUNT, DICT } = require('../utils/constants');
+const { LEETCODE_URL, SUBMISSION_COUNT } = require('../utils/constants');
+const DICT = require('../utils/dictionary');
 const { error } = require('../utils/helper');
 
 async function getLeetcodeDataFromUsername(username) {

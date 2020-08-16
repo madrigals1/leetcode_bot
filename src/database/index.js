@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const userSchema = require('../objects/user');
-const {
-  DB_NAME, DB_PORT, MONGO_URL, DICT,
-} = require('../utils/constants');
+const { DB_NAME, DB_PORT, MONGO_URL } = require('../utils/constants');
+const DICT = require('../utils/dictionary');
 const { log, error } = require('../utils/helper');
 
 // Main class for Database

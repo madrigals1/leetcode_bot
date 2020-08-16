@@ -1,5 +1,6 @@
 const User = require('./repository/user');
-const { MASTER_PASSWORD, DICT } = require('./utils/constants');
+const { MASTER_PASSWORD } = require('./utils/constants');
+const DICT = require('./utils/dictionary');
 
 module.exports = [
   {

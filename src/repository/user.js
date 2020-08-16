@@ -2,7 +2,8 @@ const moment = require('moment');
 const Database = require('../database');
 const { getLeetcodeDataFromUsername } = require('../scraper');
 const { log } = require('../utils/helper');
-const { DATE_FORMAT, DICT } = require('../utils/constants');
+const { DATE_FORMAT } = require('../utils/constants');
+const DICT = require('../utils/dictionary');
 
 class User {
   constructor() {
@@ -34,7 +35,12 @@ class User {
         // eslint-disable-next-line no-await-in-loop
         const userData = await getLeetcodeDataFromUsername(user.username);
 
-        if (userData) this.objects[i] = userData;
+        if (userData) {
+          this.objects[i] = userData;
+          log(DICT.MESSAGE.USERNAME_WAS_REFRESHED(user.username));
+        } else {
+          log(DICT.MESSAGE.USERNAME_WAS_NOT_REFRESHED(user.username));
+        }
       }
 
       // Sort objects after refresh
