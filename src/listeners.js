@@ -4,6 +4,29 @@ const DICT = require('./utils/dictionary');
 const bot = require('./objects/bot');
 const { log, isRegexMatchInArray } = require('./utils/helper');
 
+const createReplyMarkup = (users) => {
+  // Create menu for users
+  const usersInlineKeyboard = [];
+
+  for (let i = 0; i < Math.ceil(users.length / 3); i++) {
+    const row = [];
+    for (let j = 0; j < 3; j++) {
+      const index = (i * 3) + j;
+      if (index < users.length) {
+        const user = users[index];
+        row.push({
+          text: `${user.username}`,
+          callback_data: `/rating ${user.username}`,
+        });
+      }
+    }
+    usersInlineKeyboard.push(row);
+  }
+
+  return JSON.stringify({
+    inline_keyboard: usersInlineKeyboard,
+  });
+};
 const ratingTypes = [/\/rating/g];
 const ratingCallback = async (msg, callbackQuery = false, data = null) => {
   let text;
@@ -19,6 +42,15 @@ const ratingCallback = async (msg, callbackQuery = false, data = null) => {
   // If more than 1 User was sent
   if (userNameList.length > 2) bot.sendMessage(msg.chat.id, DICT.STATUS.ERROR.INCORRECT_INPUT);
 
+  // Load users from repo
+  const users = User.all();
+
+  // Options for be.sendMessage
+  const options = {
+    parse_mode: 'HTML',
+    reply_markup: createReplyMarkup(users),
+  };
+
   // If 1 User was sent
   if (userNameList.length === 2) {
     const username = userNameList[1].toLowerCase();
@@ -27,7 +59,7 @@ const ratingCallback = async (msg, callbackQuery = false, data = null) => {
     let result;
 
     if (user) {
-      result = bot.sendMessage(msg.chat.id, DICT.USER_TEXT(user), { parse_mode: 'HTML' });
+      result = bot.sendMessage(msg.chat.id, DICT.USER_TEXT(user), options);
     } else {
       result = bot.sendMessage(msg.chat.id, DICT.DATABASE.NO_USERS);
     }
@@ -35,31 +67,8 @@ const ratingCallback = async (msg, callbackQuery = false, data = null) => {
     return result;
   }
 
-  // Retrieve users from repo
-  const users = User.all();
-
-  // Create menu for users
-  const usersInlineKeyboard = users.map((user) => (
-    [
-      {
-        text: `${user.username}`,
-        callback_data: `/rating ${user.username}`,
-      },
-    ]
-  ));
-
-  const replyMarkup = JSON.stringify({
-    inline_keyboard: usersInlineKeyboard,
-  });
-
-  // Options for be.sendMessage
-  const options = {
-    parse_mode: 'Markdown',
-    reply_markup: replyMarkup,
-  };
-
   // If 0 User was sent
-  return bot.sendMessage(msg.chat.id, DICT.RATING_TEXT(users), options);
+  return bot.sendMessage(msg.chat.id, DICT.RATING_TEXT(User.all()), options);
 };
 
 const listeners = [
@@ -149,7 +158,9 @@ const listeners = [
 
       let result;
 
-      if (isRegexMatchInArray(data, ratingTypes)) result = ratingCallback(message, true, data);
+      if (isRegexMatchInArray(data, ratingTypes)) {
+        result = ratingCallback(message, true, data);
+      }
 
       return result;
     },

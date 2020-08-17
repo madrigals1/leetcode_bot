@@ -71,7 +71,7 @@ ${user.submissions.map((submission) => `
 
 const RATING_TEXT = (users) => (
   users
-    ? users.map((user, index) => `${index + 1}. *${user.username}* ${user.solved}\n`).join('')
+    ? users.map((user, index) => `${index + 1}. <b>${user.username}</b> ${user.solved}\n`).join('')
     : DATABASE.NO_USERS
 );
 
