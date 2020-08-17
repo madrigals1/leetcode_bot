@@ -15,6 +15,15 @@ const {
 
 const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
 
+const STATUS_MAP = {
+  Accepted: '💚 Accepted',
+  'Runtime Error': '🤣 Runtime Error',
+  'Wrong Answer': '😢 Wrong Answer',
+  'Time Limit Exceeded': '🤬 Time Limit Exceeded',
+  'Memory Limit Exceeded': '🤔 Time Limit Exceeded',
+  'Output Limit Exceeded': '😱 Output Limit Exceeded',
+};
+
 module.exports = {
   TELEGRAM_TOKEN,
   MASTER_PASSWORD,
@@ -24,4 +33,5 @@ module.exports = {
   LEETCODE_URL,
   SUBMISSION_COUNT,
   DATE_FORMAT,
+  STATUS_MAP,
 };

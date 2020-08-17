@@ -1,6 +1,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const { LEETCODE_URL, SUBMISSION_COUNT } = require('../utils/constants');
+const { LEETCODE_URL, SUBMISSION_COUNT, STATUS_MAP } = require('../utils/constants');
 const DICT = require('../utils/dictionary');
 const { error } = require('../utils/helper');
 
@@ -29,9 +29,10 @@ async function getLeetcodeDataFromUsername(username) {
       for (let i = 0; i < Math.min(submissionsDOM.length, SUBMISSION_COUNT); i++) {
         const sdom = submissionsDOM.eq(i);
         const spans = sdom.find('span');
+        const status = spans.eq(0).text().trim();
         submissions.push({
           link: sdom.attr('href'),
-          status: spans.eq(0).text().trim(),
+          status: STATUS_MAP[status],
           language: spans.eq(1).text().trim(),
           name: sdom.find('b').text().trim(),
           time: spans.eq(2).text().trim(),
