@@ -75,6 +75,8 @@ const RATING_TEXT = (users) => (
     : DATABASE.NO_USERS
 );
 
+const TYPING = 'typing';
+
 const DICT = {
   STATUS,
   REFRESH,
@@ -83,6 +85,7 @@ const DICT = {
   WELCOME_TEXT,
   USER_TEXT,
   RATING_TEXT,
+  TYPING,
 };
 
 module.exports = DICT;
