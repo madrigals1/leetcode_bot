@@ -1,7 +1,7 @@
 const moment = require('moment');
 const Database = require('../database');
 const { getLeetcodeDataFromUsername } = require('../scraper');
-const { log } = require('../utils/helper');
+const { log, delay } = require('../utils/helper');
 const { DATE_FORMAT } = require('../utils/constants');
 const DICT = require('../utils/dictionary');
 
@@ -28,19 +28,29 @@ class User {
       // Get all users from database
       this.objects = await Database.findAllUsers();
 
+      // Index of User, that is being currently updated
+      let index = 0;
+
       // Modify users with data from LeetCode
-      for (let i = 0; i < this.objects.length; i++) {
-        const user = this.objects[i];
+      while (index < this.objects.length) {
+        const user = this.objects[index];
 
         // eslint-disable-next-line no-await-in-loop
         const userData = await getLeetcodeDataFromUsername(user.username);
 
         if (userData) {
-          this.objects[i] = userData;
+          this.objects[index] = userData;
           log(DICT.MESSAGE.USERNAME_WAS_REFRESHED(user.username));
+
+          // If successfully loaded, go to next user
+          index += 1;
         } else {
           log(DICT.MESSAGE.USERNAME_WAS_NOT_REFRESHED(user.username));
         }
+
+        // Wait 4 seconds before loading next User, LeetCode only allows 15 requests per minute
+        // eslint-disable-next-line no-await-in-loop
+        await delay(4000);
       }
 
       // Sort objects after refresh

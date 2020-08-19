@@ -20,6 +20,8 @@ const refreshLog = () => {
   log(`${DICT.DATABASE.IS_REFRESHED} ${date}`);
 };
 
+const delay = (msTime) => new Promise((res) => setTimeout(res, msTime));
+
 module.exports = {
-  log, error, refreshLog, isRegexMatchInArray,
+  log, error, refreshLog, isRegexMatchInArray, delay,
 };
