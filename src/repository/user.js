@@ -2,7 +2,7 @@ const moment = require('moment');
 const Database = require('../database');
 const { getLeetcodeDataFromUsername } = require('../scraper');
 const { log, delay } = require('../utils/helper');
-const { DATE_FORMAT } = require('../utils/constants');
+const { DATE_FORMAT, DELAY_TIME_MS } = require('../utils/constants');
 const DICT = require('../utils/dictionary');
 
 class User {
@@ -50,7 +50,7 @@ class User {
 
         // Wait 4 seconds before loading next User, LeetCode only allows 15 requests per minute
         // eslint-disable-next-line no-await-in-loop
-        await delay(4000);
+        await delay(DELAY_TIME_MS);
       }
 
       // Sort objects after refresh
@@ -71,8 +71,12 @@ class User {
   async sort() {
     this.objects.sort(
       (user1, user2) => {
-        const solved1 = user1.solved ? parseInt(user1.solved, 10) : -Math.Infinity;
-        const solved2 = user2.solved ? parseInt(user2.solved, 10) : -Math.Infinity;
+        const solved1 = user1.solved !== undefined
+          ? parseInt(user1.solved, 10)
+          : -Math.Infinity;
+        const solved2 = user2.solved !== undefined
+          ? parseInt(user2.solved, 10)
+          : -Math.Infinity;
         return solved2 - solved1;
       },
     );

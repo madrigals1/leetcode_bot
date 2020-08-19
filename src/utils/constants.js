@@ -11,6 +11,7 @@ const {
   LEETCODE_URL,
   MONGO_URL,
   SUBMISSION_COUNT,
+  DELAY_TIME_MS,
 } = process.env;
 
 const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
@@ -34,4 +35,5 @@ module.exports = {
   SUBMISSION_COUNT,
   DATE_FORMAT,
   STATUS_MAP,
+  DELAY_TIME_MS,
 };
