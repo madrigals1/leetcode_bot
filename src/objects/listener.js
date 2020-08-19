@@ -1,4 +1,4 @@
-const DICT = require('../utils/dictionary');
+const { STATUS } = require('../utils/constants');
 
 class Listener {
   constructor(actionType, types, callback) {
@@ -12,7 +12,7 @@ class Listener {
       bot[this.actionType](type, (msg) => {
         // If action is send from User, send typing indicator
         if (msg.chat) {
-          bot.sendChatAction(msg.chat.id, DICT.TYPING);
+          bot.sendChatAction(msg.chat.id, STATUS.TYPING);
         }
         this.callback(msg);
       });

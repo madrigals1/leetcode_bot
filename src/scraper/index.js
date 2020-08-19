@@ -1,7 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { LEETCODE_URL, SUBMISSION_COUNT, STATUS_MAP } = require('../utils/constants');
-const DICT = require('../utils/dictionary');
+const { SERVER_MESSAGES } = require('../utils/dictionary');
 const { error } = require('../utils/helper');
 
 async function getLeetcodeDataFromUsername(username) {
@@ -49,7 +49,7 @@ async function getLeetcodeDataFromUsername(username) {
       };
     },
     (err) => {
-      error(`${DICT.STATUS.ERROR.ON_THE_SERVER} ${err}`);
+      error(SERVER_MESSAGES.ERROR_ON_THE_SERVER(err));
       return null;
     },
   );

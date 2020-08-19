@@ -1,6 +1,6 @@
 const User = require('./repository/user');
 const { MASTER_PASSWORD } = require('./utils/constants');
-const DICT = require('./utils/dictionary');
+const { BOT_MESSAGES } = require('./utils/dictionary');
 const bot = require('./objects/bot');
 const { log, isRegexMatchInArray } = require('./utils/helper');
 
@@ -40,7 +40,7 @@ const ratingCallback = async (msg, callbackQuery = false, data = null) => {
   const userNameList = text.split(' ');
 
   // If more than 1 User was sent
-  if (userNameList.length > 2) bot.sendMessage(msg.chat.id, DICT.STATUS.ERROR.INCORRECT_INPUT);
+  if (userNameList.length > 2) bot.sendMessage(msg.chat.id, BOT_MESSAGES.INCORRECT_INPUT);
 
   // Load users from repo
   const users = User.all();
@@ -59,16 +59,18 @@ const ratingCallback = async (msg, callbackQuery = false, data = null) => {
     let result;
 
     if (user) {
-      result = bot.sendMessage(msg.chat.id, DICT.USER_TEXT(user), options);
+      result = bot.sendMessage(msg.chat.id, BOT_MESSAGES.USER_TEXT(user), options);
     } else {
-      result = bot.sendMessage(msg.chat.id, DICT.DATABASE.NO_USERS);
+      result = bot.sendMessage(
+        msg.chat.id, BOT_MESSAGES.USERNAME_NOT_FOUND(username), { parse_mode: 'HTML' },
+      );
     }
 
     return result;
   }
 
   // If 0 User was sent
-  return bot.sendMessage(msg.chat.id, DICT.RATING_TEXT(User.all()), options);
+  return bot.sendMessage(msg.chat.id, BOT_MESSAGES.RATING_TEXT(User.all()), options);
 };
 
 const listeners = [
@@ -76,7 +78,7 @@ const listeners = [
     actionType: 'onText',
     types: [/\/start/g],
     callback: (msg) => bot.sendMessage(
-      msg.chat.id, DICT.WELCOME_TEXT(), { parse_mode: 'HTML' },
+      msg.chat.id, BOT_MESSAGES.WELCOME_TEXT(), { parse_mode: 'HTML' },
     ),
   },
   {
@@ -88,34 +90,38 @@ const listeners = [
 
       // If no username is set, return exception
       if (userNameList.length === 1) {
-        return bot.sendMessage(msg.chat.id, DICT.MESSAGE.AT_LEAST_1_USERNAME);
+        return bot.sendMessage(
+          msg.chat.id,
+          BOT_MESSAGES.AT_LEAST_1_USERNAME,
+          { parse_mode: 'HTML' },
+        );
       }
 
       // Removing /add
       userNameList.shift();
 
-      const detailList = await Promise.all(userNameList.map(async (username) => {
-        const data = await User.add(username);
-        return `- <b>${username}</b> - ${data.detail}\n`;
+      const resultList = await Promise.all(userNameList.map(async (username) => {
+        const result = await User.add(username);
+        log(result.detail);
+        return result.detail;
       }));
 
       // Add users and map
-      const text = detailList.join('');
+      const userDetails = resultList.join('');
 
       return bot.sendMessage(
-        msg.chat.id, `${DICT.MESSAGE.USER_LIST}${text}`, { parse_mode: 'HTML' },
+        msg.chat.id, BOT_MESSAGES.USER_LIST(userDetails), { parse_mode: 'HTML' },
       );
     },
   },
   {
     actionType: 'onText',
     types: [/\/refresh/g],
-    callback: async (msg) => {
-      bot.sendMessage(msg.chat.id, DICT.DATABASE.STARTED_REFRESH).then(() => {
-      });
-      await User.refresh();
-      return bot.sendMessage(msg.chat.id, DICT.DATABASE.IS_REFRESHED);
-    },
+    callback: async (msg) => bot.sendMessage(msg.chat.id, BOT_MESSAGES.STARTED_REFRESH)
+      .then(async () => {
+        await User.refresh();
+        return bot.sendMessage(msg.chat.id, BOT_MESSAGES.IS_REFRESHED);
+      }),
   },
   {
     actionType: 'onText',
@@ -131,18 +137,27 @@ const listeners = [
       // Correct input for removing should be /rm <username> <master_password>
       // If length of the input is not 3, throw error
       if (userNameList.length !== 3) {
-        return bot.sendMessage(msg.chat.id, DICT.STATUS.ERROR.INCORRECT_INPUT);
+        return bot.sendMessage(msg.chat.id, BOT_MESSAGES.INCORRECT_INPUT);
       }
 
+      // Get username and password from message
       const username = userNameList[1].toLowerCase();
       const password = userNameList[2];
 
+      // If password is incorrect, send appropriate message
       if (password !== MASTER_PASSWORD) {
-        return bot.sendMessage(msg.chat.id, DICT.STATUS.ERROR.PASSWORD_IS_INCORRECT);
+        return bot.sendMessage(msg.chat.id, BOT_MESSAGES.PASSWORD_IS_INCORRECT);
       }
 
-      const result = await User.remove(username);
-      return bot.sendMessage(msg.chat.id, `- ${username} - ${result.detail}`);
+      // Send message, that user will be deleted
+      return bot.sendMessage(
+        msg.chat.id, BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username), { parse_mode: 'HTML' },
+      ).then(async () => {
+        // Remove the user and send the result (success or failure)
+        const result = await User.remove(username);
+        log(result.detail);
+        return bot.sendMessage(msg.chat.id, result.detail, { parse_mode: 'HTML' });
+      });
     },
   },
   {

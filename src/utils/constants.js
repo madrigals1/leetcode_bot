@@ -25,6 +25,20 @@ const STATUS_MAP = {
   'Output Limit Exceeded': '😱 Output Limit Exceeded',
 };
 
+const EMOJI = {
+  ERROR: '❌',
+  SUCCESS: '✔',
+  WAITING: '⏳',
+  WARNING: '⚠',
+  COOL: '😎',
+};
+
+const STATUS = {
+  ERROR: 'error',
+  SUCCESS: 'success',
+  TYPING: 'typing',
+};
+
 module.exports = {
   TELEGRAM_TOKEN,
   MASTER_PASSWORD,
@@ -36,4 +50,6 @@ module.exports = {
   DATE_FORMAT,
   STATUS_MAP,
   DELAY_TIME_MS,
+  EMOJI,
+  STATUS,
 };

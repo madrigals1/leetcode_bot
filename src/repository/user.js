@@ -2,8 +2,8 @@ const moment = require('moment');
 const Database = require('../database');
 const { getLeetcodeDataFromUsername } = require('../scraper');
 const { log, delay } = require('../utils/helper');
-const { DATE_FORMAT, DELAY_TIME_MS } = require('../utils/constants');
-const DICT = require('../utils/dictionary');
+const { DATE_FORMAT, DELAY_TIME_MS, STATUS } = require('../utils/constants');
+const { BOT_MESSAGES, SERVER_MESSAGES } = require('../utils/dictionary');
 
 class User {
   constructor() {
@@ -23,7 +23,9 @@ class User {
       Database.lastRefreshStartedAt = moment();
 
       // Log when refresh started
-      log(DICT.DATABASE.STARTED_REFRESH, Database.lastRefreshStartedAt.format(DATE_FORMAT));
+      log(SERVER_MESSAGES.DATABASE_STARTED_REFRESH(
+        Database.lastRefreshStartedAt.format(DATE_FORMAT),
+      ));
 
       // Get all users from database
       this.objects = await Database.findAllUsers();
@@ -40,12 +42,12 @@ class User {
 
         if (userData) {
           this.objects[index] = userData;
-          log(DICT.MESSAGE.USERNAME_WAS_REFRESHED(user.username));
+          log(SERVER_MESSAGES.USERNAME_WAS_REFRESHED(user.username));
 
           // If successfully loaded, go to next user
           index += 1;
         } else {
-          log(DICT.MESSAGE.USERNAME_WAS_NOT_REFRESHED(user.username));
+          log(SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(user.username));
         }
 
         // Wait 4 seconds before loading next User, LeetCode only allows 15 requests per minute
@@ -61,9 +63,11 @@ class User {
       Database.lastRefreshFinishedAt = moment();
 
       // Log when refresh started
-      log(DICT.DATABASE.IS_REFRESHED, Database.lastRefreshFinishedAt.format(DATE_FORMAT));
+      log(SERVER_MESSAGES.IS_REFRESHED(
+        Database.lastRefreshFinishedAt.format(DATE_FORMAT),
+      ));
     } else {
-      log(DICT.DATABASE.IS_ALREADY_REFRESHING);
+      log(SERVER_MESSAGES.IS_ALREADY_REFRESHING);
     }
   }
 
@@ -99,23 +103,26 @@ class User {
         await this.sort();
 
         status = {
-          status: DICT.STATUS.SUCCESS.DEFAULT,
-          detail: DICT.STATUS.SUCCESS.ADDED_USER,
+          status: STATUS.SUCCESS,
+          detail: BOT_MESSAGES.USERNAME_WAS_ADDED(username),
         };
       } else {
         // If user does not exist in LeetCode, remove User
         await Database.removeUser(username);
 
         status = {
-          status: DICT.STATUS.ERROR.DEFAULT,
-          detail: DICT.STATUS.ERROR.USERNAME_NOT_FOUND_ON_LEETCODE,
+          status: STATUS.ERROR,
+          detail: BOT_MESSAGES.USERNAME_NOT_FOUND_ON_LEETCODE(username),
         };
       }
 
       return status;
     }
 
-    return { status: DICT.STATUS.ERROR.DEFAULT, detail: DICT.STATUS.ERROR.USERNAME_ALREADY_EXISTS };
+    return {
+      status: STATUS.ERROR,
+      detail: BOT_MESSAGES.USERNAME_ALREADY_EXISTS(username),
+    };
   }
 
   // Remove User by Username
@@ -124,15 +131,18 @@ class User {
 
     if (deleted) {
       // Set objects array to tempObjects
-      this.objects = this.objects.filter((user) => user.username !== username);
+      this.objects = this.objects.filter((user) => user.username.toLowerCase() !== username);
 
       // Sort objects after removing
       await this.sort();
 
-      return { status: DICT.STATUS.SUCCESS.DEFAULT, detail: DICT.STATUS.SUCCESS.DELETED_USER };
+      return {
+        status: STATUS.SUCCESS,
+        detail: BOT_MESSAGES.USERNAME_WAS_DELETED(username),
+      };
     }
 
-    return { status: DICT.STATUS.ERROR.DEFAULT, detail: DICT.STATUS.ERROR.USERNAME_NOT_FOUND };
+    return { status: STATUS.ERROR, detail: BOT_MESSAGES.USERNAME_NOT_FOUND(username) };
   }
 
   // Load User by Username

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const userSchema = require('../objects/user');
 const { DB_NAME, DB_PORT, MONGO_URL } = require('../utils/constants');
-const DICT = require('../utils/dictionary');
+const { SERVER_MESSAGES } = require('../utils/dictionary');
 const { log, error } = require('../utils/helper');
 
 // Main class for Database
@@ -33,10 +33,10 @@ class Database {
         useCreateIndex: true,
       })
       .then(() => {
-        log(DICT.DATABASE.CONNECTION_STATUS.SUCCESSFUL);
+        log(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
       })
       .catch((err) => {
-        error(DICT.DATABASE.CONNECTION_STATUS.ERROR, err);
+        error(SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
       });
   }
 
