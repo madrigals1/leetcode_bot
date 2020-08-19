@@ -47,7 +47,7 @@ const BOT_MESSAGES = {
   NO_USERS,
   USERNAME_NOT_FOUND: (username) => `${EMOJI.ERROR} Username <b>${username}</b> was not found in database`,
   USERS_ARE_REFRESHED: `${EMOJI.SUCCESS} Users are refreshed`,
-  USERNAME_NOT_FOUND_ON_LEETCODE: (username) => `${EMOJI.ERROR} User <b>${username}</b> is not found on LeetCode`,
+  USERNAME_NOT_FOUND_ON_LEETCODE: (username) => `${EMOJI.ERROR} User <b>${username}</b> is not found on <b>LeetCode</b>`,
   USERNAME_ALREADY_EXISTS: (username) => `${EMOJI.ERROR} User <b>${username}</b> already exists in database\n`,
   // USERNAME_WILL_BE_ADDED: (username) => `${EMOJI.WAITING} User <b>${username}</b> will be added`,
   USERNAME_WAS_ADDED: (username) => `${EMOJI.SUCCESS} <b>${username}</b> was added\n`,

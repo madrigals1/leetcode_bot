@@ -26,10 +26,10 @@ const STATUS_MAP = {
 };
 
 const EMOJI = {
-  ERROR: '❌',
-  SUCCESS: '✔',
+  ERROR: '❗',
+  SUCCESS: '✅',
   WAITING: '⏳',
-  WARNING: '⚠',
+  WARNING: '⚠️',
   COOL: '😎',
 };
 
