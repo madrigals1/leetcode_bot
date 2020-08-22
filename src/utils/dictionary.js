@@ -25,6 +25,8 @@ const SERVER_MESSAGES = {
     SUCCESSFUL: 'Database connection successful!',
     ERROR: (error) => `Database connection error: ${error}`,
   },
+
+  MOST_RECENT_SUBMISSIONS: 'Most recent submissions',
 };
 
 const NO_USERS = `${EMOJI.ERROR} No users found in database`;

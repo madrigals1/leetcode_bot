@@ -23,7 +23,12 @@ async function getLeetcodeDataFromUsername(username) {
         .text()
         .split('/');
 
-      const submissionsDOM = row.last().find('.list-group-item');
+      const lastPanel = row.last();
+      const lastPanelHeading = lastPanel.find('.panel-title').text().trim();
+
+      // If the panel is not Most Recent Submissions, ignore
+      const submissionsDOM = lastPanelHeading === SERVER_MESSAGES.MOST_RECENT_SUBMISSIONS
+        ? row.last().find('.list-group-item') : [];
       const submissions = [];
 
       for (let i = 0; i < Math.min(submissionsDOM.length, SUBMISSION_COUNT); i++) {
