@@ -4,11 +4,6 @@ const SERVER_MESSAGES = {
   // ERROR
   ERROR_ON_THE_SERVER: (error) => `Error on the server: ${error}`,
 
-  // USER
-  // USERNAME_WAS_ADDED: (username) => `${username} was added to Database`,
-  // USERNAME_WAS_NOT_ADDED: (username) => `${username} was not added to Database`,
-  // USERNAME_ALREADY_EXISTS: (username) => `${username} already exists in Database`,
-
   // REFRESHING
   REFRESH_IN_PROCESS: 'Refreshing',
   REFRESH_SUCCESS: 'Successfully refreshed',
@@ -32,9 +27,7 @@ const SERVER_MESSAGES = {
 const NO_USERS = `${EMOJI.ERROR} No users found in database`;
 
 const BOT_MESSAGES = {
-
   // MISC
-
   INCORRECT_INPUT: `${EMOJI.ERROR} Incorrect input`,
   PASSWORD_IS_INCORRECT: `${EMOJI.ERROR} Password is incorrect`,
 
@@ -53,15 +46,9 @@ const BOT_MESSAGES = {
   USERS_ARE_REFRESHED: `${EMOJI.SUCCESS} Users are refreshed`,
   USERNAME_NOT_FOUND_ON_LEETCODE: (username) => `${EMOJI.ERROR} User *${username}* is not found on *LeetCode*`,
   USERNAME_ALREADY_EXISTS: (username) => `${EMOJI.ERROR} User *${username}* already exists in database\n`,
-  // USERNAME_WILL_BE_ADDED: (username) => `${EMOJI.WAITING} User *${username}* will be added`,
   USERNAME_WAS_ADDED: (username) => `${EMOJI.SUCCESS} *${username}* was added\n`,
-  USERNAME_WAS_NOT_ADDED: (username) => `${EMOJI.ERROR} *${username}* was not added\n`,
   USERNAME_WILL_BE_DELETED: (username) => `${EMOJI.WAITING} User *${username}* will be deleted`,
   USERNAME_WAS_DELETED: (username) => `${EMOJI.SUCCESS} User *${username}* was deleted`,
-  // USERNAME_WAS_REFRESHED: (username) => `${EMOJI.SUCCESS} *${username}* was refreshed`,
-  // USERNAME_WAS_NOT_REFRESHED: (username) => (
-  //   `${EMOJI.ERROR} *${username}* was not refreshed`
-  // ),
 
   // BIG TEXTS
   WELCOME_TEXT: (prefix) => `Welcome! This is Leetcode Rating bot Elite ${EMOJI.COOL} Boys
