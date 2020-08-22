@@ -12,8 +12,10 @@ const error = (...args) => {
   console.error(...args);
 };
 
+const replaceAll = (text, regBefore, regAfter) => text.split(regBefore).join(regAfter);
+
 const delay = (msTime) => new Promise((res) => setTimeout(res, msTime));
 
 module.exports = {
-  log, error, isRegexMatchInArray, delay,
+  log, error, isRegexMatchInArray, delay, replaceAll,
 };

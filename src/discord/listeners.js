@@ -1,14 +1,14 @@
 const User = require('../repository/user');
 const { MASTER_PASSWORD, DISCORD } = require('../utils/constants');
 const { BOT_MESSAGES } = require('../utils/dictionary');
-const { log } = require('../utils/helper');
+const { log, replaceAll } = require('../utils/helper');
 
 const sendFormattedMessage = (channel, message) => {
   // BOLD
-  let formattedMessage = message.split('*').join('**');
+  let formattedMessage = replaceAll(message, '*', '**');
 
   // ITALIC
-  formattedMessage = formattedMessage.split('_').join('*');
+  formattedMessage = replaceAll(formattedMessage, '_', '*');
 
   channel.send(formattedMessage);
 };
