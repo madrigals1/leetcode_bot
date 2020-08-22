@@ -30,6 +30,7 @@ const STATUS_MAP = {
 
 const EMOJI = {
   ERROR: '❗',
+  CROSS_MARK: '❌',
   SUCCESS: '✅',
   WAITING: '⏳',
   WARNING: '⚠️',

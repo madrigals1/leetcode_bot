@@ -1,5 +1,5 @@
 const User = require('../repository/user');
-const { MASTER_PASSWORD, TELEGRAM } = require('../utils/constants');
+const { MASTER_PASSWORD, TELEGRAM, EMOJI } = require('../utils/constants');
 const { BOT_MESSAGES } = require('../utils/dictionary');
 const bot = require('./bot');
 const { log, isRegexMatchInArray } = require('../utils/helper');
@@ -22,6 +22,12 @@ const createReplyMarkup = (users) => {
     }
     usersInlineKeyboard.push(row);
   }
+
+  // Button for closing Keyboard Menu
+  usersInlineKeyboard.push([{
+    text: `${EMOJI.CROSS_MARK} Close`,
+    callback_data: 'placeholder',
+  }]);
 
   return JSON.stringify({
     inline_keyboard: usersInlineKeyboard,
