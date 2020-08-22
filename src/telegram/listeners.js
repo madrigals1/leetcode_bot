@@ -47,7 +47,7 @@ const ratingCallback = async (msg, callbackQuery = false, data = null) => {
 
   // Options for be.sendMessage
   const options = {
-    parse_mode: 'Markdown',
+    parse_mode: 'HTML',
     reply_markup: createReplyMarkup(users),
   };
 
@@ -62,7 +62,7 @@ const ratingCallback = async (msg, callbackQuery = false, data = null) => {
       result = bot.sendMessage(msg.chat.id, BOT_MESSAGES.USER_TEXT(user), options);
     } else {
       result = bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.USERNAME_NOT_FOUND(username), { parse_mode: 'Markdown' },
+        msg.chat.id, BOT_MESSAGES.USERNAME_NOT_FOUND(username), { parse_mode: 'HTML' },
       );
     }
 
@@ -78,7 +78,7 @@ const listeners = [
     actionType: 'onText',
     types: [/\/start/g],
     callback: (msg) => bot.sendMessage(
-      msg.chat.id, BOT_MESSAGES.WELCOME_TEXT(TELEGRAM.PREFIX), { parse_mode: 'Markdown' },
+      msg.chat.id, BOT_MESSAGES.WELCOME_TEXT(TELEGRAM.PREFIX), { parse_mode: 'HTML' },
     ),
   },
   {
@@ -93,7 +93,7 @@ const listeners = [
         return bot.sendMessage(
           msg.chat.id,
           BOT_MESSAGES.AT_LEAST_1_USERNAME(TELEGRAM.PREFIX),
-          { parse_mode: 'Markdown' },
+          { parse_mode: 'HTML' },
         );
       }
 
@@ -110,7 +110,7 @@ const listeners = [
       const userDetails = resultList.join('');
 
       return bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.USER_LIST(userDetails), { parse_mode: 'Markdown' },
+        msg.chat.id, BOT_MESSAGES.USER_LIST(userDetails), { parse_mode: 'HTML' },
       );
     },
   },
@@ -151,12 +151,12 @@ const listeners = [
 
       // Send message, that user will be deleted
       return bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username), { parse_mode: 'Markdown' },
+        msg.chat.id, BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username), { parse_mode: 'HTML' },
       ).then(async () => {
         // Remove the user and send the result (success or failure)
         const result = await User.remove(username);
         log(result.detail);
-        return bot.sendMessage(msg.chat.id, result.detail, { parse_mode: 'Markdown' });
+        return bot.sendMessage(msg.chat.id, result.detail, { parse_mode: 'HTML' });
       });
     },
   },

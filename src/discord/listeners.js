@@ -4,13 +4,15 @@ const { BOT_MESSAGES } = require('../utils/dictionary');
 const { log, replaceAll } = require('../utils/helper');
 
 const sendFormattedMessage = (channel, message) => {
-  // BOLD
-  let formattedMessage = replaceAll(message, '*', '**');
+  // Change bold, italic and code from HTML to Markdown
+  let formatted = replaceAll(message, '<b>', '**');
+  formatted = replaceAll(formatted, '</b>', '**');
+  formatted = replaceAll(formatted, '<i>', '*');
+  formatted = replaceAll(formatted, '</i>', '*');
+  formatted = replaceAll(formatted, '<code>', '`');
+  formatted = replaceAll(formatted, '</code>', '`');
 
-  // ITALIC
-  formattedMessage = replaceAll(formattedMessage, '_', '*');
-
-  channel.send(formattedMessage);
+  channel.send(formatted);
 };
 
 const listeners = [
