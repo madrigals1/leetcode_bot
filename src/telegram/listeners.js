@@ -125,6 +125,30 @@ const listeners = [
   },
   {
     actionType: 'onText',
+    types: [/\/avatar/g],
+    callback: async (msg) => {
+      const userNameList = msg.text.split(' ');
+      userNameList.shift();
+
+      // If more than 1 User on no User was sent
+      if (userNameList.length !== 1) {
+        return bot.sendMessage(msg.chat.id, BOT_MESSAGES.INCORRECT_INPUT);
+      }
+
+      const username = userNameList[0].toLowerCase();
+      const user = User.load(username);
+
+      if (user) {
+        return bot.sendPhoto(msg.chat.id, user.avatar, { caption: user.link });
+      }
+
+      return bot.sendMessage(
+        msg.chat.id, BOT_MESSAGES.USERNAME_NOT_FOUND(username), { parse_mode: 'HTML' },
+      );
+    },
+  },
+  {
+    actionType: 'onText',
     types: ratingTypes,
     callback: (msg) => ratingCallback(msg),
   },

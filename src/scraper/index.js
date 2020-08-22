@@ -15,6 +15,12 @@ async function getLeetcodeDataFromUsername(username) {
         .first()
         .find('.panel-default');
 
+      const avatar = row
+        .eq(0)
+        .find('.panel-body')
+        .find('img')
+        .attr('src');
+
       const [solved, all] = row
         .eq(2)
         .find('ul > li')
@@ -50,6 +56,7 @@ async function getLeetcodeDataFromUsername(username) {
         username: body.find('.username').attr('title'),
         solved: parseInt(solved.trim(), 10),
         all: parseInt(all.trim(), 10),
+        avatar,
         submissions,
       };
     },
