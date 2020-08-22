@@ -195,6 +195,11 @@ const listeners = [
     callback: (query) => {
       const { message, data } = query;
 
+      bot.answerCallbackQuery(query.id)
+        .then(() => {
+          bot.deleteMessage(message.chat.id, message.message_id);
+        });
+
       let result;
 
       if (isRegexMatchInArray(data, ratingTypes)) {
