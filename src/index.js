@@ -1,19 +1,20 @@
-const listeners = require('./listeners');
-const bot = require('./objects/bot');
+const telegram = require('./telegram');
+const discord = require('./discord');
 const startScheduler = require('./utils/scheduler');
-const Listener = require('./objects/listener');
 const Database = require('./database');
 const User = require('./repository/user');
+const { TELEGRAM, DISCORD } = require('./utils/constants');
 
 // Connecting to Database
 Database.connect().then(() => {
   // Refreshing the users
   User.refresh()
     .then(() => {
-      // Adding listeners for the bot
-      listeners.forEach((listener) => {
-        new Listener(listener.actionType, listener.types, listener.callback).init(bot);
-      });
+      // Run Telegram BOT
+      if (TELEGRAM.ENABLE) telegram.run();
+
+      // Run Discord BOT
+      if (DISCORD.ENABLE) discord.run();
 
       // Starting the scheduler for database refresher
       startScheduler();

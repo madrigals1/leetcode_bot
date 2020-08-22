@@ -5,6 +5,9 @@ dotenv.config();
 // ENV Variables
 const {
   TELEGRAM_TOKEN,
+  DISCORD_TOKEN,
+  TELEGRAM_ENABLE,
+  DISCORD_ENABLE,
   MASTER_PASSWORD,
   DB_NAME,
   DB_PORT,
@@ -39,8 +42,22 @@ const STATUS = {
   TYPING: 'typing',
 };
 
+const TELEGRAM = {
+  ENABLE: TELEGRAM_ENABLE,
+  TOKEN: TELEGRAM_TOKEN,
+  PREFIX: '/',
+};
+
+const DISCORD = {
+  ENABLE: DISCORD_ENABLE,
+  TOKEN: DISCORD_TOKEN,
+  PREFIX: '!',
+};
+
 module.exports = {
   TELEGRAM_TOKEN,
+  DISCORD,
+  TELEGRAM,
   MASTER_PASSWORD,
   MONGO_URL,
   DB_NAME,

@@ -1,8 +1,16 @@
 const mongoose = require('mongoose');
-const userSchema = require('../objects/user');
 const { DB_NAME, DB_PORT, MONGO_URL } = require('../utils/constants');
 const { SERVER_MESSAGES } = require('../utils/dictionary');
 const { log, error } = require('../utils/helper');
+
+// Schemas
+const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+});
 
 // Main class for Database
 class Database {

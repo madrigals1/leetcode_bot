@@ -1,8 +1,8 @@
-const User = require('./repository/user');
-const { MASTER_PASSWORD } = require('./utils/constants');
-const { BOT_MESSAGES } = require('./utils/dictionary');
-const bot = require('./objects/bot');
-const { log, isRegexMatchInArray } = require('./utils/helper');
+const User = require('../repository/user');
+const { MASTER_PASSWORD, TELEGRAM } = require('../utils/constants');
+const { BOT_MESSAGES } = require('../utils/dictionary');
+const bot = require('./bot');
+const { log, isRegexMatchInArray } = require('../utils/helper');
 
 const createReplyMarkup = (users) => {
   // Create menu for users
@@ -47,7 +47,7 @@ const ratingCallback = async (msg, callbackQuery = false, data = null) => {
 
   // Options for be.sendMessage
   const options = {
-    parse_mode: 'HTML',
+    parse_mode: 'Markdown',
     reply_markup: createReplyMarkup(users),
   };
 
@@ -62,7 +62,7 @@ const ratingCallback = async (msg, callbackQuery = false, data = null) => {
       result = bot.sendMessage(msg.chat.id, BOT_MESSAGES.USER_TEXT(user), options);
     } else {
       result = bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.USERNAME_NOT_FOUND(username), { parse_mode: 'HTML' },
+        msg.chat.id, BOT_MESSAGES.USERNAME_NOT_FOUND(username), { parse_mode: 'Markdown' },
       );
     }
 
@@ -78,7 +78,7 @@ const listeners = [
     actionType: 'onText',
     types: [/\/start/g],
     callback: (msg) => bot.sendMessage(
-      msg.chat.id, BOT_MESSAGES.WELCOME_TEXT(), { parse_mode: 'HTML' },
+      msg.chat.id, BOT_MESSAGES.WELCOME_TEXT(TELEGRAM.PREFIX), { parse_mode: 'Markdown' },
     ),
   },
   {
@@ -92,8 +92,8 @@ const listeners = [
       if (userNameList.length === 1) {
         return bot.sendMessage(
           msg.chat.id,
-          BOT_MESSAGES.AT_LEAST_1_USERNAME,
-          { parse_mode: 'HTML' },
+          BOT_MESSAGES.AT_LEAST_1_USERNAME(TELEGRAM.PREFIX),
+          { parse_mode: 'Markdown' },
         );
       }
 
@@ -110,7 +110,7 @@ const listeners = [
       const userDetails = resultList.join('');
 
       return bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.USER_LIST(userDetails), { parse_mode: 'HTML' },
+        msg.chat.id, BOT_MESSAGES.USER_LIST(userDetails), { parse_mode: 'Markdown' },
       );
     },
   },
@@ -151,12 +151,12 @@ const listeners = [
 
       // Send message, that user will be deleted
       return bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username), { parse_mode: 'HTML' },
+        msg.chat.id, BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username), { parse_mode: 'Markdown' },
       ).then(async () => {
         // Remove the user and send the result (success or failure)
         const result = await User.remove(username);
         log(result.detail);
-        return bot.sendMessage(msg.chat.id, result.detail, { parse_mode: 'HTML' });
+        return bot.sendMessage(msg.chat.id, result.detail, { parse_mode: 'Markdown' });
       });
     },
   },
