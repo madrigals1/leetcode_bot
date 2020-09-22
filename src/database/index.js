@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const { DB_NAME, DB_PORT, MONGO_URL } = require('../utils/constants');
+const {
+  DB_NAME, DB_PORT, MONGO_URL, DB_USER, DB_PASSWORD,
+} = require('../utils/constants');
 const { SERVER_MESSAGES } = require('../utils/dictionary');
 const { log, error } = require('../utils/helper');
 
@@ -39,6 +41,8 @@ class Database {
         useUnifiedTopology: true,
         useFindAndModify: false,
         useCreateIndex: true,
+        user: DB_USER,
+        pass: DB_PASSWORD,
       })
       .then(() => {
         log(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
