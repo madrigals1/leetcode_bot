@@ -21,7 +21,7 @@ class Database {
     this.url = MONGO_URL;
     this.port = DB_PORT;
     this.name = DB_NAME;
-    this.server = `${this.url}:${this.port}`;
+    this.server = `${DB_USER}:${DB_PASSWORD}@${this.url}:${this.port}`;
     this.databaseUrl = `mongodb://${this.server}/${this.name}`;
 
     // Indicator
@@ -41,8 +41,6 @@ class Database {
         useUnifiedTopology: true,
         useFindAndModify: false,
         useCreateIndex: true,
-        user: DB_USER,
-        pass: DB_PASSWORD,
       })
       .then(() => {
         log(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
