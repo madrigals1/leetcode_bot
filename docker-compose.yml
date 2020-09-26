@@ -11,17 +11,4 @@ services:
     ports:
       - 8080:8000
       - 9229:9229
-    links:
-      - mongo
     command: npm start
-  mongo:
-    container_name: mongo
-    image: mongo
-    volumes:
-      - ./mongo-volume:/data/db
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
-      MONGO_INITDB_DATABASE: ${DB_NAME}
