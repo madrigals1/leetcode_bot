@@ -12,8 +12,3 @@ services:
       - 8080:8000
       - 9229:9229
     command: npm start
-
-networks:
-  default:  
-    external:
-      name: mongodb_docker_default
