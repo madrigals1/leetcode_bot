@@ -6,17 +6,17 @@ const User = require('./repository/user');
 const { TELEGRAM, DISCORD } = require('./utils/constants');
 
 // Connecting to Database
-Database.connect();
+Database.connect().then(() => {
+  // Refreshing the users
+  User.refresh()
+    .then(() => {
+      // Run Telegram BOT
+      if (TELEGRAM.ENABLE) telegram.run();
 
-// Refreshing the users
-User.refresh()
-  .then(() => {
-    // Run Telegram BOT
-    if (TELEGRAM.ENABLE) telegram.run();
+      // Run Discord BOT
+      if (DISCORD.ENABLE) discord.run();
 
-    // Run Discord BOT
-    if (DISCORD.ENABLE) discord.run();
-
-    // Starting the scheduler for database refresher
-    startScheduler();
-  });
+      // Starting the scheduler for database refresher
+      startScheduler();
+    });
+});
