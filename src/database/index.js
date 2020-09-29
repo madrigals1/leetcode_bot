@@ -20,10 +20,10 @@ class Database {
   connect() {
     // Connect to MongoDB
     try {
-      const connection = monk(this.databaseUrl);
+      this.connection = monk(this.databaseUrl);
 
       // Create Collection
-      this.users = connection.get('User');
+      this.users = this.connection.get('Leetcoder');
       this.users.createIndex('username last');
 
       log(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
