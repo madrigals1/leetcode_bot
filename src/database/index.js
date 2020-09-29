@@ -17,8 +17,11 @@ const userSchema = new mongoose.Schema({
 // Main class for Database
 class Database {
   constructor() {
-    // Environment variables
-    this.databaseUrl = `mongodb://${DB_USER}:${DB_PASSWORD}@${MONGO_URL}:${DB_PORT}/${DB_NAME}?authSource=admin`;
+    const credentials = DB_USER && DB_PASSWORD ? `${DB_USER}:${DB_PASSWORD}@` : '';
+    const authSource = DB_USER && DB_PASSWORD ? '?authSource=admin' : '';
+    const databaseUrl = `${MONGO_URL}:${DB_PORT}/${DB_NAME}`;
+
+    this.mongoUrl = `mongodb://${credentials}${databaseUrl}${authSource}`;
 
     // Indicator
     this.isRefreshing = false;
@@ -32,7 +35,7 @@ class Database {
   // Connect to Database
   async connect() {
     await mongoose
-      .connect(this.databaseUrl, {
+      .connect(this.mongoUrl, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
