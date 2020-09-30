@@ -17,6 +17,7 @@ const {
   MONGO_URL,
   SUBMISSION_COUNT,
   DELAY_TIME_MS,
+  DB_AUTHENTICATION_ENABLED,
 } = process.env;
 
 const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
@@ -74,4 +75,5 @@ module.exports = {
   DELAY_TIME_MS,
   EMOJI,
   STATUS,
+  DB_AUTHENTICATION_ENABLED,
 };

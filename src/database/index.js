@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const {
-  DB_NAME, DB_PORT, MONGO_URL, DB_USER, DB_PASSWORD,
+  DB_NAME, DB_PORT, MONGO_URL, DB_USER, DB_PASSWORD, DB_AUTHENTICATION_ENABLED,
 } = require('../utils/constants');
 const { SERVER_MESSAGES } = require('../utils/dictionary');
 const { log, error } = require('../utils/helper');
@@ -17,8 +17,8 @@ const userSchema = new mongoose.Schema({
 // Main class for Database
 class Database {
   constructor() {
-    const credentials = DB_USER && DB_PASSWORD ? `${DB_USER}:${DB_PASSWORD}@` : '';
-    const authSource = DB_USER && DB_PASSWORD ? '?authSource=admin' : '';
+    const credentials = DB_AUTHENTICATION_ENABLED ? `${DB_USER}:${DB_PASSWORD}@` : '';
+    const authSource = DB_AUTHENTICATION_ENABLED ? '?authSource=admin' : '';
     const databaseUrl = `${MONGO_URL}:${DB_PORT}/${DB_NAME}`;
 
     this.mongoUrl = `mongodb://${credentials}${databaseUrl}${authSource}`;
