@@ -4,7 +4,7 @@ services:
   leetcode_bot:
     container_name: leetbot
     restart: always
-    build: .
+    build: docker/.
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
