@@ -4,7 +4,8 @@
   "description": "LeetCode BOT for checking rating of users",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "fix": "eslint --fix src/*"
   },
   "keywords": [],
   "author": "Adi Sabyrbayev",
