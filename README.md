@@ -3,7 +3,7 @@ Leetcode Bot is a web scraper, that connects to Telegram or Discord Bot for crea
 
 You can create your own rating by adding Leetcode users.
 
-If you want to use [Docker](https://www.docker.com/), check this [tutorial]().
+If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docker/README-Docker.md).
 
 ## Demo
 
