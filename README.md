@@ -21,7 +21,7 @@ Adding and Deleting
 ## Prerequisites
 
 Make sure you have installed these:
-- [MongoDB]('https://www.mongodb.com/download-center') - cross-platform document-oriented database program. 
+- [MongoDB](https://www.mongodb.com/download-center) - cross-platform document-oriented database program. 
 Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema.
 - [Node.js](https://nodejs.org/en/) - JavaScript runtime built on Chrome's V8 JavaScript engine.
 
