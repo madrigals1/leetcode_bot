@@ -60,7 +60,7 @@ const BOT_MESSAGES = {
 <b><i>${prefix}rating username</i></b>  - Rating for separate user
 <b><i>${prefix}refresh</i></b>   - Manual refresh of database.
 <b><i>${prefix}add username1 username2</i></b>   ... - adding users`,
-  USER_TEXT: (user) => `<b>Name:</b> ${user.name}
+  USER_TEXT: (user) => `<b>Name:</b> ${user.name || 'No name'}
 <b>Username:</b> ${user.username}
 <b>Link:</b> <b>${user.link}</b>
 <b>Solved:</b> ${user.solved} / ${user.all}
