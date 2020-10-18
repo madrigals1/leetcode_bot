@@ -1,6 +1,6 @@
 const moment = require('moment');
 const Database = require('../database');
-const { getLeetcodeDataFromUsername } = require('../scraper');
+const { getLeetcodeDataFromUsername } = require('../leetcode');
 const { log, delay } = require('../utils/helper');
 const { DATE_FORMAT, DELAY_TIME_MS, STATUS } = require('../utils/constants');
 const { BOT_MESSAGES, SERVER_MESSAGES } = require('../utils/dictionary');
