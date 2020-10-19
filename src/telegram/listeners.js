@@ -191,6 +191,37 @@ const listeners = [
     },
   },
   {
+    actionType: 'onText',
+    types: [/\/clear/g],
+    callback: async (msg) => {
+      const args = msg.text.split(' ');
+
+      // Correct input for removing should be /clear <master_password>
+      // If length of the input is not 2, throw error
+      if (args.length !== 2) {
+        return bot.sendMessage(msg.chat.id, BOT_MESSAGES.INCORRECT_INPUT);
+      }
+
+      // Get password from message
+      const password = args[1];
+
+      // If password is incorrect, send appropriate message
+      if (password !== MASTER_PASSWORD) {
+        return bot.sendMessage(msg.chat.id, BOT_MESSAGES.PASSWORD_IS_INCORRECT);
+      }
+
+      // Send message, that Database will be cleared
+      return bot.sendMessage(
+        msg.chat.id, BOT_MESSAGES.DATABASE_WILL_BE_CLEARED, { parse_mode: 'HTML' },
+      ).then(async () => {
+        // Remove all Users and send the result (success or failure)
+        const result = await User.clear();
+        log(result.detail);
+        return bot.sendMessage(msg.chat.id, result.detail, { parse_mode: 'HTML' });
+      });
+    },
+  },
+  {
     actionType: 'on',
     types: ['polling_error'],
     callback: (err) => log(err),

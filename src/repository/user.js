@@ -145,6 +145,23 @@ class User {
     return { status: STATUS.ERROR, detail: BOT_MESSAGES.USERNAME_NOT_FOUND(username) };
   }
 
+  // Remove User by Username
+  async clear() {
+    const deleted = await Database.removeAllUsers();
+
+    if (deleted) {
+      // Clean objects array
+      this.objects = [];
+
+      return {
+        status: STATUS.SUCCESS,
+        detail: BOT_MESSAGES.DATABASE_WAS_CLEARED,
+      };
+    }
+
+    return { status: STATUS.ERROR, detail: BOT_MESSAGES.DATABASE_WAS_NOT_CLEARED };
+  }
+
   // Load User by Username
   load(username) {
     return this.objects.find((user) => user.username.toLowerCase() === username);

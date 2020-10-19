@@ -54,6 +54,11 @@ const BOT_MESSAGES = {
   USERNAME_WILL_BE_DELETED: (username) => `${EMOJI.WAITING} User <b>${username}</b> will be deleted`,
   USERNAME_WAS_DELETED: (username) => `${EMOJI.SUCCESS} User <b>${username}</b> was deleted`,
 
+  // DATABASE
+  DATABASE_WILL_BE_CLEARED: `${EMOJI.WASTEBASKET} Database will be cleared`,
+  DATABASE_WAS_CLEARED: `${EMOJI.SUCCESS} Database was cleared`,
+  DATABASE_WAS_NOT_CLEARED: `${EMOJI.ERROR} Database was not cleared`,
+
   // BIG TEXTS
   WELCOME_TEXT: (prefix) => `Welcome! This is Leetcode Rating bot Elite ${EMOJI.COOL} Boys
 <b><i>${prefix}rating</i></b> - Overall rating

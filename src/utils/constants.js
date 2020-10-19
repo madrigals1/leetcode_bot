@@ -38,6 +38,7 @@ const EMOJI = {
   WAITING: '⏳',
   WARNING: '⚠️',
   COOL: '😎',
+  WASTEBASKET: '🗑️',
 };
 
 const STATUS = {

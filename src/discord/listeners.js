@@ -80,6 +80,32 @@ const listeners = [
     },
   },
   {
+    // Action for clearing Database from users
+    types: ['clear'],
+    callback: async (message, args) => {
+      // Format should be /clear password
+      if (args.length !== 1) {
+        return sendFormattedMessage(message.channel, BOT_MESSAGES.INCORRECT_INPUT);
+      }
+
+      // Get password from message
+      const password = args[1];
+
+      // If password is incorrect, send appropriate message
+      if (password !== MASTER_PASSWORD) {
+        return sendFormattedMessage(message.channel, BOT_MESSAGES.PASSWORD_IS_INCORRECT);
+      }
+
+      // Send message, that Database will be cleared
+      sendFormattedMessage(message.channel, BOT_MESSAGES.DATABASE_WILL_BE_CLEARED);
+
+      // Remove all Users and get result
+      const result = await User.clear();
+      log(result.detail);
+      return sendFormattedMessage(message.channel, result.detail);
+    },
+  },
+  {
     types: ['rating'],
     callback: async (message, userNameList) => {
       // If more than 1 User was sent

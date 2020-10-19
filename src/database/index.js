@@ -84,6 +84,13 @@ class Database {
 
     return true;
   }
+
+  async removeAllUsers() {
+    // Delete all users
+    await this.UserModel.deleteMany({});
+
+    return true;
+  }
 }
 
 module.exports = new Database();
