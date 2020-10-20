@@ -4,7 +4,7 @@ const User = require('../repository/user');
 
 const startScheduler = () => {
   schedule.scheduleJob('*/30 * * * *', () => {
-    User.refresh();
+    User.refresh().then();
   });
 };
 

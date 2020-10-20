@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const {
   DB_NAME, DB_PORT, MONGO_URL, DB_USER, DB_PASSWORD, DB_AUTHENTICATION_ENABLED,
 } = require('../utils/constants');

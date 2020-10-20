@@ -1,4 +1,5 @@
 const moment = require('moment');
+
 const Database = require('../database');
 const { getLeetcodeDataFromUsername } = require('../leetcode');
 const { log, delay } = require('../utils/helper');
@@ -56,7 +57,7 @@ class User {
       }
 
       // Sort objects after refresh
-      this.sort();
+      await this.sort();
 
       // Set database indicators
       Database.isRefreshing = false;

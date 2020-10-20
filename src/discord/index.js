@@ -1,7 +1,8 @@
-const bot = require('./bot');
-const { log } = require('../utils/helper');
-const listeners = require('./listeners');
 const { DISCORD } = require('../utils/constants');
+const { log } = require('../utils/helper');
+
+const bot = require('./bot');
+const listeners = require('./listeners');
 
 const run = () => {
   bot.on('message', (message) => {

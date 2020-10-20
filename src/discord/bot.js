@@ -1,4 +1,5 @@
 const DiscordBot = require('discord.js');
+
 const { DISCORD_TOKEN } = require('../utils/constants');
 
 const bot = new DiscordBot.Client();

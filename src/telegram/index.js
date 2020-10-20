@@ -1,7 +1,8 @@
+const { log } = require('../utils/helper');
+
 const listeners = require('./listeners');
 const Listener = require('./listener');
 const bot = require('./bot');
-const { log } = require('../utils/helper');
 
 const run = () => {
   listeners.forEach((listener) => {
