@@ -32,16 +32,21 @@ const listeners = [
         );
       }
 
-      const resultList = await Promise.all(userNameList.map(async (username) => {
+      const promiseList = userNameList.map(async (username) => {
         const result = await User.add(username);
         log(result.detail);
         return result.detail;
-      }));
+      });
+
+      const resultList = await Promise.all(promiseList);
 
       // Add users and map
       const userDetails = resultList.join('');
 
-      return sendFormattedMessage(message.channel, BOT_MESSAGES.USER_LIST(userDetails));
+      return sendFormattedMessage(
+        message.channel,
+        BOT_MESSAGES.USER_LIST(userDetails),
+      );
     },
   },
   {
@@ -58,7 +63,10 @@ const listeners = [
       // Correct input for removing should be /rm <username> <master_password>
       // If length of the input is not 3, throw error
       if (userNameList.length !== 2) {
-        return sendFormattedMessage(message.channel, BOT_MESSAGES.INCORRECT_INPUT);
+        return sendFormattedMessage(
+          message.channel,
+          BOT_MESSAGES.INCORRECT_INPUT,
+        );
       }
 
       // Get username and password from message
@@ -67,11 +75,17 @@ const listeners = [
 
       // If password is incorrect, send appropriate message
       if (password !== MASTER_PASSWORD) {
-        return sendFormattedMessage(message.channel, BOT_MESSAGES.PASSWORD_IS_INCORRECT);
+        return sendFormattedMessage(
+          message.channel,
+          BOT_MESSAGES.PASSWORD_IS_INCORRECT,
+        );
       }
 
       // Send message, that user will be deleted
-      sendFormattedMessage(message.channel, BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username));
+      sendFormattedMessage(
+        message.channel,
+        BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username),
+      );
 
       // Remove User and get result
       const result = await User.remove(username);
@@ -85,7 +99,10 @@ const listeners = [
     callback: async (message, args) => {
       // Format should be /clear password
       if (args.length !== 1) {
-        return sendFormattedMessage(message.channel, BOT_MESSAGES.INCORRECT_INPUT);
+        return sendFormattedMessage(
+          message.channel,
+          BOT_MESSAGES.INCORRECT_INPUT,
+        );
       }
 
       // Get password from message
@@ -93,11 +110,17 @@ const listeners = [
 
       // If password is incorrect, send appropriate message
       if (password !== MASTER_PASSWORD) {
-        return sendFormattedMessage(message.channel, BOT_MESSAGES.PASSWORD_IS_INCORRECT);
+        return sendFormattedMessage(
+          message.channel,
+          BOT_MESSAGES.PASSWORD_IS_INCORRECT,
+        );
       }
 
       // Send message, that Database will be cleared
-      sendFormattedMessage(message.channel, BOT_MESSAGES.DATABASE_WILL_BE_CLEARED);
+      sendFormattedMessage(
+        message.channel,
+        BOT_MESSAGES.DATABASE_WILL_BE_CLEARED,
+      );
 
       // Remove all Users and get result
       const result = await User.clear();
@@ -110,7 +133,10 @@ const listeners = [
     callback: async (message, userNameList) => {
       // If more than 1 User was sent
       if (userNameList.length > 1) {
-        return sendFormattedMessage(message.channel, BOT_MESSAGES.INCORRECT_INPUT);
+        return sendFormattedMessage(
+          message.channel,
+          BOT_MESSAGES.INCORRECT_INPUT,
+        );
       }
 
       // If 1 User was sent
@@ -121,16 +147,25 @@ const listeners = [
         let result;
 
         if (user) {
-          result = sendFormattedMessage(message.channel, BOT_MESSAGES.USER_TEXT(user));
+          result = sendFormattedMessage(
+            message.channel,
+            BOT_MESSAGES.USER_TEXT(user),
+          );
         } else {
-          result = sendFormattedMessage(message.channel, BOT_MESSAGES.USERNAME_NOT_FOUND(username));
+          result = sendFormattedMessage(
+            message.channel,
+            BOT_MESSAGES.USERNAME_NOT_FOUND(username),
+          );
         }
 
         return result;
       }
 
       // If 0 User was sent
-      return sendFormattedMessage(message.channel, BOT_MESSAGES.RATING_TEXT(User.all()));
+      return sendFormattedMessage(
+        message.channel,
+        BOT_MESSAGES.RATING_TEXT(User.all()),
+      );
     },
   },
 ];

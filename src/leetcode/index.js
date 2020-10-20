@@ -1,7 +1,11 @@
 const axios = require('axios');
 const moment = require('moment');
 
-const { LEETCODE_URL, SUBMISSION_COUNT, STATUS_MAP } = require('../utils/constants');
+const {
+  LEETCODE_URL,
+  SUBMISSION_COUNT,
+  STATUS_MAP,
+} = require('../utils/constants');
 const { SERVER_MESSAGES } = require('../utils/dictionary');
 const { error } = require('../utils/helper');
 
@@ -66,7 +70,9 @@ const getLeetcodeDataFromUsername = async (username) => {
     status: STATUS_MAP[submission.statusDisplay],
     language: submission.lang,
     name: submission.title,
-    time: moment.duration(moment.unix(submission.timestamp) - now).humanize(true),
+    time: moment
+      .duration(moment.unix(submission.timestamp) - now)
+      .humanize(true),
   }));
 
   return {

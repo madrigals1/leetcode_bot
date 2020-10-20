@@ -51,7 +51,8 @@ class User {
           log(SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(user.username));
         }
 
-        // Wait 4 seconds before loading next User, LeetCode only allows 15 requests per minute
+        // Wait X seconds until loading next User, X is set in .env
+        // This is due to RPM of LeetCode GraphQL
         // eslint-disable-next-line no-await-in-loop
         await delay(DELAY_TIME_MS);
       }
@@ -132,7 +133,9 @@ class User {
 
     if (deleted) {
       // Set objects array to tempObjects
-      this.objects = this.objects.filter((user) => user.username.toLowerCase() !== username);
+      this.objects = this.objects.filter((user) => (
+        user.username.toLowerCase() !== username
+      ));
 
       // Sort objects after removing
       await this.sort();
@@ -143,7 +146,10 @@ class User {
       };
     }
 
-    return { status: STATUS.ERROR, detail: BOT_MESSAGES.USERNAME_NOT_FOUND(username) };
+    return {
+      status: STATUS.ERROR,
+      detail: BOT_MESSAGES.USERNAME_NOT_FOUND(username),
+    };
   }
 
   // Remove User by Username
@@ -160,12 +166,17 @@ class User {
       };
     }
 
-    return { status: STATUS.ERROR, detail: BOT_MESSAGES.DATABASE_WAS_NOT_CLEARED };
+    return {
+      status: STATUS.ERROR,
+      detail: BOT_MESSAGES.DATABASE_WAS_NOT_CLEARED,
+    };
   }
 
   // Load User by Username
   load(username) {
-    return this.objects.find((user) => user.username.toLowerCase() === username);
+    return this.objects.find((user) => (
+      user.username.toLowerCase() === username
+    ));
   }
 }
 

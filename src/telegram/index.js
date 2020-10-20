@@ -6,7 +6,11 @@ const bot = require('./bot');
 
 const run = () => {
   listeners.forEach((listener) => {
-    new Listener(listener.actionType, listener.types, listener.callback).init(bot);
+    new Listener(
+      listener.actionType,
+      listener.types,
+      listener.callback,
+    ).init(bot);
   });
 
   log('>>> Telegram BOT is running!');

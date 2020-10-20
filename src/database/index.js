@@ -18,7 +18,9 @@ const userSchema = new mongoose.Schema({
 // Main class for Database
 class Database {
   constructor() {
-    const credentials = DB_AUTHENTICATION_ENABLED ? `${DB_USER}:${DB_PASSWORD}@` : '';
+    const credentials = DB_AUTHENTICATION_ENABLED
+      ? `${DB_USER}:${DB_PASSWORD}@`
+      : '';
     const authSource = DB_AUTHENTICATION_ENABLED ? '?authSource=admin' : '';
     const databaseUrl = `${MONGO_URL}:${DB_PORT}/${DB_NAME}`;
 

@@ -4,6 +4,6 @@ const { DISCORD_TOKEN } = require('../utils/constants');
 
 const bot = new DiscordBot.Client();
 
-bot.login(DISCORD_TOKEN);
+bot.login(DISCORD_TOKEN).then();
 
 module.exports = bot;
