@@ -21,11 +21,11 @@ class User {
     if (!Database.isRefreshing) {
       // Set database indicators
       Database.isRefreshing = true;
-      Database.lastRefreshStartedAt = moment();
+      const refreshStartedAt = moment();
 
       // Log when refresh started
       log(SERVER_MESSAGES.DATABASE_STARTED_REFRESH(
-        Database.lastRefreshStartedAt.format(DATE_FORMAT),
+        refreshStartedAt.format(DATE_FORMAT),
       ));
 
       // Get all users from database
@@ -62,12 +62,10 @@ class User {
 
       // Set database indicators
       Database.isRefreshing = false;
-      Database.lastRefreshFinishedAt = moment();
+      const refreshFinishedAt = moment();
 
       // Log when refresh started
-      log(SERVER_MESSAGES.IS_REFRESHED(
-        Database.lastRefreshFinishedAt.format(DATE_FORMAT),
-      ));
+      log(SERVER_MESSAGES.IS_REFRESHED(refreshFinishedAt.format(DATE_FORMAT)));
     } else {
       log(SERVER_MESSAGES.IS_ALREADY_REFRESHING);
     }

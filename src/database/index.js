@@ -6,33 +6,30 @@ const {
 const { SERVER_MESSAGES } = require('../utils/dictionary');
 const { log, error } = require('../utils/helper');
 
-// Schemas
-const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-});
+const { UserModel } = require('./mongodb');
 
 // Main class for Database
 class Database {
   constructor() {
+    // If authentication credentials were provided in environment, use them.
+    // If not, use empty string in MongoDB connection
     const credentials = DB_AUTHENTICATION_ENABLED
       ? `${DB_USER}:${DB_PASSWORD}@`
       : '';
+
+    // Set Authentication Source to connect to MongoDB database
     const authSource = DB_AUTHENTICATION_ENABLED ? '?authSource=admin' : '';
+    // URL for Connection to MongoDB, is already usable for connection.
     const databaseUrl = `${MONGO_URL}:${DB_PORT}/${DB_NAME}`;
 
+    // URL for Connection to MongoDB, that contains authentication
     this.mongoUrl = `mongodb://${credentials}${databaseUrl}${authSource}`;
 
-    // Indicator
+    // Indicator to see, if Database is already refreshing
     this.isRefreshing = false;
-    this.lastRefreshStartedAt = null;
-    this.lastRefreshFinishedAt = null;
 
-    // Models
-    this.UserModel = mongoose.model('User', userSchema);
+    // Database Models
+    this.UserModel = UserModel;
   }
 
   // Connect to Database
