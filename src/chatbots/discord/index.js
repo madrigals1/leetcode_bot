@@ -1,5 +1,5 @@
-const { DISCORD } = require('../utils/constants');
-const { log } = require('../utils/helper');
+const { DISCORD } = require('../../utils/constants');
+const { log } = require('../../utils/helper');
 
 const bot = require('./bot');
 const listeners = require('./listeners');

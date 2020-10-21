@@ -1,4 +1,4 @@
-const { log } = require('../utils/helper');
+const { log } = require('../../utils/helper');
 
 const listeners = require('./listeners');
 const Listener = require('./listener');

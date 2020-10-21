@@ -1,4 +1,4 @@
-const { STATUS } = require('../utils/constants');
+const { STATUS } = require('../../utils/constants');
 
 class Listener {
   constructor(actionType, types, callback) {

@@ -1,7 +1,7 @@
-const User = require('../repository/user');
-const { MASTER_PASSWORD, TELEGRAM, EMOJI } = require('../utils/constants');
-const { BOT_MESSAGES } = require('../utils/dictionary');
-const { log, isRegexMatchInArray } = require('../utils/helper');
+const User = require('../../cache/user');
+const { MASTER_PASSWORD, TELEGRAM, EMOJI } = require('../../utils/constants');
+const { BOT_MESSAGES } = require('../../utils/dictionary');
+const { log, isRegexMatchInArray } = require('../../utils/helper');
 
 const bot = require('./bot');
 

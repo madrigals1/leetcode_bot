@@ -1,7 +1,7 @@
-const User = require('../repository/user');
-const { MASTER_PASSWORD, DISCORD } = require('../utils/constants');
-const { BOT_MESSAGES } = require('../utils/dictionary');
-const { log, replaceAll } = require('../utils/helper');
+const User = require('../../cache/user');
+const { MASTER_PASSWORD, DISCORD } = require('../../utils/constants');
+const { BOT_MESSAGES } = require('../../utils/dictionary');
+const { log, replaceAll } = require('../../utils/helper');
 
 const sendFormattedMessage = (channel, message) => {
   // Change bold, italic and code from HTML to Markdown
