@@ -35,19 +35,19 @@ const createReplyMarkup = (users) => {
   });
 };
 const ratingTypes = [/\/rating/g];
-const ratingCallback = async (msg, callbackQuery = false, data = null) => {
-  let text;
-
-  if (!callbackQuery) {
-    text = msg.text;
-  } else {
-    text = data;
-  }
+const ratingCallback = async (
+  msg,
+  callbackQuery = false,
+  data = null,
+) => {
+  const text = !callbackQuery ? msg.text : data;
 
   const userNameList = text.split(' ');
 
   // If more than 1 User was sent
-  if (userNameList.length > 2) bot.sendMessage(msg.chat.id, BOT_MESSAGES.INCORRECT_INPUT);
+  if (userNameList.length > 2) {
+    bot.sendMessage(msg.chat.id, BOT_MESSAGES.INCORRECT_INPUT).then();
+  }
 
   // Load users from repo
   const users = User.all();
@@ -63,21 +63,27 @@ const ratingCallback = async (msg, callbackQuery = false, data = null) => {
     const username = userNameList[1].toLowerCase();
     const user = User.load(username);
 
-    let result;
-
     if (user) {
-      result = bot.sendMessage(msg.chat.id, BOT_MESSAGES.USER_TEXT(user), options);
-    } else {
-      result = bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.USERNAME_NOT_FOUND(username), { parse_mode: 'HTML' },
+      return bot.sendMessage(
+        msg.chat.id,
+        BOT_MESSAGES.USER_TEXT(user),
+        options,
       );
     }
 
-    return result;
+    return bot.sendMessage(
+      msg.chat.id,
+      BOT_MESSAGES.USERNAME_NOT_FOUND(username),
+      { parse_mode: 'HTML' },
+    );
   }
 
   // If 0 User was sent
-  return bot.sendMessage(msg.chat.id, BOT_MESSAGES.RATING_TEXT(User.all()), options);
+  return bot.sendMessage(
+    msg.chat.id,
+    BOT_MESSAGES.RATING_TEXT(User.all()),
+    options,
+  );
 };
 
 const listeners = [
@@ -85,7 +91,9 @@ const listeners = [
     actionType: 'onText',
     types: [/\/start/g],
     callback: (msg) => bot.sendMessage(
-      msg.chat.id, BOT_MESSAGES.WELCOME_TEXT(TELEGRAM.PREFIX), { parse_mode: 'HTML' },
+      msg.chat.id,
+      BOT_MESSAGES.WELCOME_TEXT(TELEGRAM.PREFIX),
+      { parse_mode: 'HTML' },
     ),
   },
   {
@@ -107,28 +115,34 @@ const listeners = [
       // Removing /add
       userNameList.shift();
 
-      const resultList = await Promise.all(userNameList.map(async (username) => {
+      const promiseList = userNameList.map(async (username) => {
         const result = await User.add(username);
         log(result.detail);
         return result.detail;
-      }));
+      });
+
+      const resultList = await Promise.all(promiseList);
 
       // Add users and map
       const userDetails = resultList.join('');
 
       return bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.USER_LIST(userDetails), { parse_mode: 'HTML' },
+        msg.chat.id,
+        BOT_MESSAGES.USER_LIST(userDetails),
+        { parse_mode: 'HTML' },
       );
     },
   },
   {
     actionType: 'onText',
     types: [/\/refresh/g],
-    callback: async (msg) => bot.sendMessage(msg.chat.id, BOT_MESSAGES.STARTED_REFRESH)
-      .then(async () => {
-        await User.refresh();
-        return bot.sendMessage(msg.chat.id, BOT_MESSAGES.IS_REFRESHED);
-      }),
+    callback: async (msg) => bot.sendMessage(
+      msg.chat.id,
+      BOT_MESSAGES.STARTED_REFRESH,
+    ).then(async () => {
+      await User.refresh();
+      return bot.sendMessage(msg.chat.id, BOT_MESSAGES.IS_REFRESHED);
+    }),
   },
   {
     actionType: 'onText',
@@ -146,11 +160,17 @@ const listeners = [
       const user = User.load(username);
 
       if (user) {
-        return bot.sendPhoto(msg.chat.id, user.avatar, { caption: user.link });
+        return bot.sendPhoto(
+          msg.chat.id,
+          user.avatar,
+          { caption: user.link },
+        );
       }
 
       return bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.USERNAME_NOT_FOUND(username), { parse_mode: 'HTML' },
+        msg.chat.id,
+        BOT_MESSAGES.USERNAME_NOT_FOUND(username),
+        { parse_mode: 'HTML' },
       );
     },
   },
@@ -182,12 +202,18 @@ const listeners = [
 
       // Send message, that user will be deleted
       return bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username), { parse_mode: 'HTML' },
+        msg.chat.id,
+        BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username),
+        { parse_mode: 'HTML' },
       ).then(async () => {
         // Remove the user and send the result (success or failure)
         const result = await User.remove(username);
         log(result.detail);
-        return bot.sendMessage(msg.chat.id, result.detail, { parse_mode: 'HTML' });
+        return bot.sendMessage(
+          msg.chat.id,
+          result.detail,
+          { parse_mode: 'HTML' },
+        );
       });
     },
   },
@@ -213,12 +239,18 @@ const listeners = [
 
       // Send message, that Database will be cleared
       return bot.sendMessage(
-        msg.chat.id, BOT_MESSAGES.DATABASE_WILL_BE_CLEARED, { parse_mode: 'HTML' },
+        msg.chat.id,
+        BOT_MESSAGES.DATABASE_WILL_BE_CLEARED,
+        { parse_mode: 'HTML' },
       ).then(async () => {
         // Remove all Users and send the result (success or failure)
         const result = await User.clear();
         log(result.detail);
-        return bot.sendMessage(msg.chat.id, result.detail, { parse_mode: 'HTML' });
+        return bot.sendMessage(
+          msg.chat.id,
+          result.detail,
+          { parse_mode: 'HTML' },
+        );
       });
     },
   },
