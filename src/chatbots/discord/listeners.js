@@ -17,12 +17,14 @@ const sendFormattedMessage = (channel, message) => {
 
 const listeners = [
   {
+    // !start
     types: ['start'],
     callback: (message) => sendFormattedMessage(
       message.channel, BOT_MESSAGES.WELCOME_TEXT(DISCORD.PREFIX),
     ),
   },
   {
+    // !add <username1> <username2>
     types: ['add'],
     callback: async (message, userNameList) => {
       // If no username is set, return exception
@@ -32,24 +34,27 @@ const listeners = [
         );
       }
 
+      // Add all Users 1 by 1 and create Promise List
       const promiseList = userNameList.map(async (username) => {
         const result = await User.add(username);
         log(result.detail);
         return result.detail;
       });
 
+      // Await all Promises
       const resultList = await Promise.all(promiseList);
 
       // Add users and map
-      const userDetails = resultList.join('');
+      const userListDetails = resultList.join('');
 
       return sendFormattedMessage(
         message.channel,
-        BOT_MESSAGES.USER_LIST(userDetails),
+        BOT_MESSAGES.USER_LIST(userListDetails),
       );
     },
   },
   {
+    // !refresh
     types: ['refresh'],
     callback: async (message) => {
       sendFormattedMessage(message.channel, BOT_MESSAGES.STARTED_REFRESH);
@@ -58,20 +63,20 @@ const listeners = [
     },
   },
   {
+    // !remove <username> <master_password>
     types: ['remove'],
-    callback: async (message, userNameList) => {
-      // Correct input for removing should be /rm <username> <master_password>
+    callback: async (message, args) => {
       // If length of the input is not 3, throw error
-      if (userNameList.length !== 2) {
+      if (args.length !== 2) {
         return sendFormattedMessage(
           message.channel,
           BOT_MESSAGES.INCORRECT_INPUT,
         );
       }
 
-      // Get username and password from message
-      const username = userNameList[0].toLowerCase();
-      const password = userNameList[1];
+      // Get username and password from args
+      const username = args[0].toLowerCase();
+      const password = args[1];
 
       // If password is incorrect, send appropriate message
       if (password !== MASTER_PASSWORD) {
@@ -94,10 +99,9 @@ const listeners = [
     },
   },
   {
-    // Action for clearing Database from users
+    // !clear <master_password>
     types: ['clear'],
     callback: async (message, args) => {
-      // Format should be /clear password
       if (args.length !== 1) {
         return sendFormattedMessage(
           message.channel,
@@ -141,24 +145,23 @@ const listeners = [
 
       // If 1 User was sent
       if (userNameList.length === 1) {
+        // Get username from args
         const username = userNameList[0].toLowerCase();
+
+        // Load User from cache by username
         const user = User.load(username);
 
-        let result;
-
         if (user) {
-          result = sendFormattedMessage(
+          return sendFormattedMessage(
             message.channel,
             BOT_MESSAGES.USER_TEXT(user),
           );
-        } else {
-          result = sendFormattedMessage(
-            message.channel,
-            BOT_MESSAGES.USERNAME_NOT_FOUND(username),
-          );
         }
 
-        return result;
+        return sendFormattedMessage(
+          message.channel,
+          BOT_MESSAGES.USERNAME_NOT_FOUND(username),
+        );
       }
 
       // If 0 User was sent
