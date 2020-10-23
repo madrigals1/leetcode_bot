@@ -7,7 +7,7 @@ const {
   STATUS_MAP,
 } = require('../utils/constants');
 const { SERVER_MESSAGES } = require('../utils/dictionary');
-const { error } = require('../utils/helper');
+const { error, log } = require('../utils/helper');
 
 const { GET_USER_PROFILE, GET_RECENT_SUBMISSION_LIST } = require('./qraphql');
 
@@ -46,7 +46,8 @@ const getLeetcodeDataFromUsername = async (username) => {
   const userGraphQLdata = GET_USER_PROFILE(username);
   const userData = await axios
     .post(graphQLLink, userGraphQLdata, { headers: graphQLHeaders })
-    .then((graphQLResponse) => graphQLResponse.data.data);
+    .then((graphQLResponse) => graphQLResponse.data.data)
+    .catch((err) => log(err));
   const { matchedUser } = userData;
 
   // If user was not found on LeetCode, return empty dict
