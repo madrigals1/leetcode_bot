@@ -77,13 +77,13 @@ const actions = [
     name: 'clear',
     execute: async (args, reply, context) => {
       // Correct input for removing should be /clear <master_password>
-      // If length of args is not 2, return error message
+      // If length of args is not 1, return error message
       if (args.length !== 1) {
         return reply(BOT_MESSAGES.INCORRECT_INPUT, context);
       }
 
       // Get password from message
-      const password = args[1];
+      const password = args[0];
 
       // If password is incorrect, return error message
       if (password !== MASTER_PASSWORD) {
