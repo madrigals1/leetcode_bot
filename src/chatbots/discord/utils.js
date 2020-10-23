@@ -13,7 +13,14 @@ const sendFormattedMessage = (message, context) => {
   formatted = replaceAll(formatted, '</code>', '`');
 
   // Send message back to channel
-  channel.send(formatted);
+  return new Promise((resolve, reject) => {
+    if (channel) {
+      channel.send(formatted);
+      resolve('Success');
+    } else {
+      reject(Error('Channel is not provided in context'));
+    }
+  });
 };
 
 module.exports = { sendFormattedMessage };
