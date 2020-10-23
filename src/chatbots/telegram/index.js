@@ -18,6 +18,7 @@ class Telegram {
     this.token = TELEGRAM.TOKEN;
     this.options = { polling: true };
     this.ratingActionName = 'rating';
+    this.ignoredActions = [this.ratingActionName];
   }
 
   run() {
@@ -30,7 +31,7 @@ class Telegram {
     // Add regular actions
     actions.forEach((action) => {
       // Skip /rating action
-      if (action.name === this.ratingActionName) return;
+      if (this.ignoredActions.includes(action.name)) return;
 
       // convert regular string to regexp
       const actionNameRegex = new RegExp(action.name);
