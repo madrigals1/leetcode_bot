@@ -22,7 +22,7 @@ class User {
     for (let i = 0; i < this.users.length; i++) {
       if (this.users[i].username === username) {
         this.users[i] = userData;
-        break;
+        return;
       }
     }
 
