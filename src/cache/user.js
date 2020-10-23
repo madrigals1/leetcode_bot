@@ -18,13 +18,16 @@ class User {
   }
 
   // Replace User with username in the cache
-  replaceUser(username, userData) {
+  addOrReplaceUser(username, userData) {
     for (let i = 0; i < this.users.length; i++) {
       if (this.users[i].username === username) {
         this.users[i] = userData;
         break;
       }
     }
+
+    // If user was not found in cache, add user
+    this.users.push(userData);
   }
 
   // Refresh Users map
@@ -53,7 +56,7 @@ class User {
 
         // If UserData was returned from Backend, replace User in cache
         if (userData) {
-          this.replaceUser(username, userData);
+          this.addOrReplaceUser(username, userData);
           log(SERVER_MESSAGES.USERNAME_WAS_REFRESHED(username));
         } else {
           log(SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(username));
