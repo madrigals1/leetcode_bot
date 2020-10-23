@@ -1,5 +1,5 @@
-const telegram = require('./chatbots/telegram');
-const discord = require('./chatbots/discord');
+const Telegram = require('./chatbots/telegram');
+const Discord = require('./chatbots/discord');
 const startScheduler = require('./utils/scheduler');
 const Database = require('./database');
 const User = require('./cache/user');
@@ -11,10 +11,10 @@ Database.connect().then(() => {
   User.refresh()
     .then(() => {
       // Run Telegram BOT
-      if (TELEGRAM.ENABLE) telegram.run();
+      if (TELEGRAM.ENABLE) Telegram.run();
 
       // Run Discord BOT
-      if (DISCORD.ENABLE) discord.run();
+      if (DISCORD.ENABLE) Discord.run();
 
       // Starting the scheduler for database refresher
       startScheduler();

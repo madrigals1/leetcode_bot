@@ -1,39 +1,49 @@
 const { DISCORD } = require('../../utils/constants');
 const { log } = require('../../utils/helper');
+const { actions } = require('../actions');
 
-const bot = require('./bot');
-const listeners = require('./listeners');
+const { createBot } = require('./bot');
+const { sendFormattedMessage } = require('./utils');
 
-const run = () => {
-  // If bot receives any message
-  bot.on('message', (message) => {
-    const { content, author } = message;
+class Discord {
+  constructor() {
+    // Save token
+    this.token = DISCORD.TOKEN;
+  }
 
-    // If message doesn't start with ! (prefix) OR author is BOT, then ignore
-    if (!content.startsWith(DISCORD.PREFIX) || author.bot) return;
+  run() {
+    // Create Bot with token
+    this.bot = createBot(this.token);
 
-    // Turn "!rating username arg1" into ["!rating", "username", "arg1"]
-    let args = content.slice(DISCORD.PREFIX.length).trim().split(' ');
+    // Set Bot message listener (any message)
+    this.bot.on('message', (message) => {
+      const { content, author, channel } = message;
 
-    // Get command and arguments from args list
-    const command = args[0];
-    args = args.splice(1);
+      // If message doesn't start with ! (prefix) OR author is BOT, then ignore
+      if (!content.startsWith(DISCORD.PREFIX) || author.bot) return;
 
-    // Go through each listener and check, if it's command is correct and
-    // execute it's callback
-    for (let i = 0; i < listeners.length; i++) {
-      const listener = listeners[i];
-      for (let j = 0; j < listener.types.length; j++) {
-        // If we found a command that we need, execute it and stop the loop
-        if (listener.types[j] === command) {
-          listener.callback(message, args);
+      // Turn "!rating username arg1" into ["!rating", "username", "arg1"]
+      let args = content.slice(DISCORD.PREFIX.length).trim().split(' ');
+
+      // Get command and arguments from args list
+      const command = args[0];
+      args = args.splice(1);
+
+      // Find appropriate action by name and execute it
+      for (let i = 0; i < actions.length; i++) {
+        const action = actions[i];
+        if (action.name === command) {
+          const context = { channel, prefix: DISCORD.PREFIX };
+          action.execute(args, sendFormattedMessage, context);
+
+          // Stop searching after action is found
           return;
         }
       }
-    }
-  });
+    });
 
-  log('>>> Discord BOT is running!');
-};
+    log('>>> Discord BOT is running!');
+  }
+}
 
-module.exports = { run };
+module.exports = new Discord();
