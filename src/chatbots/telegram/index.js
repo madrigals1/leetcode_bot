@@ -17,7 +17,7 @@ class Telegram {
     // Save token and options
     this.token = TELEGRAM.TOKEN;
     this.options = { polling: true };
-    this.ratingActionName = /\/rating/g;
+    this.ratingActionName = 'rating';
   }
 
   run() {
@@ -29,6 +29,9 @@ class Telegram {
 
     // Add regular actions
     actions.forEach((action) => {
+      // Skip /rating action
+      if (action.name === this.ratingActionName) return;
+
       // convert regular string to regexp
       const actionNameRegex = new RegExp(action.name);
 
@@ -55,7 +58,7 @@ class Telegram {
 
     // Set specific rating command
     this.bot.onText(
-      this.ratingActionName, (msg) => this.ratingAction(msg),
+      new RegExp(this.ratingActionName), (msg) => this.ratingAction(msg),
     );
 
     // Set specific callback_query and polling_error

@@ -100,6 +100,31 @@ const actions = [
         });
     },
   },
+  {
+    name: 'rating',
+    execute: async (args, reply, context) => {
+      // If more than 1 User was sent
+      if (args.length > 1) return reply(BOT_MESSAGES.INCORRECT_INPUT, context);
+
+      // If 1 User was sent
+      if (args.length === 1) {
+        // Get username from args
+        const username = args[0].toLowerCase();
+
+        // Load User from cache by username
+        const user = User.load(username);
+
+        if (user) {
+          return reply(BOT_MESSAGES.USER_TEXT(user), context);
+        }
+
+        return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
+      }
+
+      // If 0 User was sent
+      return reply(BOT_MESSAGES.RATING_TEXT(User.all()), context);
+    },
+  },
 ];
 
 module.exports = { actions };
