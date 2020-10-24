@@ -40,9 +40,7 @@ const createRatingListReplyMarkup = (users) => {
     callback_data: 'placeholder',
   }]);
 
-  return JSON.stringify({
-    inline_keyboard: usersInlineKeyboard,
-  });
+  return JSON.stringify({ inline_keyboard: usersInlineKeyboard });
 };
 
 module.exports = { getArgs, createRatingListReplyMarkup, reply };
