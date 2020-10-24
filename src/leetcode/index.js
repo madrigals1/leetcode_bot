@@ -46,13 +46,19 @@ const getLeetcodeDataFromUsername = async (username) => {
     .post(graphQLLink, userGraphQLdata, { headers: graphQLHeaders })
     .then((graphQLResponse) => graphQLResponse.data.data)
     .catch((err) => log(err));
-  const { matchedUser } = userData;
+  const { matchedUser, allQuestionsCount } = userData;
 
-  // If user was not found on LeetCode, return empty dict
+  // If user was not found on LeetCode, return null
   if (!matchedUser) return null;
 
-  const userProfileData = matchedUser.profile;
-  const userSubmissionStatsData = userData.matchedUser.submitStats;
+  // Get profile and submitStats from matchedUser
+  const { profile, submitStats } = matchedUser;
+
+  // Get realName and avatar from profile
+  const { realName, userAvatar } = profile;
+
+  // Get submission number from submitStats
+  const { acSubmissionNum } = submitStats;
 
   // Get current time to make humanized times for submissions
   const now = moment();
@@ -60,27 +66,42 @@ const getLeetcodeDataFromUsername = async (username) => {
   // Get GraphQL from 'getRecentSubmissionList'
   const recentSubmissionGraphQLdata = GET_RECENT_SUBMISSION_LIST(username);
   const userRecentSubmissionData = await axios
-    .post(graphQLLink, recentSubmissionGraphQLdata, { headers: graphQLHeaders })
+    .post(
+      graphQLLink,
+      recentSubmissionGraphQLdata,
+      { headers: graphQLHeaders },
+    )
     .then((graphQLResponse) => graphQLResponse.data.data);
-  const recentSubmissionList = userRecentSubmissionData
-    .recentSubmissionList.slice(0, SUBMISSION_COUNT);
-  const submissions = recentSubmissionList.map((submission) => ({
-    link: `/problems/${submission.titleSlug}`,
-    status: STATUS_MAP[submission.statusDisplay],
-    language: submission.lang,
-    name: submission.title,
-    time: moment
-      .duration(moment.unix(submission.timestamp) - now)
-      .humanize(true),
-  }));
+
+  const { recentSubmissionList } = userRecentSubmissionData;
+  const limitedRecentSubmissionList = (
+    recentSubmissionList.slice(0, SUBMISSION_COUNT)
+  );
+
+  const submissions = limitedRecentSubmissionList.map((submission) => {
+    // Get necessary data from submission
+    const {
+      titleSlug, statusDisplay, lang, title, timestamp,
+    } = submission;
+
+    return {
+      link: `/problems/${titleSlug}`,
+      status: STATUS_MAP[statusDisplay],
+      language: lang,
+      name: title,
+      time: moment
+        .duration(moment.unix(timestamp) - now)
+        .humanize(true),
+    };
+  });
 
   return {
-    name: userProfileData.realName,
+    name: realName,
     link: `${LEETCODE_URL}/${username}`,
     username,
-    solved: userSubmissionStatsData.acSubmissionNum[0].count,
-    all: userData.allQuestionsCount[0].count,
-    avatar: userProfileData.userAvatar,
+    solved: acSubmissionNum[0].count,
+    all: allQuestionsCount[0].count,
+    avatar: userAvatar,
     submissions,
   };
 };

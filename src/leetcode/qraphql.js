@@ -3,46 +3,18 @@ const GET_USER_PROFILE = (username) => ({
   query: `
     query getUserProfile($username: String!) {
       allQuestionsCount {
-        difficulty
         count
         __typename
       }
       matchedUser(username: $username) {
-        username
-        socialAccounts
-        githubUrl
-        contributions {
-          points
-          questionCount
-          testcaseCount
-          __typename
-        }
         profile {
           realName
-          websites
-          countryName
-          skillTags
-          company
-          school
-          starRating
-          aboutMe
           userAvatar
-          reputation
-          ranking
           __typename
         }
-        submissionCalendar
         submitStats {
           acSubmissionNum {
-            difficulty
             count
-            submissions
-            __typename
-          }
-          totalSubmissionNum {
-            difficulty
-            count
-            submissions
             __typename
           }
           __typename
@@ -66,12 +38,6 @@ const GET_RECENT_SUBMISSION_LIST = (username) => ({
         timestamp
         statusDisplay
         lang
-        __typename
-      }
-      languageList {
-        id
-        name
-        verboseName
         __typename
       }
     }
