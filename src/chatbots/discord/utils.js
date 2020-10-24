@@ -7,7 +7,7 @@ const formatMessage = (message) => (message
 
 const reply = (message, context) => {
   // Get channel from context
-  const { channel } = context;
+  const { channel, photoUrl } = context;
 
   // Format message to Markdown style, requested by Discord
   const formattedMessage = formatMessage(message);
@@ -15,7 +15,8 @@ const reply = (message, context) => {
   // Send message back to channel
   return new Promise((resolve, reject) => {
     if (channel) {
-      channel.send(formattedMessage);
+      if (photoUrl) channel.send(formattedMessage, { files: [photoUrl] });
+      else channel.send(formattedMessage);
       resolve('Success');
     } else {
       reject(Error('Channel is not provided in context'));

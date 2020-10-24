@@ -121,6 +121,26 @@ const actions = [
       return reply(BOT_MESSAGES.RATING_TEXT(User.all()), context);
     },
   },
+  {
+    name: 'avatar',
+    execute: async (args, reply, context) => {
+      // If more than 1 User on no User was sent
+      if (args.length !== 1) {
+        return reply(BOT_MESSAGES.INCORRECT_INPUT, context);
+      }
+
+      const username = args[0].toLowerCase();
+      const user = User.load(username);
+
+      if (user) {
+        // Add photo to context
+        context.photoUrl = user.avatar;
+        return reply('', context);
+      }
+
+      return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
+    },
+  },
 ];
 
 module.exports = { actions };

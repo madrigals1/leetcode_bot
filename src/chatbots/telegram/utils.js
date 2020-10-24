@@ -1,7 +1,14 @@
 const { EMOJI } = require('../../utils/constants');
 
 const reply = (message, context) => {
-  const { chatId, options, bot } = context;
+  const {
+    chatId, options, bot, photoUrl,
+  } = context;
+
+  if (photoUrl) {
+    return bot.sendPhoto(chatId, photoUrl, { captions: message });
+  }
+
   return bot.sendMessage(chatId, message, options);
 };
 
