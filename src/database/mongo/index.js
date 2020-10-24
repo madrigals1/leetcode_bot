@@ -1,13 +1,6 @@
 const mongoose = require('mongoose');
 
-const {
-  MONGO_DB_NAME,
-  MONGO_DB_PORT,
-  MONGO_DB_URL,
-  MONGO_DB_USER,
-  MONGO_DB_PASSWORD,
-  MONGO_DB_AUTHENTICATION_ENABLED,
-} = require('../../utils/constants');
+const { MONGO } = require('../../utils/constants');
 const { SERVER_MESSAGES } = require('../../utils/dictionary');
 const { log, error } = require('../../utils/helper');
 
@@ -18,14 +11,14 @@ class MongoDB {
   constructor() {
     // If authentication credentials were provided in environment, use them.
     // If not, use empty string in MongoDB connection
-    const credentials = MONGO_DB_AUTHENTICATION_ENABLED
-      ? `${MONGO_DB_USER}:${MONGO_DB_PASSWORD}@` : '';
+    const credentials = MONGO.DB_AUTHENTICATION_ENABLED
+      ? `${MONGO.DB_USER}:${MONGO.DB_PASSWORD}@` : '';
 
     // Set Authentication Source to connect to MongoDB database
-    const authSource = MONGO_DB_AUTHENTICATION_ENABLED
+    const authSource = MONGO.DB_AUTHENTICATION_ENABLED
       ? '?authSource=admin' : '';
     // URL for Connection to MongoDB, is already usable for connection.
-    const databaseUrl = `${MONGO_DB_URL}:${MONGO_DB_PORT}/${MONGO_DB_NAME}`;
+    const databaseUrl = `${MONGO.DB_URL}:${MONGO.DB_PORT}/${MONGO.DB_NAME}`;
 
     // URL for Connection to MongoDB, that contains authentication
     this.mongoUrl = `mongodb://${credentials}${databaseUrl}${authSource}`;

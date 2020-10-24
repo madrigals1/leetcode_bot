@@ -1,24 +1,18 @@
 const { Client } = require('pg');
 
 const { error } = require('../../utils/helper');
-const {
-  POSTGRES_DB_URL,
-  POSTGRES_DB_NAME,
-  POSTGRES_DB_USER,
-  POSTGRES_DB_PASSWORD,
-  POSTGRES_DB_PORT,
-} = require('../../utils/constants');
+const { POSTGRES } = require('../../utils/constants');
 
 const { QUERIES } = require('./queries');
 
 class Postgres {
   constructor() {
     this.client = new Client({
-      user: POSTGRES_DB_USER,
-      host: POSTGRES_DB_URL,
-      database: POSTGRES_DB_NAME,
-      password: POSTGRES_DB_PASSWORD,
-      port: POSTGRES_DB_PORT,
+      user: POSTGRES.DB_USER,
+      host: POSTGRES.DB_URL,
+      database: POSTGRES.DB_NAME,
+      password: POSTGRES.DB_PASSWORD,
+      port: POSTGRES.DB_PORT,
     });
   }
 
