@@ -19,6 +19,7 @@ const {
   SUBMISSION_COUNT,
   DELAY_TIME_MS,
   DB_AUTHENTICATION_ENABLED,
+  NODE_SCHEDULE_TIME,
 } = process.env;
 
 const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
@@ -80,4 +81,5 @@ module.exports = {
   EMOJI,
   STATUS,
   DB_AUTHENTICATION_ENABLED,
+  NODE_SCHEDULE_TIME,
 };
