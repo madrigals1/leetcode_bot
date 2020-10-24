@@ -1,21 +1,21 @@
-const { replaceAll } = require('../../utils/helper');
+// Change bold, italic and code from HTML to Markdown
+const formatMessage = (message) => (message
+  .replace(/<b>|<\/b>/g, '**')
+  .replace(/<i>|<\/i>/g, '*')
+  .replace(/<code>|<\/code>/g, '`')
+);
 
-const sendFormattedMessage = (message, context) => {
+const reply = (message, context) => {
   // Get channel from context
   const { channel } = context;
 
-  // Change bold, italic and code from HTML to Markdown
-  let formatted = replaceAll(message, '<b>', '**');
-  formatted = replaceAll(formatted, '</b>', '**');
-  formatted = replaceAll(formatted, '<i>', '*');
-  formatted = replaceAll(formatted, '</i>', '*');
-  formatted = replaceAll(formatted, '<code>', '`');
-  formatted = replaceAll(formatted, '</code>', '`');
+  // Format message to Markdown style, requested by Discord
+  const formattedMessage = formatMessage(message);
 
   // Send message back to channel
   return new Promise((resolve, reject) => {
     if (channel) {
-      channel.send(formatted);
+      channel.send(formattedMessage);
       resolve('Success');
     } else {
       reject(Error('Channel is not provided in context'));
@@ -23,4 +23,4 @@ const sendFormattedMessage = (message, context) => {
   });
 };
 
-module.exports = { sendFormattedMessage };
+module.exports = { reply };

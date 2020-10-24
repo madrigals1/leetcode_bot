@@ -3,7 +3,7 @@ const { log } = require('../../utils/helper');
 const { actions } = require('../actions');
 
 const { createBot } = require('./bot');
-const { sendFormattedMessage } = require('./utils');
+const { reply } = require('./utils');
 
 class Discord {
   constructor() {
@@ -34,7 +34,7 @@ class Discord {
         const action = actions[i];
         if (action.name === command) {
           const context = { channel, prefix: DISCORD.PREFIX };
-          action.execute(args, sendFormattedMessage, context);
+          action.execute(args, reply, context);
 
           // Stop searching after action is found
           return;
