@@ -103,7 +103,7 @@ class User {
 
     if (user) {
       // Load data from LeetCode by Username
-      const userData = await getLeetcodeDataFromUsername(user.username);
+      const userData = await getLeetcodeDataFromUsername(username);
 
       if (userData) {
         this.users.push(userData);
