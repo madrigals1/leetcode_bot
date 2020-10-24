@@ -17,7 +17,10 @@ const getArgs = (message) => {
 
 const createRatingListReplyMarkup = (users) => {
   // Create menu for users
-  const usersInlineKeyboard = [];
+  const usersInlineKeyboard = [[{
+    text: `${EMOJI.CARD_FILE_BOX} User List`,
+    callback_data: '/rating',
+  }]];
 
   for (let i = 0; i < Math.ceil(users.length / 3); i++) {
     const row = [];

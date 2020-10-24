@@ -6,7 +6,6 @@ const User = require('../../cache/user');
 const { log } = require('../../utils/helper');
 const { actions } = require('../actions');
 const { STATUS, TELEGRAM } = require('../../utils/constants');
-const { BOT_MESSAGES } = require('../../utils/dictionary');
 
 const { getArgs, createRatingListReplyMarkup, reply } = require('./utils');
 
@@ -16,7 +15,9 @@ class Telegram {
     this.token = TELEGRAM.TOKEN;
     this.options = { polling: true };
     this.ratingActionName = 'rating';
-    this.ignoredActions = [this.ratingActionName];
+    this.ratingAction = actions.find(
+      (action) => action.name === this.ratingActionName,
+    ).execute;
   }
 
   run() {
@@ -28,9 +29,6 @@ class Telegram {
 
     // Add regular actions
     actions.forEach((action) => {
-      // Skip /rating action
-      if (this.ignoredActions.includes(action.name)) return;
-
       // convert regular string to regexp
       const actionNameRegex = new RegExp(action.name);
 
@@ -43,22 +41,24 @@ class Telegram {
         // Get args from message
         const args = getArgs(message.text);
 
+        // Variable to check if this action is rating action for reply markup
+        const willIncludeRatingReplyMarkup = (
+          action.name === this.ratingActionName
+        );
+
         // Create context for action
-        const context = {
-          chatId: message.chat.id,
-          prefix: TELEGRAM.PREFIX,
-          options: { parse_mode: 'HTML' },
-          bot: this.bot,
-        };
+        const context = willIncludeRatingReplyMarkup
+          ? this.replyMarkupContext(message.chat.id)
+          : {
+            chatId: message.chat.id,
+            prefix: TELEGRAM.PREFIX,
+            options: { parse_mode: 'HTML' },
+            bot: this.bot,
+          };
 
         action.execute(args, reply, context);
       });
     });
-
-    // Set specific rating command
-    this.bot.onText(
-      new RegExp(this.ratingActionName), (msg) => this.ratingAction(msg),
-    );
 
     // Set specific callback_query and polling_error
     this.bot.on('polling_error', (err) => log(err));
@@ -73,7 +73,14 @@ class Telegram {
 
       // If message starts with /rating, call rating action
       if (data.match(this.ratingActionName)) {
-        return this.ratingAction(message, data);
+        // Get args from callback_query message
+        const args = getArgs(data);
+
+        return this.ratingAction(
+          args,
+          reply,
+          this.replyMarkupContext(message.chat.id),
+        );
       }
 
       return null;
@@ -82,49 +89,16 @@ class Telegram {
     log('>>> Telegram BOT is running!');
   }
 
-  async ratingAction(message, data = null) {
-    // Get text from message or data if provided
-    const text = data || message.text;
-
-    // Get args from text
-    const args = getArgs(text);
-
-    // Create context for responding
-    const context = {
-      chatId: message.chat.id,
-      options: { parse_mode: 'HTML' },
-      bot: this.bot,
-    };
-
-    // If more than 1 User was sent
-    if (args.length > 1) reply(BOT_MESSAGES.INCORRECT_INPUT, context);
-
-    // Load users from repo
-    const users = User.all();
-
-    // Context for message with reply markup
-    const replyMarkupContext = {
-      chatId: context.chatId,
+  replyMarkupContext(chatId) {
+    return {
+      chatId,
+      prefix: TELEGRAM.PREFIX,
       options: {
         parse_mode: 'HTML',
-        reply_markup: createRatingListReplyMarkup(users),
+        reply_markup: createRatingListReplyMarkup(User.all()),
       },
       bot: this.bot,
     };
-
-    // If 1 User was sent
-    if (args.length === 1) {
-      const username = args[0].toLowerCase();
-      const user = User.load(username);
-
-      // If user does exist, return user data with reply markup
-      if (user) return reply(BOT_MESSAGES.USER_TEXT(user), replyMarkupContext);
-
-      return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username));
-    }
-
-    // If 0 User was sent
-    return reply(BOT_MESSAGES.RATING_TEXT(User.all()), replyMarkupContext);
   }
 }
 

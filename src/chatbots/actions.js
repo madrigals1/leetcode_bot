@@ -108,15 +108,11 @@ const actions = [
 
       // If 1 User was sent
       if (args.length === 1) {
-        // Get username from args
         const username = args[0].toLowerCase();
-
-        // Load User from cache by username
         const user = User.load(username);
 
-        if (user) {
-          return reply(BOT_MESSAGES.USER_TEXT(user), context);
-        }
+        // If user does exist, return user data with reply markup
+        if (user) return reply(BOT_MESSAGES.USER_TEXT(user), context);
 
         return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
       }
