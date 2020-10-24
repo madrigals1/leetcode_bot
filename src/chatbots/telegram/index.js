@@ -8,9 +8,7 @@ const { actions } = require('../actions');
 const { STATUS, TELEGRAM } = require('../../utils/constants');
 const { BOT_MESSAGES } = require('../../utils/dictionary');
 
-const {
-  getArgs, createRatingListReplyMarkup, sendMessage,
-} = require('./utils');
+const { getArgs, createRatingListReplyMarkup, reply } = require('./utils');
 
 class Telegram {
   constructor() {
@@ -53,7 +51,7 @@ class Telegram {
           bot: this.bot,
         };
 
-        action.execute(args, sendMessage, context);
+        action.execute(args, reply, context);
       });
     });
 
@@ -99,7 +97,7 @@ class Telegram {
     };
 
     // If more than 1 User was sent
-    if (args.length > 1) sendMessage(BOT_MESSAGES.INCORRECT_INPUT, context);
+    if (args.length > 1) reply(BOT_MESSAGES.INCORRECT_INPUT, context);
 
     // Load users from repo
     const users = User.all();
@@ -120,17 +118,13 @@ class Telegram {
       const user = User.load(username);
 
       // If user does exist, return user data with reply markup
-      if (user) {
-        return sendMessage(BOT_MESSAGES.USER_TEXT(user), replyMarkupContext);
-      }
+      if (user) return reply(BOT_MESSAGES.USER_TEXT(user), replyMarkupContext);
 
-      return sendMessage(BOT_MESSAGES.USERNAME_NOT_FOUND(username));
+      return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username));
     }
 
     // If 0 User was sent
-    return sendMessage(
-      BOT_MESSAGES.RATING_TEXT(User.all()), replyMarkupContext,
-    );
+    return reply(BOT_MESSAGES.RATING_TEXT(User.all()), replyMarkupContext);
   }
 }
 

@@ -1,6 +1,6 @@
 const { EMOJI } = require('../../utils/constants');
 
-const sendMessage = (message, context) => {
+const reply = (message, context) => {
   const { chatId, options, bot } = context;
   return bot.sendMessage(chatId, message, options);
 };
@@ -45,4 +45,4 @@ const createRatingListReplyMarkup = (users) => {
   });
 };
 
-module.exports = { getArgs, createRatingListReplyMarkup, sendMessage };
+module.exports = { getArgs, createRatingListReplyMarkup, reply };
