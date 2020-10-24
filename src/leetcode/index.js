@@ -2,9 +2,7 @@ const axios = require('axios');
 const moment = require('moment');
 
 const {
-  LEETCODE_URL,
-  SUBMISSION_COUNT,
-  STATUS_MAP,
+  LEETCODE_URL, SUBMISSION_COUNT, STATUS_MAP,
 } = require('../utils/constants');
 const { SERVER_MESSAGES } = require('../utils/dictionary');
 const { error, log } = require('../utils/helper');
