@@ -63,7 +63,7 @@ const BOT_MESSAGES = {
   WELCOME_TEXT: (prefix) => `Welcome! This is Leetcode Rating bot Elite ${EMOJI.COOL} Boys
 <b><i>${prefix}rating</i></b> - Overall rating
 <b><i>${prefix}rating username</i></b>  - Rating for separate user
-<b><i>${prefix}refresh</i></b>   - Manual refresh of database.
+<b><i>${prefix}refresh</i></b> - Manual refresh of database.
 <b><i>${prefix}add username1 username2</i></b>   ... - adding users`,
   USER_TEXT: (user) => `<b>Name:</b> ${user.name || 'No name'}
 <b>Username:</b> ${user.username}
