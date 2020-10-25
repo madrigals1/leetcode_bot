@@ -1,9 +1,7 @@
 const axios = require('axios');
 const moment = require('moment');
 
-const {
-  LEETCODE_URL, SUBMISSION_COUNT, STATUS_MAP,
-} = require('../utils/constants');
+const { LEETCODE_URL, STATUS_MAP } = require('../utils/constants');
 const { SERVER_MESSAGES } = require('../utils/dictionary');
 const { error, log } = require('../utils/helper');
 
@@ -74,11 +72,8 @@ const getLeetcodeDataFromUsername = async (username) => {
     .then((graphQLResponse) => graphQLResponse.data.data);
 
   const { recentSubmissionList } = userRecentSubmissionData;
-  const limitedRecentSubmissionList = (
-    recentSubmissionList.slice(0, SUBMISSION_COUNT)
-  );
 
-  const submissions = limitedRecentSubmissionList.map((submission) => {
+  const submissions = recentSubmissionList.map((submission) => {
     // Get necessary data from submission
     const {
       titleSlug, statusDisplay, lang, title, timestamp,

@@ -1,7 +1,14 @@
-const { BOT_MESSAGES } = require('../utils/dictionary');
+const nodeHtmlToImage = require('node-html-to-image');
+const imgur = require('imgur');
+
+const { BOT_MESSAGES, SERVER_MESSAGES } = require('../utils/dictionary');
 const User = require('../cache/user');
-const { log } = require('../utils/helper');
+const { log, error } = require('../utils/helper');
 const { MASTER_PASSWORD } = require('../utils/constants');
+
+const {
+  generateImagePath, tableForSubmissions, deleteFile,
+} = require('./utils');
 
 const actions = [
   {
@@ -139,6 +146,67 @@ const actions = [
       }
 
       return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
+    },
+  },
+  {
+    name: 'submissions',
+    execute: async (args, reply, context) => {
+      // If incorrect number of args provided, return incorrect input
+      if (args.length !== 1) {
+        return reply(BOT_MESSAGES.INCORRECT_INPUT, context);
+      }
+
+      // Get User from args
+      const username = args[0].toLowerCase();
+      const user = User.load(username);
+
+      // If User does not exist, return error message
+      if (!user) {
+        return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
+      }
+
+      // Generate unique path
+      const path = generateImagePath();
+
+      // Create HTML image with Table
+      const imageCreated = await nodeHtmlToImage({
+        output: path,
+        html: tableForSubmissions(user),
+      })
+        .then(() => {
+          log(SERVER_MESSAGES.IMAGE_WAS_CREATED(path));
+          return true;
+        })
+        .catch((err) => {
+          error(SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED(err));
+          return false;
+        });
+
+      // If image was created
+      if (imageCreated) {
+        // Upload image to imgur and get link
+        const imageLink = await imgur.uploadImages(
+          [path],
+          'File',
+        )
+          .then((images) => images[0].link)
+          .catch((err) => {
+            error(SERVER_MESSAGES.ERROR_ON_THE_SERVER(err));
+            return false;
+          });
+
+        // If image link was not achieved from Imgur API
+        if (!imageLink) return reply(BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
+
+        // Delete image after uploading to imgur
+        deleteFile(path);
+
+        // Add image to context
+        context.photoUrl = imageLink;
+        return reply('', context);
+      }
+
+      return reply(BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
     },
   },
 ];

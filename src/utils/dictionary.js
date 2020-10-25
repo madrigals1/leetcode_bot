@@ -1,4 +1,4 @@
-const { LEETCODE_URL, EMOJI } = require('./constants');
+const { LEETCODE_URL, EMOJI, SUBMISSION_COUNT } = require('./constants');
 
 const SERVER_MESSAGES = {
   // ERROR
@@ -16,6 +16,11 @@ const SERVER_MESSAGES = {
     SUCCESSFUL: 'Database connection successful!',
     ERROR: (error) => `Database connection error: ${error}`,
   },
+
+  // LOGGING
+  IMAGE_WAS_CREATED: (path) => `The image was created in ${path}`,
+  IMAGE_WAS_NOT_CREATED: (path) => `The image was NOT created: ${path}`,
+  FILE_WAS_DELETED: (path) => `${path} was deleted`,
 };
 
 const NO_USERS = `${EMOJI.ERROR} No users found in database`;
@@ -24,6 +29,7 @@ const BOT_MESSAGES = {
   // MISC
   INCORRECT_INPUT: `${EMOJI.ERROR} Incorrect input`,
   PASSWORD_IS_INCORRECT: `${EMOJI.ERROR} Password is incorrect`,
+  ERROR_ON_THE_SERVER: `${EMOJI.ERROR} Error on the server`,
 
   // REFRESHING
   STARTED_REFRESH: `${EMOJI.WAITING} Database started refresh`,
@@ -65,7 +71,7 @@ const BOT_MESSAGES = {
 <b>Solved:</b> ${user.solved} / ${user.all}
 
 <b>Last ${user.submissions.length} Submissions:</b>
-${user.submissions.map((submission) => `
+${user.submissions.slice(0, SUBMISSION_COUNT).map((submission) => `
 <b>${submission.name}</b>
 <b>Link:</b> <b>${LEETCODE_URL}${submission.link}</b>
 <b>Status:</b> ${submission.status}
