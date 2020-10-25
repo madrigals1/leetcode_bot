@@ -60,11 +60,17 @@ const BOT_MESSAGES = {
 
   // BIG TEXTS
   WELCOME_TEXT: (prefix) => `Welcome! This is Leetcode Rating bot Elite ${EMOJI.COOL} Boys
+
+<b>Main commands:</b>
 <b><i>${prefix}rating</i></b> - Overall rating
+<b><i>${prefix}refresh</i></b> - Manual refresh of database
+<b><i>${prefix}add username1 username2</i></b> ... - adding Users
+
+<b>User related commands: </b> 
 <b><i>${prefix}rating username</i></b> - Rating for separate User
 <b><i>${prefix}avatar username</i></b> - Avatar for User
-<b><i>${prefix}refresh</i></b> - Manual refresh of database.
-<b><i>${prefix}add username1 username2</i></b> ... - adding Isers`,
+<b><i>${prefix}submissions username</i></b> - Get all recent submissions for User as Table
+`,
   USER_TEXT: (user) => `<b>Name:</b> ${user.name || 'No name'}
 <b>Username:</b> ${user.username}
 <b>Link:</b> <b>${user.link}</b>
