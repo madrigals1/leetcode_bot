@@ -5,12 +5,8 @@ const SERVER_MESSAGES = {
   ERROR_ON_THE_SERVER: (error) => `Error on the server: ${error}`,
 
   // REFRESHING
-  REFRESH_IN_PROCESS: 'Refreshing',
-  REFRESH_SUCCESS: 'Successfully refreshed',
-  REFRESH_FAILURE: 'Failed refreshing',
-  REFRESH_FINISHED: 'Finished refresh',
   DATABASE_STARTED_REFRESH: (time) => `Database started refresh at ${time}`,
-  IS_REFRESHED: (time) => `Database is refreshed at ${time}`,
+  DATABASE_FINISHED_REFRESH: (time) => `Database is refreshed at ${time}`,
   IS_ALREADY_REFRESHING: 'Database is already refreshing',
   USERNAME_WAS_REFRESHED: (username) => `${username} was refreshed`,
   USERNAME_WAS_NOT_REFRESHED: (username) => `${username} was not refreshed`,
@@ -20,8 +16,6 @@ const SERVER_MESSAGES = {
     SUCCESSFUL: 'Database connection successful!',
     ERROR: (error) => `Database connection error: ${error}`,
   },
-
-  MOST_RECENT_SUBMISSIONS: 'Most recent submissions',
 };
 
 const NO_USERS = `${EMOJI.ERROR} No users found in database`;
@@ -34,7 +28,6 @@ const BOT_MESSAGES = {
   // REFRESHING
   STARTED_REFRESH: `${EMOJI.WAITING} Database started refresh`,
   IS_REFRESHED: `${EMOJI.SUCCESS} Database is refreshed`,
-  IS_ALREADY_REFRESHING: `${EMOJI.WAITING} Database is already refreshing`,
 
   // USER RELATED
   USER_LIST: (userList) => `User List:\n${userList}`,
@@ -43,7 +36,6 @@ const BOT_MESSAGES = {
   ),
   NO_USERS,
   USERNAME_NOT_FOUND: (username) => `${EMOJI.ERROR} Username <b>${username}</b> was not found in database`,
-  USERS_ARE_REFRESHED: `${EMOJI.SUCCESS} Users are refreshed`,
   USERNAME_NOT_FOUND_ON_LEETCODE: (username) => (
     `${EMOJI.ERROR} User <b>${username}</b> was not found on <b>LeetCode</b>\n`
   ),

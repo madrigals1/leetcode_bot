@@ -75,7 +75,7 @@ class User {
       const refreshFinishedAt = moment().format(DATE_FORMAT);
 
       // Log when refresh started
-      log(SERVER_MESSAGES.IS_REFRESHED(refreshFinishedAt));
+      log(SERVER_MESSAGES.DATABASE_FINISHED_REFRESH(refreshFinishedAt));
     } else {
       log(SERVER_MESSAGES.IS_ALREADY_REFRESHING);
     }

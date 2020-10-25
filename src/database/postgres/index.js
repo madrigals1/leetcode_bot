@@ -1,7 +1,8 @@
 const { Client } = require('pg');
 
-const { error } = require('../../utils/helper');
+const { error, log } = require('../../utils/helper');
 const { POSTGRES } = require('../../utils/constants');
+const { SERVER_MESSAGES } = require('../../utils/dictionary');
 
 const { QUERIES } = require('./queries');
 
@@ -25,9 +26,12 @@ class Postgres {
 
     // Create table for users if not exist
     return this.client.query(query)
-      .then(() => true)
+      .then(() => {
+        log(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
+        return true;
+      })
       .catch((err) => {
-        error(err);
+        error(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL(err));
         this.client.end();
         return false;
       });
