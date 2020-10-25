@@ -17,8 +17,6 @@ const generateImagePath = () => {
 const tableForSubmissions = async (path, user) => {
   const rowHeight = 36;
   const bodyMargin = 8;
-  const tableHeight = (rowHeight + 2) * (user.submissions.length + 1);
-  const pageHeight = tableHeight + bodyMargin * 2;
 
   const content = `
 <html lang="en">
@@ -35,7 +33,6 @@ const tableForSubmissions = async (path, user) => {
         font-family: arial, sans-serif;
         border-collapse: collapse;
         width: 100%;
-        height: ${tableHeight}px;
       }
       td, th {
         border: 1px solid #dddddd;
@@ -86,11 +83,21 @@ const tableForSubmissions = async (path, user) => {
     const page = await browser.newPage();
     await page.setViewport({
       width: 960,
-      height: pageHeight,
+      height: 760,
       deviceScaleFactor: 1,
     });
     await page.setContent(content);
-    await page.screenshot({ path });
+    const div = await page.$('html');
+    const boundingBox = await div.boundingBox();
+    await div.screenshot({
+      path,
+      clip: {
+        x: boundingBox.x,
+        y: boundingBox.y,
+        width: boundingBox.width,
+        height: boundingBox.height,
+      },
+    });
     await browser.close();
     log(SERVER_MESSAGES.IMAGE_WAS_CREATED(path));
     return true;
