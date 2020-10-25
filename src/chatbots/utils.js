@@ -17,8 +17,8 @@ const generateImagePath = () => {
 const tableForSubmissions = async (path, user) => {
   const rowHeight = 36;
   const bodyMargin = 8;
-  const pageHeight = (rowHeight + 2) * (user.submissions.length + 1)
-    + bodyMargin * 2;
+  const tableHeight = (rowHeight + 2) * (user.submissions.length + 1);
+  const pageHeight = tableHeight + bodyMargin * 2;
 
   const content = `
 <html lang="en">
@@ -29,12 +29,13 @@ const tableForSubmissions = async (path, user) => {
         box-sizing: border-box;
       }
       body {
-        margin: ${bodyMargin};
+        margin: ${bodyMargin}px;
       }
       table {
         font-family: arial, sans-serif;
         border-collapse: collapse;
         width: 100%;
+        height: ${tableHeight}px;
       }
       td, th {
         border: 1px solid #dddddd;
