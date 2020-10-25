@@ -57,7 +57,7 @@ const tableForSubmissions = async (path, user) => {
   `;
 
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.setViewport({
       width: 960,
