@@ -38,8 +38,8 @@ const actions = [
     name: 'refresh',
     execute: async (args, reply, context) => (
       reply(BOT_MESSAGES.STARTED_REFRESH, context).then(async () => {
-        await User.refresh();
-        return reply(BOT_MESSAGES.IS_REFRESHED, context);
+        const result = await User.refresh();
+        return reply(result, context);
       })
     ),
   },

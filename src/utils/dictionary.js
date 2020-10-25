@@ -28,6 +28,7 @@ const BOT_MESSAGES = {
   // REFRESHING
   STARTED_REFRESH: `${EMOJI.WAITING} Database started refresh`,
   IS_REFRESHED: `${EMOJI.SUCCESS} Database is refreshed`,
+  IS_ALREADY_REFRESHING: `${EMOJI.ERROR} Database is already refreshing`,
 
   // USER RELATED
   USER_LIST: (userList) => `User List:\n${userList}`,

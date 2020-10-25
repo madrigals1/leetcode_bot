@@ -32,53 +32,56 @@ class User {
 
   // Refresh Users map
   async refresh() {
-    if (!Database.isRefreshing) {
-      // Set database as refreshing and get refresh time
-      Database.isRefreshing = true;
-      const refreshedStartedAt = moment().format(DATE_FORMAT);
+    // If database was already refreshing
+    if (Database.isRefreshing) {
+      log(SERVER_MESSAGES.IS_ALREADY_REFRESHING);
+      return BOT_MESSAGES.IS_ALREADY_REFRESHING;
+    }
 
-      // Log when refresh started
-      log(SERVER_MESSAGES.DATABASE_STARTED_REFRESH(refreshedStartedAt));
+    // Set database as refreshing and get refresh time
+    Database.isRefreshing = true;
+    const refreshedStartedAt = moment().format(DATE_FORMAT);
 
-      // Get all users from database
-      const databaseUsers = await Database.findAllUsers();
+    // Log when refresh started
+    log(SERVER_MESSAGES.DATABASE_STARTED_REFRESH(refreshedStartedAt));
 
-      // Modify users with data from LeetCode
-      for (let i = 0; i < databaseUsers.length; i++) {
-        const databaseUser = databaseUsers[i];
+    // Get all users from database
+    const databaseUsers = await Database.findAllUsers();
 
-        // Get username from Database User
-        const { username } = databaseUser;
+    // Modify users with data from LeetCode
+    for (let i = 0; i < databaseUsers.length; i++) {
+      const databaseUser = databaseUsers[i];
 
-        // Get data from LeetCode related to this User
-        // eslint-disable-next-line no-await-in-loop
-        const userData = await getLeetcodeDataFromUsername(username);
+      // Get username from Database User
+      const { username } = databaseUser;
 
-        // If UserData was returned from Backend, replace User in cache
-        if (userData) {
-          this.addOrReplaceUser(username, userData);
-          log(SERVER_MESSAGES.USERNAME_WAS_REFRESHED(username));
-        } else {
-          log(SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(username));
-        }
+      // Get data from LeetCode related to this User
+      // eslint-disable-next-line no-await-in-loop
+      const userData = await getLeetcodeDataFromUsername(username);
 
-        // Wait X seconds until loading next User, X is set in .env
-        // eslint-disable-next-line no-await-in-loop
-        await delay(DELAY_TIME_MS);
+      // If UserData was returned from Backend, replace User in cache
+      if (userData) {
+        this.addOrReplaceUser(username, userData);
+        log(SERVER_MESSAGES.USERNAME_WAS_REFRESHED(username));
+      } else {
+        log(SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(username));
       }
 
-      // Sort objects after refresh
-      await this.sort();
-
-      // Set database indicators
-      Database.isRefreshing = false;
-      const refreshFinishedAt = moment().format(DATE_FORMAT);
-
-      // Log when refresh started
-      log(SERVER_MESSAGES.DATABASE_FINISHED_REFRESH(refreshFinishedAt));
-    } else {
-      log(SERVER_MESSAGES.IS_ALREADY_REFRESHING);
+      // Wait X seconds until loading next User, X is set in .env
+      // eslint-disable-next-line no-await-in-loop
+      await delay(DELAY_TIME_MS);
     }
+
+    // Sort objects after refresh
+    await this.sort();
+
+    // Set database indicators
+    Database.isRefreshing = false;
+    const refreshFinishedAt = moment().format(DATE_FORMAT);
+
+    // Log when refresh started
+    log(SERVER_MESSAGES.DATABASE_FINISHED_REFRESH(refreshFinishedAt));
+    return BOT_MESSAGES.IS_REFRESHED;
   }
 
   // Sort all Users by amount of solved questions on LeetCode
