@@ -15,11 +15,22 @@ const generateImagePath = () => {
 };
 
 const tableForSubmissions = async (path, user) => {
+  const rowHeight = 36;
+  const bodyMargin = 8;
+  const pageHeight = (rowHeight + 2) * (user.submissions.length + 1)
+    + bodyMargin * 2;
+
   const content = `
 <html lang="en">
   <head>
     <title>{user.username}</title>
     <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: ${bodyMargin};
+      }
       table {
         font-family: arial, sans-serif;
         border-collapse: collapse;
@@ -29,6 +40,9 @@ const tableForSubmissions = async (path, user) => {
         border: 1px solid #dddddd;
         text-align: left;
         padding: 8px;
+      }
+      tr {
+        height: ${rowHeight}px;
       }
       tr:nth-child(even) {
         background-color: #dddddd;
@@ -60,14 +74,18 @@ const tableForSubmissions = async (path, user) => {
   try {
     // Set options for Puppeteer
     const options = CHROMIUM_PATH
-      ? { args: ['--no-sandbox'], executablePath: CHROMIUM_PATH }
-      : {};
+      ? {
+        args: ['--no-sandbox'],
+        executablePath: CHROMIUM_PATH,
+        defaultViewport: null,
+      }
+      : { defaultViewport: null };
 
     const browser = await puppeteer.launch(options);
     const page = await browser.newPage();
     await page.setViewport({
       width: 960,
-      height: 760,
+      height: pageHeight,
       deviceScaleFactor: 1,
     });
     await page.setContent(content);
