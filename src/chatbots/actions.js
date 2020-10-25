@@ -1,4 +1,3 @@
-const nodeHtmlToImage = require('node-html-to-image');
 const imgur = require('imgur');
 
 const { BOT_MESSAGES, SERVER_MESSAGES } = require('../utils/dictionary');
@@ -169,21 +168,10 @@ const actions = [
       const path = generateImagePath();
 
       // Create HTML image with Table
-      const imageCreated = await nodeHtmlToImage({
-        output: path,
-        html: tableForSubmissions(user),
-      })
-        .then(() => {
-          log(SERVER_MESSAGES.IMAGE_WAS_CREATED(path));
-          return true;
-        })
-        .catch((err) => {
-          error(SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED(err));
-          return false;
-        });
+      const tableImageCreated = await tableForSubmissions(path, user);
 
       // If image was created
-      if (imageCreated) {
+      if (tableImageCreated) {
         // Upload image to imgur and get link
         const imageLink = await imgur.uploadImages(
           [path],

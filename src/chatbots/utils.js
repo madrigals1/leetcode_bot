@@ -1,5 +1,6 @@
 const fs = require('fs');
 
+const puppeteer = require('puppeteer');
 const uuid4 = require('uuid4');
 
 const { log, error } = require('../utils/helper');
@@ -12,7 +13,8 @@ const generateImagePath = () => {
   return `./tmp/image_${uuid}.png`;
 };
 
-const tableForSubmissions = (user) => `
+const tableForSubmissions = async (path, user) => {
+  const content = `
 <html lang="en">
   <head>
     <title>{user.username}</title>
@@ -46,11 +48,32 @@ const tableForSubmissions = (user) => `
         <th>${submission.time}</th>
         <th>${submission.language}</th>
         <th>${submission.status}</th>
-      </tr>`).join('')}
+      </tr>`)
+    .join('')}
     </table>
     
   </body>
-</html>`;
+</html>
+  `;
+
+  try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setViewport({
+      width: 960,
+      height: 760,
+      deviceScaleFactor: 1,
+    });
+    await page.setContent(content);
+    await page.screenshot({ path });
+    await browser.close();
+    log(SERVER_MESSAGES.IMAGE_WAS_CREATED(path));
+    return true;
+  } catch (err) {
+    error(SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED(err));
+    return false;
+  }
+};
 
 const deleteFile = (path) => {
   fs.unlink(path, (err) => {
