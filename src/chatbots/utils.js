@@ -5,6 +5,7 @@ const uuid4 = require('uuid4');
 
 const { log, error } = require('../utils/helper');
 const { SERVER_MESSAGES } = require('../utils/dictionary');
+const { CHROMIUM_PATH } = require('../utils/constants');
 
 const generateImagePath = () => {
   // Generate uuid for image in tmp folder
@@ -57,7 +58,12 @@ const tableForSubmissions = async (path, user) => {
   `;
 
   try {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+    // Set options for Puppeteer
+    const options = CHROMIUM_PATH
+      ? { args: ['--no-sandbox'], executablePath: CHROMIUM_PATH }
+      : {};
+
+    const browser = await puppeteer.launch(options);
     const page = await browser.newPage();
     await page.setViewport({
       width: 960,

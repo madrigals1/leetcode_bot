@@ -30,6 +30,8 @@ const {
   SUBMISSION_COUNT,
   DELAY_TIME_MS,
   NODE_SCHEDULE_TIME,
+  // Server settings
+  CHROMIUM_PATH,
 } = process.env;
 
 const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
@@ -108,4 +110,6 @@ module.exports = {
   STATUS_MAP,
   EMOJI,
   STATUS,
+  // Server settings
+  CHROMIUM_PATH,
 };
