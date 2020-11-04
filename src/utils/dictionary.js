@@ -18,8 +18,8 @@ const SERVER_MESSAGES = {
   },
 
   // LOGGING
-  IMAGE_WAS_CREATED: (path) => `The image was created in ${path}`,
-  IMAGE_WAS_NOT_CREATED: (path) => `The image was NOT created: ${path}`,
+  IMAGE_WAS_CREATED: 'The image was created',
+  IMAGE_WAS_NOT_CREATED: 'The image was NOT created',
   FILE_WAS_DELETED: (path) => `${path} was deleted`,
 };
 

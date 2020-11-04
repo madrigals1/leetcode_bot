@@ -1,13 +1,9 @@
-const imgur = require('imgur');
-
-const { BOT_MESSAGES, SERVER_MESSAGES } = require('../utils/dictionary');
+const { BOT_MESSAGES } = require('../utils/dictionary');
 const User = require('../cache/user');
-const { log, error } = require('../utils/helper');
+const { log } = require('../utils/helper');
 const { MASTER_PASSWORD } = require('../utils/constants');
 
-const {
-  generateImagePath, tableForSubmissions, deleteFile,
-} = require('./utils');
+const { tableForSubmissions } = require('./utils');
 
 const actions = [
   {
@@ -164,36 +160,17 @@ const actions = [
         return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
       }
 
-      // Generate unique path
-      const path = generateImagePath();
-
       // Create HTML image with Table
-      const tableImageCreated = await tableForSubmissions(path, user);
+      const tableImageLink = await tableForSubmissions(user);
 
       // If image was created
-      if (tableImageCreated) {
-        // Upload image to imgur and get link
-        const imageLink = await imgur.uploadImages(
-          [path],
-          'File',
-        )
-          .then((images) => images[0].link)
-          .catch((err) => {
-            error(SERVER_MESSAGES.ERROR_ON_THE_SERVER(err));
-            return false;
-          });
-
-        // If image link was not achieved from Imgur API
-        if (!imageLink) return reply(BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
-
-        // Delete image after uploading to imgur
-        deleteFile(path);
-
+      if (tableImageLink) {
         // Add image to context
-        context.photoUrl = imageLink;
+        context.photoUrl = tableImageLink;
         return reply('', context);
       }
 
+      // If image link was not achieved from Imgur API
       return reply(BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
     },
   },

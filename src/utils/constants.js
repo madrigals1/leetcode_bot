@@ -24,14 +24,14 @@ const {
   POSTGRES_DB_USER,
   POSTGRES_DB_PASSWORD,
   POSTGRES_DB_PORT,
+  // Table API
+  TABLE_API_LINK,
   // System settings
   MASTER_PASSWORD,
   LEETCODE_URL,
   SUBMISSION_COUNT,
   DELAY_TIME_MS,
   NODE_SCHEDULE_TIME,
-  // Server settings
-  CHROMIUM_PATH,
 } = process.env;
 
 const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
@@ -105,11 +105,11 @@ module.exports = {
   SUBMISSION_COUNT,
   DELAY_TIME_MS,
   NODE_SCHEDULE_TIME,
+  // Table API
+  TABLE_API_LINK,
   // Constants
   DATE_FORMAT,
   STATUS_MAP,
   EMOJI,
   STATUS,
-  // Server settings
-  CHROMIUM_PATH,
 };
