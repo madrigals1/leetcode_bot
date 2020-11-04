@@ -1,8 +1,7 @@
 version: '3'
 
 services:
-  leetcode_bot:
-    container_name: leetbot
+  backend:
     restart: always
     build: .
     volumes:
