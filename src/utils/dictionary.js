@@ -20,7 +20,10 @@ const SERVER_MESSAGES = {
   // LOGGING
   IMAGE_WAS_CREATED: 'The image was created',
   IMAGE_WAS_NOT_CREATED: 'The image was NOT created',
-  FILE_WAS_DELETED: (path) => `${path} was deleted`,
+
+  // TABLE API
+  API_NOT_WORKING: 'api_not_working',
+  NO_SUBMISSIONS: 'no_submissions',
 };
 
 const NO_USERS = `${EMOJI.ERROR} No users found in database`;
@@ -52,6 +55,9 @@ const BOT_MESSAGES = {
   USERNAME_WAS_ADDED: (username) => `${EMOJI.SUCCESS} <b>${username}</b> was added\n`,
   USERNAME_WILL_BE_DELETED: (username) => `${EMOJI.WAITING} User <b>${username}</b> will be deleted`,
   USERNAME_WAS_DELETED: (username) => `${EMOJI.SUCCESS} User <b>${username}</b> was deleted`,
+  USER_NO_SUBMISSIONS: (user) => (
+    `${EMOJI.ERROR} User <b>${user}</b> does not have any submissions`
+  ),
 
   // DATABASE
   DATABASE_WILL_BE_CLEARED: `${EMOJI.WASTEBASKET} Database will be cleared`,

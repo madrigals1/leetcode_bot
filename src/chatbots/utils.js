@@ -2,17 +2,33 @@ const axios = require('axios');
 
 const { TABLE_API_LINK } = require('../utils/constants');
 const { log, error } = require('../utils/helper');
-const { SERVER_MESSAGES } = require('../utils/dictionary');
+const { SERVER_MESSAGES, BOT_MESSAGES } = require('../utils/dictionary');
 
-const tableForSubmissions = (users) => axios
-  .post(TABLE_API_LINK, { table: users })
+const tableForSubmissions = (user) => axios
+  .post(TABLE_API_LINK, {
+    table: user.submissions.map((submission) => (
+      {
+        Name: submission.name,
+        Time: submission.time,
+        Language: submission.language,
+        Status: submission.status,
+      }
+    )),
+  })
   .then((res) => {
     log(SERVER_MESSAGES.IMAGE_WAS_CREATED);
-    return res.data.link;
+    if (res.data.detail === 'Please, provide \'table\' in request body') {
+      return {
+        error: BOT_MESSAGES.USER_NO_SUBMISSIONS(user.username),
+        reason: SERVER_MESSAGES.NO_SUBMISSIONS,
+      };
+    }
+    return { link: res.data.link };
   })
-  .catch(() => {
+  .catch((err) => {
     error(SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED);
-    return false;
+    error(err);
+    return { error: err, reason: SERVER_MESSAGES.API_NOT_WORKING };
   });
 
 module.exports = { tableForSubmissions };

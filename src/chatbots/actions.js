@@ -1,4 +1,4 @@
-const { BOT_MESSAGES } = require('../utils/dictionary');
+const { BOT_MESSAGES, SERVER_MESSAGES } = require('../utils/dictionary');
 const User = require('../cache/user');
 const { log } = require('../utils/helper');
 const { MASTER_PASSWORD } = require('../utils/constants');
@@ -161,16 +161,21 @@ const actions = [
       }
 
       // Create HTML image with Table
-      const tableImageLink = await tableForSubmissions(user);
+      const table = await tableForSubmissions(user);
 
       // If image was created
-      if (tableImageLink) {
+      if (table.link) {
         // Add image to context
-        context.photoUrl = tableImageLink;
+        context.photoUrl = table.link;
         return reply('', context);
       }
 
-      // If image link was not achieved from Imgur API
+      // If error is because of User not having any submissions
+      if (table.reason === SERVER_MESSAGES.NO_SUBMISSIONS) {
+        return reply(table.error, context);
+      }
+
+      // If image link was not achieved from Table API
       return reply(BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
     },
   },
