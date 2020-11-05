@@ -39,6 +39,7 @@ const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
 const STATUS_MAP = {
   Accepted: '💚 Accepted',
   'Runtime Error': '🤣 Runtime Error',
+  'Compile Error': '🤣 Compile Error',
   'Wrong Answer': '😢 Wrong Answer',
   'Time Limit Exceeded': '🤬 Time Limit Exceeded',
   'Memory Limit Exceeded': '🤔 Time Limit Exceeded',
