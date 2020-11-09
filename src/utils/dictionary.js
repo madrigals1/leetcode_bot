@@ -58,6 +58,8 @@ const BOT_MESSAGES = {
   USER_NO_SUBMISSIONS: (user) => (
     `${EMOJI.ERROR} User <b>${user}</b> does not have any submissions`
   ),
+  USER_LIST_SUBMISSIONS: `${EMOJI.CARD_FILE_BOX} Submissions`,
+  USER_LIST_AVATARS: `${EMOJI.CARD_FILE_BOX} Avatars`,
 
   // DATABASE
   DATABASE_WILL_BE_CLEARED: `${EMOJI.WASTEBASKET} Database will be cleared`,
