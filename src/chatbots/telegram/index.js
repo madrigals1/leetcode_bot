@@ -2,22 +2,26 @@ process.env.NTBA_FIX_319 = 1;
 
 const TelegramBot = require('node-telegram-bot-api');
 
-const User = require('../../cache/user');
 const { log } = require('../../utils/helper');
 const { actions } = require('../actions');
 const { STATUS, TELEGRAM } = require('../../utils/constants');
 
-const { getArgs, createRatingListReplyMarkup, reply } = require('./utils');
+const { getArgs, reply } = require('./utils');
 
 class Telegram {
   constructor() {
     // Save token and options
     this.token = TELEGRAM.TOKEN;
     this.options = { polling: true };
-    this.ratingActionName = 'rating';
-    this.ratingAction = actions.find(
-      (action) => action.name === this.ratingActionName,
-    ).execute;
+  }
+
+  getContext(message) {
+    return {
+      chatId: message.chat.id,
+      prefix: TELEGRAM.PREFIX,
+      options: { parse_mode: 'HTML' },
+      bot: this.bot,
+    };
   }
 
   run() {
@@ -41,20 +45,8 @@ class Telegram {
         // Get args from message
         const args = getArgs(message.text);
 
-        // Variable to check if this action is rating action for reply markup
-        const willIncludeRatingReplyMarkup = (
-          action.name === this.ratingActionName
-        );
-
-        // Create context for action
-        const context = willIncludeRatingReplyMarkup
-          ? this.replyMarkupContext(message.chat.id)
-          : {
-            chatId: message.chat.id,
-            prefix: TELEGRAM.PREFIX,
-            options: { parse_mode: 'HTML' },
-            bot: this.bot,
-          };
+        // Create context for message
+        const context = this.getContext(message);
 
         action.execute(args, reply, context);
       });
@@ -71,34 +63,25 @@ class Telegram {
           this.bot.deleteMessage(message.chat.id, message.message_id).then();
         });
 
-      // If message starts with /rating, call rating action
-      if (data.match(this.ratingActionName)) {
-        // Get args from callback_query message
-        const args = getArgs(data);
+      // Check if callback data is a command
+      for (let i = 0; i < actions.length; i++) {
+        const action = actions[i];
+        // If message starts with /rating, call rating action
+        if (data.match(action.name)) {
+          // Get args from callback_query message
+          const args = getArgs(data);
 
-        return this.ratingAction(
-          args,
-          reply,
-          this.replyMarkupContext(message.chat.id),
-        );
+          // Create context for message
+          const context = this.getContext(message);
+
+          return action.execute(args, reply, context);
+        }
       }
 
       return null;
     });
 
     log('>>> Telegram BOT is running!');
-  }
-
-  replyMarkupContext(chatId) {
-    return {
-      chatId,
-      prefix: TELEGRAM.PREFIX,
-      options: {
-        parse_mode: 'HTML',
-        reply_markup: createRatingListReplyMarkup(User.all()),
-      },
-      bot: this.bot,
-    };
   }
 }
 

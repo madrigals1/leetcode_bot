@@ -1,5 +1,3 @@
-const { EMOJI } = require('../../utils/constants');
-
 const reply = (message, context) => {
   const {
     chatId, options, bot, photoUrl,
@@ -22,35 +20,4 @@ const getArgs = (message) => {
   return args;
 };
 
-const createRatingListReplyMarkup = (users) => {
-  // Create menu for users
-  const usersInlineKeyboard = [[{
-    text: `${EMOJI.CARD_FILE_BOX} User List`,
-    callback_data: '/rating',
-  }]];
-
-  for (let i = 0; i < Math.ceil(users.length / 3); i++) {
-    const row = [];
-    for (let j = 0; j < 3; j++) {
-      const index = (i * 3) + j;
-      if (index < users.length) {
-        const user = users[index];
-        row.push({
-          text: `${user.username}`,
-          callback_data: `/rating ${user.username}`,
-        });
-      }
-    }
-    usersInlineKeyboard.push(row);
-  }
-
-  // Button for closing Keyboard Menu
-  usersInlineKeyboard.push([{
-    text: `${EMOJI.CROSS_MARK} Close`,
-    callback_data: 'placeholder',
-  }]);
-
-  return JSON.stringify({ inline_keyboard: usersInlineKeyboard });
-};
-
-module.exports = { getArgs, createRatingListReplyMarkup, reply };
+module.exports = { getArgs, reply };

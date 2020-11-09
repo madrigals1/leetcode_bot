@@ -2,8 +2,9 @@ const { BOT_MESSAGES, SERVER_MESSAGES } = require('../utils/dictionary');
 const User = require('../cache/user');
 const { log } = require('../utils/helper');
 const { MASTER_PASSWORD } = require('../utils/constants');
+const { EMOJI } = require('../utils/constants');
 
-const { tableForSubmissions } = require('./utils');
+const { tableForSubmissions, createUserListReplyMarkup } = require('./utils');
 
 const actions = [
   {
@@ -114,69 +115,111 @@ const actions = [
         const user = User.load(username);
 
         // If user does exist, return user data with reply markup
-        if (user) return reply(BOT_MESSAGES.USER_TEXT(user), context);
+        if (user) {
+          context.options.reply_markup = createUserListReplyMarkup({
+            isOnlyHeader: true,
+            header: `${EMOJI.CARD_FILE_BOX} Rating`,
+            command: '/rating',
+          });
+
+          return reply(BOT_MESSAGES.USER_TEXT(user), context);
+        }
 
         return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
       }
 
-      // If 0 User was sent
+      // If 0 User was sent, add reply markup context for User
+      context.options.reply_markup = createUserListReplyMarkup({
+        users: User.all(),
+        footer: `${EMOJI.CROSS_MARK} Close`,
+        command: '/rating',
+      });
+
       return reply(BOT_MESSAGES.RATING_TEXT(User.all()), context);
     },
   },
   {
     name: 'avatar',
     execute: async (args, reply, context) => {
-      // If more than 1 User on no User was sent
-      if (args.length !== 1) {
+      // If incorrect number of args provided, return incorrect input
+      if (args.length > 1) {
         return reply(BOT_MESSAGES.INCORRECT_INPUT, context);
       }
 
-      const username = args[0].toLowerCase();
-      const user = User.load(username);
+      // If 1 User was sent
+      if (args.length === 1) {
+        // Get User from args
+        const username = args[0].toLowerCase();
+        const user = User.load(username);
 
-      if (user) {
-        // Add photo to context
-        context.photoUrl = user.avatar;
-        return reply('', context);
+        if (user) {
+          // Add photo to context
+          context.photoUrl = user.avatar;
+          return reply('', context);
+        }
+
+        return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
       }
 
-      return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
+      // If 0 User was sent, add reply markup context for User
+      context.options.reply_markup = createUserListReplyMarkup({
+        users: User.all(),
+        footer: `${EMOJI.CROSS_MARK} Close`,
+        command: '/avatar',
+      });
+
+      // If 0 User was sent
+      return reply(BOT_MESSAGES.USER_LIST_AVATARS, context);
     },
   },
   {
     name: 'submissions',
     execute: async (args, reply, context) => {
       // If incorrect number of args provided, return incorrect input
-      if (args.length !== 1) {
+      if (args.length > 1) {
         return reply(BOT_MESSAGES.INCORRECT_INPUT, context);
       }
 
-      // Get User from args
-      const username = args[0].toLowerCase();
-      const user = User.load(username);
+      // If 1 User was sent
+      if (args.length === 1) {
+        // Get User from args
+        const username = args[0].toLowerCase();
+        const user = User.load(username);
 
-      // If User does not exist, return error message
-      if (!user) {
-        return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
+        // If User does not exist, return error message
+        if (!user) {
+          return reply(BOT_MESSAGES.USERNAME_NOT_FOUND(username), context);
+        }
+
+        // Create HTML image with Table
+        const table = await tableForSubmissions(user);
+
+        // If image was created
+        if (table.link) {
+          // Add image to context
+          context.photoUrl = table.link;
+
+          return reply('', context);
+        }
+
+        // If error is because of User not having any submissions
+        if (table.reason === SERVER_MESSAGES.NO_SUBMISSIONS) {
+          return reply(table.error, context);
+        }
+
+        // If image link was not achieved from Table API
+        return reply(BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
       }
 
-      // Create HTML image with Table
-      const table = await tableForSubmissions(user);
+      // If 0 User was sent, add reply markup context for User
+      context.options.reply_markup = createUserListReplyMarkup({
+        users: User.all(),
+        footer: `${EMOJI.CROSS_MARK} Close`,
+        command: '/submissions',
+      });
 
-      // If image was created
-      if (table.link) {
-        // Add image to context
-        context.photoUrl = table.link;
-        return reply('', context);
-      }
-
-      // If error is because of User not having any submissions
-      if (table.reason === SERVER_MESSAGES.NO_SUBMISSIONS) {
-        return reply(table.error, context);
-      }
-
-      // If image link was not achieved from Table API
-      return reply(BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
+      // If 0 User was sent
+      return reply(BOT_MESSAGES.USER_LIST_SUBMISSIONS, context);
     },
   },
 ];
