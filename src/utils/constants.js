@@ -64,16 +64,23 @@ const STATUS = {
 };
 
 const TELEGRAM = {
+  NAME: 'telegram',
   ENABLE: TELEGRAM_ENABLE,
   TOKEN: TELEGRAM_TOKEN,
   PREFIX: '/',
 };
 
 const DISCORD = {
+  NAME: 'discord',
   ENABLE: DISCORD_ENABLE,
   TOKEN: DISCORD_TOKEN,
   PREFIX: '!',
 };
+
+const PROVIDERS = [
+  TELEGRAM,
+  DISCORD,
+];
 
 const MONGO = {
   DB_URL: MONGO_DB_URL,
@@ -96,6 +103,7 @@ module.exports = {
   // Chatbot data objects
   DISCORD,
   TELEGRAM,
+  PROVIDERS,
   // Database settings
   DB_PROVIDER,
   MONGO,

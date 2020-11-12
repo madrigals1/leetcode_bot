@@ -104,6 +104,30 @@ const actions = [
     },
   },
   {
+    name: 'stats',
+    execute: async (args, reply, context) => {
+      // Correct input for removing should be /stats <master_password>
+      // If length of args is not 1, return error message
+      if (args.length !== 1) {
+        return reply(BOT_MESSAGES.INCORRECT_INPUT, context);
+      }
+
+      // Get password from message
+      const password = args[0];
+
+      // If password is incorrect, return error message
+      if (password !== MASTER_PASSWORD) {
+        return reply(BOT_MESSAGES.PASSWORD_IS_INCORRECT, context);
+      }
+
+      // Get Users
+      const users = await User.all();
+
+      // Send message with stats
+      return reply(BOT_MESSAGES.STATS_TEXT(context.provider, users), context);
+    },
+  },
+  {
     name: 'rating',
     execute: async (args, reply, context) => {
       // If more than 1 User was sent

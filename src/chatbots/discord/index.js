@@ -33,7 +33,12 @@ class Discord {
       for (let i = 0; i < actions.length; i++) {
         const action = actions[i];
         if (action.name === command) {
-          const context = { channel, prefix: DISCORD.PREFIX, options: {} };
+          const context = {
+            channel,
+            provider: DISCORD.NAME,
+            prefix: DISCORD.PREFIX,
+            options: {},
+          };
           channel.startTyping().then();
           action.execute(args, reply, context);
           channel.stopTyping();

@@ -1,4 +1,13 @@
-const { LEETCODE_URL, EMOJI, SUBMISSION_COUNT } = require('./constants');
+const {
+  LEETCODE_URL,
+  EMOJI,
+  SUBMISSION_COUNT,
+  PROVIDERS,
+  DB_PROVIDER,
+  DISCORD,
+  TELEGRAM,
+  DELAY_TIME_MS,
+} = require('./constants');
 
 const SERVER_MESSAGES = {
   // ERROR
@@ -75,7 +84,7 @@ const BOT_MESSAGES = {
 <b><i>${prefix}refresh</i></b> - Manual refresh of database 
 <b><i>${prefix}add username1 username2</i></b> ... - adding Users
 <b><i>${prefix}submissions</i></b> - Submissions list
-<b><i>${prefix}avatar</i></b> - Overall list
+<b><i>${prefix}avatar</i></b> - Avatar list
 
 <b>User related commands:</b> 
 <b><i>${prefix}rating username</i></b> - Rating for separate User
@@ -85,6 +94,7 @@ const BOT_MESSAGES = {
 <b>Admin commands:</b>
 <b><i>${prefix}remove username master_password</i></b> - Remove User
 <b><i>${prefix}clear master_password</i></b> - Clear Database
+<b><i>${prefix}stats master_password</i></b> - Show Stats for this BOT
 `,
   USER_TEXT: (user) => `<b>Name:</b> ${user.name || 'No name'}
 <b>Username:</b> ${user.username}
@@ -106,6 +116,36 @@ ${user.submissions.slice(0, SUBMISSION_COUNT).map((submission) => `
     return users.map(
       (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.solved}`),
     ).join('\n');
+  },
+
+  STATS_TEXT: (providerName, users) => {
+    // Get prefix for provider
+    const prefix = PROVIDERS
+      .find((provider) => (provider.NAME === providerName))
+      .PREFIX;
+
+    const userNameList = users.map(
+      (user) => (`<b>- ${user.username}</b>`),
+    ).join('\n');
+
+    return `
+<b>PROVIDER RELATED</b>
+<b>Provider:</b> ${providerName}
+<b>Prefix:</b> ${prefix}
+<b>Discord enabled:</b> ${DISCORD.ENABLE}
+<b>Telegram enabled:</b> ${TELEGRAM.ENABLE}
+
+<b>DATABASE RELATED</b>
+<b>Database:</b> ${DB_PROVIDER}
+<b>User Count:</b> ${users.length}
+
+<b>SYSTEM RELATED</b>
+<b>Submissions:</b> ${SUBMISSION_COUNT}
+<b>Delay between calls:</b> ${DELAY_TIME_MS}
+
+<b>USER LIST</b>
+${userNameList}
+    `;
   },
 };
 

@@ -17,6 +17,7 @@ class Telegram {
 
   getContext(message) {
     return {
+      provider: TELEGRAM.NAME,
       chatId: message.chat.id,
       prefix: TELEGRAM.PREFIX,
       options: { parse_mode: 'HTML' },
