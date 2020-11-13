@@ -1,5 +1,13 @@
+# Pycharm
 .idea
+
+# Node
 node_modules
 .env
 dist
+
+# Docker related
 mongo-volume
+
+# Sqlite database name
+leetbot.db
