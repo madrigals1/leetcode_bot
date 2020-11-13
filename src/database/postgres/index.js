@@ -31,7 +31,7 @@ class Postgres {
         return true;
       })
       .catch((err) => {
-        error(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL(err));
+        error(SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
         this.client.end();
         return false;
       });
