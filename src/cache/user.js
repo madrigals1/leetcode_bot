@@ -22,9 +22,14 @@ class User {
     return this.users;
   }
 
+  // Get amount of users
+  get amount() {
+    return this.all().length;
+  }
+
   // Replace User with username in the cache
   addOrReplaceUser(username, userData) {
-    for (let i = 0; i < this.users.length; i++) {
+    for (let i = 0; i < this.amount; i++) {
       if (this.users[i].username === username) {
         this.users[i] = userData;
         return;
@@ -198,11 +203,6 @@ class User {
     return this.users.find((user) => (
       user.username.toLowerCase() === username
     ));
-  }
-
-  // Get amount of users
-  get amount() {
-    return this.all().length;
   }
 }
 
