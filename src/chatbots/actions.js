@@ -21,18 +21,23 @@ const actions = [
         return reply(BOT_MESSAGES.AT_LEAST_1_USERNAME(context.prefix), context);
       }
 
+      // Variable to store text to return back to chat
+      let userDetails = '';
+
       // Promise List with promises for adding users
-      const promiseList = args.map(async (username) => {
+      for (let i = 0; i < args.length; i++) {
+        // Get username
+        const username = args[i];
+
+        // Get results of adding
+        // eslint-disable-next-line no-await-in-loop
         const result = await User.add(username);
+
+        // Log result detail
         log(result.detail);
-        return result.detail;
-      });
 
-      // Resolve promise list
-      const resultList = await Promise.all(promiseList);
-
-      // Make results into single string and return
-      const userDetails = resultList.join('');
+        userDetails += result.detail;
+      }
 
       return reply(BOT_MESSAGES.USER_LIST(userDetails), context);
     },

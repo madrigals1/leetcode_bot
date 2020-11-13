@@ -2,6 +2,7 @@ const {
   LEETCODE_URL,
   EMOJI,
   SUBMISSION_COUNT,
+  USER_AMOUNT_LIMIT,
   PROVIDERS,
   DB_PROVIDER,
   DISCORD,
@@ -61,12 +62,13 @@ const BOT_MESSAGES = {
   USERNAME_ALREADY_EXISTS: (username) => (
     `${EMOJI.ERROR} User <b>${username}</b> already exists in database\n`
   ),
-  USERNAME_WAS_ADDED: (username) => `${EMOJI.SUCCESS} <b>${username}</b> was added\n`,
+  USERNAME_WAS_ADDED: (username, userAmount) => `${EMOJI.SUCCESS} <b>${username}</b> was added <b>${userAmount}/${USER_AMOUNT_LIMIT}</b>\n`,
   USERNAME_WILL_BE_DELETED: (username) => `${EMOJI.WAITING} User <b>${username}</b> will be deleted`,
   USERNAME_WAS_DELETED: (username) => `${EMOJI.SUCCESS} User <b>${username}</b> was deleted`,
   USER_NO_SUBMISSIONS: (user) => (
     `${EMOJI.ERROR} User <b>${user}</b> does not have any submissions`
   ),
+  USERNAME_NOT_ADDED_USER_LIMIT: (username) => `${EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${USER_AMOUNT_LIMIT}</b>\n`,
   USER_LIST_SUBMISSIONS: `${EMOJI.CARD_FILE_BOX} Submissions`,
   USER_LIST_AVATARS: `${EMOJI.CARD_FILE_BOX} Avatars`,
 
@@ -138,6 +140,7 @@ ${user.submissions.slice(0, SUBMISSION_COUNT).map((submission) => `
 <b>DATABASE RELATED</b>
 <b>Database:</b> ${DB_PROVIDER}
 <b>User Count:</b> ${users.length}
+<b>User amount limit:</b> ${USER_AMOUNT_LIMIT}
 
 <b>SYSTEM RELATED</b>
 <b>Submissions:</b> ${SUBMISSION_COUNT}

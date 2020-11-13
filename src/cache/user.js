@@ -3,7 +3,12 @@ const moment = require('moment');
 const Database = require('../database');
 const { getLeetcodeDataFromUsername } = require('../leetcode');
 const { log, delay } = require('../utils/helper');
-const { DATE_FORMAT, DELAY_TIME_MS, STATUS } = require('../utils/constants');
+const {
+  DATE_FORMAT,
+  DELAY_TIME_MS,
+  STATUS,
+  USER_AMOUNT_LIMIT,
+} = require('../utils/constants');
 const { BOT_MESSAGES, SERVER_MESSAGES } = require('../utils/dictionary');
 
 class User {
@@ -101,6 +106,14 @@ class User {
 
   // Add User by Username
   async add(username) {
+    // If user count is gte user amount limit, stop execution
+    if (this.amount >= USER_AMOUNT_LIMIT) {
+      return {
+        status: STATUS.ERROR,
+        detail: BOT_MESSAGES.USERNAME_NOT_ADDED_USER_LIMIT(username),
+      };
+    }
+
     // Add User to Database
     const user = await Database.addUser(username);
 
@@ -116,7 +129,7 @@ class User {
 
         return {
           status: STATUS.SUCCESS,
-          detail: BOT_MESSAGES.USERNAME_WAS_ADDED(username),
+          detail: BOT_MESSAGES.USERNAME_WAS_ADDED(username, this.amount),
         };
       }
 
@@ -185,6 +198,11 @@ class User {
     return this.users.find((user) => (
       user.username.toLowerCase() === username
     ));
+  }
+
+  // Get amount of users
+  get amount() {
+    return this.all().length;
   }
 }
 
