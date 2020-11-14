@@ -1,4 +1,5 @@
-const Database = require('better-sqlite3');
+const sqlite3 = require('sqlite3');
+const { open } = require('sqlite');
 
 const { log } = require('../../utils/helper');
 const { SERVER_MESSAGES } = require('../../utils/dictionary');
@@ -7,46 +8,47 @@ const QUERIES = require('./queries');
 
 class SQLite {
   // Connect to Database
-  connect() {
-    // Send message back to channel
-    return new Promise((resolve, reject) => {
-      try {
-        this.database = new Database('leetbot.db');
-
-        // Create User table if not exists
-        this.createUserTable();
-
-        // SQL statements dictionary
-        this.statements = {};
-
-        // Prepare SQL statements
-        Object.entries(QUERIES).forEach(([key, value]) => {
-          this.statements[key] = this.database.prepare(value);
-        });
-
+  async connect() {
+    // Create database connection
+    const connection = await open({
+      filename: 'leetbot.db',
+      driver: sqlite3.Database,
+    })
+      .then((database) => {
         // Log that database is connected
         log(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
+        return { success: true, database };
+      })
+      .catch((err) => {
+        // Log that database connection had errors
+        log(SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
+        return { success: false, err };
+      });
+
+    // Set database from connection
+    this.database = connection.success ? connection.database : null;
+
+    return new Promise((resolve, reject) => {
+      if (connection.success) {
         resolve(true);
-      } catch (e) {
-        log(SERVER_MESSAGES.CONNECTION_STATUS.ERROR(e));
-        reject(Error(e));
       }
+      reject(Error(connection.err));
     });
   }
 
   // Create Users table if not exists
   createUserTable() {
-    this.database.prepare(QUERIES.CREATE_USERS_TABLE).run();
+    this.database.run(QUERIES.CREATE_USERS_TABLE);
   }
 
   // Find all Users
   async findAllUsers() {
-    return this.statements.FIND_ALL_USERS.all();
+    return this.database.all(QUERIES.FIND_ALL_USERS);
   }
 
   // Load User by `username`
   async loadUser(username) {
-    return this.statements.LOAD_USER.get(username);
+    return this.database.get(QUERIES.LOAD_USER, username);
   }
 
   // Add User to Database
@@ -57,7 +59,7 @@ class SQLite {
     // If user already exists, do not add User to Database
     if (exists) return false;
 
-    return this.statements.ADD_USER.run(username);
+    return this.database.run(QUERIES.ADD_USER, username);
   }
 
   // Remove User from Database
@@ -68,12 +70,12 @@ class SQLite {
     // If user does not exist, return false
     if (!exists) return false;
 
-    return this.statements.REMOVE_USER.run(username);
+    return this.database.run(QUERIES.REMOVE_USER, username);
   }
 
   // Remove all Users from Database
   async removeAllUsers() {
-    return this.statements.REMOVE_ALL_USERS;
+    return this.database.run(QUERIES.REMOVE_ALL_USERS);
   }
 }
 
