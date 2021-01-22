@@ -1,13 +1,20 @@
 # Leetcode Bot
-Leetcode Bot is a web scraper, that connects to Telegram or Discord Bot for creating Leetcode Rating.
+Leetcode Bot is an app, that gets data for **LeetCode Users** and creates **Rating of Users.**
 
-You can create your own rating by adding Leetcode users.
+```
+1. madrigals1 506
+2. makhmudgaly2 247
+3. pheonix97al 231
+4. megasaab 132
+```
 
-If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docs/README-Docker.md).
+**Telegram BOT** or **Discord BOT** are used to display this rating.
+
+You can create your own rating by deploying this project on your machine!!!
 
 ## Demo
 
-[Telegram BOT](https://t.me/dalbbot)
+[Demo BOT on Telegram](https://t.me/dalbbot)
 
 Main
 ![Main](https://i.imgur.com/7VRyBUV.png)
@@ -21,11 +28,18 @@ Adding and Deleting
 ## Prerequisites
 
 Make sure you have installed these:
-- [MongoDB](https://www.mongodb.com/download-center) - cross-platform document-oriented database program. 
 Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema.
 - [Node.js](https://nodejs.org/en/) - JavaScript runtime built on Chrome's V8 JavaScript engine.
 
+(Optional) If you are going to use **PostgreSQL** or **MongoDB**, you will have to install them:
+- [PostgreSQL](https://www.postgresql.org/) - PostgreSQL is a powerful, open source object-relational database system with over 30 years of active development that has earned it a strong reputation for reliability, feature robustness, and performance.
+- [MongoDB](https://www.mongodb.com/) - MongoDB is a source-available cross-platform document-oriented database program.
+
+> You can use **SQLite3** as Database, this way you will not have to install anything.
+
 ## Installation
+
+> If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docs/README-Docker.md).
 
 Make a copy of .env.example file named .env
 
@@ -36,12 +50,12 @@ cp .env.example .env
 To enable **Telegram BOT** or **Discord BOT**, change respective values inside `.env`
 
 ```dotenv
-# Change TELEGRAM_TOKEN to your own TELEGRAM_TOKEN you get from BotFather
+# Change TELEGRAM_TOKEN to your own token you get from https://t.me/botfather
 TELEGRAM_ENABLE=True
 TELEGRAM_TOKEN=****************************************
 
 # Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
-DISCORD_ENABLE=True
+DISCORD_ENABLE=False
 DISCORD_TOKEN=*****************************************
 ```
 
@@ -51,23 +65,35 @@ Change **MASTER_PASSWORD** value to secure password, that will be used for delet
 MASTER_PASSWORD=***************************************
 ```
 
-Change settings for **MongoDB**
+Change settings for **Database**
 
-```dotenv
-MONGO_URL=localhost
-DB_NAME=leetbot_db
-DB_AUTHENTICATION_ENABLED=true
-DB_USER=admin
-DB_PASSWORD=password
-DB_PORT=27017
-```
+- **SQLite3** - no changes needed.
 
-Change submission count, that will be shown for each User
+- **MongoDB**
+    ```dotenv
+    MONGO_DB_URL=localhost
+    MONGO_DB_NAME=leetbot_db
+    MONGO_DB_AUTHENTICATION_ENABLED=True
+    MONGO_DB_USER=admin
+    MONGO_DB_PASSWORD=password
+    MONGO_DB_PORT=27017
+    ```
+
+- **PostgreSQL**
+    ```
+    POSTGRES_DB_URL=localhost
+    POSTGRES_DB_NAME=leetbot_db
+    POSTGRES_DB_USER=admin
+    POSTGRES_DB_PASSWORD=password
+    POSTGRES_DB_PORT=5432
+    ```
+
+Change submission count, that will be shown for each User - `/rating <username>`
 ```dotenv
 SUBMISSION_COUNT=5
 ```
 
-Delay time is set to 4s, because LeetCode Rate-Limit is 15 RPM
+Delay time is set to 4s, depends on LeetCode RPM, which I don't know.
 
 ```dotenv
 DELAY_TIME_MS=4000
@@ -81,17 +107,9 @@ npm ci
 
 ## Running
 
-Run the MongoDB database
-
-```shell script
-mongod --auth
-```
-
-Open another terminal tab and run
-
 ```
 npm start
 ```
 
 ### Author
-- Adi Sabyrbayev [Github](https://github.com/Madrigals1), [LinkedIn](https://www.linkedin.com/in/madrigals1/)
+- Adi Sabyrbayev [Github](https://github.com/madrigals1), [LinkedIn](https://www.linkedin.com/in/madrigals1/)
