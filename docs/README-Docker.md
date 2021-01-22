@@ -6,6 +6,14 @@ Make sure you have these:
 
 > On **Windows** and **MacOS**, Docker Compose is installed together with Docker. On Linux, it should be installed separately.
 
+
+(Optional) If you are going to use **PostgreSQL** or **MongoDB**, you will have to install them:
+- [PostgreSQL](https://www.postgresql.org/) - PostgreSQL is a powerful, open source object-relational database system with over 30 years of active development that has earned it a strong reputation for reliability, feature robustness, and performance.
+- [MongoDB](https://www.mongodb.com/) - MongoDB is a source-available cross-platform document-oriented database program.
+
+> You can use **SQLite3** as Database, this way you will not have to install anything.
+
+
 ## Installation
 
 Make a copy of `.env.example` file named `.env`
@@ -32,16 +40,28 @@ Change **MASTER_PASSWORD** value to secure password, that will be used for delet
 MASTER_PASSWORD=***************************************
 ```
 
-Change settings for **MongoDB**
+Change settings for Database
 
-```dotenv
-MONGO_URL=localhost
-DB_NAME=leetbot_db
-DB_AUTHENTICATION_ENABLED=true
-DB_USER=admin
-DB_PASSWORD=password
-DB_PORT=27017
-```
+- **SQLite3** - no changes needed.
+
+- **MongoDB**
+    ```dotenv
+    MONGO_DB_URL=localhost
+    MONGO_DB_NAME=leetbot_db
+    MONGO_DB_AUTHENTICATION_ENABLED=True
+    MONGO_DB_USER=admin
+    MONGO_DB_PASSWORD=password
+    MONGO_DB_PORT=27017
+    ```
+
+- **PostgreSQL**
+    ```
+    POSTGRES_DB_URL=localhost
+    POSTGRES_DB_NAME=leetbot_db
+    POSTGRES_DB_USER=admin
+    POSTGRES_DB_PASSWORD=password
+    POSTGRES_DB_PORT=5432
+    ```
 
 Change submission count, that will be shown for each User
 ```dotenv
