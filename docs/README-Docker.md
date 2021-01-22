@@ -80,7 +80,7 @@ Build **Docker Compose**
 docker-compose up --build -d
 ```
 
-> If you are using **MongoDB** or **PostgreSQL**, be sure to add set up correct networking between **LeetCode BOT** container and DBMS instances.
+> If you are using **MongoDB** or **PostgreSQL**, be sure to set up correct networking between **LeetCode BOT** container and DBMS instances.
 
 ## Running
 
