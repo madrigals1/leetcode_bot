@@ -25,7 +25,7 @@ cp .env.example .env
 To enable **Telegram BOT** or **Discord BOT**, change respective values inside `.env`
 
 ```dotenv
-# Change TELEGRAM_TOKEN to your own TELEGRAM_TOKEN you get from BotFather
+# Change TELEGRAM_TOKEN to your own TELEGRAM_TOKEN you get from https://t.me/botfather
 TELEGRAM_ENABLE=True
 TELEGRAM_TOKEN=****************************************
 
