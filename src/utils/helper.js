@@ -6,4 +6,6 @@ const error = (...args) => console.error(...args);
 
 const delay = (msTime) => new Promise((res) => setTimeout(res, msTime));
 
-module.exports = { log, error, delay };
+const is_true = (value) => ["true", "True", "1", "t", "T"].includes(value);
+
+module.exports = { log, error, delay, is_true };

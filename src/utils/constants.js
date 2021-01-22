@@ -1,5 +1,7 @@
 const dotenv = require('dotenv');
 
+const { is_true } = require('./helper');
+
 dotenv.config();
 
 // ENV Variables
@@ -73,7 +75,7 @@ const TELEGRAM = {
 
 const DISCORD = {
   NAME: 'discord',
-  ENABLE: DISCORD_ENABLE,
+  ENABLE: is_true(DISCORD_ENABLE),
   TOKEN: DISCORD_TOKEN,
   PREFIX: '!',
 };
