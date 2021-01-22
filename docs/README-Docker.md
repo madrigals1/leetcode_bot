@@ -63,12 +63,12 @@ Change settings for Database
     POSTGRES_DB_PORT=5432
     ```
 
-Change submission count, that will be shown for each User
+Change submission count, that will be shown for each User - `/rating <username>`
 ```dotenv
 SUBMISSION_COUNT=5
 ```
 
-Delay time is set to 4s, because LeetCode Rate-Limit is 15 RPM
+Delay time is set to 4s, depends on LeetCode RPM, which I don't know.
 
 ```dotenv
 DELAY_TIME_MS=4000
@@ -80,7 +80,7 @@ Build **Docker Compose**
 docker-compose up --build -d
 ```
 
-**MongoDB** instance should be up in the same network, which is `mongodb_docker_default`. Rename as you want.
+> If you are using **MongoDB** or **PostgreSQL**, be sure to add set up correct networking between **LeetCode BOT** container and DBMS instances.
 
 ## Running
 
