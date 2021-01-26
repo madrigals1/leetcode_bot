@@ -1,11 +1,11 @@
 const axios = require('axios');
 
-const { TABLE_API_LINK } = require('../utils/constants');
+const { VIZAPI_LINK } = require('../utils/constants');
 const { log, error } = require('../utils/helper');
 const { SERVER_MESSAGES, BOT_MESSAGES } = require('../utils/dictionary');
 
 const tableForSubmissions = (user) => axios
-  .post(TABLE_API_LINK, {
+  .post(`${VIZAPI_LINK}/table`, {
     table: user.submissions.map((submission) => (
       {
         Name: submission.name,
