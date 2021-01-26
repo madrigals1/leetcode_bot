@@ -26,8 +26,8 @@ const {
   POSTGRES_DB_USER,
   POSTGRES_DB_PASSWORD,
   POSTGRES_DB_PORT,
-  // Table API
-  TABLE_API_LINK,
+  // External Microservices
+  VIZAPI_LINK,
   // System settings
   MASTER_PASSWORD,
   LEETCODE_URL,
@@ -118,8 +118,8 @@ module.exports = {
   USER_AMOUNT_LIMIT,
   DELAY_TIME_MS,
   NODE_SCHEDULE_TIME,
-  // Table API
-  TABLE_API_LINK,
+  // External Microservices
+  VIZAPI_LINK,
   // Constants
   DATE_FORMAT,
   STATUS_MAP,
