@@ -34,13 +34,15 @@ class Discord {
         const action = actions[i];
         if (action.name === command) {
           const context = {
+            args,
+            reply,
             channel,
             provider: DISCORD.NAME,
             prefix: DISCORD.PREFIX,
             options: {},
           };
           channel.startTyping().then();
-          action.execute(args, reply, context);
+          action.execute(context);
           channel.stopTyping();
 
           // Stop searching after action is found

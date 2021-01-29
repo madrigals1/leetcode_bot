@@ -15,8 +15,10 @@ class Telegram {
     this.options = { polling: true };
   }
 
-  getContext(message) {
+  getContext(message, args, reply) {
     return {
+      args,
+      reply,
       provider: TELEGRAM.NAME,
       chatId: message.chat.id,
       prefix: TELEGRAM.PREFIX,
@@ -47,9 +49,9 @@ class Telegram {
         const args = getArgs(message.text);
 
         // Create context for message
-        const context = this.getContext(message);
+        const context = this.getContext(message, args, reply);
 
-        action.execute(args, reply, context);
+        action.execute(context);
       });
     });
 
@@ -73,9 +75,9 @@ class Telegram {
           const args = getArgs(data);
 
           // Create context for message
-          const context = this.getContext(message);
+          const context = this.getContext(message, args, reply);
 
-          return action.execute(args, reply, context);
+          return action.execute(context);
         }
       }
 
