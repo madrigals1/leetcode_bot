@@ -15,7 +15,7 @@ class Telegram {
     this.options = { polling: true };
   }
 
-  getContext(message, args, reply) {
+  getContext(message, args) {
     return {
       args,
       reply,
@@ -49,7 +49,7 @@ class Telegram {
         const args = getArgs(message.text);
 
         // Create context for message
-        const context = this.getContext(message, args, reply);
+        const context = this.getContext(message, args);
 
         action.execute(context);
       });
@@ -75,7 +75,7 @@ class Telegram {
           const args = getArgs(data);
 
           // Create context for message
-          const context = this.getContext(message, args, reply);
+          const context = this.getContext(message, args);
 
           return action.execute(context);
         }
