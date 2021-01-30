@@ -9,13 +9,16 @@ const { tableForSubmissions, createUserListReplyMarkup } = require('./utils');
 const actions = [
   {
     name: 'start',
-    execute: (args, reply, context) => (
-      reply(BOT_MESSAGES.WELCOME_TEXT(context.prefix), context)
-    ),
+    execute: (context) => {
+      const { reply } = context;
+      return reply(BOT_MESSAGES.WELCOME_TEXT(context.prefix), context);
+    },
   },
   {
     name: 'add',
-    execute: async (args, reply, context) => {
+    execute: async (context) => {
+      const { args, reply } = context;
+
       // If no username is set, return exception
       if (args.length === 0) {
         return reply(BOT_MESSAGES.AT_LEAST_1_USERNAME(context.prefix), context);
@@ -44,16 +47,19 @@ const actions = [
   },
   {
     name: 'refresh',
-    execute: async (args, reply, context) => (
-      reply(BOT_MESSAGES.STARTED_REFRESH, context).then(async () => {
+    execute: async (context) => {
+      const { reply } = context;
+      return reply(BOT_MESSAGES.STARTED_REFRESH, context).then(async () => {
         const result = await User.refresh();
         return reply(result, context);
-      })
-    ),
+      });
+    },
   },
   {
     name: 'remove',
-    execute: async (args, reply, context) => {
+    execute: async (context) => {
+      const { args, reply } = context;
+
       // Correct input for removing should be /rm <username> <master_password>
       // If length of args is not 2, return error message
       if (args.length !== 2) {
@@ -83,7 +89,9 @@ const actions = [
   },
   {
     name: 'clear',
-    execute: async (args, reply, context) => {
+    execute: async (context) => {
+      const { args, reply } = context;
+
       // Correct input for removing should be /clear <master_password>
       // If length of args is not 1, return error message
       if (args.length !== 1) {
@@ -110,7 +118,9 @@ const actions = [
   },
   {
     name: 'stats',
-    execute: async (args, reply, context) => {
+    execute: async (context) => {
+      const { args, reply } = context;
+
       // Correct input for removing should be /stats <master_password>
       // If length of args is not 1, return error message
       if (args.length !== 1) {
@@ -134,7 +144,9 @@ const actions = [
   },
   {
     name: 'rating',
-    execute: async (args, reply, context) => {
+    execute: async (context) => {
+      const { args, reply } = context;
+
       // If more than 1 User was sent
       if (args.length > 1) return reply(BOT_MESSAGES.INCORRECT_INPUT, context);
 
@@ -169,7 +181,9 @@ const actions = [
   },
   {
     name: 'avatar',
-    execute: async (args, reply, context) => {
+    execute: async (context) => {
+      const { args, reply } = context;
+
       // If incorrect number of args provided, return incorrect input
       if (args.length > 1) {
         return reply(BOT_MESSAGES.INCORRECT_INPUT, context);
@@ -203,7 +217,9 @@ const actions = [
   },
   {
     name: 'submissions',
-    execute: async (args, reply, context) => {
+    execute: async (context) => {
+      const { args, reply } = context;
+
       // If incorrect number of args provided, return incorrect input
       if (args.length > 1) {
         return reply(BOT_MESSAGES.INCORRECT_INPUT, context);
