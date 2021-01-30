@@ -1,10 +1,10 @@
-const Telegram = require('./chatbots/telegram');
-const Discord = require('./chatbots/discord');
-const startScheduler = require('./utils/scheduler');
-const Database = require('./database');
-const User = require('./cache/user');
-const { TELEGRAM, DISCORD } = require('./utils/constants');
-const { delay } = require('./utils/helper');
+import Telegram from './chatbots/telegram';
+import Discord from './chatbots/discord';
+import startScheduler from './utils/scheduler';
+import Database from './database';
+import User from './cache/user';
+import constants from './utils/constants';
+import { delay } from './utils/helper';
 
 // Connecting to Database
 Database.connect().then(async () => {
@@ -15,10 +15,10 @@ Database.connect().then(async () => {
   User.refresh()
     .then(() => {
       // Run Telegram BOT
-      if (TELEGRAM.ENABLE) Telegram.run();
+      if (constants.TELEGRAM.ENABLE) Telegram.run();
 
       // Run Discord BOT
-      if (DISCORD.ENABLE) Discord.run();
+      if (constants.DISCORD.ENABLE) Discord.run();
 
       // Starting the scheduler for database refresher
       startScheduler();

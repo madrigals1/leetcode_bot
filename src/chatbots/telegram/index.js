@@ -1,17 +1,17 @@
+import TelegramBot from 'node-telegram-bot-api';
+
+import { log } from '../../utils/helper';
+import actions from '../actions';
+import constants from '../../utils/constants';
+
+import { getArgs, reply } from './utils';
+
 process.env.NTBA_FIX_319 = 1;
-
-const TelegramBot = require('node-telegram-bot-api');
-
-const { log } = require('../../utils/helper');
-const { actions } = require('../actions');
-const { STATUS, TELEGRAM } = require('../../utils/constants');
-
-const { getArgs, reply } = require('./utils');
 
 class Telegram {
   constructor() {
     // Save token and options
-    this.token = TELEGRAM.TOKEN;
+    this.token = constants.TELEGRAM.TOKEN;
     this.options = { polling: true };
   }
 
@@ -19,9 +19,9 @@ class Telegram {
     return {
       args,
       reply,
-      provider: TELEGRAM.NAME,
+      provider: constants.TELEGRAM.NAME,
       chatId: message.chat.id,
-      prefix: TELEGRAM.PREFIX,
+      prefix: constants.TELEGRAM.PREFIX,
       options: { parse_mode: 'HTML' },
       bot: this.bot,
     };
@@ -42,7 +42,9 @@ class Telegram {
       this.bot.onText(actionNameRegex, (message) => {
         // If action is send from User, send typing indicator
         if (message.chat) {
-          this.bot.sendChatAction(message.chat.id, STATUS.TYPING).then();
+          this.bot
+            .sendChatAction(message.chat.id, constants.STATUS.TYPING)
+            .then();
         }
 
         // Get args from message
@@ -88,4 +90,4 @@ class Telegram {
   }
 }
 
-module.exports = new Telegram();
+export default new Telegram();

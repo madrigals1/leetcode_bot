@@ -1,6 +1,6 @@
-const DiscordBot = require('discord.js');
+import DiscordBot from 'discord.js';
 
-const { log } = require('../../utils/helper');
+import { log } from '../../utils/helper';
 
 const createBot = (token) => {
   // Create bot and use Token to Login
@@ -10,4 +10,4 @@ const createBot = (token) => {
   return bot;
 };
 
-module.exports = { createBot };
+export default createBot;

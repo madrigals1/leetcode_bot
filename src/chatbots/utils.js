@@ -1,11 +1,11 @@
-const axios = require('axios');
+import axios from 'axios';
 
-const { VIZAPI_LINK } = require('../utils/constants');
-const { log, error } = require('../utils/helper');
-const { SERVER_MESSAGES, BOT_MESSAGES } = require('../utils/dictionary');
+import constants from '../utils/constants';
+import { log, error } from '../utils/helper';
+import dictionary from '../utils/dictionary';
 
-const tableForSubmissions = (user) => axios
-  .post(`${VIZAPI_LINK}/table`, {
+export const tableForSubmissions = (user) => axios
+  .post(`${constants.VIZAPI_LINK}/table`, {
     table: user.submissions.map((submission) => (
       {
         Name: submission.name,
@@ -16,22 +16,22 @@ const tableForSubmissions = (user) => axios
     )),
   })
   .then((res) => {
-    log(SERVER_MESSAGES.IMAGE_WAS_CREATED);
+    log(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
     if (res.data.detail === 'Please, provide \'table\' in request body') {
       return {
-        error: BOT_MESSAGES.USER_NO_SUBMISSIONS(user.username),
-        reason: SERVER_MESSAGES.NO_SUBMISSIONS,
+        error: dictionary.BOT_MESSAGES.USER_NO_SUBMISSIONS(user.username),
+        reason: dictionary.SERVER_MESSAGES.NO_SUBMISSIONS,
       };
     }
     return { link: res.data.link };
   })
   .catch((err) => {
-    error(SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED);
+    error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED);
     error(err);
-    return { error: err, reason: SERVER_MESSAGES.API_NOT_WORKING };
+    return { error: err, reason: dictionary.SERVER_MESSAGES.API_NOT_WORKING };
   });
 
-const createUserListReplyMarkup = (options) => {
+export const createUserListReplyMarkup = (options) => {
   // Get all variables from context
   const {
     isOnlyHeader, users, header, footer, command,
@@ -74,5 +74,3 @@ const createUserListReplyMarkup = (options) => {
 
   return JSON.stringify({ inline_keyboard: usersInlineKeyboard });
 };
-
-module.exports = { tableForSubmissions, createUserListReplyMarkup };

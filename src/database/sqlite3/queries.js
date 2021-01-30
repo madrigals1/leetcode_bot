@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   CREATE_USERS_TABLE: (
     `CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY,

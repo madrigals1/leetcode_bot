@@ -1,8 +1,8 @@
-const { DB_PROVIDER } = require('../utils/constants');
+import constants from '../utils/constants';
 
-const MongoDB = require('./mongo');
-const Postgres = require('./postgres');
-const SQLite = require('./sqlite3');
+import MongoDB from './mongo';
+import Postgres from './postgres';
+import SQLite from './sqlite3';
 
 // Get map of database
 const databaseMap = {
@@ -13,6 +13,6 @@ const databaseMap = {
 };
 
 // Get current database
-const Database = databaseMap[DB_PROVIDER];
+const Database = databaseMap[constants.DB_PROVIDER];
 
-module.exports = new Database();
+export default new Database();

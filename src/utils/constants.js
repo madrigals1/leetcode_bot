@@ -1,6 +1,6 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
-const { isTrue } = require('./helper');
+import { isTrue } from './helper';
 
 dotenv.config();
 
@@ -102,7 +102,7 @@ const POSTGRES = {
   DB_PORT: POSTGRES_DB_PORT,
 };
 
-module.exports = {
+export default {
   // Chatbot data objects
   DISCORD,
   TELEGRAM,

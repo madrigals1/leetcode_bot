@@ -1,11 +1,11 @@
 // Change bold, italic and code from HTML to Markdown
-const formatMessage = (message) => (message
+export const formatMessage = (message) => (message
   .replace(/<b>|<\/b>/g, '**')
   .replace(/<i>|<\/i>/g, '*')
   .replace(/<code>|<\/code>/g, '`')
 );
 
-const reply = (message, context) => {
+export const reply = (message, context) => {
   // Get channel from context
   const { channel, photoUrl } = context;
 
@@ -23,5 +23,3 @@ const reply = (message, context) => {
     }
   });
 };
-
-module.exports = { reply };

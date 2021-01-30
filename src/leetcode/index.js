@@ -1,11 +1,11 @@
-const axios = require('axios');
-const moment = require('moment');
+import axios from 'axios';
+import moment from 'moment';
 
-const { LEETCODE_URL, STATUS_MAP } = require('../utils/constants');
-const { SERVER_MESSAGES } = require('../utils/dictionary');
-const { error, log } = require('../utils/helper');
+import constants from '../utils/constants';
+import dictionary from '../utils/dictionary';
+import { error, log } from '../utils/helper';
 
-const { GET_USER_PROFILE, GET_RECENT_SUBMISSION_LIST } = require('./qraphql');
+import { GET_USER_PROFILE, GET_RECENT_SUBMISSION_LIST } from './qraphql';
 
 // Save CSRF_TOKEN as constant to reuse in future
 let CSRF_TOKEN = null;
@@ -16,7 +16,7 @@ const getCSRFToken = async () => {
 
   // If CSRF_TOKEN was not already set, retrieve it
   return axios
-    .get(LEETCODE_URL)
+    .get(constants.LEETCODE_URL)
     .then((response) => {
       // Get CSRF Token from Header to use in GraphQL Responses
       const csrfTokenHeader = response.headers['set-cookie'][1];
@@ -25,13 +25,13 @@ const getCSRFToken = async () => {
       return CSRF_TOKEN;
     })
     .catch((err) => {
-      error(SERVER_MESSAGES.ERROR_ON_THE_SERVER(err));
+      error(dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(err));
       return null;
     });
 };
 
 const getLeetcodeDataFromUsername = async (username) => {
-  const graphQLLink = `${LEETCODE_URL}/graphql`;
+  const graphQLLink = `${constants.LEETCODE_URL}/graphql`;
 
   // Get saved csrfToken or retrieve new one
   const csrfToken = await getCSRFToken();
@@ -81,7 +81,7 @@ const getLeetcodeDataFromUsername = async (username) => {
 
     return {
       link: `/problems/${titleSlug}`,
-      status: STATUS_MAP[statusDisplay],
+      status: constants.STATUS_MAP[statusDisplay],
       language: lang,
       name: title,
       time: moment
@@ -92,7 +92,7 @@ const getLeetcodeDataFromUsername = async (username) => {
 
   return {
     name: realName,
-    link: `${LEETCODE_URL}/${username}`,
+    link: `${constants.LEETCODE_URL}/${username}`,
     username,
     solved: acSubmissionNum[0].count,
     all: allQuestionsCount[0].count,
@@ -101,4 +101,4 @@ const getLeetcodeDataFromUsername = async (username) => {
   };
 };
 
-module.exports = { getLeetcodeDataFromUsername };
+export default getLeetcodeDataFromUsername;

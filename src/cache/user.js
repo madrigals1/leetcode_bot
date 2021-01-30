@@ -1,15 +1,10 @@
-const moment = require('moment');
+import moment from 'moment';
 
-const Database = require('../database');
-const { getLeetcodeDataFromUsername } = require('../leetcode');
-const { log, delay } = require('../utils/helper');
-const {
-  DATE_FORMAT,
-  DELAY_TIME_MS,
-  STATUS,
-  USER_AMOUNT_LIMIT,
-} = require('../utils/constants');
-const { BOT_MESSAGES, SERVER_MESSAGES } = require('../utils/dictionary');
+import getLeetcodeDataFromUsername from '../leetcode';
+import Database from '../database';
+import { log, delay } from '../utils/helper';
+import constants from '../utils/constants';
+import dictionary from '../utils/dictionary';
 
 class User {
   constructor() {
@@ -44,16 +39,18 @@ class User {
   async refresh() {
     // If database was already refreshing
     if (Database.isRefreshing) {
-      log(SERVER_MESSAGES.IS_ALREADY_REFRESHING);
-      return BOT_MESSAGES.IS_ALREADY_REFRESHING;
+      log(dictionary.SERVER_MESSAGES.IS_ALREADY_REFRESHING);
+      return dictionary.BOT_MESSAGES.IS_ALREADY_REFRESHING;
     }
 
     // Set database as refreshing and get refresh time
     Database.isRefreshing = true;
-    const refreshedStartedAt = moment().format(DATE_FORMAT);
+    const refreshedStartedAt = moment().format(constants.DATE_FORMAT);
 
     // Log when refresh started
-    log(SERVER_MESSAGES.DATABASE_STARTED_REFRESH(refreshedStartedAt));
+    log(dictionary.SERVER_MESSAGES.DATABASE_STARTED_REFRESH(
+      refreshedStartedAt,
+    ));
 
     // Get all users from database
     const databaseUsers = await Database.findAllUsers();
@@ -72,14 +69,14 @@ class User {
       // If UserData was returned from Backend, replace User in cache
       if (userData) {
         this.addOrReplaceUser(username, userData);
-        log(SERVER_MESSAGES.USERNAME_WAS_REFRESHED(username));
+        log(dictionary.SERVER_MESSAGES.USERNAME_WAS_REFRESHED(username));
       } else {
-        log(SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(username));
+        log(dictionary.SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(username));
       }
 
       // Wait X seconds until loading next User, X is set in .env
       // eslint-disable-next-line no-await-in-loop
-      await delay(DELAY_TIME_MS);
+      await delay(constants.DELAY_TIME_MS);
     }
 
     // Sort objects after refresh
@@ -87,11 +84,13 @@ class User {
 
     // Set database indicators
     Database.isRefreshing = false;
-    const refreshFinishedAt = moment().format(DATE_FORMAT);
+    const refreshFinishedAt = moment().format(constants.DATE_FORMAT);
 
     // Log when refresh started
-    log(SERVER_MESSAGES.DATABASE_FINISHED_REFRESH(refreshFinishedAt));
-    return BOT_MESSAGES.IS_REFRESHED;
+    log(dictionary.SERVER_MESSAGES.DATABASE_FINISHED_REFRESH(
+      refreshFinishedAt,
+    ));
+    return dictionary.BOT_MESSAGES.IS_REFRESHED;
   }
 
   // Sort all Users by amount of solved questions on LeetCode
@@ -112,10 +111,10 @@ class User {
   // Add User by Username
   async add(username) {
     // If user count is gte user amount limit, stop execution
-    if (this.amount >= USER_AMOUNT_LIMIT) {
+    if (this.amount >= constants.USER_AMOUNT_LIMIT) {
       return {
-        status: STATUS.ERROR,
-        detail: BOT_MESSAGES.USERNAME_NOT_ADDED_USER_LIMIT(username),
+        status: constants.STATUS.ERROR,
+        detail: dictionary.BOT_MESSAGES.USERNAME_NOT_ADDED_USER_LIMIT(username),
       };
     }
 
@@ -133,8 +132,10 @@ class User {
         await this.sort();
 
         return {
-          status: STATUS.SUCCESS,
-          detail: BOT_MESSAGES.USERNAME_WAS_ADDED(username, this.amount),
+          status: constants.STATUS.SUCCESS,
+          detail: dictionary.BOT_MESSAGES.USERNAME_WAS_ADDED(
+            username, this.amount,
+          ),
         };
       }
 
@@ -142,14 +143,16 @@ class User {
       await Database.removeUser(username);
 
       return {
-        status: STATUS.ERROR,
-        detail: BOT_MESSAGES.USERNAME_NOT_FOUND_ON_LEETCODE(username),
+        status: constants.STATUS.ERROR,
+        detail: dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND_ON_LEETCODE(
+          username,
+        ),
       };
     }
 
     return {
-      status: STATUS.ERROR,
-      detail: BOT_MESSAGES.USERNAME_ALREADY_EXISTS(username),
+      status: constants.STATUS.ERROR,
+      detail: dictionary.BOT_MESSAGES.USERNAME_ALREADY_EXISTS(username),
     };
   }
 
@@ -167,14 +170,14 @@ class User {
       await this.sort();
 
       return {
-        status: STATUS.SUCCESS,
-        detail: BOT_MESSAGES.USERNAME_WAS_DELETED(username),
+        status: constants.STATUS.SUCCESS,
+        detail: dictionary.BOT_MESSAGES.USERNAME_WAS_DELETED(username),
       };
     }
 
     return {
-      status: STATUS.ERROR,
-      detail: BOT_MESSAGES.USERNAME_NOT_FOUND(username),
+      status: constants.STATUS.ERROR,
+      detail: dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username),
     };
   }
 
@@ -187,14 +190,14 @@ class User {
       this.users = [];
 
       return {
-        status: STATUS.SUCCESS,
-        detail: BOT_MESSAGES.DATABASE_WAS_CLEARED,
+        status: constants.STATUS.SUCCESS,
+        detail: dictionary.BOT_MESSAGES.DATABASE_WAS_CLEARED,
       };
     }
 
     return {
-      status: STATUS.ERROR,
-      detail: BOT_MESSAGES.DATABASE_WAS_NOT_CLEARED,
+      status: constants.STATUS.ERROR,
+      detail: dictionary.BOT_MESSAGES.DATABASE_WAS_NOT_CLEARED,
     };
   }
 
@@ -206,4 +209,4 @@ class User {
   }
 }
 
-module.exports = new User();
+export default new User();
