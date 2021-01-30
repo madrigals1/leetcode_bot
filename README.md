@@ -17,7 +17,6 @@ You can create your own rating by deploying this project on your machine!!!
 ## Table of Contents
 
 - [Functionality](#Functionality)
-- [Prerequisites](#Prerequisites)
 - [Installation](#Installation)
 - [Running](#Running)
 - [Testing](#Testing)
