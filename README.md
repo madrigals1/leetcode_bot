@@ -12,9 +12,15 @@ Leetcode Bot is an app, that gets data for **LeetCode Users** and creates **Rati
 
 You can create your own rating by deploying this project on your machine!!!
 
-## Demo
-
 [Demo BOT on Telegram](https://t.me/dalbbot)
+
+## Table of Contents
+
+- [Functionality](#Functionality)
+- [Prerequisites](#Prerequisites)
+- [Installation](#Installation)
+- [Running](#Running)
+- [Authors](#Authors)
 
 ## Functionality
 
@@ -128,6 +134,6 @@ npm ci
 npm start
 ```
 
-### Authors
+## Authors
 - Adi Sabyrbayev [Github](https://github.com/madrigals1), [LinkedIn](https://www.linkedin.com/in/madrigals1/)
 - Aibek Ziyashev [Github](https://github.com/dmndcrow), [LinkedIn](https://www.linkedin.com/in/aibek-ziyashev-11b744193/)
