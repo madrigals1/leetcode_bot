@@ -49,7 +49,11 @@ You can create your own rating by deploying this project on your machine!!!
 
 ![Submissions username](https://i.imgur.com/5yotx36.png)
 
-## Prerequisites
+## Installation
+
+> If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docs/README-Docker.md).
+
+### Prerequisites
 
 Make sure you have installed these:
 Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema.
@@ -60,10 +64,6 @@ Classified as a NoSQL database program, MongoDB uses JSON-like documents with sc
 - [MongoDB](https://www.mongodb.com/) - MongoDB is a source-available cross-platform document-oriented database program.
 
 > You can use **SQLite3** as Database, this way you will not have to install anything.
-
-## Installation
-
-> If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docs/README-Docker.md).
 
 Make a copy of .env.example file named .env
 
