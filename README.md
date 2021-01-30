@@ -64,69 +64,71 @@ Classified as a NoSQL database program, MongoDB uses JSON-like documents with sc
 
 > You can use **SQLite3** as Database, this way you will not have to install anything.
 
-Make a copy of .env.example file named .env
+### Installation Steps
 
-```shell script
-cp .env.example .env
-```
+1. Make a copy of .env.example file named .env
 
-To enable **Telegram BOT** or **Discord BOT**, change respective values inside `.env`
+    ```shell script
+    cp .env.example .env
+    ```
 
-```dotenv
-# Change TELEGRAM_TOKEN to your own token you get from https://t.me/botfather
-TELEGRAM_ENABLE=True
-TELEGRAM_TOKEN=****************************************
+2. To enable **Telegram BOT** or **Discord BOT**, change respective values inside `.env`
 
-# Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
-DISCORD_ENABLE=False
-DISCORD_TOKEN=*****************************************
-```
-
-Change **MASTER_PASSWORD** value to secure password, that will be used for deleting data.
-
-```dotenv
-MASTER_PASSWORD=***************************************
-```
-
-Change settings for **Database**
-
-- **SQLite3** - no changes needed.
-
-- **MongoDB**
     ```dotenv
-    MONGO_DB_URL=localhost
-    MONGO_DB_NAME=leetbot_db
-    MONGO_DB_AUTHENTICATION_ENABLED=True
-    MONGO_DB_USER=admin
-    MONGO_DB_PASSWORD=password
-    MONGO_DB_PORT=27017
+    # Change TELEGRAM_TOKEN to your own token you get from https://t.me/botfather
+    TELEGRAM_ENABLE=True
+    TELEGRAM_TOKEN=****************************************
+
+    # Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
+    DISCORD_ENABLE=False
+    DISCORD_TOKEN=*****************************************
     ```
 
-- **PostgreSQL**
-    ```
-    POSTGRES_DB_URL=localhost
-    POSTGRES_DB_NAME=leetbot_db
-    POSTGRES_DB_USER=admin
-    POSTGRES_DB_PASSWORD=password
-    POSTGRES_DB_PORT=5432
+3. Change **MASTER_PASSWORD** value to secure password, that will be used for deleting data.
+
+    ```dotenv
+    MASTER_PASSWORD=***************************************
     ```
 
-Change submission count, that will be shown for each User - `/rating <username>`
-```dotenv
-SUBMISSION_COUNT=5
-```
+4. Change settings for **Database**
 
-Delay time is set to 4s, depends on LeetCode RPM, which I don't know.
+    - **SQLite3** - no changes needed.
 
-```dotenv
-DELAY_TIME_MS=4000
-```
+    - **MongoDB**
+        ```dotenv
+        MONGO_DB_URL=localhost
+        MONGO_DB_NAME=leetbot_db
+        MONGO_DB_AUTHENTICATION_ENABLED=True
+        MONGO_DB_USER=admin
+        MONGO_DB_PASSWORD=password
+        MONGO_DB_PORT=27017
+        ```
 
-Install npm packages
+    - **PostgreSQL**
+        ```
+        POSTGRES_DB_URL=localhost
+        POSTGRES_DB_NAME=leetbot_db
+        POSTGRES_DB_USER=admin
+        POSTGRES_DB_PASSWORD=password
+        POSTGRES_DB_PORT=5432
+        ```
 
-```
-npm ci
-```
+5. Change submission count, that will be shown for each User - `/rating <username>`
+    ```dotenv
+    SUBMISSION_COUNT=5
+    ```
+
+6. Delay time is set to 4s, depends on LeetCode RPM, which I don't know.
+
+    ```dotenv
+    DELAY_TIME_MS=4000
+    ```
+
+7. Install npm packages
+
+    ```
+    npm ci
+    ```
 
 ## Running
 
