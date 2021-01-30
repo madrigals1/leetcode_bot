@@ -19,21 +19,27 @@ You can create your own rating by deploying this project on your machine!!!
 ## Functionality
 
 `/start`
+
 ![Start](https://i.imgur.com/EDZk84y.png)
 
 `/rating`
+
 ![Rating](https://i.imgur.com/56qWPO7.png)
 
 `/rating username`
+
 ![Rating username](https://i.imgur.com/mjHCA9X.png)
 
 `/add username1 username2 ...`
+
 ![Add username1 username2](https://i.imgur.com/oibWs44.png)
 
 `/avatar username`
+
 ![Avatar username](https://i.imgur.com/spGTNmN.png)
 
 `/submissions username`
+
 ![Submissions username](https://i.imgur.com/5yotx36.png)
 
 ## Prerequisites
