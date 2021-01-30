@@ -20,6 +20,7 @@ You can create your own rating by deploying this project on your machine!!!
 - [Prerequisites](#Prerequisites)
 - [Installation](#Installation)
 - [Running](#Running)
+- [Testing](#Testing)
 - [Authors](#Authors)
 
 ## Functionality
@@ -132,6 +133,12 @@ npm ci
 
 ```
 npm start
+```
+
+## Testing
+
+```
+npm test
 ```
 
 ## Authors
