@@ -12,7 +12,7 @@ const actions = [
     execute: (context) => {
       const { reply } = context;
       return reply(BOT_MESSAGES.WELCOME_TEXT(context.prefix), context);
-    }
+    },
   },
   {
     name: 'add',
@@ -52,7 +52,7 @@ const actions = [
       return reply(BOT_MESSAGES.STARTED_REFRESH, context).then(async () => {
         const result = await User.refresh();
         return reply(result, context);
-      })
+      });
     },
   },
   {
