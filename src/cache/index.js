@@ -10,6 +10,9 @@ class Cache {
   constructor() {
     // Create cache container for all Users
     this.users = [];
+    this.database = Database;
+    this.userLimit = constants.USER_AMOUNT_LIMIT;
+    this.getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
   }
 
   // Return all users
@@ -38,13 +41,13 @@ class Cache {
   // Refresh Users map
   async refreshUsers() {
     // If database was already refreshing
-    if (Database.isRefreshing) {
+    if (this.database.isRefreshing) {
       log(dictionary.SERVER_MESSAGES.IS_ALREADY_REFRESHING);
       return dictionary.BOT_MESSAGES.IS_ALREADY_REFRESHING;
     }
 
     // Set database as refreshing and get refresh time
-    Database.isRefreshing = true;
+    this.database.isRefreshing = true;
     const refreshedStartedAt = moment().format(constants.DATE_FORMAT);
 
     // Log when refresh started
@@ -53,7 +56,7 @@ class Cache {
     ));
 
     // Get all users from database
-    const databaseUsers = await Database.findAllUsers();
+    const databaseUsers = await this.database.findAllUsers();
 
     // Modify users with data from LeetCode
     for (let i = 0; i < databaseUsers.length; i++) {
@@ -64,7 +67,7 @@ class Cache {
 
       // Get data from LeetCode related to this User
       // eslint-disable-next-line no-await-in-loop
-      const userData = await getLeetcodeDataFromUsername(username);
+      const userData = await this.getLeetcodeDataFromUsername(username);
 
       // If UserData was returned from Backend, replace User in cache
       if (userData) {
@@ -83,7 +86,7 @@ class Cache {
     await this.sortUsers();
 
     // Set database indicators
-    Database.isRefreshing = false;
+    this.database.isRefreshing = false;
     const refreshFinishedAt = moment().format(constants.DATE_FORMAT);
 
     // Log when refresh started
@@ -111,7 +114,7 @@ class Cache {
   // Add User by Username
   async addUser(username) {
     // If user count is gte user amount limit, stop execution
-    if (this.amount >= constants.USER_AMOUNT_LIMIT) {
+    if (this.amount >= this.userLimit) {
       return {
         status: constants.STATUS.ERROR,
         detail: dictionary.BOT_MESSAGES.USERNAME_NOT_ADDED_USER_LIMIT(username),
@@ -119,11 +122,11 @@ class Cache {
     }
 
     // Add User to Database
-    const user = await Database.addUser(username);
+    const user = await this.database.addUser(username);
 
     if (user) {
       // Load data from LeetCode by Username
-      const userData = await getLeetcodeDataFromUsername(username);
+      const userData = await this.getLeetcodeDataFromUsername(username);
 
       if (userData) {
         this.users.push(userData);
@@ -140,7 +143,7 @@ class Cache {
       }
 
       // If user does not exist in LeetCode, remove User
-      await Database.removeUser(username);
+      await this.database.removeUser(username);
 
       return {
         status: constants.STATUS.ERROR,
@@ -158,7 +161,7 @@ class Cache {
 
   // Remove User by Username
   async removeUser(username) {
-    const deleted = await Database.removeUser(username);
+    const deleted = await this.database.removeUser(username);
 
     if (deleted) {
       // Set objects array to tempObjects
@@ -183,7 +186,7 @@ class Cache {
 
   // Remove all Users from Database
   async clearUsers() {
-    const deleted = await Database.removeAllUsers();
+    const deleted = await this.database.removeAllUsers();
 
     if (deleted) {
       // Remove all Users from cache
