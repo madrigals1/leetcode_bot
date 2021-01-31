@@ -13,6 +13,7 @@ class Cache {
     this.database = Database;
     this.userLimit = constants.USER_AMOUNT_LIMIT;
     this.getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
+    this.delayTime = constants.DELAY_TIME_MS;
   }
 
   // Return all users
@@ -79,7 +80,7 @@ class Cache {
 
       // Wait X seconds until loading next User, X is set in .env
       // eslint-disable-next-line no-await-in-loop
-      await delay(constants.DELAY_TIME_MS);
+      await delay(this.delayTime);
     }
 
     // Sort objects after refresh

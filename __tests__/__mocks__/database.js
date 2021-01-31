@@ -3,6 +3,10 @@ import users from './data';
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
 class MockDatabaseProvider {
+  constructor() {
+    this.isRefreshing = false;
+  }
+
   // Connect to Database
   async connect() {
     return new Promise((resolve) => resolve(true));
@@ -15,7 +19,7 @@ class MockDatabaseProvider {
 
   // Find all Users
   async findAllUsers() {
-    return users.map((user) => user.username);
+    return users.map((user) => ({ username: user.username }));
   }
 
   // Load User by `username`
