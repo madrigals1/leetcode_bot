@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import _ from 'lodash';
 
 import Cache from '../src/cache';
 
@@ -60,9 +60,6 @@ test('Cache.addOrReplaceUserInCache method', async () => {
 });
 
 test('Cache.refreshUsers method', async () => {
-  // eslint-disable-next-line no-console
-  console.log = jest.fn();
-
   // Save original array
   const usersClone = [...users];
 
@@ -81,4 +78,66 @@ test('Cache.refreshUsers method', async () => {
   // Clear array and bring back original array
   users.length = 0;
   usersClone.forEach((user) => users.push(user));
+});
+
+test('Cache.sortUsers method', async () => {
+  const unsortedUsers = [
+    {
+      username: 'user_1',
+      solved: 123,
+    },
+    {
+      username: 'user_2',
+      solved: 0,
+    },
+    {
+      username: 'user_3',
+      solved: 23,
+    },
+    {
+      username: 'user_4',
+      solved: 1452,
+    },
+    {
+      username: 'user_5',
+      solved: 700,
+    },
+    {
+      username: 'user_6',
+      solved: 0,
+    },
+  ];
+
+  const sortedUsers = [
+    {
+      username: 'user_4',
+      solved: 1452,
+    },
+    {
+      username: 'user_5',
+      solved: 700,
+    },
+    {
+      username: 'user_1',
+      solved: 123,
+    },
+    {
+      username: 'user_3',
+      solved: 23,
+    },
+    {
+      username: 'user_2',
+      solved: 0,
+    },
+    {
+      username: 'user_6',
+      solved: 0,
+    },
+  ];
+
+  unsortedUsers.forEach((user) => Cache.users.push(user));
+
+  await Cache.sortUsers();
+
+  expect(_.isEqual(Cache.users, sortedUsers)).toBe(true);
 });
