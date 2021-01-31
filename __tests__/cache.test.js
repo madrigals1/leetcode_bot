@@ -15,7 +15,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await Cache.clearUsers();
+  Cache.users.length = 0;
 });
 
 test('Cache.all method', () => {
