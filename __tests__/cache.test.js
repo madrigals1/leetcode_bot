@@ -18,20 +18,20 @@ afterEach(async () => {
   Cache.users.length = 0;
 });
 
-test('Cache.all method', () => {
+test('Cache.allUsers method', () => {
   // Expect default Cache.users to be array
   expect(Array.isArray(Cache.users)).toBe(true);
-  expect(Array.isArray(Cache.all())).toBe(true);
+  expect(Array.isArray(Cache.allUsers())).toBe(true);
 });
 
-test('Cache.amount method', async () => {
-  expect(Cache.amount).toBe(0);
+test('Cache.userAmount property', async () => {
+  expect(Cache.userAmount).toBe(0);
   await Cache.addUser('random_username');
-  expect(Cache.amount).toBe(1);
+  expect(Cache.userAmount).toBe(1);
   await Cache.addUser('random_username_2');
-  expect(Cache.amount).toBe(2);
+  expect(Cache.userAmount).toBe(2);
   await Cache.clearUsers();
-  expect(Cache.amount).toBe(0);
+  expect(Cache.userAmount).toBe(0);
 });
 
 test('Cache.addOrReplaceUserInCache method', async () => {
@@ -56,7 +56,7 @@ test('Cache.addOrReplaceUserInCache method', async () => {
   expect(JSON.stringify(secondUserDataBefore))
     .toBe(JSON.stringify(secondUserData));
 
-  expect(Cache.amount).toBe(1);
+  expect(Cache.userAmount).toBe(1);
 });
 
 test('Cache.refreshUsers method', async () => {
@@ -164,11 +164,11 @@ test('Cache.removeUser method', async () => {
   await Cache.addUser('random_username');
   await Cache.addUser('random_username_2');
 
-  expect(Cache.amount).toBe(2);
+  expect(Cache.userAmount).toBe(2);
 
   await Cache.removeUser('random_username');
 
-  expect(Cache.amount).toBe(1);
+  expect(Cache.userAmount).toBe(1);
 
   const userLeft = Cache.users[0];
 
@@ -179,11 +179,11 @@ test('Cache.clearUsers method', async () => {
   await Cache.addUser('random_username');
   await Cache.addUser('random_username_2');
 
-  expect(Cache.amount).toBe(2);
+  expect(Cache.userAmount).toBe(2);
 
   await Cache.clearUsers();
 
-  expect(Cache.amount).toBe(0);
+  expect(Cache.userAmount).toBe(0);
 });
 
 test('Cache.loadUser method', async () => {

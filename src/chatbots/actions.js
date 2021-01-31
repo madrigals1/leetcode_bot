@@ -142,7 +142,7 @@ const actions = [
       }
 
       // Get Users
-      const users = await Cache.all();
+      const users = await Cache.allUsers();
 
       // Send message with stats
       return reply(
@@ -185,12 +185,15 @@ const actions = [
 
       // If 0 User was sent, add reply markup context for User
       context.options.reply_markup = createUserListReplyMarkup({
-        users: Cache.all(),
+        users: Cache.allUsers(),
         footer: `${constants.EMOJI.CROSS_MARK} Close`,
         command: '/rating',
       });
 
-      return reply(dictionary.BOT_MESSAGES.RATING_TEXT(Cache.all()), context);
+      return reply(
+        dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers()),
+        context,
+      );
     },
   },
   {
@@ -223,7 +226,7 @@ const actions = [
 
       // If 0 User was sent, add reply markup context for User
       context.options.reply_markup = createUserListReplyMarkup({
-        users: Cache.all(),
+        users: Cache.allUsers(),
         footer: `${constants.EMOJI.CROSS_MARK} Close`,
         command: '/avatar',
       });
@@ -278,7 +281,7 @@ const actions = [
 
       // If 0 User was sent, add reply markup context for User
       context.options.reply_markup = createUserListReplyMarkup({
-        users: Cache.all(),
+        users: Cache.allUsers(),
         footer: `${constants.EMOJI.CROSS_MARK} Close`,
         command: '/submissions',
       });

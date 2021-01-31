@@ -17,18 +17,18 @@ class Cache {
   }
 
   // Return all users
-  all() {
+  allUsers() {
     return this.users;
   }
 
   // Get amount of users
-  get amount() {
-    return this.all().length;
+  get userAmount() {
+    return this.allUsers().length;
   }
 
   // Replace User with username in the cache
   addOrReplaceUserInCache(username, userData) {
-    for (let i = 0; i < this.amount; i++) {
+    for (let i = 0; i < this.userAmount; i++) {
       if (this.users[i].username === username) {
         this.users[i] = userData;
         return;
@@ -115,7 +115,7 @@ class Cache {
   // Add User by Username
   async addUser(username) {
     // If user count is gte user amount limit, stop execution
-    if (this.amount >= this.userLimit) {
+    if (this.userAmount >= this.userLimit) {
       return {
         status: constants.STATUS.ERROR,
         detail: dictionary.BOT_MESSAGES.USERNAME_NOT_ADDED_USER_LIMIT(username),
@@ -138,7 +138,7 @@ class Cache {
         return {
           status: constants.STATUS.SUCCESS,
           detail: dictionary.BOT_MESSAGES.USERNAME_WAS_ADDED(
-            username, this.amount,
+            username, this.userAmount,
           ),
         };
       }
