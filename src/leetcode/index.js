@@ -5,6 +5,7 @@ import constants from '../utils/constants';
 import dictionary from '../utils/dictionary';
 import { error, log } from '../utils/helper';
 
+import { getLeetcodeUsernameLink, getLeetcodeProblemLink } from './utils';
 import { GET_USER_PROFILE, GET_RECENT_SUBMISSION_LIST } from './qraphql';
 
 // Save CSRF_TOKEN as constant to reuse in future
@@ -80,7 +81,7 @@ const getLeetcodeDataFromUsername = async (username) => {
     } = submission;
 
     return {
-      link: `/problems/${titleSlug}`,
+      link: getLeetcodeProblemLink(titleSlug),
       status: constants.STATUS_MAP[statusDisplay],
       language: lang,
       name: title,
@@ -92,7 +93,7 @@ const getLeetcodeDataFromUsername = async (username) => {
 
   return {
     name: realName,
-    link: `${constants.LEETCODE_URL}/${username}`,
+    link: getLeetcodeUsernameLink(username),
     username,
     solved: acSubmissionNum[0].count,
     all: allQuestionsCount[0].count,
