@@ -12,6 +12,9 @@
   "author": "Adi Sabyrbayev",
   "license": "ISC",
   "type": "module",
+  "jest": {
+    "modulePathIgnorePatterns": ["__mocks__"]
+  },
   "dependencies": {
     "axios": "^0.21.1",
     "discord.js": "^12.5.1",
