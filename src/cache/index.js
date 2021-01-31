@@ -6,7 +6,7 @@ import { log, delay } from '../utils/helper';
 import constants from '../utils/constants';
 import dictionary from '../utils/dictionary';
 
-class User {
+class Cache {
   constructor() {
     // Create cache container for all Users
     this.users = [];
@@ -23,7 +23,7 @@ class User {
   }
 
   // Replace User with username in the cache
-  addOrReplaceUser(username, userData) {
+  addOrReplaceUserInCache(username, userData) {
     for (let i = 0; i < this.amount; i++) {
       if (this.users[i].username === username) {
         this.users[i] = userData;
@@ -36,7 +36,7 @@ class User {
   }
 
   // Refresh Users map
-  async refresh() {
+  async refreshUsers() {
     // If database was already refreshing
     if (Database.isRefreshing) {
       log(dictionary.SERVER_MESSAGES.IS_ALREADY_REFRESHING);
@@ -68,7 +68,7 @@ class User {
 
       // If UserData was returned from Backend, replace User in cache
       if (userData) {
-        this.addOrReplaceUser(username, userData);
+        this.addOrReplaceUserInCache(username, userData);
         log(dictionary.SERVER_MESSAGES.USERNAME_WAS_REFRESHED(username));
       } else {
         log(dictionary.SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(username));
@@ -80,7 +80,7 @@ class User {
     }
 
     // Sort objects after refresh
-    await this.sort();
+    await this.sortUsers();
 
     // Set database indicators
     Database.isRefreshing = false;
@@ -94,7 +94,7 @@ class User {
   }
 
   // Sort all Users by amount of solved questions on LeetCode
-  async sort() {
+  async sortUsers() {
     this.users.sort(
       (user1, user2) => {
         const solved1 = user1.solved !== undefined
@@ -109,7 +109,7 @@ class User {
   }
 
   // Add User by Username
-  async add(username) {
+  async addUser(username) {
     // If user count is gte user amount limit, stop execution
     if (this.amount >= constants.USER_AMOUNT_LIMIT) {
       return {
@@ -129,7 +129,7 @@ class User {
         this.users.push(userData);
 
         // Sort objects after adding
-        await this.sort();
+        await this.sortUsers();
 
         return {
           status: constants.STATUS.SUCCESS,
@@ -157,7 +157,7 @@ class User {
   }
 
   // Remove User by Username
-  async remove(username) {
+  async removeUser(username) {
     const deleted = await Database.removeUser(username);
 
     if (deleted) {
@@ -167,7 +167,7 @@ class User {
       ));
 
       // Sort objects after removing
-      await this.sort();
+      await this.sortUsers();
 
       return {
         status: constants.STATUS.SUCCESS,
@@ -182,7 +182,7 @@ class User {
   }
 
   // Remove all Users from Database
-  async clear() {
+  async clearUsers() {
     const deleted = await Database.removeAllUsers();
 
     if (deleted) {
@@ -202,11 +202,11 @@ class User {
   }
 
   // Load User by Username
-  load(username) {
+  loadUser(username) {
     return this.users.find((user) => (
       user.username.toLowerCase() === username
     ));
   }
 }
 
-export default new User();
+export default new Cache();

@@ -1,5 +1,5 @@
 import dictionary from '../utils/dictionary';
-import User from '../cache/user';
+import Cache from '../cache';
 import { log } from '../utils/helper';
 import constants from '../utils/constants';
 
@@ -39,7 +39,7 @@ const actions = [
 
         // Get results of adding
         // eslint-disable-next-line no-await-in-loop
-        const result = await User.add(username);
+        const result = await Cache.addUser(username);
 
         // Log result detail
         log(result.detail);
@@ -56,7 +56,7 @@ const actions = [
       const { reply } = context;
       return reply(dictionary.BOT_MESSAGES.STARTED_REFRESH, context)
         .then(async () => {
-          const result = await User.refresh();
+          const result = await Cache.refreshUsers();
           return reply(result, context);
         });
     },
@@ -87,7 +87,7 @@ const actions = [
         context,
       ).then(async () => {
         // Remove the user and send the result (success or failure)
-        const result = await User.remove(username);
+        const result = await Cache.removeUser(username);
         log(result.detail);
         return reply(result.detail, context);
       });
@@ -116,7 +116,7 @@ const actions = [
       return reply(dictionary.BOT_MESSAGES.DATABASE_WILL_BE_CLEARED, context)
         .then(async () => {
           // Remove all Users and send the result (success or failure)
-          const result = await User.clear();
+          const result = await Cache.clearUsers();
           log(result.detail);
           return reply(result.detail, context);
         });
@@ -142,7 +142,7 @@ const actions = [
       }
 
       // Get Users
-      const users = await User.all();
+      const users = await Cache.all();
 
       // Send message with stats
       return reply(
@@ -164,7 +164,7 @@ const actions = [
       // If 1 User was sent
       if (args.length === 1) {
         const username = args[0].toLowerCase();
-        const user = User.load(username);
+        const user = Cache.loadUser(username);
 
         // If user does exist, return user data with reply markup
         if (user) {
@@ -185,12 +185,12 @@ const actions = [
 
       // If 0 User was sent, add reply markup context for User
       context.options.reply_markup = createUserListReplyMarkup({
-        users: User.all(),
+        users: Cache.all(),
         footer: `${constants.EMOJI.CROSS_MARK} Close`,
         command: '/rating',
       });
 
-      return reply(dictionary.BOT_MESSAGES.RATING_TEXT(User.all()), context);
+      return reply(dictionary.BOT_MESSAGES.RATING_TEXT(Cache.all()), context);
     },
   },
   {
@@ -207,7 +207,7 @@ const actions = [
       if (args.length === 1) {
         // Get User from args
         const username = args[0].toLowerCase();
-        const user = User.load(username);
+        const user = Cache.loadUser(username);
 
         if (user) {
           // Add photo to context
@@ -223,7 +223,7 @@ const actions = [
 
       // If 0 User was sent, add reply markup context for User
       context.options.reply_markup = createUserListReplyMarkup({
-        users: User.all(),
+        users: Cache.all(),
         footer: `${constants.EMOJI.CROSS_MARK} Close`,
         command: '/avatar',
       });
@@ -246,7 +246,7 @@ const actions = [
       if (args.length === 1) {
         // Get User from args
         const username = args[0].toLowerCase();
-        const user = User.load(username);
+        const user = Cache.loadUser(username);
 
         // If User does not exist, return error message
         if (!user) {
@@ -278,7 +278,7 @@ const actions = [
 
       // If 0 User was sent, add reply markup context for User
       context.options.reply_markup = createUserListReplyMarkup({
-        users: User.all(),
+        users: Cache.all(),
         footer: `${constants.EMOJI.CROSS_MARK} Close`,
         command: '/submissions',
       });
