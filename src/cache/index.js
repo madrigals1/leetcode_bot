@@ -209,7 +209,7 @@ class Cache {
   loadUser(username) {
     return this.users.find((user) => (
       user.username.toLowerCase() === username
-    ));
+    )) || false;
   }
 }
 
