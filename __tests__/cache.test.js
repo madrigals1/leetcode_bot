@@ -61,7 +61,7 @@ test('Cache.addOrReplaceUserInCache method', async () => {
 
 test('Cache.refreshUsers method', async () => {
   // Save original array
-  const usersClone = [...users];
+  const usersClone = _.cloneDeep(users, true);
 
   // Adding in this order, because they will be sorted by solved count
   await Cache.addUser('random_username_2');
@@ -140,4 +140,22 @@ test('Cache.sortUsers method', async () => {
   await Cache.sortUsers();
 
   expect(_.isEqual(Cache.users, sortedUsers)).toBe(true);
+});
+
+test('Cache.addUser method', async () => {
+  await Cache.addUser('random_username');
+
+  const firstUserData = Cache.users[0];
+
+  expect(firstUserData.name).toBe('Random User Name');
+  expect(firstUserData.solved).toBe(124);
+  expect(firstUserData.all).toBe(1700);
+  expect(firstUserData.avatar).toBe('https://example.com/random_link');
+  expect(firstUserData.submissions.length).toBe(2);
+
+  const firstUserDataDirect = (
+    await getLeetcodeDataFromUsername('random_username')
+  );
+
+  expect(_.isEqual(firstUserData, firstUserDataDirect)).toBe(true);
 });
