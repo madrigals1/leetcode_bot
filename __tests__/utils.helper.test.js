@@ -1,5 +1,3 @@
-import { jest } from '@jest/globals';
-
 import {
   isTrue, delay, log, error,
 } from '../src/utils/helper';
