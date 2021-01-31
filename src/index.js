@@ -2,7 +2,7 @@ import Telegram from './chatbots/telegram';
 import Discord from './chatbots/discord';
 import startScheduler from './utils/scheduler';
 import Database from './database';
-import User from './cache/user';
+import Cache from './cache';
 import constants from './utils/constants';
 import { delay } from './utils/helper';
 
@@ -12,7 +12,7 @@ Database.connect().then(async () => {
   await delay(1000);
 
   // Refreshing the users
-  User.refresh()
+  Cache.refreshUsers()
     .then(() => {
       // Run Telegram BOT
       if (constants.TELEGRAM.ENABLE) Telegram.run();
