@@ -1,6 +1,8 @@
-const {
+import { jest } from '@jest/globals';
+
+import {
   isTrue, delay, log, error,
-} = require('../src/utils/helper');
+} from '../src/utils/helper';
 
 test('isTrue function', () => {
   const trueValues = ['true', 'True', '1', 't', 'T', 1, true];
