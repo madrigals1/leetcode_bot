@@ -42,9 +42,6 @@ test('delay function', async () => {
 });
 
 test('log function', () => {
-  // eslint-disable-next-line no-console
-  console.log = jest.fn();
-
   log('test logging');
 
   // eslint-disable-next-line no-console
@@ -52,9 +49,6 @@ test('log function', () => {
 });
 
 test('error function', () => {
-  // eslint-disable-next-line no-console
-  console.error = jest.fn();
-
   error('test errors');
 
   // eslint-disable-next-line no-console
