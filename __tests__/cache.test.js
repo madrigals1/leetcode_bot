@@ -159,3 +159,18 @@ test('Cache.addUser method', async () => {
 
   expect(_.isEqual(firstUserData, firstUserDataDirect)).toBe(true);
 });
+
+test('Cache.removeUser method', async () => {
+  await Cache.addUser('random_username');
+  await Cache.addUser('random_username_2');
+
+  expect(Cache.amount).toBe(2);
+
+  await Cache.removeUser('random_username');
+
+  expect(Cache.amount).toBe(1);
+
+  const userLeft = Cache.users[0];
+
+  expect(userLeft.name).toBe('Random User Name 2');
+});
