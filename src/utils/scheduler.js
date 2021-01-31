@@ -7,7 +7,7 @@ import constants from './constants';
 const startScheduler = () => {
   schedule.scheduleJob(
     constants.NODE_SCHEDULE_TIME,
-    () => Cache.refreshUsers().then(),
+    () => Cache.refreshUsers(),
   );
 };
 
