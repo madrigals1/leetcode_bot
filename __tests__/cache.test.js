@@ -185,3 +185,19 @@ test('Cache.clearUsers method', async () => {
 
   expect(Cache.amount).toBe(0);
 });
+
+test('Cache.loadUser method', async () => {
+  await Cache.addUser('random_username');
+  await Cache.addUser('random_username_2');
+
+  const userData = await getLeetcodeDataFromUsername('random_username');
+  const cachedUserData = await Cache.loadUser('random_username');
+
+  expect(_.isEqual(userData, cachedUserData)).toBe(true);
+
+  expect(await Cache.loadUser('not_existing_user')).toBe(false);
+
+  await Cache.removeUser('random_username');
+
+  expect(await Cache.loadUser('random_username')).toBe(false);
+});
