@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import Cache from '../src/cache';
+import Cache from '../cache';
 
 import getLeetcodeDataFromUsername from './__mocks__/utils';
 import MockDatabaseProvider from './__mocks__/database';

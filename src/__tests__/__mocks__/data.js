@@ -1,7 +1,7 @@
 import {
   getLeetcodeProblemLink, getLeetcodeUsernameLink,
-} from '../../src/leetcode/utils';
-import constants from '../../src/utils/constants';
+} from '../../leetcode/utils';
+import constants from '../../utils/constants';
 
 const users = [
   {
