@@ -1,5 +1,5 @@
 export default {
   verbose: true,
-  setupFilesAfterEnv: ['./__tests__/setup.js'],
+  setupFilesAfterEnv: ['./src/__tests__/setup.js'],
   modulePathIgnorePatterns: ['__mocks__', 'setup.js'],
 };
