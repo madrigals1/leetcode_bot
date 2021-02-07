@@ -1,4 +1,5 @@
 import constants from '../../utils/constants';
+import dictionary from '../../utils/dictionary';
 import { log } from '../../utils/helper';
 import actions from '../actions';
 
@@ -54,7 +55,7 @@ class Discord {
       }
     });
 
-    log('>>> Discord BOT is running!');
+    log(dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING);
   }
 }
 

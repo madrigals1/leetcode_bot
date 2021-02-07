@@ -17,6 +17,11 @@ const SERVER_MESSAGES = {
     ERROR: (error) => `Database connection error: ${error}`,
   },
 
+  DISCORD_BOT_IS_CONNECTED: '>>> Discord BOT is connected!',
+  DISCORD_BOT_IS_RUNNING: '>>> Discord BOT is running!',
+  TELEGRAM_BOT_IS_CONNECTED: '>>> Telegram BOT is connected!',
+  TELEGRAM_BOT_IS_RUNNING: '>>> Telegram BOT is running!',
+
   // LOGGING
   IMAGE_WAS_CREATED: 'The image was created',
   IMAGE_WAS_NOT_CREATED: 'The image was NOT created',

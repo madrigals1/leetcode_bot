@@ -3,6 +3,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import { log } from '../../utils/helper';
 import actions from '../actions';
 import constants from '../../utils/constants';
+import dictionary from '../../utils/dictionary';
 
 import { getArgs, reply } from './utils';
 
@@ -32,7 +33,7 @@ class Telegram {
     this.bot = new TelegramBot(this.token, this.options);
 
     // Log that Telegram BOT is connected
-    log('>>> Telegram BOT is connected!');
+    log(dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_CONNECTED);
 
     // Add regular actions
     actions.forEach((action) => {
@@ -86,7 +87,7 @@ class Telegram {
       return null;
     });
 
-    log('>>> Telegram BOT is running!');
+    log(dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_RUNNING);
   }
 }
 
