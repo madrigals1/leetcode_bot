@@ -12,9 +12,9 @@ class Discord {
     this.token = constants.DISCORD.TOKEN;
   }
 
-  run() {
+  async run() {
     // Create Bot with token
-    this.bot = createBot(this.token);
+    this.bot = await createBot(this.token);
 
     // Set Bot message listener (any message)
     this.bot.on('message', (message) => {
