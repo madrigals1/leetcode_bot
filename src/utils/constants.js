@@ -9,8 +9,10 @@ const {
   // Chatbot settings
   TELEGRAM_TOKEN,
   DISCORD_TOKEN,
+  DISCORD_TEST_TOKEN,
   TELEGRAM_ENABLE,
   DISCORD_ENABLE,
+  DISCORD_TEST_ENABLE,
   // Database settings
   DB_PROVIDER,
   // 1) MongoDB settings
@@ -77,6 +79,8 @@ const DISCORD = {
   NAME: 'discord',
   ENABLE: isTrue(DISCORD_ENABLE),
   TOKEN: DISCORD_TOKEN,
+  TEST_ENABLE: DISCORD_TEST_ENABLE,
+  TEST_TOKEN: DISCORD_TEST_TOKEN,
   PREFIX: '!',
 };
 
