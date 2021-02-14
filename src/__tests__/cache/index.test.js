@@ -17,13 +17,13 @@ afterEach(async () => {
   Cache.users.length = 0;
 });
 
-test('Cache.allUsers method', () => {
+test('cache.index.Cache.allUsers method', () => {
   // Expect default Cache.users to be array
   expect(Array.isArray(Cache.users)).toBe(true);
   expect(Array.isArray(Cache.allUsers())).toBe(true);
 });
 
-test('Cache.userAmount property', async () => {
+test('cache.index.Cache.userAmount property', async () => {
   expect(Cache.userAmount).toBe(0);
   await Cache.addUser('random_username');
   expect(Cache.userAmount).toBe(1);
@@ -33,7 +33,7 @@ test('Cache.userAmount property', async () => {
   expect(Cache.userAmount).toBe(0);
 });
 
-test('Cache.addOrReplaceUserInCache method', async () => {
+test('cache.index.Cache.addOrReplaceUserInCache method', async () => {
   await Cache.addUser('random_username');
 
   const firstUserData = Cache.users[0];
@@ -58,7 +58,7 @@ test('Cache.addOrReplaceUserInCache method', async () => {
   expect(Cache.userAmount).toBe(1);
 });
 
-test('Cache.refreshUsers method', async () => {
+test('cache.index.Cache.refreshUsers method', async () => {
   // Save original array
   const usersClone = _.cloneDeep(users, true);
 
@@ -79,7 +79,7 @@ test('Cache.refreshUsers method', async () => {
   usersClone.forEach((user) => users.push(user));
 });
 
-test('Cache.sortUsers method', async () => {
+test('cache.index.Cache.sortUsers method', async () => {
   const unsortedUsers = [
     {
       username: 'user_1',
@@ -141,7 +141,7 @@ test('Cache.sortUsers method', async () => {
   expect(_.isEqual(Cache.users, sortedUsers)).toBe(true);
 });
 
-test('Cache.addUser method', async () => {
+test('cache.index.Cache.addUser method', async () => {
   await Cache.addUser('random_username');
 
   const firstUserData = Cache.users[0];
@@ -174,7 +174,7 @@ test('Cache.removeUser method', async () => {
   expect(userLeft.name).toBe('Random User Name 2');
 });
 
-test('Cache.clearUsers method', async () => {
+test('cache.index.Cache.clearUsers method', async () => {
   await Cache.addUser('random_username');
   await Cache.addUser('random_username_2');
 
@@ -185,7 +185,7 @@ test('Cache.clearUsers method', async () => {
   expect(Cache.userAmount).toBe(0);
 });
 
-test('Cache.loadUser method', async () => {
+test('cache.index.Cache.loadUser method', async () => {
   await Cache.addUser('random_username');
   await Cache.addUser('random_username_2');
 
