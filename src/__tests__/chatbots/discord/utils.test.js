@@ -1,4 +1,11 @@
-import { formatMessage } from '../../../chatbots/discord/utils';
+import { formatMessage, reply } from '../../../chatbots/discord/utils';
+import { isPromise } from '../../../utils/helper';
+
+let formattedMessage = null;
+
+const send = (message) => {
+  formattedMessage = message;
+};
 
 test('discord.utils.formatMessage function', async () => {
   const testCases = [
@@ -14,5 +21,35 @@ test('discord.utils.formatMessage function', async () => {
 
   testCases.forEach(([input, output]) => {
     expect(formatMessage(input)).toBe(output);
+  });
+});
+
+test('discord.utils.reply function', async () => {
+  const testCases = [
+    {
+      message: '<b>Message 1</b>',
+      context: { channel: { send }, photoUrl: 'random_url' },
+      expected: 'Success',
+      expectedMessage: '**Message 1**',
+    },
+    {
+      message: '<i>Message 2</i>',
+      context: { photoUrl: 'random_url_2' },
+      expected: Error('Channel is not provided in context'),
+      expectedMessage: null,
+    },
+  ];
+
+  testCases.forEach(async ({
+    message, context, expected, expectedMessage,
+  }) => {
+    const promise = reply(message, context);
+    expect(isPromise(promise)).toBe(true);
+
+    const result = await promise;
+    expect(result).toBe(expected);
+    expect(expectedMessage).toBe(formattedMessage);
+
+    formattedMessage = null;
   });
 });
