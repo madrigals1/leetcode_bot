@@ -14,7 +14,7 @@ afterAll(async () => {
   jest.setTimeout(5000);
 });
 
-test('discord.index.run function', async () => {
+test('telegram.index.run function', async () => {
   expect(TelegramBotInstance.token).toBe(constants.TELEGRAM.TEST_TOKEN);
 
   await TelegramBotInstance.run();
