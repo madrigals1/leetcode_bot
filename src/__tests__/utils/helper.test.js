@@ -2,7 +2,7 @@ import {
   isTrue, delay, log, error,
 } from '../../utils/helper';
 
-test('isTrue function', () => {
+test('utils.helper.isTrue function', () => {
   const trueValues = ['true', 'True', '1', 't', 'T', 1, true];
 
   // Check true valuess
@@ -29,7 +29,7 @@ test('isTrue function', () => {
   falseValues.forEach((value) => expect(isTrue(value)).toBe(false));
 });
 
-test('delay function', async () => {
+test('utils.helper.delay function', async () => {
   expect(delay(1).then).not.toBe(undefined);
 
   const timeMsBefore = new Date().getTime();
@@ -39,14 +39,14 @@ test('delay function', async () => {
   expect(timeMsAfter - timeMsBefore >= 500).toBe(true);
 });
 
-test('log function', () => {
+test('utils.helper.log function', () => {
   log('test logging');
 
   // eslint-disable-next-line no-console
   expect(console.log).toHaveBeenCalledWith('test logging');
 });
 
-test('error function', () => {
+test('utils.helper.error function', () => {
   error('test errors');
 
   // eslint-disable-next-line no-console
