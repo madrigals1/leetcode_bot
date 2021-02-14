@@ -1,8 +1,18 @@
+import { jest } from '@jest/globals';
+
 import constants from '../../../utils/constants';
 import dictionary from '../../../utils/dictionary';
 import DiscordBotInstance from '../../../chatbots/discord';
 
 DiscordBotInstance.token = constants.DISCORD.TEST_TOKEN;
+
+beforeAll(async () => {
+  jest.setTimeout(30000);
+});
+
+afterAll(async () => {
+  jest.setTimeout(5000);
+});
 
 test('discord.index.run function', async () => {
   expect(DiscordBotInstance.token).toBe(constants.DISCORD.TEST_TOKEN);
