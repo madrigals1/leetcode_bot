@@ -14,7 +14,7 @@ afterAll(async () => {
   jest.setTimeout(5000);
 });
 
-test('discord.bot.createBot function', async () => {
+test('chatbots.discord.bot.createBot function', async () => {
   expect(typeof createBot).toBe('function');
 
   // Create a test bot with test token

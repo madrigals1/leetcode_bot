@@ -7,7 +7,7 @@ const send = (message) => {
   formattedMessage = message;
 };
 
-test('discord.utils.formatMessage function', async () => {
+test('chatbots.discord.utils.formatMessage function', async () => {
   const testCases = [
     ['<b>Bold Text</b>', '**Bold Text**'],
     ['<i>Italic Text</i>', '*Italic Text*'],
@@ -24,7 +24,7 @@ test('discord.utils.formatMessage function', async () => {
   });
 });
 
-test('discord.utils.reply function', async () => {
+test('chatbots.discord.utils.reply function', async () => {
   const testCases = [
     {
       message: '<b>Message 1</b>',

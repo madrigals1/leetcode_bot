@@ -14,7 +14,7 @@ afterAll(async () => {
   jest.setTimeout(5000);
 });
 
-test('discord.index.run function', async () => {
+test('chatbots.discord.index.run function', async () => {
   expect(DiscordBotInstance.token).toBe(constants.DISCORD.TEST_TOKEN);
 
   await DiscordBotInstance.run();
