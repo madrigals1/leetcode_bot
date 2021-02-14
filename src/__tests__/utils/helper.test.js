@@ -1,6 +1,6 @@
 import {
   isTrue, delay, log, error,
-} from '../utils/helper';
+} from '../../utils/helper';
 
 test('isTrue function', () => {
   const trueValues = ['true', 'True', '1', 't', 'T', 1, true];
