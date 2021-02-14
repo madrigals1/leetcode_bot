@@ -1,5 +1,5 @@
 import {
-  isTrue, delay, log, error,
+  isTrue, delay, log, error, isPromise,
 } from '../../utils/helper';
 
 test('utils.helper.isTrue function', () => {
@@ -51,4 +51,10 @@ test('utils.helper.error function', () => {
 
   // eslint-disable-next-line no-console
   expect(console.error).toHaveBeenCalledWith('test errors');
+});
+
+test('utils.helper.isPromise function', () => {
+  const promise = new Promise((resolve) => resolve(true));
+
+  expect(isPromise(promise)).toBe(true);
 });

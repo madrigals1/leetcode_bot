@@ -9,3 +9,7 @@ export const delay = (msTime) => new Promise((res) => setTimeout(res, msTime));
 export const isTrue = (value) => (
   ['true', 'True', '1', 't', 'T', 1, true].includes(value)
 );
+
+export const isPromise = (obj) => !!(
+  obj instanceof Promise && Promise.resolve(obj)
+);
