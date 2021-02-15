@@ -1,6 +1,6 @@
 import { formatMessage, reply } from '../../../chatbots/discord/utils';
 import { isPromise } from '../../../utils/helper';
-import MockFuncDiscord from '../../__mocks__/chatbots.mock';
+import MockFuncDiscord from '../../__mocks__/chatbots/discord.mock';
 
 const mockFuncDiscord = new MockFuncDiscord();
 
