@@ -55,3 +55,25 @@ test('chatbots.telegram.utils.reply function', async () => {
     bot.nullify();
   });
 });
+
+test('chatbots.telegram.utils.getArgs function', async () => {
+  const testCases = [
+    {
+      message: '/action Random action with Args',
+      expectedArgs: ['Random', 'action', 'with', 'Args'],
+    },
+    {
+      message: '!action wow here',
+      expectedArgs: ['wow', 'here'],
+    },
+    {
+      message: 'any words with separator',
+      expectedArgs: ['words', 'with', 'separator'],
+    },
+  ];
+
+  testCases.forEach(({ message, expectedArgs }) => {
+    const args = getArgs(message);
+    expect(args).toStrictEqual(expectedArgs);
+  });
+});
