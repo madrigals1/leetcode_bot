@@ -1,4 +1,4 @@
-import users from './data';
+import users from './data.mock';
 
 function getLeetcodeDataFromUsername(username) {
   return new Promise((resolve) => {
