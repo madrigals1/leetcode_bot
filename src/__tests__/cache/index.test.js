@@ -1,9 +1,9 @@
 import _ from 'lodash';
 
 import Cache from '../../cache';
-import getLeetcodeDataFromUsername from '../__mocks__/utils';
-import MockDatabaseProvider from '../__mocks__/database';
-import users from '../__mocks__/data';
+import getLeetcodeDataFromUsername from '../__mocks__/utils.mock';
+import MockDatabaseProvider from '../__mocks__/database.mock';
+import users from '../__mocks__/data.mock';
 
 Cache.database = new MockDatabaseProvider();
 Cache.getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;

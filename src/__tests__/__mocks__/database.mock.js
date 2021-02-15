@@ -1,4 +1,4 @@
-import users from './data';
+import users from './data.mock';
 
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
