@@ -3,7 +3,7 @@ import MockBotTelegram from '../../__mocks__/chatbots/telegram.mock';
 
 const bot = new MockBotTelegram();
 
-test('telegram.utils.reply function', async () => {
+test('chatbots.telegram.utils.reply function', async () => {
   const testCases = [
     {
       message: 'Random Message 1',
