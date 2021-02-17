@@ -51,7 +51,7 @@ class MockDatabaseProvider {
   // Remove all Users from Database
   async removeAllUsers() {
     this.users = [];
-    return true;
+    return this.fakeResult;
   }
 }
 

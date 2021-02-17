@@ -280,9 +280,21 @@ test('cache.index.Cache.clearUsers method', async () => {
 
   expect(Cache.userAmount).toBe(2);
 
-  await Cache.clearUsers();
+  const resultSuccess = await Cache.clearUsers();
+  expect(resultSuccess.status).toBe(constants.STATUS.SUCCESS);
+  expect(resultSuccess.detail).toBe(
+    dictionary.BOT_MESSAGES.DATABASE_WAS_CLEARED,
+  );
 
   expect(Cache.userAmount).toBe(0);
+
+  Cache.database.fakeResult = false;
+
+  const resultFail = await Cache.clearUsers();
+  expect(resultFail.status).toBe(constants.STATUS.ERROR);
+  expect(resultFail.detail).toBe(
+    dictionary.BOT_MESSAGES.DATABASE_WAS_NOT_CLEARED,
+  );
 });
 
 test('cache.index.Cache.loadUser method', async () => {
