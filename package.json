@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node --experimental-modules --experimental-specifier-resolution=node src/index.js",
     "fix": "eslint --fix src/*",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
+    "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage"
   },
   "keywords": [],
   "author": "Adi Sabyrbayev",
