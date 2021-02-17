@@ -131,6 +131,14 @@ test('cache.index.Cache.sortUsers method', async () => {
       username: 'user_6',
       solved: 0,
     },
+    {
+      username: 'user_7',
+      solved: undefined,
+    },
+    {
+      username: 'user_8',
+      solved: undefined,
+    },
   ];
 
   const sortedUsers = [
@@ -157,6 +165,14 @@ test('cache.index.Cache.sortUsers method', async () => {
     {
       username: 'user_6',
       solved: 0,
+    },
+    {
+      username: 'user_7',
+      solved: undefined,
+    },
+    {
+      username: 'user_8',
+      solved: undefined,
     },
   ];
 
