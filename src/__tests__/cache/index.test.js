@@ -56,6 +56,21 @@ test('cache.index.Cache.addOrReplaceUserInCache method', async () => {
     .toBe(JSON.stringify(secondUserData));
 
   expect(Cache.userAmount).toBe(1);
+
+  const firstUserReaddedBefore = (
+    await getLeetcodeDataFromUsername('random_username')
+  );
+
+  await Cache.addOrReplaceUserInCache(
+    'unexisting_username', firstUserReaddedBefore,
+  );
+
+  const firstUserReaddedAfter = Cache.users[1];
+
+  expect(JSON.stringify(firstUserReaddedBefore))
+    .toBe(JSON.stringify(firstUserReaddedAfter));
+
+  expect(Cache.userAmount).toBe(2);
 });
 
 test('cache.index.Cache.refreshUsers method', async () => {
