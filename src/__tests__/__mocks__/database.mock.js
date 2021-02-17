@@ -5,6 +5,7 @@ import users from './data.mock';
 class MockDatabaseProvider {
   constructor() {
     this.isRefreshing = false;
+    this.savedUsers = users.map((user) => ({ username: user.username }));
   }
 
   // Connect to Database
@@ -19,7 +20,7 @@ class MockDatabaseProvider {
 
   // Find all Users
   async findAllUsers() {
-    return users.map((user) => ({ username: user.username }));
+    return this.savedUsers;
   }
 
   // Load User by `username`

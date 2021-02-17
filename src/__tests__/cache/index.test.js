@@ -103,6 +103,17 @@ test('cache.index.Cache.refreshUsers method', async () => {
   expect(console.log).toHaveBeenCalledWith(
     dictionary.SERVER_MESSAGES.IS_ALREADY_REFRESHING,
   );
+  Cache.database.isRefreshing = false;
+
+  // Check case, where User is deleted from LeetCode
+  const fakeUsername = 'non_existing_username';
+  Cache.database.savedUsers = [{ username: fakeUsername }];
+
+  await Cache.refreshUsers();
+  // eslint-disable-next-line no-console
+  expect(console.log).toHaveBeenCalledWith(
+    dictionary.SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(fakeUsername),
+  );
 });
 
 test('cache.index.Cache.sortUsers method', async () => {
