@@ -141,12 +141,9 @@ const actions = [
         return reply(dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT, context);
       }
 
-      // Get Users
-      const users = await Cache.allUsers();
-
       // Send message with stats
       return reply(
-        dictionary.BOT_MESSAGES.STATS_TEXT(context.provider, users),
+        dictionary.BOT_MESSAGES.STATS_TEXT(context.provider, Cache),
         context,
       );
     },

@@ -5,6 +5,7 @@ import getLeetcodeDataFromUsername from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import users from '../__mocks__/data.mock';
 import dictionary from '../../utils/dictionary';
+import constants from '../../utils/constants';
 
 Cache.database = new MockDatabaseProvider();
 Cache.getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
@@ -210,9 +211,22 @@ test('cache.index.Cache.addUser method', async () => {
   );
 
   expect(_.isEqual(firstUserData, firstUserDataDirect)).toBe(true);
+
+  // Test User Limit
+  const userLimit = 1;
+  Cache.userLimit = userLimit;
+  const secondUsername = 'random_username_2';
+  const result = await Cache.addUser(secondUsername);
+  expect(result.status).toBe(constants.STATUS.ERROR);
+  expect(result.detail).toBe(
+    dictionary.BOT_MESSAGES.USERNAME_NOT_ADDED_USER_LIMIT(
+      secondUsername, userLimit,
+    ),
+  );
+  Cache.userLimit = 30;
 });
 
-test('Cache.removeUser method', async () => {
+test('cache.index.Cache.removeUser method', async () => {
   await Cache.addUser('random_username');
   await Cache.addUser('random_username_2');
 

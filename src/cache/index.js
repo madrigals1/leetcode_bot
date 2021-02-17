@@ -118,7 +118,9 @@ class Cache {
     if (this.userAmount >= this.userLimit) {
       return {
         status: constants.STATUS.ERROR,
-        detail: dictionary.BOT_MESSAGES.USERNAME_NOT_ADDED_USER_LIMIT(username),
+        detail: dictionary.BOT_MESSAGES.USERNAME_NOT_ADDED_USER_LIMIT(
+          username, this.userLimit,
+        ),
       };
     }
 
@@ -138,7 +140,7 @@ class Cache {
         return {
           status: constants.STATUS.SUCCESS,
           detail: dictionary.BOT_MESSAGES.USERNAME_WAS_ADDED(
-            username, this.userAmount,
+            username, this.userAmount, this.userLimit,
           ),
         };
       }

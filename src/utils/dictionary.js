@@ -57,13 +57,13 @@ const BOT_MESSAGES = {
   USERNAME_ALREADY_EXISTS: (username) => (
     `${constants.EMOJI.ERROR} User <b>${username}</b> already exists in database\n`
   ),
-  USERNAME_WAS_ADDED: (username, userAmount) => `${constants.EMOJI.SUCCESS} <b>${username}</b> was added <b>${userAmount}/${constants.USER_AMOUNT_LIMIT}</b>\n`,
+  USERNAME_WAS_ADDED: (username, userAmount, userLimit) => `${constants.EMOJI.SUCCESS} <b>${username}</b> was added <b>${userAmount}/${userLimit}</b>\n`,
   USERNAME_WILL_BE_DELETED: (username) => `${constants.EMOJI.WAITING} User <b>${username}</b> will be deleted`,
   USERNAME_WAS_DELETED: (username) => `${constants.EMOJI.SUCCESS} User <b>${username}</b> was deleted`,
   USER_NO_SUBMISSIONS: (user) => (
     `${constants.EMOJI.ERROR} User <b>${user}</b> does not have any submissions`
   ),
-  USERNAME_NOT_ADDED_USER_LIMIT: (username) => `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${constants.USER_AMOUNT_LIMIT}</b>\n`,
+  USERNAME_NOT_ADDED_USER_LIMIT: (username, userLimit) => `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`,
   USER_LIST_SUBMISSIONS: `${constants.EMOJI.CARD_FILE_BOX} Submissions`,
   USER_LIST_AVATARS: `${constants.EMOJI.CARD_FILE_BOX} Avatars`,
 
@@ -115,7 +115,9 @@ ${user.submissions.slice(0, constants.SUBMISSION_COUNT).map((submission) => `
     ).join('\n');
   },
 
-  STATS_TEXT: (providerName, users) => {
+  STATS_TEXT: (providerName, cache) => {
+    const { userLimit, users } = cache;
+
     // Get prefix for provider
     const prefix = constants.PROVIDERS
       .find((provider) => (provider.NAME === providerName))
@@ -135,7 +137,7 @@ ${user.submissions.slice(0, constants.SUBMISSION_COUNT).map((submission) => `
 <b>DATABASE RELATED</b>
 <b>Database:</b> ${constants.DB_PROVIDER}
 <b>User Count:</b> ${users.length}
-<b>User amount limit:</b> ${constants.USER_AMOUNT_LIMIT}
+<b>User amount limit:</b> ${userLimit}
 
 <b>SYSTEM RELATED</b>
 <b>Submissions:</b> ${constants.SUBMISSION_COUNT}
