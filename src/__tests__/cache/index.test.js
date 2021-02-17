@@ -196,11 +196,11 @@ test('cache.index.Cache.sortUsers method', async () => {
 });
 
 test('cache.index.Cache.addUser method', async () => {
-  const username = 'random_username';
-  const resultSuccess = await Cache.addUser(username);
+  const realUsername = 'random_username';
+  const resultSuccess = await Cache.addUser(realUsername);
   expect(resultSuccess.status).toBe(constants.STATUS.SUCCESS);
   expect(resultSuccess.detail).toBe(dictionary.BOT_MESSAGES.USERNAME_WAS_ADDED(
-    username, Cache.userAmount, Cache.userLimit,
+    realUsername, Cache.userAmount, Cache.userLimit,
   ));
 
   const firstUserData = Cache.users[0];
@@ -232,11 +232,17 @@ test('cache.index.Cache.addUser method', async () => {
 
   // Test Remove User if not exist in LeetCode
   const fakeUsername = 'not_existing_username';
-  const resultFailAlreadyExists = await Cache.addUser(fakeUsername);
-  expect(resultFailAlreadyExists.status).toBe(constants.STATUS.ERROR);
+  const resultFailNotExists = await Cache.addUser(fakeUsername);
+  expect(resultFailNotExists.status).toBe(constants.STATUS.ERROR);
+  expect(resultFailNotExists.detail).toBe(
+    dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND_ON_LEETCODE(fakeUsername),
+  );
+
+  // Test Username already exists
+  const resultFailAlreadyExists = await Cache.addUser(realUsername);
   expect(resultFailAlreadyExists.status).toBe(constants.STATUS.ERROR);
   expect(resultFailAlreadyExists.detail).toBe(
-    dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND_ON_LEETCODE(fakeUsername),
+    dictionary.BOT_MESSAGES.USERNAME_ALREADY_EXISTS(realUsername),
   );
 });
 

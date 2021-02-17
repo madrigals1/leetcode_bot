@@ -6,6 +6,8 @@ class MockDatabaseProvider {
   constructor() {
     this.isRefreshing = false;
     this.savedUsers = users.map((user) => ({ username: user.username }));
+    this.fakeResult = true;
+    this.users = [];
   }
 
   // Connect to Database
@@ -15,7 +17,7 @@ class MockDatabaseProvider {
 
   // Create Users table if not exists
   createUserTable() {
-    return true;
+    return this.fakeResult;
   }
 
   // Find all Users
@@ -25,21 +27,27 @@ class MockDatabaseProvider {
 
   // Load User by `username`
   async loadUser(username) {
-    return true;
+    return this.fakeResult;
   }
 
   // Add User to Database
   async addUser(username) {
+    if (this.users.includes(username)) {
+      return false;
+    }
+    this.users.push(username);
     return true;
   }
 
   // Remove User from Database
   async removeUser(username) {
+    this.users = this.users.filter((uname) => uname !== username);
     return true;
   }
 
   // Remove all Users from Database
   async removeAllUsers() {
+    this.users = [];
     return true;
   }
 }
