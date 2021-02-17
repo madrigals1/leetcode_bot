@@ -4,6 +4,7 @@ import Cache from '../../cache';
 import getLeetcodeDataFromUsername from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import users from '../__mocks__/data.mock';
+import dictionary from '../../utils/dictionary';
 
 Cache.database = new MockDatabaseProvider();
 Cache.getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
@@ -92,6 +93,16 @@ test('cache.index.Cache.refreshUsers method', async () => {
   // Clear array and bring back original array
   users.length = 0;
   usersClone.forEach((user) => users.push(user));
+
+  // Check refreshing case
+  Cache.database.isRefreshing = true;
+  const result = await Cache.refreshUsers();
+
+  expect(result).toBe(dictionary.BOT_MESSAGES.IS_ALREADY_REFRESHING);
+  // eslint-disable-next-line no-console
+  expect(console.log).toHaveBeenCalledWith(
+    dictionary.SERVER_MESSAGES.IS_ALREADY_REFRESHING,
+  );
 });
 
 test('cache.index.Cache.sortUsers method', async () => {
