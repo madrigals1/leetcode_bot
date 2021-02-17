@@ -252,13 +252,26 @@ test('cache.index.Cache.removeUser method', async () => {
 
   expect(Cache.userAmount).toBe(2);
 
-  await Cache.removeUser('random_username');
+  const realUsername = 'random_username';
+  const result = await Cache.removeUser(realUsername);
 
   expect(Cache.userAmount).toBe(1);
+  expect(result.status).toBe(constants.STATUS.SUCCESS);
+  expect(result.detail).toBe(
+    dictionary.BOT_MESSAGES.USERNAME_WAS_DELETED(realUsername),
+  );
 
   const userLeft = Cache.users[0];
 
   expect(userLeft.name).toBe('Random User Name 2');
+
+  // Remove unexisting User
+  const fakeUsername = 'not_existing_user';
+  const resultFail = await Cache.removeUser(fakeUsername);
+  expect(resultFail.status).toBe(constants.STATUS.ERROR);
+  expect(resultFail.detail).toBe(
+    dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(fakeUsername),
+  );
 });
 
 test('cache.index.Cache.clearUsers method', async () => {

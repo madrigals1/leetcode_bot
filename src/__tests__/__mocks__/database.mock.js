@@ -41,6 +41,9 @@ class MockDatabaseProvider {
 
   // Remove User from Database
   async removeUser(username) {
+    if (!this.users.includes(username)) {
+      return false;
+    }
     this.users = this.users.filter((uname) => uname !== username);
     return true;
   }
