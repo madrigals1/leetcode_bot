@@ -1,24 +1,24 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const { MONGO } = require('../../utils/constants');
-const { SERVER_MESSAGES } = require('../../utils/dictionary');
-const { log, error } = require('../../utils/helper');
+import constants from '../../utils/constants';
+import dictionary from '../../utils/dictionary';
+import { log, error } from '../../utils/helper';
 
-const { UserModel } = require('./schemas');
+import UserModel from './schemas';
 
 // Main class for MongoDB Database
 class MongoDB {
   constructor() {
     // If authentication credentials were provided in environment, use them.
     // If not, use empty string in MongoDB connection
-    const credentials = MONGO.DB_AUTHENTICATION_ENABLED
-      ? `${MONGO.DB_USER}:${MONGO.DB_PASSWORD}@` : '';
+    const credentials = constants.MONGO.DB_AUTHENTICATION_ENABLED
+      ? `${constants.MONGO.DB_USER}:${constants.MONGO.DB_PASSWORD}@` : '';
 
     // Set Authentication Source to connect to MongoDB database
-    const authSource = MONGO.DB_AUTHENTICATION_ENABLED
+    const authSource = constants.MONGO.DB_AUTHENTICATION_ENABLED
       ? '?authSource=admin' : '';
     // URL for Connection to MongoDB, is already usable for connection.
-    const databaseUrl = `${MONGO.DB_URL}:${MONGO.DB_PORT}/${MONGO.DB_NAME}`;
+    const databaseUrl = `${constants.MONGO.DB_URL}:${constants.MONGO.DB_PORT}/${constants.MONGO.DB_NAME}`;
 
     // URL for Connection to MongoDB, that contains authentication
     this.mongoUrl = `mongodb://${credentials}${databaseUrl}${authSource}`;
@@ -40,10 +40,10 @@ class MongoDB {
         useCreateIndex: true,
       })
       .then(() => {
-        log(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
+        log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
       })
       .catch((err) => {
-        error(SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
+        error(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
       });
   }
 
@@ -91,4 +91,4 @@ class MongoDB {
   }
 }
 
-module.exports = MongoDB;
+export default MongoDB;

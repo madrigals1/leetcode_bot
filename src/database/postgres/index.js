@@ -1,19 +1,21 @@
-const { Client } = require('pg');
+import pg from 'pg';
 
-const { error, log } = require('../../utils/helper');
-const { POSTGRES } = require('../../utils/constants');
-const { SERVER_MESSAGES } = require('../../utils/dictionary');
+import { error, log } from '../../utils/helper';
+import constants from '../../utils/constants';
+import dictionary from '../../utils/dictionary';
 
-const { QUERIES } = require('./queries');
+import QUERIES from './queries';
+
+const { Client } = pg;
 
 class Postgres {
   constructor() {
     this.client = new Client({
-      user: POSTGRES.DB_USER,
-      host: POSTGRES.DB_URL,
-      database: POSTGRES.DB_NAME,
-      password: POSTGRES.DB_PASSWORD,
-      port: POSTGRES.DB_PORT,
+      user: constants.POSTGRES.DB_USER,
+      host: constants.POSTGRES.DB_URL,
+      database: constants.POSTGRES.DB_NAME,
+      password: constants.POSTGRES.DB_PASSWORD,
+      port: constants.POSTGRES.DB_PORT,
     });
   }
 
@@ -27,11 +29,11 @@ class Postgres {
     // Create table for users if not exist
     return this.client.query(query)
       .then(() => {
-        log(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
+        log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
         return true;
       })
       .catch((err) => {
-        error(SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
+        error(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
         this.client.end();
         return false;
       });
@@ -105,4 +107,4 @@ class Postgres {
   }
 }
 
-module.exports = Postgres;
+export default Postgres;

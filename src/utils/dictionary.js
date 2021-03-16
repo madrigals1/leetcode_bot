@@ -1,14 +1,4 @@
-const {
-  LEETCODE_URL,
-  EMOJI,
-  SUBMISSION_COUNT,
-  USER_AMOUNT_LIMIT,
-  PROVIDERS,
-  DB_PROVIDER,
-  DISCORD,
-  TELEGRAM,
-  DELAY_TIME_MS,
-} = require('./constants');
+import constants from './constants';
 
 const SERVER_MESSAGES = {
   // ERROR
@@ -27,6 +17,11 @@ const SERVER_MESSAGES = {
     ERROR: (error) => `Database connection error: ${error}`,
   },
 
+  DISCORD_BOT_IS_CONNECTED: '>>> Discord BOT is connected!',
+  DISCORD_BOT_IS_RUNNING: '>>> Discord BOT is running!',
+  TELEGRAM_BOT_IS_CONNECTED: '>>> Telegram BOT is connected!',
+  TELEGRAM_BOT_IS_RUNNING: '>>> Telegram BOT is running!',
+
   // LOGGING
   IMAGE_WAS_CREATED: 'The image was created',
   IMAGE_WAS_NOT_CREATED: 'The image was NOT created',
@@ -36,49 +31,49 @@ const SERVER_MESSAGES = {
   NO_SUBMISSIONS: 'no_submissions',
 };
 
-const NO_USERS = `${EMOJI.ERROR} No users found in database`;
+const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;
 
 const BOT_MESSAGES = {
   // MISC
-  INCORRECT_INPUT: `${EMOJI.ERROR} Incorrect input`,
-  PASSWORD_IS_INCORRECT: `${EMOJI.ERROR} Password is incorrect`,
-  ERROR_ON_THE_SERVER: `${EMOJI.ERROR} Error on the server`,
+  INCORRECT_INPUT: `${constants.EMOJI.ERROR} Incorrect input`,
+  PASSWORD_IS_INCORRECT: `${constants.EMOJI.ERROR} Password is incorrect`,
+  ERROR_ON_THE_SERVER: `${constants.EMOJI.ERROR} Error on the server`,
 
   // REFRESHING
-  STARTED_REFRESH: `${EMOJI.WAITING} Database started refresh`,
-  IS_REFRESHED: `${EMOJI.SUCCESS} Database is refreshed`,
-  IS_ALREADY_REFRESHING: `${EMOJI.ERROR} Database is already refreshing`,
+  STARTED_REFRESH: `${constants.EMOJI.WAITING} Database started refresh`,
+  IS_REFRESHED: `${constants.EMOJI.SUCCESS} Database is refreshed`,
+  IS_ALREADY_REFRESHING: `${constants.EMOJI.ERROR} Database is already refreshing`,
 
   // USER RELATED
   USER_LIST: (userList) => `User List:\n${userList}`,
   AT_LEAST_1_USERNAME: (prefix) => (
-    `${EMOJI.WARNING} Please, enter at least 1 username after <b>${prefix}add</b> command`
+    `${constants.EMOJI.WARNING} Please, enter at least 1 username after <b>${prefix}add</b> command`
   ),
   NO_USERS,
-  USERNAME_NOT_FOUND: (username) => `${EMOJI.ERROR} Username <b>${username}</b> was not found in database`,
+  USERNAME_NOT_FOUND: (username) => `${constants.EMOJI.ERROR} Username <b>${username}</b> was not found in database`,
   USERNAME_NOT_FOUND_ON_LEETCODE: (username) => (
-    `${EMOJI.ERROR} User <b>${username}</b> was not found on <b>LeetCode</b>\n`
+    `${constants.EMOJI.ERROR} User <b>${username}</b> was not found on <b>LeetCode</b>\n`
   ),
   USERNAME_ALREADY_EXISTS: (username) => (
-    `${EMOJI.ERROR} User <b>${username}</b> already exists in database\n`
+    `${constants.EMOJI.ERROR} User <b>${username}</b> already exists in database\n`
   ),
-  USERNAME_WAS_ADDED: (username, userAmount) => `${EMOJI.SUCCESS} <b>${username}</b> was added <b>${userAmount}/${USER_AMOUNT_LIMIT}</b>\n`,
-  USERNAME_WILL_BE_DELETED: (username) => `${EMOJI.WAITING} User <b>${username}</b> will be deleted`,
-  USERNAME_WAS_DELETED: (username) => `${EMOJI.SUCCESS} User <b>${username}</b> was deleted`,
+  USERNAME_WAS_ADDED: (username, userAmount, userLimit) => `${constants.EMOJI.SUCCESS} <b>${username}</b> was added <b>${userAmount}/${userLimit}</b>\n`,
+  USERNAME_WILL_BE_DELETED: (username) => `${constants.EMOJI.WAITING} User <b>${username}</b> will be deleted`,
+  USERNAME_WAS_DELETED: (username) => `${constants.EMOJI.SUCCESS} User <b>${username}</b> was deleted`,
   USER_NO_SUBMISSIONS: (user) => (
-    `${EMOJI.ERROR} User <b>${user}</b> does not have any submissions`
+    `${constants.EMOJI.ERROR} User <b>${user}</b> does not have any submissions`
   ),
-  USERNAME_NOT_ADDED_USER_LIMIT: (username) => `${EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${USER_AMOUNT_LIMIT}</b>\n`,
-  USER_LIST_SUBMISSIONS: `${EMOJI.CARD_FILE_BOX} Submissions`,
-  USER_LIST_AVATARS: `${EMOJI.CARD_FILE_BOX} Avatars`,
+  USERNAME_NOT_ADDED_USER_LIMIT: (username, userLimit) => `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`,
+  USER_LIST_SUBMISSIONS: `${constants.EMOJI.CARD_FILE_BOX} Submissions`,
+  USER_LIST_AVATARS: `${constants.EMOJI.CARD_FILE_BOX} Avatars`,
 
   // DATABASE
-  DATABASE_WILL_BE_CLEARED: `${EMOJI.WASTEBASKET} Database will be cleared`,
-  DATABASE_WAS_CLEARED: `${EMOJI.SUCCESS} Database was cleared`,
-  DATABASE_WAS_NOT_CLEARED: `${EMOJI.ERROR} Database was not cleared`,
+  DATABASE_WILL_BE_CLEARED: `${constants.EMOJI.WASTEBASKET} Database will be cleared`,
+  DATABASE_WAS_CLEARED: `${constants.EMOJI.SUCCESS} Database was cleared`,
+  DATABASE_WAS_NOT_CLEARED: `${constants.EMOJI.ERROR} Database was not cleared`,
 
   // BIG TEXTS
-  WELCOME_TEXT: (prefix) => `Welcome! This is Leetcode Rating bot Elite ${EMOJI.COOL} Boys
+  WELCOME_TEXT: (prefix) => `Welcome! This is Leetcode Rating bot Elite ${constants.EMOJI.COOL} Boys
 
 <b>Main commands:</b>
 <b><i>${prefix}start</i></b> - Starting Page
@@ -104,9 +99,9 @@ const BOT_MESSAGES = {
 <b>Solved:</b> ${user.solved} / ${user.all}
 
 <b>Last ${user.submissions.length} Submissions:</b>
-${user.submissions.slice(0, SUBMISSION_COUNT).map((submission) => `
+${user.submissions.slice(0, constants.SUBMISSION_COUNT).map((submission) => `
 <b>${submission.name}</b>
-<b>Link:</b> <b>${LEETCODE_URL}${submission.link}</b>
+<b>Link:</b> <b>${constants.LEETCODE_URL}${submission.link}</b>
 <b>Status:</b> ${submission.status}
 <b>Language:</b> ${submission.language}
 <b>Time:</b> ${submission.time}
@@ -120,9 +115,11 @@ ${user.submissions.slice(0, SUBMISSION_COUNT).map((submission) => `
     ).join('\n');
   },
 
-  STATS_TEXT: (providerName, users) => {
+  STATS_TEXT: (providerName, cache) => {
+    const { userLimit, users } = cache;
+
     // Get prefix for provider
-    const prefix = PROVIDERS
+    const prefix = constants.PROVIDERS
       .find((provider) => (provider.NAME === providerName))
       .PREFIX;
 
@@ -134,17 +131,17 @@ ${user.submissions.slice(0, SUBMISSION_COUNT).map((submission) => `
 <b>PROVIDER RELATED</b>
 <b>Provider:</b> ${providerName}
 <b>Prefix:</b> ${prefix}
-<b>Discord enabled:</b> ${DISCORD.ENABLE}
-<b>Telegram enabled:</b> ${TELEGRAM.ENABLE}
+<b>Discord enabled:</b> ${constants.DISCORD.ENABLE}
+<b>Telegram enabled:</b> ${constants.TELEGRAM.ENABLE}
 
 <b>DATABASE RELATED</b>
-<b>Database:</b> ${DB_PROVIDER}
+<b>Database:</b> ${constants.DB_PROVIDER}
 <b>User Count:</b> ${users.length}
-<b>User amount limit:</b> ${USER_AMOUNT_LIMIT}
+<b>User amount limit:</b> ${userLimit}
 
 <b>SYSTEM RELATED</b>
-<b>Submissions:</b> ${SUBMISSION_COUNT}
-<b>Delay between calls:</b> ${DELAY_TIME_MS}
+<b>Submissions:</b> ${constants.SUBMISSION_COUNT}
+<b>Delay between calls:</b> ${constants.DELAY_TIME_MS}
 
 <b>USER LIST</b>
 ${userNameList}
@@ -152,7 +149,7 @@ ${userNameList}
   },
 };
 
-module.exports = {
+export default {
   BOT_MESSAGES,
   SERVER_MESSAGES,
 };

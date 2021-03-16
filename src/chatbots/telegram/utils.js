@@ -1,4 +1,4 @@
-const reply = (message, context) => {
+export const reply = (message, context) => {
   const {
     chatId, options, bot, photoUrl,
   } = context;
@@ -10,7 +10,7 @@ const reply = (message, context) => {
   return bot.sendMessage(chatId, message, options);
 };
 
-const getArgs = (message) => {
+export const getArgs = (message) => {
   // Get all args from message
   const args = message.split(' ');
 
@@ -19,5 +19,3 @@ const getArgs = (message) => {
 
   return args;
 };
-
-module.exports = { getArgs, reply };

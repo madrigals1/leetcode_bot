@@ -1,11 +1,14 @@
-const schedule = require('node-schedule');
+import schedule from 'node-schedule';
 
-const User = require('../cache/user');
+import Cache from '../cache';
 
-const { NODE_SCHEDULE_TIME } = require('./constants');
+import constants from './constants';
 
 const startScheduler = () => {
-  schedule.scheduleJob(NODE_SCHEDULE_TIME, () => User.refresh().then());
+  schedule.scheduleJob(
+    constants.NODE_SCHEDULE_TIME,
+    () => Cache.refreshUsers(),
+  );
 };
 
-module.exports = startScheduler;
+export default startScheduler;

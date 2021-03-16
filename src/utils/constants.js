@@ -1,6 +1,6 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
-const { isTrue } = require('./helper');
+import { isTrue } from './helper';
 
 dotenv.config();
 
@@ -8,9 +8,13 @@ dotenv.config();
 const {
   // Chatbot settings
   TELEGRAM_TOKEN,
+  TELEGRAM_TEST_TOKEN,
   DISCORD_TOKEN,
+  DISCORD_TEST_TOKEN,
   TELEGRAM_ENABLE,
+  TELEGRAM_TEST_ENABLE,
   DISCORD_ENABLE,
+  DISCORD_TEST_ENABLE,
   // Database settings
   DB_PROVIDER,
   // 1) MongoDB settings
@@ -26,8 +30,8 @@ const {
   POSTGRES_DB_USER,
   POSTGRES_DB_PASSWORD,
   POSTGRES_DB_PORT,
-  // Table API
-  TABLE_API_LINK,
+  // External Microservices
+  VIZAPI_LINK,
   // System settings
   MASTER_PASSWORD,
   LEETCODE_URL,
@@ -70,6 +74,8 @@ const TELEGRAM = {
   NAME: 'telegram',
   ENABLE: TELEGRAM_ENABLE,
   TOKEN: TELEGRAM_TOKEN,
+  TEST_ENABLE: TELEGRAM_TEST_ENABLE,
+  TEST_TOKEN: TELEGRAM_TEST_TOKEN,
   PREFIX: '/',
 };
 
@@ -77,6 +83,8 @@ const DISCORD = {
   NAME: 'discord',
   ENABLE: isTrue(DISCORD_ENABLE),
   TOKEN: DISCORD_TOKEN,
+  TEST_ENABLE: DISCORD_TEST_ENABLE,
+  TEST_TOKEN: DISCORD_TEST_TOKEN,
   PREFIX: '!',
 };
 
@@ -102,7 +110,7 @@ const POSTGRES = {
   DB_PORT: POSTGRES_DB_PORT,
 };
 
-module.exports = {
+export default {
   // Chatbot data objects
   DISCORD,
   TELEGRAM,
@@ -118,8 +126,8 @@ module.exports = {
   USER_AMOUNT_LIMIT,
   DELAY_TIME_MS,
   NODE_SCHEDULE_TIME,
-  // Table API
-  TABLE_API_LINK,
+  // External Microservices
+  VIZAPI_LINK,
   // Constants
   DATE_FORMAT,
   STATUS_MAP,

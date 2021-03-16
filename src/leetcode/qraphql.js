@@ -1,4 +1,4 @@
-const GET_USER_PROFILE = (username) => ({
+export const GET_USER_PROFILE = (username) => ({
   operationName: 'getUserProfile',
   query: `
     query getUserProfile($username: String!) {
@@ -28,7 +28,7 @@ const GET_USER_PROFILE = (username) => ({
   },
 });
 
-const GET_RECENT_SUBMISSION_LIST = (username) => ({
+export const GET_RECENT_SUBMISSION_LIST = (username) => ({
   operationName: 'getRecentSubmissionList',
   query: `
     query getRecentSubmissionList($username: String!, $limit: Int) {
@@ -46,5 +46,3 @@ const GET_RECENT_SUBMISSION_LIST = (username) => ({
     username,
   },
 });
-
-module.exports = { GET_USER_PROFILE, GET_RECENT_SUBMISSION_LIST };

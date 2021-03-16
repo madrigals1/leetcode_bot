@@ -1,10 +1,10 @@
-const sqlite3 = require('sqlite3');
-const { open } = require('sqlite');
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
 
-const { log } = require('../../utils/helper');
-const { SERVER_MESSAGES } = require('../../utils/dictionary');
+import { log } from '../../utils/helper';
+import dictionary from '../../utils/dictionary';
 
-const QUERIES = require('./queries');
+import QUERIES from './queries';
 
 class SQLite {
   // Connect to Database
@@ -17,7 +17,7 @@ class SQLite {
       })
         .then((database) => {
           // Log that database is connected
-          log(SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
+          log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
 
           // Set database object
           this.database = database;
@@ -29,7 +29,7 @@ class SQLite {
         })
         .catch((err) => {
           // Log that database connection had errors
-          log(SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
+          log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
 
           reject(Error(err));
         });
@@ -79,4 +79,4 @@ class SQLite {
   }
 }
 
-module.exports = SQLite;
+export default SQLite;

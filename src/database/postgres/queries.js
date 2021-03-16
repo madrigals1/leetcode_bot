@@ -7,4 +7,4 @@ const QUERIES = {
   REMOVE_ALL_USERS: 'DELETE FROM users;',
 };
 
-module.exports = { QUERIES };
+export default QUERIES;

@@ -1,13 +1,16 @@
-const DiscordBot = require('discord.js');
+import DiscordBot from 'discord.js';
 
-const { log } = require('../../utils/helper');
+import { log } from '../../utils/helper';
+import dictionary from '../../utils/dictionary';
 
-const createBot = (token) => {
+const createBot = async (token) => {
   // Create bot and use Token to Login
   const bot = new DiscordBot.Client();
-  bot.login(token).then(() => log('>>> Discord BOT is connected!'));
+  await bot.login(token);
+
+  log(dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_CONNECTED);
 
   return bot;
 };
 
-module.exports = { createBot };
+export default createBot;

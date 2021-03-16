@@ -12,20 +12,47 @@ Leetcode Bot is an app, that gets data for **LeetCode Users** and creates **Rati
 
 You can create your own rating by deploying this project on your machine!!!
 
-## Demo
-
 [Demo BOT on Telegram](https://t.me/dalbbot)
 
-Main
-![Main](https://i.imgur.com/7VRyBUV.png)
+## Table of Contents
 
-Submissions
-![Submissions](https://i.imgur.com/KppSfUe.png)
+- [Functionality](#Functionality)
+- [Installation](#Installation)
+- [Running](#Running)
+- [Testing](#Testing)
+- [Authors](#Authors)
 
-Adding and Deleting
-![Adding and Deleting](https://i.imgur.com/Q9CQH05.png)
+## Functionality
 
-## Prerequisites
+`/start`
+
+![Start](https://i.imgur.com/EDZk84y.png)
+
+`/rating`
+
+![Rating](https://i.imgur.com/56qWPO7.png)
+
+`/rating username`
+
+![Rating username](https://i.imgur.com/mjHCA9X.png)
+
+`/add username1 username2 ...`
+
+![Add username1 username2](https://i.imgur.com/oibWs44.png)
+
+`/avatar username`
+
+![Avatar username](https://i.imgur.com/spGTNmN.png)
+
+`/submissions username`
+
+![Submissions username](https://i.imgur.com/5yotx36.png)
+
+## Installation
+
+> If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docs/README-Docker.md).
+
+### Prerequisites
 
 Make sure you have installed these:
 Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema.
@@ -37,73 +64,71 @@ Classified as a NoSQL database program, MongoDB uses JSON-like documents with sc
 
 > You can use **SQLite3** as Database, this way you will not have to install anything.
 
-## Installation
+### Installation Steps
 
-> If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docs/README-Docker.md).
+1. Make a copy of .env.example file named .env
 
-Make a copy of .env.example file named .env
+    ```shell script
+    cp .env.example .env
+    ```
 
-```shell script
-cp .env.example .env
-```
+2. To enable **Telegram BOT** or **Discord BOT**, change respective values inside `.env`
 
-To enable **Telegram BOT** or **Discord BOT**, change respective values inside `.env`
-
-```dotenv
-# Change TELEGRAM_TOKEN to your own token you get from https://t.me/botfather
-TELEGRAM_ENABLE=True
-TELEGRAM_TOKEN=****************************************
-
-# Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
-DISCORD_ENABLE=False
-DISCORD_TOKEN=*****************************************
-```
-
-Change **MASTER_PASSWORD** value to secure password, that will be used for deleting data.
-
-```dotenv
-MASTER_PASSWORD=***************************************
-```
-
-Change settings for **Database**
-
-- **SQLite3** - no changes needed.
-
-- **MongoDB**
     ```dotenv
-    MONGO_DB_URL=localhost
-    MONGO_DB_NAME=leetbot_db
-    MONGO_DB_AUTHENTICATION_ENABLED=True
-    MONGO_DB_USER=admin
-    MONGO_DB_PASSWORD=password
-    MONGO_DB_PORT=27017
+    # Change TELEGRAM_TOKEN to your own token you get from https://t.me/botfather
+    TELEGRAM_ENABLE=True
+    TELEGRAM_TOKEN=****************************************
+
+    # Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
+    DISCORD_ENABLE=False
+    DISCORD_TOKEN=*****************************************
     ```
 
-- **PostgreSQL**
-    ```
-    POSTGRES_DB_URL=localhost
-    POSTGRES_DB_NAME=leetbot_db
-    POSTGRES_DB_USER=admin
-    POSTGRES_DB_PASSWORD=password
-    POSTGRES_DB_PORT=5432
+3. Change **MASTER_PASSWORD** value to secure password, that will be used for deleting data.
+
+    ```dotenv
+    MASTER_PASSWORD=***************************************
     ```
 
-Change submission count, that will be shown for each User - `/rating <username>`
-```dotenv
-SUBMISSION_COUNT=5
-```
+4. Change settings for **Database**
 
-Delay time is set to 4s, depends on LeetCode RPM, which I don't know.
+    - **SQLite3** - no changes needed.
 
-```dotenv
-DELAY_TIME_MS=4000
-```
+    - **MongoDB**
+        ```dotenv
+        MONGO_DB_URL=localhost
+        MONGO_DB_NAME=leetbot_db
+        MONGO_DB_AUTHENTICATION_ENABLED=True
+        MONGO_DB_USER=admin
+        MONGO_DB_PASSWORD=password
+        MONGO_DB_PORT=27017
+        ```
 
-Install npm packages
+    - **PostgreSQL**
+        ```
+        POSTGRES_DB_URL=localhost
+        POSTGRES_DB_NAME=leetbot_db
+        POSTGRES_DB_USER=admin
+        POSTGRES_DB_PASSWORD=password
+        POSTGRES_DB_PORT=5432
+        ```
 
-```
-npm ci
-```
+5. Change submission count, that will be shown for each User - `/rating <username>`
+    ```dotenv
+    SUBMISSION_COUNT=5
+    ```
+
+6. Delay time is set to 4s, depends on LeetCode RPM, which I don't know.
+
+    ```dotenv
+    DELAY_TIME_MS=4000
+    ```
+
+7. Install npm packages
+
+    ```
+    npm ci
+    ```
 
 ## Running
 
@@ -111,6 +136,12 @@ npm ci
 npm start
 ```
 
-### Authors
+## Testing
+
+```
+npm test
+```
+
+## Authors
 - Adi Sabyrbayev [Github](https://github.com/madrigals1), [LinkedIn](https://www.linkedin.com/in/madrigals1/)
 - Aibek Ziyashev [Github](https://github.com/dmndcrow), [LinkedIn](https://www.linkedin.com/in/aibek-ziyashev-11b744193/)
