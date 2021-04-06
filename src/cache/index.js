@@ -56,35 +56,39 @@ class Cache {
       refreshedStartedAt,
     ));
 
-    // Get all users from database
-    const databaseUsers = await this.database.findAllUsers();
+    try {
+      // Get all users from database
+      const databaseUsers = await this.database.findAllUsers();
 
-    // Modify users with data from LeetCode
-    for (let i = 0; i < databaseUsers.length; i++) {
-      const databaseUser = databaseUsers[i];
+      // Modify users with data from LeetCode
+      for (let i = 0; i < databaseUsers.length; i++) {
+        const databaseUser = databaseUsers[i];
 
-      // Get username from Database User
-      const { username } = databaseUser;
+        // Get username from Database User
+        const { username } = databaseUser;
 
-      // Get data from LeetCode related to this User
-      // eslint-disable-next-line no-await-in-loop
-      const userData = await this.getLeetcodeDataFromUsername(username);
+        // Get data from LeetCode related to this User
+        // eslint-disable-next-line no-await-in-loop
+        const userData = await this.getLeetcodeDataFromUsername(username);
 
-      // If UserData was returned from Backend, replace User in cache
-      if (userData) {
-        this.addOrReplaceUserInCache(username, userData);
-        log(dictionary.SERVER_MESSAGES.USERNAME_WAS_REFRESHED(username));
-      } else {
-        log(dictionary.SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(username));
+        // If UserData was returned from Backend, replace User in cache
+        if (userData) {
+          this.addOrReplaceUserInCache(username, userData);
+          log(dictionary.SERVER_MESSAGES.USERNAME_WAS_REFRESHED(username));
+        } else {
+          log(dictionary.SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(username));
+        }
+
+        // Wait X seconds until loading next User, X is set in .env
+        // eslint-disable-next-line no-await-in-loop
+        await delay(this.delayTime);
       }
 
-      // Wait X seconds until loading next User, X is set in .env
-      // eslint-disable-next-line no-await-in-loop
-      await delay(this.delayTime);
+      // Sort objects after refresh
+      await this.sortUsers();
+    } catch (err) {
+      log(err);
     }
-
-    // Sort objects after refresh
-    await this.sortUsers();
 
     // Set database indicators
     this.database.isRefreshing = false;
