@@ -7,12 +7,22 @@ export const GET_USER_PROFILE = (username) => ({
         __typename
       }
       matchedUser(username: $username) {
+        contributions {
+          points
+          __typename
+        }
         profile {
+          company
+          countryName
           realName
           userAvatar
           __typename
         }
         submitStats {
+          totalSubmissionNum {
+            submissions
+            __typename
+          }
           acSubmissionNum {
             count
             __typename
@@ -38,6 +48,21 @@ export const GET_RECENT_SUBMISSION_LIST = (username) => ({
         timestamp
         statusDisplay
         lang
+        __typename
+      }
+    }
+  `,
+  variables: {
+    username,
+  },
+});
+
+export const GET_CONTEST_RANKING_DATA = (username) => ({
+  operationName: 'getContestRankingData',
+  query: `
+    query getContestRankingData($username: String!) {
+      userContestRanking(username: $username) {
+        rating
         __typename
       }
     }

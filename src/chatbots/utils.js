@@ -4,6 +4,61 @@ import constants from '../utils/constants';
 import { log, error } from '../utils/helper';
 import dictionary from '../utils/dictionary';
 
+const getCompareDataFromUser = (user) => ({
+  image: user.profile.userAvatar,
+  bio_fields: [
+    {
+      name: 'Name',
+      value: user.name,
+    },
+    {
+      name: 'Username',
+      value: user.username,
+    },
+    {
+      name: 'Location',
+      value: user.profile.countryName,
+    },
+    {
+      name: 'Company',
+      value: user.profile.company,
+    },
+  ],
+  compare_fields: [
+    {
+      name: 'Problems Solved',
+      value: user.solved,
+    },
+    {
+      name: 'Contest Rating',
+      value: Math.round(user.contestData.userContestRanking.rating),
+    },
+    {
+      name: 'Total Submissions',
+      value: user.submitStats.totalSubmissionNum[0].submissions,
+    },
+    {
+      name: 'Points',
+      value: user.contributions.points,
+    },
+  ],
+});
+
+export const compareMenu = (leftUser, rightUser) => axios
+  .post(`${constants.VIZAPI_LINK}/compare`, {
+    left: getCompareDataFromUser(leftUser),
+    right: getCompareDataFromUser(rightUser),
+  })
+  .then((res) => {
+    log(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
+    return { link: res.data.link };
+  })
+  .catch((err) => {
+    error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED);
+    error(err);
+    return { error: err, reason: dictionary.SERVER_MESSAGES.API_NOT_WORKING };
+  });
+
 export const tableForSubmissions = (user) => axios
   .post(`${constants.VIZAPI_LINK}/table`, {
     table: user.submissions.map((submission) => (

@@ -6,7 +6,9 @@ import dictionary from '../utils/dictionary';
 import { error, log } from '../utils/helper';
 
 import { getLeetcodeUsernameLink, getLeetcodeProblemLink } from './utils';
-import { GET_USER_PROFILE, GET_RECENT_SUBMISSION_LIST } from './qraphql';
+import {
+  GET_USER_PROFILE, GET_RECENT_SUBMISSION_LIST, GET_CONTEST_RANKING_DATA,
+} from './qraphql';
 
 // Save CSRF_TOKEN as constant to reuse in future
 let CSRF_TOKEN = null;
@@ -51,7 +53,7 @@ const getLeetcodeDataFromUsername = async (username) => {
   if (!matchedUser) return null;
 
   // Get profile and submitStats from matchedUser
-  const { profile, submitStats } = matchedUser;
+  const { profile, submitStats, contributions } = matchedUser;
 
   // Get realName and avatar from profile
   const { realName } = profile;
@@ -91,6 +93,19 @@ const getLeetcodeDataFromUsername = async (username) => {
     };
   });
 
+  // Get GraphQL from 'getContestRankingData'
+  const contestQuery = GET_CONTEST_RANKING_DATA(username);
+  const contestData = await axios
+    .post(
+      graphQLLink,
+      contestQuery,
+      { headers: graphQLHeaders },
+    )
+    .then((graphQLResponse) => {
+      const { data } = graphQLResponse.data;
+      return data;
+    });
+
   return {
     name: realName,
     link: getLeetcodeUsernameLink(username),
@@ -98,6 +113,9 @@ const getLeetcodeDataFromUsername = async (username) => {
     solved: acSubmissionNum[0].count,
     all: allQuestionsCount[0].count,
     profile,
+    contributions,
+    contestData,
+    submitStats,
     submissions,
   };
 };

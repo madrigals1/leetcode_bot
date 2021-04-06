@@ -3,7 +3,9 @@ import Cache from '../cache';
 import { log } from '../utils/helper';
 import constants from '../utils/constants';
 
-import { tableForSubmissions, createUserListReplyMarkup } from './utils';
+import {
+  tableForSubmissions, createUserListReplyMarkup, compareMenu,
+} from './utils';
 
 const actions = [
   {
@@ -272,7 +274,7 @@ const actions = [
           return reply(table.error, context);
         }
 
-        // If image link was not achieved from Table API
+        // If image link was not achieved from VizAPI
         return reply(dictionary.BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
       }
 
@@ -285,6 +287,40 @@ const actions = [
 
       // If 0 User was sent
       return reply(dictionary.BOT_MESSAGES.USER_LIST_SUBMISSIONS, context);
+    },
+  },
+  {
+    name: 'compare',
+    execute: async (context) => {
+      const { args, reply } = context;
+
+      // If incorrect number of args provided, return incorrect input
+      if (args.length !== 2) {
+        return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
+      }
+
+      // Get Users from args
+      const leftUsername = args[0].toLowerCase();
+      const leftUser = Cache.loadUser(leftUsername);
+      const rightUsername = args[1].toLowerCase();
+      const rightUser = Cache.loadUser(rightUsername);
+
+      if (!leftUser || !rightUser) {
+        return reply(dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND, context);
+      }
+
+      const { link } = await compareMenu(leftUser, rightUser);
+
+      // If image was created
+      if (link) {
+        // Add image to context
+        context.photoUrl = link;
+
+        return reply('', context);
+      }
+
+      // If image link was not achieved from VizAPI
+      return reply(dictionary.BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
     },
   },
 ];
