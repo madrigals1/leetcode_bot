@@ -10,7 +10,9 @@ const users = [
     username: 'random_username',
     solved: 124,
     all: 1700,
-    avatar: 'https://example.com/random_link',
+    profile: {
+      userAvatar: 'https://example.com/random_link',
+    },
     submissions: [
       {
         link: getLeetcodeProblemLink('random_problem_slug'),
@@ -34,7 +36,9 @@ const users = [
     username: 'random_username_2',
     solved: 752,
     all: 1700,
-    avatar: 'https://example.com/random_link_2',
+    profile: {
+      userAvatar: 'https://example.com/random_link_2',
+    },
     submissions: [
       {
         link: getLeetcodeProblemLink('random_problem_slug_3'),

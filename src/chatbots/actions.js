@@ -211,7 +211,7 @@ const actions = [
 
         if (user) {
           // Add photo to context
-          context.photoUrl = user.avatar;
+          context.photoUrl = user.profile.userAvatar;
           return reply('', context);
         }
 

@@ -54,7 +54,7 @@ const getLeetcodeDataFromUsername = async (username) => {
   const { profile, submitStats } = matchedUser;
 
   // Get realName and avatar from profile
-  const { realName, userAvatar } = profile;
+  const { realName } = profile;
 
   // Get submission number from submitStats
   const { acSubmissionNum } = submitStats;
@@ -97,7 +97,7 @@ const getLeetcodeDataFromUsername = async (username) => {
     username,
     solved: acSubmissionNum[0].count,
     all: allQuestionsCount[0].count,
-    avatar: userAvatar,
+    profile,
     submissions,
   };
 };

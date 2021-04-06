@@ -61,7 +61,8 @@ test('cache.index.Cache.addOrReplaceUserInCache method', async () => {
   expect(firstUserData.name).toBe('Random User Name');
   expect(firstUserData.solved).toBe(124);
   expect(firstUserData.all).toBe(1700);
-  expect(firstUserData.avatar).toBe('https://example.com/random_link');
+  expect(firstUserData.profile.userAvatar)
+    .toBe('https://example.com/random_link');
   expect(firstUserData.submissions.length).toBe(2);
 
   // Replace 1st User with 2nd User and compare data
@@ -216,7 +217,8 @@ test('cache.index.Cache.addUser method', async () => {
   expect(firstUserData.name).toBe('Random User Name');
   expect(firstUserData.solved).toBe(124);
   expect(firstUserData.all).toBe(1700);
-  expect(firstUserData.avatar).toBe('https://example.com/random_link');
+  expect(firstUserData.profile.userAvatar)
+    .toBe('https://example.com/random_link');
   expect(firstUserData.submissions.length).toBe(2);
   const firstUserDataDirect = (
     await getLeetcodeDataFromUsername('random_username')
