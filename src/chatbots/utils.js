@@ -31,7 +31,7 @@ const getCompareDataFromUser = (user) => ({
     },
     {
       name: 'Contest Rating',
-      value: Math.round(user.contestData.userContestRanking.rating),
+      value: Math.round(user.contestData.userContestRanking?.rating),
     },
     {
       name: 'Total Submissions',
