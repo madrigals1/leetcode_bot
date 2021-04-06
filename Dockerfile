@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:15.13-alpine3.10
 
 # Install required packages
 ENV PYTHONUNBUFFERED=1
