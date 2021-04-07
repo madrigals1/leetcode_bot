@@ -24,29 +24,91 @@ You can create your own rating by deploying this project on your machine!!!
 
 ## Functionality
 
-`/start`
+### Start
 
-![Start](https://i.imgur.com/EDZk84y.png)
+Starting page that contains links to all other actions
 
-`/rating`
+| Name | Start |
+| --- | --- |
+| Arguments | - |
+| Telegram | Yes |
+| Discord | Yes |
+| Admin | No |
 
-![Rating](https://i.imgur.com/56qWPO7.png)
+| Request | Response |
+| --- | --- |
+| `/start` | ![Start](https://i.imgur.com/EDZk84y.png) | 
 
-`/rating username`
+---
 
-![Rating username](https://i.imgur.com/mjHCA9X.png)
+### Rating
 
-`/add username1 username2 ...`
+Prints out rating of users if called without args and data for specific user if called with args.
 
-![Add username1 username2](https://i.imgur.com/oibWs44.png)
+| Name | Rating |
+| --- | --- |
+| Arguments | [1] `username` - username of User in LeetCode. If specified, bot will get data of this specific User and print out. |
+| Telegram | Yes |
+| Discord | Limited |
+| Admin | No |
 
-`/avatar username`
+| Request | Response |
+| --- | --- |
+| `/rating` | ![Rating](https://i.imgur.com/56qWPO7.png) |
+| `/rating username` | ![Rating username](https://i.imgur.com/mjHCA9X.png) | 
 
-![Avatar username](https://i.imgur.com/spGTNmN.png)
+---
 
-`/submissions username`
+### Add
 
-![Submissions username](https://i.imgur.com/5yotx36.png)
+Takes list of Users separated by whitespaces. Saves usernames into Database. Loads data of these Users from LeetCode and saves it into Cache.
+
+| Name | Add |
+| --- | --- |
+| Arguments | [1+] `username ...` - usernames of Users in LeetCode |
+| Telegram | Yes |
+| Discord | Yes |
+| Admin | No |
+
+| Request | Response |
+| --- | --- |
+| `/add username1 username2 ...` | ![Add username1 username2](https://i.imgur.com/oibWs44.png) |
+
+---
+
+### Avatar
+
+Returns avatar of User from LeetCode as image
+
+| Name | Avatar |
+| --- | --- |
+| Arguments | [1] `username` - username of User in LeetCode |
+| Telegram | Yes |
+| Discord | Yes |
+| Admin | No |
+
+| Request | Response |
+| --- | --- |
+| `/avatar` | List of Users as buttons |
+| `/avatar username` | ![Avatar username](https://i.imgur.com/spGTNmN.png) |
+
+---
+
+### Submissions
+
+Gets submission data of User, converts that data into visualization using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
+
+| Name | Submissions |
+| --- | --- |
+| Arguments | [1] `username` - username of User in LeetCode |
+| Telegram | Yes |
+| Discord | Yes |
+| Admin | No |
+
+| Request | Response |
+| --- | --- |
+| `/submissions` | List of Users as buttons |
+| `/submissions username` | ![Submissions username](https://i.imgur.com/5yotx36.png) |
 
 ## Installation
 
