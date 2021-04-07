@@ -110,6 +110,21 @@ Gets submission data of User, converts that data into visualization using [VizAP
 | `/submissions` | ![Submissions](https://i.imgur.com/FHo6fta.png) |
 | `/submissions username` | ![Submissions username](https://i.imgur.com/5yotx36.png) |
 
+### Refresh
+
+Manual refresh of database. By default, database is refreshed once in 15 minutes.
+
+| Name | Refresh |
+| --- | --- |
+| Arguments | - |
+| Telegram | Yes |
+| Discord | Yes |
+| Admin | No |
+
+| Request | Response |
+| --- | --- |
+| `/refresh` | ![Refresh](https://i.imgur.com/Mmcyv7P.png) |
+
 ## Installation
 
 > If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docs/README-Docker.md).
