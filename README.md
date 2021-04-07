@@ -110,6 +110,8 @@ Gets submission data of User, converts that data into visualization using [VizAP
 | `/submissions` | ![Submissions](https://i.imgur.com/FHo6fta.png) |
 | `/submissions username` | ![Submissions username](https://i.imgur.com/5yotx36.png) |
 
+---
+
 ### Compare
 
 Creates small comparison visualization between 2 users using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
@@ -126,6 +128,8 @@ Creates small comparison visualization between 2 users using [VizAPI](https://gi
 | --- | --- |
 | `/compare username1 username2` | ![Compare](https://i.imgur.com/UlYzT2n.png) |
 
+---
+
 ### Refresh
 
 Manual refresh of database. By default, database is refreshed once in 15 minutes.
@@ -140,6 +144,8 @@ Manual refresh of database. By default, database is refreshed once in 15 minutes
 | Request | Response |
 | --- | --- |
 | `/refresh` | ![Refresh](https://i.imgur.com/Mmcyv7P.png) |
+
+---
 
 ### Remove
 
@@ -157,6 +163,8 @@ Admin action, that removes specified User from Database and Cache
 | --- | --- |
 | `/remove madrigals1 password` | ![Remove](https://i.imgur.com/SvwimOi.png) |
 
+---
+
 ### Clear
 
 Admin action, that clears Database and Cache from all Users
@@ -171,6 +179,8 @@ Admin action, that clears Database and Cache from all Users
 | Request | Response |
 | --- | --- |
 | `/clear password` | ![Clear](https://i.imgur.com/SvwimOi.png) |
+
+---
 
 ### Stats
 
