@@ -87,6 +87,7 @@ const BOT_MESSAGES = {
 <b><i>${prefix}rating username</i></b> - Rating for separate User
 <b><i>${prefix}avatar username</i></b> - Avatar for User
 <b><i>${prefix}submissions username</i></b> - Get all recent submissions for User as Table
+<b><i>${prefix}compare username1 username2</i></b> - Compare 2 users' stats
 
 <b>Admin commands:</b>
 <b><i>${prefix}remove username master_password</i></b> - Remove User
