@@ -110,6 +110,22 @@ Gets submission data of User, converts that data into visualization using [VizAP
 | `/submissions` | ![Submissions](https://i.imgur.com/FHo6fta.png) |
 | `/submissions username` | ![Submissions username](https://i.imgur.com/5yotx36.png) |
 
+### Compare
+
+Creates small comparison visualization between 2 users using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
+
+| Name | Compare |
+| --- | --- |
+| Arguments | [1] `username1` - username of User in LeetCode |
+| | [2] `username2` - username of User in LeetCode |
+| Telegram | Yes |
+| Discord | Yes |
+| Admin | No |
+
+| Request | Response |
+| --- | --- |
+| `/compare username1 username2` | ![Compare](https://i.imgur.com/UlYzT2n.png) |
+
 ### Refresh
 
 Manual refresh of database. By default, database is refreshed once in 15 minutes.
