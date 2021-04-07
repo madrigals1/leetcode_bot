@@ -125,6 +125,52 @@ Manual refresh of database. By default, database is refreshed once in 15 minutes
 | --- | --- |
 | `/refresh` | ![Refresh](https://i.imgur.com/Mmcyv7P.png) |
 
+### Remove
+
+Admin action, that removes specified User from Database and Cache
+
+| Name | Remove |
+| --- | --- |
+| Arguments | [1] `username` - username of User in LeetCode |
+| | [2] `master_password` - MASTER_PASSWORD, specified in .env |
+| Telegram | Yes |
+| Discord | Yes |
+| Admin | Yes |
+
+| Request | Response |
+| --- | --- |
+| `/remove madrigals1 password` | ![Remove](https://i.imgur.com/SvwimOi.png) |
+
+### Clear
+
+Admin action, that clears Database and Cache from all Users
+
+| Name | Clear |
+| --- | --- |
+| Arguments | [1] `master_password` - MASTER_PASSWORD, specified in .env |
+| Telegram | Yes |
+| Discord | Yes |
+| Admin | Yes |
+
+| Request | Response |
+| --- | --- |
+| `/clear password` | ![Clear](https://i.imgur.com/SvwimOi.png) |
+
+### Stats
+
+Admin action, that shows some lets us see some part of data, only accessible by admins directly on the server.
+
+| Name | Stats |
+| --- | --- |
+| Arguments | [1] `master_password` - MASTER_PASSWORD, specified in .env |
+| Telegram | Yes |
+| Discord | Yes |
+| Admin | Yes |
+
+| Request | Response |
+| --- | --- |
+| `/stats password` | ![Stats](https://i.imgur.com/JvvOSa8.png) |
+
 ## Installation
 
 > If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docs/README-Docker.md).
