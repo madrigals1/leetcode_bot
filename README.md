@@ -89,7 +89,7 @@ Returns avatar of User from LeetCode as image
 
 | Request | Response |
 | --- | --- |
-| `/avatar` | List of Users as buttons |
+| `/avatar` | ![Avatar](https://i.imgur.com/UVMvVOo.png) |
 | `/avatar username` | ![Avatar username](https://i.imgur.com/spGTNmN.png) |
 
 ---
@@ -107,7 +107,7 @@ Gets submission data of User, converts that data into visualization using [VizAP
 
 | Request | Response |
 | --- | --- |
-| `/submissions` | List of Users as buttons |
+| `/submissions` | ![Submissions](https://i.imgur.com/FHo6fta.png) |
 | `/submissions username` | ![Submissions username](https://i.imgur.com/5yotx36.png) |
 
 ## Installation
