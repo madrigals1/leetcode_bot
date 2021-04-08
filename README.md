@@ -84,7 +84,7 @@ Returns avatar of User from LeetCode as image
 | --- | --- |
 | Arguments | [1] `username` - username of User in LeetCode |
 | Telegram | Yes |
-| Discord | Yes |
+| Discord | Limited |
 | Admin | No |
 
 | Request | Response |
@@ -102,7 +102,7 @@ Gets submission data of User, converts that data into visualization using [VizAP
 | --- | --- |
 | Arguments | [1] `username` - username of User in LeetCode |
 | Telegram | Yes |
-| Discord | Yes |
+| Discord | Limited |
 | Admin | No |
 
 | Request | Response |
