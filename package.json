@@ -4,7 +4,7 @@
   "description": "LeetCode BOT for checking rating of users",
   "main": "src/index.js",
   "scripts": {
-    "start": "node --experimental-modules --experimental-specifier-resolution=node src/index.js",
+    "start": "tsc && node dist/index.js",
     "fix": "eslint --fix src/*",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage"
@@ -12,7 +12,6 @@
   "keywords": [],
   "author": "Adi Sabyrbayev",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "awesome-typescript-loader": "^5.2.1",
     "axios": "^0.21.1",
@@ -31,6 +30,8 @@
   },
   "devDependencies": {
     "@jest/globals": "^26.6.2",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
     "eslint": "^7.18.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
