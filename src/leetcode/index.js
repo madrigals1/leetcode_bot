@@ -4,18 +4,14 @@ import moment from 'moment';
 import constants from '../utils/constants';
 import { log } from '../utils/helper';
 
-import {
-  getCSRFToken, getLeetcodeUsernameLink, getLeetcodeProblemLink,
-} from './utils';
+import { getLeetcodeUsernameLink, getLeetcodeProblemLink } from './utils';
 import {
   GET_USER_PROFILE, GET_RECENT_SUBMISSION_LIST, GET_CONTEST_RANKING_DATA,
 } from './qraphql';
 
-const getLeetcodeDataFromUsername = async (username) => {
+const getLeetcodeDataFromUsername = async (username, csrfToken) => {
   const graphQLLink = `${constants.LEETCODE_URL}/graphql`;
 
-  // Get saved csrfToken or retrieve new one
-  const csrfToken = await getCSRFToken();
   // Set GraphQL Headers
   const graphQLHeaders = { 'x-csrftoken': csrfToken };
 
