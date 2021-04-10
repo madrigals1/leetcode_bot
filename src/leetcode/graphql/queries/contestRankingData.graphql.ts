@@ -1,4 +1,8 @@
-export default function GET_CONTEST_RANKING_DATA(username) {
+import { GraphQLQuery } from '../../models';
+
+export default function contestRankingGraphQLQuery(
+  username: string,
+): GraphQLQuery {
   return {
     operationName: 'getContestRankingData',
     query: `

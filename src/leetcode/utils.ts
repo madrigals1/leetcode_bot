@@ -4,11 +4,11 @@ import constants from '../utils/constants';
 import dictionary from '../utils/dictionary';
 import { error } from '../utils/helper';
 
-export function getLeetcodeUsernameLink(username) {
+export function getLeetcodeUsernameLink(username: string): string {
   return `${constants.LEETCODE_URL}/${username}`;
 }
 
-export function getLeetcodeProblemLink(title) {
+export function getLeetcodeProblemLink(title: string): string {
   return `${constants.LEETCODE_URL}/problems/${title}`;
 }
 
@@ -25,3 +25,7 @@ export const getCSRFToken = new Promise((resolve, reject) => {
       reject(Error("Can't get token"));
     });
 });
+
+export function getGraphQLHeaders(csrfToken: string): Record<string, string> {
+  return { 'x-csrftoken': csrfToken };
+}

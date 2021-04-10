@@ -1,4 +1,8 @@
-export default function GET_RECENT_SUBMISSION_LIST(username) {
+import { GraphQLQuery } from '../../models';
+
+export default function recentSubmissionListGraphQLQuery(
+  username: string,
+): GraphQLQuery {
   return {
     operationName: 'getRecentSubmissionList',
     query: `
@@ -9,6 +13,12 @@ export default function GET_RECENT_SUBMISSION_LIST(username) {
           timestamp
           statusDisplay
           lang
+          __typename
+        }
+        languageList {
+          id
+          name
+          verboseName
           __typename
         }
       }

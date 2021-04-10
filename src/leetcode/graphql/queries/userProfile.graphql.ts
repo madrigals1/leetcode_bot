@@ -1,4 +1,8 @@
-export default function GET_USER_PROFILE(username) {
+import { GraphQLQuery } from '../../models';
+
+export default function userProfileGraphQLQuery(
+  username: string,
+): GraphQLQuery {
   return {
     operationName: 'getUserProfile',
     query: `

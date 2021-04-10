@@ -1,38 +1,38 @@
-interface AllQuestionsNode {
+export interface AllQuestionsNode {
   difficulty: string;
   count: number;
 }
 
-interface UserBadgeNode {
+export interface UserBadgeNode {
   creationDate: string;
   displayName: string;
   icon: string;
   id: string;
 }
 
-interface BadgeNode {
+export interface BadgeNode {
   icon: string;
   name: string;
 }
 
-interface UserContributionNode {
+export interface UserContributionNode {
   points: number;
   questionCount: number;
   testcaseCount: number;
 }
 
-interface SubmissionsCountNode {
+export interface SubmissionsCountNode {
   count: number;
   difficulty: string;
   submissions: number;
 }
 
-interface UserSubmitStatsNode {
+export interface UserSubmitStatsNode {
   acSubmissionNum: SubmissionsCountNode[];
   totalSubmissionNum: SubmissionsCountNode[];
 }
 
-interface UserProfileNode {
+export interface UserProfileNode {
   aboutMe: string;
   company: string;
   coutryName: string;
@@ -46,7 +46,7 @@ interface UserProfileNode {
   websites: string[];
 }
 
-interface UserNode {
+export interface UserNode {
   activeBadge: UserBadgeNode;
   badges: UserBadgeNode[];
   contributions: UserContributionNode[];
