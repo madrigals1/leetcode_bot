@@ -2,36 +2,14 @@ import axios from 'axios';
 import moment from 'moment';
 
 import constants from '../utils/constants';
-import dictionary from '../utils/dictionary';
-import { error, log } from '../utils/helper';
+import { log } from '../utils/helper';
 
-import { getLeetcodeUsernameLink, getLeetcodeProblemLink } from './utils';
+import {
+  getCSRFToken, getLeetcodeUsernameLink, getLeetcodeProblemLink,
+} from './utils';
 import {
   GET_USER_PROFILE, GET_RECENT_SUBMISSION_LIST, GET_CONTEST_RANKING_DATA,
 } from './qraphql';
-
-// Save CSRF_TOKEN as constant to reuse in future
-let CSRF_TOKEN = null;
-
-const getCSRFToken = async () => {
-  // If CSRF_TOKEN was already set, return it
-  if (CSRF_TOKEN) return CSRF_TOKEN;
-
-  // If CSRF_TOKEN was not already set, retrieve it
-  return axios
-    .get(constants.LEETCODE_URL)
-    .then((response) => {
-      // Get CSRF Token from Header to use in GraphQL Responses
-      const csrfTokenHeader = response.headers['set-cookie'][1];
-      [, CSRF_TOKEN] = csrfTokenHeader.split('; ')[0].split('=');
-
-      return CSRF_TOKEN;
-    })
-    .catch((err) => {
-      error(dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(err));
-      return null;
-    });
-};
 
 const getLeetcodeDataFromUsername = async (username) => {
   const graphQLLink = `${constants.LEETCODE_URL}/graphql`;
