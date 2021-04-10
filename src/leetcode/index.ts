@@ -10,6 +10,8 @@ import {
   SubmissionDumpNode,
   LanguageNode,
   Contest,
+  User,
+  SubmissionData,
 } from './models';
 import {
   getLeetcodeUsernameLink, getLeetcodeProblemLink, getGraphQLHeaders,
@@ -23,7 +25,7 @@ import gqlQuery from './graphql/utils';
 
 async function getLeetcodeDataFromUsername(
   username: string, csrfToken: string,
-): Promise<Record<string, unknown>> {
+): Promise<User> {
   // Data for GraphQL Response
   const graphQLLink = `${constants.LEETCODE_URL}/graphql`;
   const graphQLHeaders: Record<string, string> = getGraphQLHeaders(csrfToken);
@@ -50,7 +52,7 @@ async function getLeetcodeDataFromUsername(
     await gqlQuery<RecentSubmissionList>(submissionContext)
   );
   const now: number = moment().unix();
-  const submissions = submissionData.recentSubmissionList.map(
+  const submissions: SubmissionData[] = submissionData.recentSubmissionList.map(
     (submission: SubmissionDumpNode) => {
       const unixTime: number = parseInt(submission.timestamp, 10);
 
