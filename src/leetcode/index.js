@@ -7,7 +7,7 @@ import { log } from '../utils/helper';
 import { getLeetcodeUsernameLink, getLeetcodeProblemLink } from './utils';
 import {
   GET_USER_PROFILE, GET_RECENT_SUBMISSION_LIST, GET_CONTEST_RANKING_DATA,
-} from './qraphql';
+} from './graphql';
 
 const getLeetcodeDataFromUsername = async (username, csrfToken) => {
   const graphQLLink = `${constants.LEETCODE_URL}/graphql`;
