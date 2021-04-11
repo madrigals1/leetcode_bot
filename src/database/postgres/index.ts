@@ -9,15 +9,13 @@ import QUERIES from './queries';
 const { Client } = pg;
 
 class Postgres {
-  constructor() {
-    this.client = new Client({
-      user: constants.POSTGRES.DB_USER,
-      host: constants.POSTGRES.DB_URL,
-      database: constants.POSTGRES.DB_NAME,
-      password: constants.POSTGRES.DB_PASSWORD,
-      port: constants.POSTGRES.DB_PORT,
-    });
-  }
+  client = new Client({
+    user: constants.POSTGRES.DB_USER,
+    host: constants.POSTGRES.DB_URL,
+    database: constants.POSTGRES.DB_NAME,
+    password: constants.POSTGRES.DB_PASSWORD,
+    port: constants.POSTGRES.DB_PORT,
+  });
 
   // Connect database
   async connect() {
@@ -51,7 +49,7 @@ class Postgres {
   }
 
   // Load User by `username`
-  async loadUser(username) {
+  async loadUser(username: string) {
     return this.client.query(QUERIES.LOAD_USER(username))
       .then((res) => res.rows[0])
       .catch((err) => {
@@ -62,7 +60,7 @@ class Postgres {
   }
 
   // Add User to Database
-  async addUser(username) {
+  async addUser(username: string) {
     // Check if user already exists is in database
     const exists = await this.loadUser(username);
 
@@ -79,7 +77,7 @@ class Postgres {
   }
 
   // Remove User from Database
-  async removeUser(username) {
+  async removeUser(username: string) {
     // Check if user exists is in database
     const exists = await this.loadUser(username);
 

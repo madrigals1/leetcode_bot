@@ -1,4 +1,4 @@
-import sqlite3 from 'sqlite3';
+import * as sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
 import { log } from '../../utils/helper';
@@ -7,8 +7,10 @@ import dictionary from '../../utils/dictionary';
 import QUERIES from './queries';
 
 class SQLite {
+  database: sqlite3.Database;
+
   // Connect to Database
-  async connect() {
+  async connect(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       // Create database connection
       open({
@@ -47,12 +49,12 @@ class SQLite {
   }
 
   // Load User by `username`
-  async loadUser(username) {
+  async loadUser(username: string) {
     return this.database.get(QUERIES.LOAD_USER, username);
   }
 
   // Add User to Database
-  async addUser(username) {
+  async addUser(username: string) {
     // Check if user already exists is in database
     const exists = await this.loadUser(username);
 
@@ -63,7 +65,7 @@ class SQLite {
   }
 
   // Remove User from Database
-  async removeUser(username) {
+  async removeUser(username: string) {
     // Check if user exists is in database
     const exists = await this.loadUser(username);
 
