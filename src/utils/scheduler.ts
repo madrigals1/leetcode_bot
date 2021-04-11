@@ -1,4 +1,4 @@
-import schedule from 'node-schedule';
+import * as schedule from 'node-schedule';
 
 import Cache from '../cache';
 
