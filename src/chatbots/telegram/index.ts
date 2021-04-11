@@ -1,4 +1,4 @@
-import TelegramBot from 'node-telegram-bot-api';
+import * as TelegramBot from 'node-telegram-bot-api';
 
 import { log } from '../../utils/helper';
 import actions from '../actions';
