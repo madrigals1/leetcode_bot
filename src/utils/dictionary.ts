@@ -64,8 +64,8 @@ const BOT_MESSAGES = {
     return `User List:\n${userList}`;
   },
   NO_USERS,
-  USER_NO_SUBMISSIONS(user: User): string {
-    return `${constants.EMOJI.ERROR} User <b>${user}</b> does not have any submissions`;
+  USER_NO_SUBMISSIONS(username: string): string {
+    return `${constants.EMOJI.ERROR} User <b>${username}</b> does not have any submissions`;
   },
 
   // USERNAME RELATED
