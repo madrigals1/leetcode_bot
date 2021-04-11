@@ -5,7 +5,8 @@ export interface Options {
   polling?: boolean;
   // eslint-disable-next-line camelcase
   parse_mode?: string;
-  reply_markup?: 
+  // eslint-disable-next-line camelcase
+  reply_markup?: string;
 }
 
 export interface Context {
