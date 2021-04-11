@@ -1,4 +1,6 @@
-export const reply = (message, context) => {
+import { Context } from '../models';
+
+export function reply(message, context: Context) {
   const {
     chatId, options, bot, photoUrl,
   } = context;
@@ -8,9 +10,9 @@ export const reply = (message, context) => {
   }
 
   return bot.sendMessage(chatId, message, options);
-};
+}
 
-export const getArgs = (message) => {
+export function getArgs(message: string): string[] {
   // Get all args from message
   const args = message.split(' ');
 
@@ -18,4 +20,4 @@ export const getArgs = (message) => {
   args.shift();
 
   return args;
-};
+}

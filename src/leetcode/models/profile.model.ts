@@ -35,7 +35,7 @@ export interface UserSubmitStatsNode {
 export interface UserProfileNode {
   aboutMe: string;
   company: string;
-  coutryName: string;
+  countryName: string;
   ranking: number;
   realName: string;
   reputation: number;
@@ -49,7 +49,7 @@ export interface UserProfileNode {
 export interface UserNode {
   activeBadge: UserBadgeNode;
   badges: UserBadgeNode[];
-  contributions: UserContributionNode[];
+  contributions: UserContributionNode;
   githubUrl: string;
   profile: UserProfileNode;
   socialAccounts: string[];

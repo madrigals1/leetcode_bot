@@ -1,9 +1,9 @@
-import DiscordBot from 'discord.js';
+import * as DiscordBot from 'discord.js';
 
 import { log } from '../../utils/helper';
 import dictionary from '../../utils/dictionary';
 
-const createBot = async (token) => {
+const createBot = async (token: string): Promise<DiscordBot.Client> => {
   // Create bot and use Token to Login
   const bot = new DiscordBot.Client();
   await bot.login(token);

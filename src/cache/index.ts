@@ -230,10 +230,10 @@ class Cache {
   }
 
   // Load User by Username
-  loadUser(username: string): User | boolean {
+  loadUser(username: string): User {
     return this.users.find((user) => (
       user.username.toLowerCase() === username
-    )) || false;
+    ));
   }
 }
 

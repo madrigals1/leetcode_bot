@@ -11,7 +11,7 @@ export interface User {
   solved: number;
   all: number;
   profile: UserProfileNode;
-  contributions: UserContributionNode[];
+  contributions: UserContributionNode;
   contestData: Contest;
   submitStats: UserSubmitStatsNode;
   submissions: SubmissionData[];
