@@ -6,10 +6,8 @@ import dictionary from '../../utils/dictionary';
 
 import QUERIES from './queries';
 
-const { Client } = pg;
-
 class Postgres {
-  client = new Client({
+  client = new pg.Client({
     user: constants.POSTGRES.DB_USER,
     host: constants.POSTGRES.DB_URL,
     database: constants.POSTGRES.DB_NAME,
