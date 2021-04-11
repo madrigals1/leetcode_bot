@@ -1,22 +1,23 @@
-import TelegramBot from 'node-telegram-bot-api';
+import * as TelegramBot from 'node-telegram-bot-api';
 
 import { log } from '../../utils/helper';
 import actions from '../actions';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
+import { Options, Context } from '../models';
 
 import { getArgs, reply } from './utils';
 
-process.env.NTBA_FIX_319 = 1;
+process.env.NTBA_FIX_319 = '1';
 
 class Telegram {
-  constructor() {
-    // Save token and options
-    this.token = constants.TELEGRAM.TOKEN;
-    this.options = { polling: true };
-  }
+  token: string = constants.TELEGRAM.TOKEN;
 
-  getContext(message, args) {
+  options: Options = { polling: true };
+
+  bot: TelegramBot;
+
+  getContext(message, args: string[]): Context {
     return {
       args,
       reply,
@@ -49,10 +50,10 @@ class Telegram {
         }
 
         // Get args from message
-        const args = getArgs(message.text);
+        const args: string[] = getArgs(message.text);
 
         // Create context for message
-        const context = this.getContext(message, args);
+        const context: Context = this.getContext(message, args);
 
         action.execute(context);
       });
@@ -75,10 +76,10 @@ class Telegram {
         // If message starts with /rating, call rating action
         if (data.match(action.name)) {
           // Get args from callback_query message
-          const args = getArgs(data);
+          const args: string[] = getArgs(data);
 
           // Create context for message
-          const context = this.getContext(message, args);
+          const context: Context = this.getContext(message, args);
 
           return action.execute(context);
         }

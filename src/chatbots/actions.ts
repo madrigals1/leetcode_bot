@@ -2,7 +2,10 @@ import dictionary from '../utils/dictionary';
 import Cache from '../cache';
 import { log } from '../utils/helper';
 import constants from '../utils/constants';
+import { CacheResponse } from '../cache/response.model';
+import { User } from '../leetcode/models';
 
+import { Context, TableResponse } from './models';
 import {
   tableForSubmissions, createUserListReplyMarkup, compareMenu,
 } from './utils';
@@ -10,7 +13,7 @@ import {
 const actions = [
   {
     name: 'start',
-    execute: (context) => {
+    execute: (context: Context): Promise<string> => {
       const { reply } = context;
       return reply(
         dictionary.BOT_MESSAGES.WELCOME_TEXT(context.prefix),
@@ -20,7 +23,7 @@ const actions = [
   },
   {
     name: 'add',
-    execute: async (context) => {
+    execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
       // If no username is set, return exception
@@ -37,11 +40,11 @@ const actions = [
       // Promise List with promises for adding users
       for (let i = 0; i < args.length; i++) {
         // Get username
-        const username = args[i];
+        const username: string = args[i];
 
         // Get results of adding
         // eslint-disable-next-line no-await-in-loop
-        const result = await Cache.addUser(username);
+        const result: CacheResponse = await Cache.addUser(username);
 
         // Log result detail
         log(result.detail);
@@ -54,18 +57,18 @@ const actions = [
   },
   {
     name: 'refresh',
-    execute: async (context) => {
+    execute: async (context: Context): Promise<string> => {
       const { reply } = context;
       return reply(dictionary.BOT_MESSAGES.STARTED_REFRESH, context)
         .then(async () => {
-          const result = await Cache.refreshUsers();
-          return reply(result, context);
+          const result: CacheResponse = await Cache.refreshUsers();
+          return reply(result.detail, context);
         });
     },
   },
   {
     name: 'remove',
-    execute: async (context) => {
+    execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
       // Correct input for removing should be /rm <username> <master_password>
@@ -75,8 +78,8 @@ const actions = [
       }
 
       // Get username and password from message
-      const username = args[0].toLowerCase();
-      const password = args[1];
+      const username: string = args[0].toLowerCase();
+      const password: string = args[1];
 
       // If password is incorrect, return error message
       if (password !== constants.MASTER_PASSWORD) {
@@ -89,7 +92,7 @@ const actions = [
         context,
       ).then(async () => {
         // Remove the user and send the result (success or failure)
-        const result = await Cache.removeUser(username);
+        const result: CacheResponse = await Cache.removeUser(username);
         log(result.detail);
         return reply(result.detail, context);
       });
@@ -97,7 +100,7 @@ const actions = [
   },
   {
     name: 'clear',
-    execute: async (context) => {
+    execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
       // Correct input for removing should be /clear <master_password>
@@ -107,7 +110,7 @@ const actions = [
       }
 
       // Get password from message
-      const password = args[0];
+      const password: string = args[0];
 
       // If password is incorrect, return error message
       if (password !== constants.MASTER_PASSWORD) {
@@ -118,7 +121,7 @@ const actions = [
       return reply(dictionary.BOT_MESSAGES.DATABASE_WILL_BE_CLEARED, context)
         .then(async () => {
           // Remove all Users and send the result (success or failure)
-          const result = await Cache.clearUsers();
+          const result: CacheResponse = await Cache.clearUsers();
           log(result.detail);
           return reply(result.detail, context);
         });
@@ -126,7 +129,7 @@ const actions = [
   },
   {
     name: 'stats',
-    execute: async (context) => {
+    execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
       // Correct input for removing should be /stats <master_password>
@@ -136,7 +139,7 @@ const actions = [
       }
 
       // Get password from message
-      const password = args[0];
+      const password: string = args[0];
 
       // If password is incorrect, return error message
       if (password !== constants.MASTER_PASSWORD) {
@@ -152,7 +155,7 @@ const actions = [
   },
   {
     name: 'rating',
-    execute: async (context) => {
+    execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
       // If more than 1 User was sent
@@ -162,8 +165,8 @@ const actions = [
 
       // If 1 User was sent
       if (args.length === 1) {
-        const username = args[0].toLowerCase();
-        const user = Cache.loadUser(username);
+        const username: string = args[0].toLowerCase();
+        const user: User = Cache.loadUser(username);
 
         // If user does exist, return user data with reply markup
         if (user) {
@@ -197,7 +200,7 @@ const actions = [
   },
   {
     name: 'avatar',
-    execute: async (context) => {
+    execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
       // If incorrect number of args provided, return incorrect input
@@ -208,8 +211,8 @@ const actions = [
       // If 1 User was sent
       if (args.length === 1) {
         // Get User from args
-        const username = args[0].toLowerCase();
-        const user = Cache.loadUser(username);
+        const username: string = args[0].toLowerCase();
+        const user: User = Cache.loadUser(username);
 
         if (user) {
           // Add photo to context
@@ -236,7 +239,7 @@ const actions = [
   },
   {
     name: 'submissions',
-    execute: async (context) => {
+    execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
       // If incorrect number of args provided, return incorrect input
@@ -247,8 +250,8 @@ const actions = [
       // If 1 User was sent
       if (args.length === 1) {
         // Get User from args
-        const username = args[0].toLowerCase();
-        const user = Cache.loadUser(username);
+        const username: string = args[0].toLowerCase();
+        const user: User = Cache.loadUser(username);
 
         // If User does not exist, return error message
         if (!user) {
@@ -259,19 +262,19 @@ const actions = [
         }
 
         // Create HTML image with Table
-        const table = await tableForSubmissions(user);
+        const response: TableResponse = await tableForSubmissions(user);
 
         // If image was created
-        if (table.link) {
+        if (response.link) {
           // Add image to context
-          context.photoUrl = table.link;
+          context.photoUrl = response.link;
 
           return reply('', context);
         }
 
         // If error is because of User not having any submissions
-        if (table.reason === dictionary.SERVER_MESSAGES.NO_SUBMISSIONS) {
-          return reply(table.error, context);
+        if (response.reason === dictionary.SERVER_MESSAGES.NO_SUBMISSIONS) {
+          return reply(response.error, context);
         }
 
         // If image link was not achieved from VizAPI
@@ -291,7 +294,7 @@ const actions = [
   },
   {
     name: 'compare',
-    execute: async (context) => {
+    execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
       // If incorrect number of args provided, return incorrect input
@@ -300,21 +303,31 @@ const actions = [
       }
 
       // Get Users from args
-      const leftUsername = args[0].toLowerCase();
-      const leftUser = Cache.loadUser(leftUsername);
-      const rightUsername = args[1].toLowerCase();
-      const rightUser = Cache.loadUser(rightUsername);
+      const leftUsername: string = args[0].toLowerCase();
+      const leftUser: User = Cache.loadUser(leftUsername);
+      const rightUsername: string = args[1].toLowerCase();
+      const rightUser: User = Cache.loadUser(rightUsername);
 
-      if (!leftUser || !rightUser) {
-        return reply(dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND, context);
+      if (!leftUser) {
+        return reply(
+          dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(leftUsername),
+          context,
+        );
       }
 
-      const { link } = await compareMenu(leftUser, rightUser);
+      if (!rightUser) {
+        return reply(
+          dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(rightUsername),
+          context,
+        );
+      }
+
+      const response: TableResponse = await compareMenu(leftUser, rightUser);
 
       // If image was created
-      if (link) {
+      if (response.link) {
         // Add image to context
-        context.photoUrl = link;
+        context.photoUrl = response.link;
 
         return reply('', context);
       }

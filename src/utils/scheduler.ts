@@ -1,14 +1,14 @@
-import schedule from 'node-schedule';
+import * as schedule from 'node-schedule';
 
 import Cache from '../cache';
 
 import constants from './constants';
 
-const startScheduler = () => {
+export function startScheduler(): void {
   schedule.scheduleJob(
     constants.NODE_SCHEDULE_TIME,
     () => Cache.refreshUsers(),
   );
-};
+}
 
 export default startScheduler;

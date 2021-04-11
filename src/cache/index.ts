@@ -1,33 +1,44 @@
-import moment from 'moment';
+import * as moment from 'moment';
 
 import getLeetcodeDataFromUsername from '../leetcode';
 import Database from '../database';
 import { log, delay } from '../utils/helper';
 import constants from '../utils/constants';
 import dictionary from '../utils/dictionary';
+import { getCSRFToken } from '../leetcode/utils';
+import { User } from '../leetcode/models';
+
+import { CacheResponse } from './response.model';
 
 class Cache {
+  users: User[] = [];
+
+  database = Database;
+
+  userLimit: number = parseInt(constants.USER_AMOUNT_LIMIT, 10);
+
+  getLeetcodeDataFromUsername: CallableFunction = getLeetcodeDataFromUsername;
+
+  delayTime: number = parseInt(constants.DELAY_TIME_MS, 10);
+
+  csrfToken: string = null;
+
   constructor() {
-    // Create cache container for all Users
-    this.users = [];
-    this.database = Database;
-    this.userLimit = constants.USER_AMOUNT_LIMIT;
-    this.getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
-    this.delayTime = constants.DELAY_TIME_MS;
+    getCSRFToken.then((token: string) => { this.csrfToken = token; });
   }
 
   // Return all users
-  allUsers() {
+  allUsers(): User[] {
     return this.users;
   }
 
   // Get amount of users
-  get userAmount() {
+  get userAmount(): number {
     return this.allUsers().length;
   }
 
   // Replace User with username in the cache
-  addOrReplaceUserInCache(username, userData) {
+  addOrReplaceUserInCache(username: string, userData: User): void {
     for (let i = 0; i < this.userAmount; i++) {
       if (this.users[i].username === username) {
         this.users[i] = userData;
@@ -40,16 +51,19 @@ class Cache {
   }
 
   // Refresh Users map
-  async refreshUsers() {
+  async refreshUsers(): Promise<CacheResponse> {
     // If database was already refreshing
     if (this.database.isRefreshing) {
       log(dictionary.SERVER_MESSAGES.IS_ALREADY_REFRESHING);
-      return dictionary.BOT_MESSAGES.IS_ALREADY_REFRESHING;
+      return {
+        status: constants.STATUS.ERROR,
+        detail: dictionary.BOT_MESSAGES.IS_ALREADY_REFRESHING,
+      };
     }
 
     // Set database as refreshing and get refresh time
     this.database.isRefreshing = true;
-    const refreshedStartedAt = moment().format(constants.DATE_FORMAT);
+    const refreshedStartedAt: string = moment().format(constants.DATE_FORMAT);
 
     // Log when refresh started
     log(dictionary.SERVER_MESSAGES.DATABASE_STARTED_REFRESH(
@@ -69,7 +83,9 @@ class Cache {
 
         // Get data from LeetCode related to this User
         // eslint-disable-next-line no-await-in-loop
-        const userData = await this.getLeetcodeDataFromUsername(username);
+        const userData = await this.getLeetcodeDataFromUsername(
+          username, this.csrfToken,
+        );
 
         // If UserData was returned from Backend, replace User in cache
         if (userData) {
@@ -85,7 +101,7 @@ class Cache {
       }
 
       // Sort objects after refresh
-      await this.sortUsers();
+      this.sortUsers();
     } catch (err) {
       log(err);
     }
@@ -98,26 +114,26 @@ class Cache {
     log(dictionary.SERVER_MESSAGES.DATABASE_FINISHED_REFRESH(
       refreshFinishedAt,
     ));
-    return dictionary.BOT_MESSAGES.IS_REFRESHED;
+
+    return {
+      status: constants.STATUS.SUCCESS,
+      detail: dictionary.BOT_MESSAGES.IS_REFRESHED,
+    };
   }
 
   // Sort all Users by amount of solved questions on LeetCode
-  async sortUsers() {
+  sortUsers(): void {
     this.users.sort(
       (user1, user2) => {
-        const solved1 = user1.solved !== undefined
-          ? parseInt(user1.solved, 10)
-          : -Math.Infinity;
-        const solved2 = user2.solved !== undefined
-          ? parseInt(user2.solved, 10)
-          : -Math.Infinity;
+        const solved1 = user1.solved !== undefined ? user1.solved : -Infinity;
+        const solved2 = user2.solved !== undefined ? user2.solved : -Infinity;
         return solved2 - solved1;
       },
     );
   }
 
   // Add User by Username
-  async addUser(username) {
+  async addUser(username: string): Promise<CacheResponse> {
     // If user count is gte user amount limit, stop execution
     if (this.userAmount >= this.userLimit) {
       return {
@@ -133,13 +149,15 @@ class Cache {
 
     if (user) {
       // Load data from LeetCode by Username
-      const userData = await this.getLeetcodeDataFromUsername(username);
+      const userData = await this.getLeetcodeDataFromUsername(
+        username, this.csrfToken,
+      );
 
       if (userData) {
         this.users.push(userData);
 
         // Sort objects after adding
-        await this.sortUsers();
+        this.sortUsers();
 
         return {
           status: constants.STATUS.SUCCESS,
@@ -167,7 +185,7 @@ class Cache {
   }
 
   // Remove User by Username
-  async removeUser(username) {
+  async removeUser(username: string): Promise<CacheResponse> {
     const deleted = await this.database.removeUser(username);
 
     if (deleted) {
@@ -177,7 +195,7 @@ class Cache {
       ));
 
       // Sort objects after removing
-      await this.sortUsers();
+      this.sortUsers();
 
       return {
         status: constants.STATUS.SUCCESS,
@@ -212,10 +230,10 @@ class Cache {
   }
 
   // Load User by Username
-  loadUser(username) {
+  loadUser(username: string): User {
     return this.users.find((user) => (
       user.username.toLowerCase() === username
-    )) || false;
+    ));
   }
 }
 
