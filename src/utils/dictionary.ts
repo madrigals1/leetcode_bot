@@ -1,22 +1,37 @@
+import { User } from '../leetcode/models';
+
 import constants from './constants';
 
 const SERVER_MESSAGES = {
   // ERROR
-  ERROR_ON_THE_SERVER: (error) => `Error on the server: ${error}`,
+  ERROR_ON_THE_SERVER(error: Error | string): string {
+    return `Error on the server: ${error}`;
+  },
 
   // REFRESHING
-  DATABASE_STARTED_REFRESH: (time) => `Database started refresh at ${time}`,
-  DATABASE_FINISHED_REFRESH: (time) => `Database is refreshed at ${time}`,
+  DATABASE_STARTED_REFRESH(time: string): string {
+    return `Database started refresh at ${time}`;
+  },
+  DATABASE_FINISHED_REFRESH(time: string): string {
+    return `Database is refreshed at ${time}`;
+  },
   IS_ALREADY_REFRESHING: 'Database is already refreshing',
-  USERNAME_WAS_REFRESHED: (username) => `${username} was refreshed`,
-  USERNAME_WAS_NOT_REFRESHED: (username) => `${username} was not refreshed`,
+  USERNAME_WAS_REFRESHED(username: string): string {
+    return `${username} was refreshed`;
+  },
+  USERNAME_WAS_NOT_REFRESHED(username: string): string {
+    return `${username} was not refreshed`;
+  },
 
   // CONNECTION TO DB
   CONNECTION_STATUS: {
     SUCCESSFUL: 'Database connection successful!',
-    ERROR: (error) => `Database connection error: ${error}`,
+    ERROR(error: Error | string): string {
+      return `Database connection error: ${error}`;
+    },
   },
 
+  // BOT LOGS
   DISCORD_BOT_IS_CONNECTED: '>>> Discord BOT is connected!',
   DISCORD_BOT_IS_RUNNING: '>>> Discord BOT is running!',
   TELEGRAM_BOT_IS_CONNECTED: '>>> Telegram BOT is connected!',
@@ -45,25 +60,41 @@ const BOT_MESSAGES = {
   IS_ALREADY_REFRESHING: `${constants.EMOJI.ERROR} Database is already refreshing`,
 
   // USER RELATED
-  USER_LIST: (userList) => `User List:\n${userList}`,
-  AT_LEAST_1_USERNAME: (prefix) => (
-    `${constants.EMOJI.WARNING} Please, enter at least 1 username after <b>${prefix}add</b> command`
-  ),
+  USER_LIST(userList: string): string {
+    return `User List:\n${userList}`;
+  },
   NO_USERS,
-  USERNAME_NOT_FOUND: (username) => `${constants.EMOJI.ERROR} Username <b>${username}</b> was not found in database`,
-  USERNAME_NOT_FOUND_ON_LEETCODE: (username) => (
-    `${constants.EMOJI.ERROR} User <b>${username}</b> was not found on <b>LeetCode</b>\n`
-  ),
-  USERNAME_ALREADY_EXISTS: (username) => (
-    `${constants.EMOJI.ERROR} User <b>${username}</b> already exists in database\n`
-  ),
-  USERNAME_WAS_ADDED: (username, userAmount, userLimit) => `${constants.EMOJI.SUCCESS} <b>${username}</b> was added <b>${userAmount}/${userLimit}</b>\n`,
-  USERNAME_WILL_BE_DELETED: (username) => `${constants.EMOJI.WAITING} User <b>${username}</b> will be deleted`,
-  USERNAME_WAS_DELETED: (username) => `${constants.EMOJI.SUCCESS} User <b>${username}</b> was deleted`,
-  USER_NO_SUBMISSIONS: (user) => (
-    `${constants.EMOJI.ERROR} User <b>${user}</b> does not have any submissions`
-  ),
-  USERNAME_NOT_ADDED_USER_LIMIT: (username, userLimit) => `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`,
+  USER_NO_SUBMISSIONS(user: User): string {
+    return `${constants.EMOJI.ERROR} User <b>${user}</b> does not have any submissions`;
+  },
+
+  // USERNAME RELATED
+  AT_LEAST_1_USERNAME(prefix: string): string {
+    return `${constants.EMOJI.WARNING} Please, enter at least 1 username after <b>${prefix}add</b> command`;
+  },
+  USERNAME_NOT_FOUND(username: string): string {
+    return `${constants.EMOJI.ERROR} Username <b>${username}</b> was not found in database`;
+  },
+  USERNAME_NOT_FOUND_ON_LEETCODE(username: string): string {
+    return `${constants.EMOJI.ERROR} User <b>${username}</b> was not found on <b>LeetCode</b>\n`;
+  },
+  USERNAME_ALREADY_EXISTS(username: string): string {
+    return `${constants.EMOJI.ERROR} User <b>${username}</b> already exists in database\n`;
+  },
+  USERNAME_WAS_ADDED(
+    username: string, userAmount: number, userLimit: number,
+  ): string {
+    return `${constants.EMOJI.SUCCESS} <b>${username}</b> was added <b>${userAmount}/${userLimit}</b>\n`;
+  },
+  USERNAME_WILL_BE_DELETED(username: string): string {
+    return `${constants.EMOJI.WAITING} User <b>${username}</b> will be deleted`;
+  },
+  USERNAME_WAS_DELETED(username: string): string {
+    return `${constants.EMOJI.SUCCESS} User <b>${username}</b> was deleted`;
+  },
+  USERNAME_NOT_ADDED_USER_LIMIT(username: string, userLimit: number): string {
+    return `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`;
+  },
   USER_LIST_SUBMISSIONS: `${constants.EMOJI.CARD_FILE_BOX} Submissions`,
   USER_LIST_AVATARS: `${constants.EMOJI.CARD_FILE_BOX} Avatars`,
 
@@ -73,7 +104,8 @@ const BOT_MESSAGES = {
   DATABASE_WAS_NOT_CLEARED: `${constants.EMOJI.ERROR} Database was not cleared`,
 
   // BIG TEXTS
-  WELCOME_TEXT: (prefix) => `Welcome! This is Leetcode Rating bot Elite ${constants.EMOJI.COOL} Boys
+  WELCOME_TEXT(prefix: string): string {
+    return `Welcome! This is Leetcode Rating bot Elite ${constants.EMOJI.COOL} Boys
 
 <b>Main commands:</b>
 <b><i>${prefix}start</i></b> - Starting Page
@@ -93,21 +125,24 @@ const BOT_MESSAGES = {
 <b><i>${prefix}remove username master_password</i></b> - Remove User
 <b><i>${prefix}clear master_password</i></b> - Clear Database
 <b><i>${prefix}stats master_password</i></b> - Show Stats for this BOT
-`,
-  USER_TEXT: (user) => `<b>Name:</b> ${user.name || 'No name'}
+`;
+  },
+  USER_TEXT(user: User): string {
+    return `<b>Name:</b> ${user.name || 'No name'}
 <b>Username:</b> ${user.username}
 <b>Link:</b> <b>${user.link}</b>
 <b>Solved:</b> ${user.solved} / ${user.all}
 
 <b>Last ${user.submissions.length} Submissions:</b>
-${user.submissions.slice(0, constants.SUBMISSION_COUNT).map((submission) => `
+${user.submissions.slice(0, parseInt(constants.SUBMISSION_COUNT, 10)).map((submission) => `
 <b>${submission.name}</b>
 <b>Link:</b> <b>${constants.LEETCODE_URL}${submission.link}</b>
 <b>Status:</b> ${submission.status}
 <b>Language:</b> ${submission.language}
 <b>Time:</b> ${submission.time}
-`).join('\n')}`,
-  RATING_TEXT: (users) => {
+`).join('\n')}`;
+  },
+  RATING_TEXT(users: User[]): string {
     if (!users || users.length === 0) {
       return NO_USERS;
     }
@@ -116,7 +151,7 @@ ${user.submissions.slice(0, constants.SUBMISSION_COUNT).map((submission) => `
     ).join('\n');
   },
 
-  STATS_TEXT: (providerName, cache) => {
+  STATS_TEXT(providerName: string, cache): string {
     const { userLimit, users } = cache;
 
     // Get prefix for provider
