@@ -7,7 +7,7 @@ import dictionary from '../../utils/dictionary';
 import QUERIES from './queries';
 
 class SQLite {
-  database: sqlite3.Database;
+  database;
 
   // Connect to Database
   async connect(): Promise<boolean> {
