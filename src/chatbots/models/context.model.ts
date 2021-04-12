@@ -7,10 +7,11 @@ export interface Options {
   parse_mode?: string;
   // eslint-disable-next-line camelcase
   reply_markup?: string;
+  files?: string[];
 }
 
 export interface Channel {
-  send: CallableFunction;
+  send;
 }
 
 export interface Context {

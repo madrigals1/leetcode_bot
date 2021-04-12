@@ -4,9 +4,10 @@
   "description": "LeetCode BOT for checking rating of users",
   "main": "src/index.js",
   "scripts": {
-    "start": "tsc && node dist/index.js",
+    "build": "rimraf dist && tsc",
+    "start": "npm run build && node dist/index.js",
     "fix": "eslint --fix src/*",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
+    "test": "jest",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
     "lint": "eslint ./src --ext .js,.ts"
   },
@@ -31,13 +32,17 @@
   },
   "devDependencies": {
     "@jest/globals": "^26.6.2",
+    "@types/babel__core": "^7.1.14",
     "@types/jest": "^26.0.22",
+    "@types/lodash": "^4.14.168",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
     "eslint": "^7.18.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "jest": "^26.6.3",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.5.4",
     "typescript": "^4.2.4"
   }
 }

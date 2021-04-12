@@ -1,4 +1,4 @@
-import { Context } from '../../chatbots/models';
+import { Context, Options } from '.';
 
 export interface TelegramTestCase {
   message: string;
@@ -23,7 +23,5 @@ export interface DiscordTestCase {
   context: Context;
   expected: string | Error;
   expectedMessage: string;
-  expectedOptions: {
-    files?: string[];
-  };
+  expectedOptions: Options;
 }

@@ -1,7 +1,7 @@
 import { formatMessage, reply } from '../../../chatbots/discord/utils';
 import { isPromise } from '../../../utils/helper';
 import MockFuncDiscord from '../../__mocks__/chatbots/discord.mock';
-import { DiscordTestCase } from '../models';
+import { DiscordTestCase } from '../../../chatbots/models';
 
 const mockFuncDiscord: MockFuncDiscord = new MockFuncDiscord();
 
@@ -44,7 +44,9 @@ test('chatbots.discord.utils.reply function', async () => {
     {
       message: '<i>Message 2</i>',
       context: {
-        channel: { send: mockFuncDiscord.send },
+        channel: {
+          send: mockFuncDiscord.send,
+        },
         args: ['asd', 'asd', 'asd'],
         reply: () => new Promise(() => 'asd'),
         provider: 'Random',
@@ -72,15 +74,10 @@ test('chatbots.discord.utils.reply function', async () => {
   testCases.forEach(async ({
     message, context, expected, expectedMessage, expectedOptions,
   }) => {
-    const promise: Promise<string> = reply(message, context);
-    expect(isPromise(promise)).toBe(true);
-
-    const result: string = await promise;
+    const result: string = await reply(message, context);
 
     expect(result).toBe(expected);
     expect(expectedMessage).toBe(mockFuncDiscord.formattedMessage);
     expect(expectedOptions).toBe(mockFuncDiscord.options);
-
-    mockFuncDiscord.send(null);
   });
 });

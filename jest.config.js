@@ -1,12 +1,13 @@
 const { DISCORD_TEST_ENABLE } = process.env;
 
-const filesToIgnore = ['__mocks__', 'setup.js'];
+const filesToIgnore = ['__mocks__', 'setup.ts'];
 
-if (DISCORD_TEST_ENABLE) filesToIgnore.push('chatbots.discord.test.js');
+if (DISCORD_TEST_ENABLE) filesToIgnore.push('chatbots.discord.test.ts');
 
-export default {
+module.exports = {
   verbose: true,
-  setupFilesAfterEnv: ['./src/__tests__/setup.js'],
+  setupFilesAfterEnv: ['./src/__tests__/setup.ts'],
   modulePathIgnorePatterns: filesToIgnore,
   testEnvironment: 'node',
+  transform: { '\\.ts$': ['ts-jest'] },
 };

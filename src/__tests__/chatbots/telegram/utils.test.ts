@@ -1,6 +1,6 @@
 import { reply, getArgs } from '../../../chatbots/telegram/utils';
 import MockBotTelegram from '../../__mocks__/chatbots/telegram.mock';
-import { TelegramTestCase, Args } from '../models';
+import { TelegramTestCase, Args } from '../../../chatbots/models';
 
 const bot = new MockBotTelegram();
 

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import Cache from '../../cache';
 import getLeetcodeDataFromUsername from '../__mocks__/utils.mock';
@@ -91,7 +91,7 @@ test('cache.index.Cache.addOrReplaceUserInCache method', async () => {
 
 test('cache.index.Cache.refreshUsers method', async () => {
   // Save original array
-  const usersClone: User[] = _.cloneDeep(users, true);
+  const usersClone: User[] = _.cloneDeep(users);
 
   // Adding in this order, because they will be sorted by solved count
   await Cache.addUser('random_username_2');
@@ -111,7 +111,8 @@ test('cache.index.Cache.refreshUsers method', async () => {
   // Check refreshing case
   Cache.database.isRefreshing = true;
   const result: CacheResponse = await Cache.refreshUsers();
-  expect(result).toBe(dictionary.BOT_MESSAGES.IS_ALREADY_REFRESHING);
+  expect(result.status).toBe(constants.STATUS.ERROR);
+  expect(result.detail).toBe(dictionary.BOT_MESSAGES.IS_ALREADY_REFRESHING);
   // eslint-disable-next-line no-console
   expect(console.log).toHaveBeenCalledWith(
     dictionary.SERVER_MESSAGES.IS_ALREADY_REFRESHING,
@@ -199,11 +200,14 @@ test('cache.index.Cache.sortUsers method', async () => {
     },
   ];
 
+  const sortedUsersModified: User[] = (
+    sortedUsers.map((user) => ({ ...mockUser1, ...user }))
+  );
   unsortedUsers.forEach((user) => Cache.users.push({ ...mockUser1, ...user }));
 
   Cache.sortUsers();
 
-  expect(_.isEqual(Cache.users, sortedUsers)).toBe(true);
+  expect(_.isEqual(Cache.users, sortedUsersModified)).toBe(true);
 });
 
 test('cache.index.Cache.addUser method', async () => {
@@ -321,9 +325,9 @@ test('cache.index.Cache.loadUser method', async () => {
   expect(_.isEqual(userData, cachedUserData)).toBe(true);
 
   // Shouldn't be able to remove unexisting User
-  expect(Cache.loadUser('not_existing_user')).toBe(false);
+  expect(_.isEmpty(Cache.loadUser('not_existing_user'))).toBe(true);
 
   // Shouldn't be able to remove already removed User
   await Cache.removeUser('random_username');
-  expect(Cache.loadUser('random_username')).toBe(false);
+  expect(_.isEmpty(Cache.loadUser('random_username'))).toBe(true);
 });
