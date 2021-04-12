@@ -9,12 +9,17 @@ export interface Options {
   reply_markup?: string;
 }
 
+export interface Channel {
+  send: CallableFunction;
+}
+
 export interface Context {
   args: string[];
   reply: (message: string, context: Context) => Promise<string>;
   channel?: DiscordBot.TextChannel
     | DiscordBot.DMChannel
-    | DiscordBot.NewsChannel;
+    | DiscordBot.NewsChannel
+    | Channel;
   provider: string;
   prefix: string;
   chatId?: number;

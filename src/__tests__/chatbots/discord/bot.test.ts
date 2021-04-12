@@ -1,4 +1,4 @@
-import DiscordBot from 'discord.js';
+import * as DiscordBot from 'discord.js';
 import { jest } from '@jest/globals';
 
 import createBot from '../../../chatbots/discord/bot';
@@ -18,7 +18,7 @@ test('chatbots.discord.bot.createBot function', async () => {
   expect(typeof createBot).toBe('function');
 
   // Create a test bot with test token
-  const bot = await createBot(constants.DISCORD.TEST_TOKEN);
+  const bot: DiscordBot.Client = await createBot(constants.DISCORD.TEST_TOKEN);
 
   expect(bot instanceof DiscordBot.Client).toBe(true);
 
