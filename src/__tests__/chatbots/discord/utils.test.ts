@@ -1,5 +1,4 @@
 import { formatMessage, reply } from '../../../chatbots/discord/utils';
-import { isPromise } from '../../../utils/helper';
 import MockFuncDiscord from '../../__mocks__/chatbots/discord.mock';
 import { DiscordTestCase } from '../../../chatbots/models';
 
