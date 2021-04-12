@@ -6,10 +6,13 @@ import MockDatabaseProvider from '../__mocks__/database.mock';
 import users from '../__mocks__/data.mock';
 import dictionary from '../../utils/dictionary';
 import constants from '../../utils/constants';
+import { CacheResponse } from '../../cache/response.model';
+import { User } from '../../leetcode/models';
 
 Cache.database = new MockDatabaseProvider();
 Cache.getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
 Cache.delayTime = 0;
+const mockUser1: User = users[0];
 
 beforeEach(async () => {
   await Cache.clearUsers();
@@ -31,7 +34,7 @@ test('cache.index.Cache.userAmount property', async () => {
 
   // Add 1st User
   const realUsername = 'random_username';
-  const resultSuccess = await Cache.addUser(realUsername);
+  const resultSuccess: CacheResponse = await Cache.addUser(realUsername);
   expect(resultSuccess.status).toBe(constants.STATUS.SUCCESS);
   expect(resultSuccess.detail).toBe(dictionary.BOT_MESSAGES.USERNAME_WAS_ADDED(
     realUsername, Cache.userAmount, Cache.userLimit,
@@ -40,7 +43,7 @@ test('cache.index.Cache.userAmount property', async () => {
 
   // Add 2nd User
   const realUsername2 = 'random_username_2';
-  const resultSuccess2 = await Cache.addUser(realUsername2);
+  const resultSuccess2: CacheResponse = await Cache.addUser(realUsername2);
   expect(Cache.userAmount).toBe(2);
   expect(resultSuccess2.status).toBe(constants.STATUS.SUCCESS);
   expect(resultSuccess2.detail).toBe(dictionary.BOT_MESSAGES.USERNAME_WAS_ADDED(
@@ -57,7 +60,7 @@ test('cache.index.Cache.addOrReplaceUserInCache method', async () => {
   await Cache.addUser('random_username');
 
   // Check if User Data is correct
-  const firstUserData = Cache.users[0];
+  const firstUserData: User = Cache.users[0];
   expect(firstUserData.name).toBe('Random User Name');
   expect(firstUserData.solved).toBe(124);
   expect(firstUserData.all).toBe(1700);
@@ -66,23 +69,21 @@ test('cache.index.Cache.addOrReplaceUserInCache method', async () => {
   expect(firstUserData.submissions.length).toBe(2);
 
   // Replace 1st User with 2nd User and compare data
-  const secondUserDataBefore = (
+  const secondUserDataBefore: User = (
     await getLeetcodeDataFromUsername('random_username_2')
   );
-  await Cache.addOrReplaceUserInCache('random_username', secondUserDataBefore);
-  const secondUserData = Cache.users[0];
+  Cache.addOrReplaceUserInCache('random_username', secondUserDataBefore);
+  const secondUserData: User = Cache.users[0];
   expect(JSON.stringify(secondUserDataBefore))
     .toBe(JSON.stringify(secondUserData));
   expect(Cache.userAmount).toBe(1);
 
   // Replace non-existing User with 1st User (Add)
-  const firstUserReaddedBefore = (
+  const firstUserReaddedBefore: User = (
     await getLeetcodeDataFromUsername('random_username')
   );
-  await Cache.addOrReplaceUserInCache(
-    'unexisting_username', firstUserReaddedBefore,
-  );
-  const firstUserReaddedAfter = Cache.users[1];
+  Cache.addOrReplaceUserInCache('unexisting_username', firstUserReaddedBefore);
+  const firstUserReaddedAfter: User = Cache.users[1];
   expect(JSON.stringify(firstUserReaddedBefore))
     .toBe(JSON.stringify(firstUserReaddedAfter));
   expect(Cache.userAmount).toBe(2);
@@ -90,7 +91,7 @@ test('cache.index.Cache.addOrReplaceUserInCache method', async () => {
 
 test('cache.index.Cache.refreshUsers method', async () => {
   // Save original array
-  const usersClone = _.cloneDeep(users, true);
+  const usersClone: User[] = _.cloneDeep(users, true);
 
   // Adding in this order, because they will be sorted by solved count
   await Cache.addUser('random_username_2');
@@ -105,11 +106,11 @@ test('cache.index.Cache.refreshUsers method', async () => {
 
   // Clear array and bring back original array
   users.length = 0;
-  usersClone.forEach((user) => users.push(user));
+  usersClone.forEach((user: User) => users.push(user));
 
   // Check refreshing case
   Cache.database.isRefreshing = true;
-  const result = await Cache.refreshUsers();
+  const result: CacheResponse = await Cache.refreshUsers();
   expect(result).toBe(dictionary.BOT_MESSAGES.IS_ALREADY_REFRESHING);
   // eslint-disable-next-line no-console
   expect(console.log).toHaveBeenCalledWith(
@@ -128,7 +129,7 @@ test('cache.index.Cache.refreshUsers method', async () => {
 });
 
 test('cache.index.Cache.sortUsers method', async () => {
-  const unsortedUsers = [
+  const unsortedUsers: Record<string, string | number>[] = [
     {
       username: 'user_1',
       solved: 123,
@@ -163,7 +164,7 @@ test('cache.index.Cache.sortUsers method', async () => {
     },
   ];
 
-  const sortedUsers = [
+  const sortedUsers: Record<string, string | number>[] = [
     {
       username: 'user_4',
       solved: 1452,
@@ -198,9 +199,9 @@ test('cache.index.Cache.sortUsers method', async () => {
     },
   ];
 
-  unsortedUsers.forEach((user) => Cache.users.push(user));
+  unsortedUsers.forEach((user) => Cache.users.push({ ...mockUser1, ...user }));
 
-  await Cache.sortUsers();
+  Cache.sortUsers();
 
   expect(_.isEqual(Cache.users, sortedUsers)).toBe(true);
 });
@@ -208,19 +209,19 @@ test('cache.index.Cache.sortUsers method', async () => {
 test('cache.index.Cache.addUser method', async () => {
   // Add 1st User
   const realUsername = 'random_username';
-  const resultSuccess = await Cache.addUser(realUsername);
+  const resultSuccess: CacheResponse = await Cache.addUser(realUsername);
   expect(resultSuccess.status).toBe(constants.STATUS.SUCCESS);
   expect(resultSuccess.detail).toBe(dictionary.BOT_MESSAGES.USERNAME_WAS_ADDED(
     realUsername, Cache.userAmount, Cache.userLimit,
   ));
-  const firstUserData = Cache.users[0];
+  const firstUserData: User = Cache.users[0];
   expect(firstUserData.name).toBe('Random User Name');
   expect(firstUserData.solved).toBe(124);
   expect(firstUserData.all).toBe(1700);
   expect(firstUserData.profile.userAvatar)
     .toBe('https://example.com/random_link');
   expect(firstUserData.submissions.length).toBe(2);
-  const firstUserDataDirect = (
+  const firstUserDataDirect: User = (
     await getLeetcodeDataFromUsername('random_username')
   );
   expect(_.isEqual(firstUserData, firstUserDataDirect)).toBe(true);
@@ -229,7 +230,9 @@ test('cache.index.Cache.addUser method', async () => {
   const userLimit = 1;
   Cache.userLimit = userLimit;
   const secondUsername = 'random_username_2';
-  const resultFailUserLimit = await Cache.addUser(secondUsername);
+  const resultFailUserLimit: CacheResponse = (
+    await Cache.addUser(secondUsername)
+  );
   expect(resultFailUserLimit.status).toBe(constants.STATUS.ERROR);
   expect(resultFailUserLimit.detail).toBe(
     dictionary.BOT_MESSAGES.USERNAME_NOT_ADDED_USER_LIMIT(
@@ -240,14 +243,16 @@ test('cache.index.Cache.addUser method', async () => {
 
   // Test Remove User if not exist in LeetCode
   const fakeUsername = 'not_existing_username';
-  const resultFailNotExists = await Cache.addUser(fakeUsername);
+  const resultFailNotExists: CacheResponse = await Cache.addUser(fakeUsername);
   expect(resultFailNotExists.status).toBe(constants.STATUS.ERROR);
   expect(resultFailNotExists.detail).toBe(
     dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND_ON_LEETCODE(fakeUsername),
   );
 
   // Test Username already exists
-  const resultFailAlreadyExists = await Cache.addUser(realUsername);
+  const resultFailAlreadyExists: CacheResponse = (
+    await Cache.addUser(realUsername)
+  );
   expect(resultFailAlreadyExists.status).toBe(constants.STATUS.ERROR);
   expect(resultFailAlreadyExists.detail).toBe(
     dictionary.BOT_MESSAGES.USERNAME_ALREADY_EXISTS(realUsername),
@@ -262,7 +267,7 @@ test('cache.index.Cache.removeUser method', async () => {
 
   // Remove existing User
   const realUsername = 'random_username';
-  const result = await Cache.removeUser(realUsername);
+  const result: CacheResponse = await Cache.removeUser(realUsername);
   expect(Cache.userAmount).toBe(1);
   expect(result.status).toBe(constants.STATUS.SUCCESS);
   expect(result.detail).toBe(
@@ -270,12 +275,12 @@ test('cache.index.Cache.removeUser method', async () => {
   );
 
   // Check remaining User
-  const userLeft = Cache.users[0];
+  const userLeft: User = Cache.users[0];
   expect(userLeft.name).toBe('Random User Name 2');
 
   // Remove unexisting User
   const fakeUsername = 'not_existing_user';
-  const resultFail = await Cache.removeUser(fakeUsername);
+  const resultFail: CacheResponse = await Cache.removeUser(fakeUsername);
   expect(resultFail.status).toBe(constants.STATUS.ERROR);
   expect(resultFail.detail).toBe(
     dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(fakeUsername),
@@ -289,7 +294,7 @@ test('cache.index.Cache.clearUsers method', async () => {
   expect(Cache.userAmount).toBe(2);
 
   // Clear Users
-  const resultSuccess = await Cache.clearUsers();
+  const resultSuccess: CacheResponse = await Cache.clearUsers();
   expect(resultSuccess.status).toBe(constants.STATUS.SUCCESS);
   expect(resultSuccess.detail).toBe(
     dictionary.BOT_MESSAGES.DATABASE_WAS_CLEARED,
@@ -298,7 +303,7 @@ test('cache.index.Cache.clearUsers method', async () => {
 
   // Check case, where clearing Users fails
   Cache.database.fakeResult = false;
-  const resultFail = await Cache.clearUsers();
+  const resultFail: CacheResponse = await Cache.clearUsers();
   expect(resultFail.status).toBe(constants.STATUS.ERROR);
   expect(resultFail.detail).toBe(
     dictionary.BOT_MESSAGES.DATABASE_WAS_NOT_CLEARED,
@@ -311,14 +316,14 @@ test('cache.index.Cache.loadUser method', async () => {
   await Cache.addUser('random_username_2');
 
   // Check if loadUser returns correct data
-  const userData = await getLeetcodeDataFromUsername('random_username');
-  const cachedUserData = await Cache.loadUser('random_username');
+  const userData: User = await getLeetcodeDataFromUsername('random_username');
+  const cachedUserData: User = Cache.loadUser('random_username');
   expect(_.isEqual(userData, cachedUserData)).toBe(true);
 
   // Shouldn't be able to remove unexisting User
-  expect(await Cache.loadUser('not_existing_user')).toBe(false);
+  expect(Cache.loadUser('not_existing_user')).toBe(false);
 
   // Shouldn't be able to remove already removed User
   await Cache.removeUser('random_username');
-  expect(await Cache.loadUser('random_username')).toBe(false);
+  expect(Cache.loadUser('random_username')).toBe(false);
 });
