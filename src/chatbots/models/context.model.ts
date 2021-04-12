@@ -7,6 +7,11 @@ export interface Options {
   parse_mode?: string;
   // eslint-disable-next-line camelcase
   reply_markup?: string;
+  files?: string[];
+}
+
+export interface Channel {
+  send;
 }
 
 export interface Context {
@@ -14,7 +19,8 @@ export interface Context {
   reply: (message: string, context: Context) => Promise<string>;
   channel?: DiscordBot.TextChannel
     | DiscordBot.DMChannel
-    | DiscordBot.NewsChannel;
+    | DiscordBot.NewsChannel
+    | Channel;
   provider: string;
   prefix: string;
   chatId?: number;

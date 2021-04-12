@@ -4,7 +4,9 @@
         "allowJs": true,
         "target": "es5",
         "module": "CommonJS",
-        "sourceMap": true
+        "sourceMap": true,
+        "types": ["node", "jest"]
     },
-    "include": ["./src/**/*"]
+    "include": ["./src/**/*"],
+    "exclude": ["./src/__tests__"]
 }

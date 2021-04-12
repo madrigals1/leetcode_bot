@@ -3,12 +3,17 @@ import {
 } from '../../utils/helper';
 
 test('utils.helper.isTrue function', () => {
-  const trueValues = ['true', 'True', '1', 't', 'T', 1, true];
+  const trueValues: Array<string | number | boolean> = [
+    'true', 'True', '1', 't', 'T', 1, true,
+  ];
 
   // Check true valuess
-  trueValues.forEach((value) => expect(isTrue(value)).toBe(true));
+  trueValues.forEach((value: string | number | boolean) => {
+    expect(isTrue(value)).toBe(true);
+  });
 
-  const falseValues = [
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const falseValues: Array<any> = [
     'false',
     'False',
     '0',
@@ -26,15 +31,16 @@ test('utils.helper.isTrue function', () => {
   ];
 
   // Check false valuess
-  falseValues.forEach((value) => expect(isTrue(value)).toBe(false));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  falseValues.forEach((value: any) => expect(isTrue(value)).toBe(false));
 });
 
 test('utils.helper.delay function', async () => {
   expect(delay(1).then).not.toBe(undefined);
 
-  const timeMsBefore = new Date().getTime();
+  const timeMsBefore: number = new Date().getTime();
   await delay(500);
-  const timeMsAfter = new Date().getTime();
+  const timeMsAfter: number = new Date().getTime();
 
   expect(timeMsAfter - timeMsBefore >= 500).toBe(true);
 });
@@ -54,7 +60,7 @@ test('utils.helper.error function', () => {
 });
 
 test('utils.helper.isPromise function', () => {
-  const promise = new Promise((resolve) => resolve(true));
+  const promise: Promise<boolean> = new Promise((resolve) => resolve(true));
 
   expect(isPromise(promise)).toBe(true);
 });
