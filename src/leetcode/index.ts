@@ -1,4 +1,5 @@
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
+import * as duration from 'dayjs/plugin/duration';
 
 import constants from '../utils/constants';
 
@@ -22,6 +23,8 @@ import {
   contestRankingGraphQLQuery,
 } from './graphql';
 import gqlQuery from './graphql/utils';
+
+dayjs.extend(duration);
 
 async function getLeetcodeDataFromUsername(
   username: string, csrfToken: string,
@@ -51,7 +54,7 @@ async function getLeetcodeDataFromUsername(
   const submissionData: RecentSubmissionList = (
     await gqlQuery<RecentSubmissionList>(submissionContext)
   );
-  const now: number = moment().unix();
+  const now: number = dayjs().unix();
   const submissions: SubmissionData[] = submissionData.recentSubmissionList.map(
     (submission: SubmissionDumpNode) => {
       const unixTime: number = parseInt(submission.timestamp, 10);
@@ -63,7 +66,7 @@ async function getLeetcodeDataFromUsername(
           language.name === submission.lang
         )).verboseName,
         name: submission.title,
-        time: moment.duration(unixTime - now).humanize(true),
+        time: dayjs.duration(unixTime - now).humanize(true),
       };
     },
   );

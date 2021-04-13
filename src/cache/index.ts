@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 import getLeetcodeDataFromUsername from '../leetcode';
 import Database from '../database';
@@ -63,7 +63,7 @@ class Cache {
 
     // Set database as refreshing and get refresh time
     this.database.isRefreshing = true;
-    const refreshedStartedAt: string = moment().format(constants.DATE_FORMAT);
+    const refreshedStartedAt: string = dayjs().format(constants.DATE_FORMAT);
 
     // Log when refresh started
     log(dictionary.SERVER_MESSAGES.DATABASE_STARTED_REFRESH(
@@ -108,7 +108,7 @@ class Cache {
 
     // Set database indicators
     this.database.isRefreshing = false;
-    const refreshFinishedAt = moment().format(constants.DATE_FORMAT);
+    const refreshFinishedAt = dayjs().format(constants.DATE_FORMAT);
 
     // Log when refresh started
     log(dictionary.SERVER_MESSAGES.DATABASE_FINISHED_REFRESH(
