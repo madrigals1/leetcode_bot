@@ -1,5 +1,6 @@
 import * as dayjs from 'dayjs';
 import * as duration from 'dayjs/plugin/duration';
+import * as relativeTime from 'dayjs/plugin/relativeTime';
 
 import constants from '../utils/constants';
 
@@ -25,6 +26,7 @@ import {
 import gqlQuery from './graphql/utils';
 
 dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 async function getLeetcodeDataFromUsername(
   username: string, csrfToken: string,
