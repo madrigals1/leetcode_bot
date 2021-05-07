@@ -204,7 +204,7 @@ Admin action, that shows some lets us see some part of data, only accessible by 
 ### Prerequisites
 
 Make sure you have installed these:
-Classified as a NoSQL database program, MongoDB uses JSON-like documents with schema.
+
 - [Node.js](https://nodejs.org/en/) - JavaScript runtime built on Chrome's V8 JavaScript engine.
 
 (Optional) If you are going to use **PostgreSQL** or **MongoDB**, you will have to install them:
