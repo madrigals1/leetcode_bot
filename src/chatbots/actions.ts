@@ -59,6 +59,10 @@ const actions = [
     name: 'refresh',
     execute: async (context: Context): Promise<string> => {
       const { reply } = context;
+
+      // Force refresh
+      Cache.database.isRefreshing = false;
+
       return reply(dictionary.BOT_MESSAGES.STARTED_REFRESH, context)
         .then(async () => {
           const result: CacheResponse = await Cache.refreshUsers();
