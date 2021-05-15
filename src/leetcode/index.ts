@@ -68,7 +68,7 @@ async function getLeetcodeDataFromUsername(
           language.name === submission.lang
         )).verboseName,
         name: submission.title,
-        time: dayjs.duration(unixTime - now).humanize(true),
+        time: dayjs.duration((unixTime - now) * 1000).humanize(true),
       };
     },
   );
