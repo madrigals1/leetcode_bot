@@ -136,7 +136,7 @@ const BOT_MESSAGES = {
 <b>Last ${user.submissions.length} Submissions:</b>
 ${user.submissions.slice(0, parseInt(constants.SUBMISSION_COUNT, 10)).map((submission) => `
 <b>${submission.name}</b>
-<b>Link:</b> <b>${constants.LEETCODE_URL}${submission.link}</b>
+<b>Link:</b> <b>${submission.link}</b>
 <b>Status:</b> ${submission.status}
 <b>Language:</b> ${submission.language}
 <b>Time:</b> ${submission.time}
