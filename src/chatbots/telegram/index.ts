@@ -67,7 +67,13 @@ class Telegram {
       // Delete message after button is clicked
       this.bot.answerCallbackQuery(query.id)
         .then(() => {
-          this.bot.deleteMessage(message.chat.id, message.message_id).then();
+          this.bot.editMessageReplyMarkup(
+            { inline_keyboard: [] },
+            {
+              chat_id: message.chat.id,
+              message_id: message.message_id,
+            },
+          );
         });
 
       // Check if callback data is a command
