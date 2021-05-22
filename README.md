@@ -267,7 +267,7 @@ Make sure you have installed these:
     SUBMISSION_COUNT=5
     ```
 
-6. Delay time is set to 4s, depends on LeetCode RPM, which I don't know.
+6. Delay time is set to 4s, depends on LeetCode RPM.
 
     ```dotenv
     DELAY_TIME_MS=4000
