@@ -291,6 +291,5 @@ npm start
 npm test
 ```
 
-## Authors
+## Author
 - Adi Sabyrbayev [Github](https://github.com/madrigals1), [LinkedIn](https://www.linkedin.com/in/madrigals1/)
-- Aibek Ziyashev [Github](https://github.com/dmndcrow), [LinkedIn](https://www.linkedin.com/in/aibek-ziyashev-11b744193/)
