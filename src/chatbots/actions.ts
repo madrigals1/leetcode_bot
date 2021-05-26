@@ -75,10 +75,34 @@ const actions = [
     execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
-      // Correct input for removing should be /rm <username> <master_password>
-      // If length of args is not 2, return error message
-      if (args.length !== 2) {
+      /*
+      Correct input for removing users should be
+      - /remove <username> <master_password> - remove specific User
+      - /remove <master_password> - Return buttons with usernames
+      */
+      if (args.length < 1 || args.length > 2) {
         return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
+      }
+
+      // Handle case with /remove <master_password>
+      if (args.length === 1) {
+        // Get password from message
+        const password: string = args[0];
+
+        // If password is incorrect, return error message
+        if (password !== constants.MASTER_PASSWORD) {
+          return reply(dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT, context);
+        }
+
+        // Add Buttons with User List
+        context.options.reply_markup = createUserListReplyMarkup({
+          users: Cache.allUsers(),
+          footer: `${constants.EMOJI.CROSS_MARK} Close`,
+          command: '/remove',
+          password,
+        });
+
+        return reply(dictionary.BOT_MESSAGES.USER_LIST_REMOVE, context);
       }
 
       // Get username and password from message
