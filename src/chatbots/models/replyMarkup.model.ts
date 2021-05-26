@@ -6,4 +6,5 @@ export interface ReplyMarkupOptions {
   header?: string,
   footer?: string,
   command: string,
+  password?: string,
 }

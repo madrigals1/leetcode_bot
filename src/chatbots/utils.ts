@@ -129,9 +129,14 @@ export function createUserListReplyMarkup(options: ReplyMarkupOptions): string {
       const index = (i * 3) + j;
       if (index < users.length) {
         const user = users[index];
+        const dataWithoutPassword = `${options.command} ${user.username}`;
+        const dataWithPassword = options.password
+          ? `${dataWithoutPassword} ${options.password}`
+          : `${dataWithoutPassword}`;
+
         row.push({
           text: `${user.username}`,
-          callback_data: `${options.command} ${user.username}`,
+          callback_data: dataWithPassword,
         });
       }
     }
