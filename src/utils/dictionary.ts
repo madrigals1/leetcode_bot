@@ -95,8 +95,9 @@ const BOT_MESSAGES = {
   USERNAME_NOT_ADDED_USER_LIMIT(username: string, userLimit: number): string {
     return `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`;
   },
-  USER_LIST_SUBMISSIONS: `${constants.EMOJI.CARD_FILE_BOX} Submissions`,
-  USER_LIST_AVATARS: `${constants.EMOJI.CARD_FILE_BOX} Avatars`,
+  USER_LIST_SUBMISSIONS: `${constants.EMOJI.CARD_FILE_BOX} Submissions Menu`,
+  USER_LIST_AVATARS: `${constants.EMOJI.PEOPLE} Avatars Menu`,
+  USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove Menu`,
 
   // DATABASE
   DATABASE_WILL_BE_CLEARED: `${constants.EMOJI.WASTEBASKET} Database will be cleared`,
