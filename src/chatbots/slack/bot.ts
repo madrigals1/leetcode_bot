@@ -1,4 +1,4 @@
-import SlackBot from 'slackbots';
+import * as SlackBot from 'slackbots';
 
 import { log } from '../../utils/helper';
 import dictionary from '../../utils/dictionary';
