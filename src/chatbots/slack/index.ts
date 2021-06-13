@@ -27,7 +27,7 @@ class Slack {
       );
     });
 
-    log(dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING);
+    log(dictionary.SERVER_MESSAGES.SLACK_BOT_IS_RUNNING);
   }
 }
 
