@@ -7,7 +7,7 @@ import { log } from '../../utils/helper';
 import createBot from './bot';
 
 class Slack {
-  token: string = constants.DISCORD.TOKEN;
+  token: string = constants.SLACK.TOKEN;
 
   bot: SlackBot.Client;
 
