@@ -11,10 +11,14 @@ const {
   TELEGRAM_TEST_TOKEN,
   DISCORD_TOKEN,
   DISCORD_TEST_TOKEN,
+  SLACK_TOKEN,
+  SLACK_TEST_TOKEN,
   TELEGRAM_ENABLE,
   TELEGRAM_TEST_ENABLE,
   DISCORD_ENABLE,
   DISCORD_TEST_ENABLE,
+  SLACK_ENABLE,
+  SLACK_TEST_ENABLE,
   // Database settings
   DB_PROVIDER,
   // 1) MongoDB settings
@@ -89,6 +93,15 @@ const DISCORD = {
   PREFIX: '!',
 };
 
+const SLACK = {
+  NAME: 'slack',
+  ENABLE: isTrue(SLACK_ENABLE),
+  TOKEN: SLACK_TOKEN,
+  TEST_ENABLE: SLACK_TEST_ENABLE,
+  TEST_TOKEN: SLACK_TEST_TOKEN,
+  PREFIX: '/',
+};
+
 const PROVIDERS = [
   TELEGRAM,
   DISCORD,
@@ -115,6 +128,7 @@ export default {
   // Chatbot data objects
   DISCORD,
   TELEGRAM,
+  SLACK,
   PROVIDERS,
   // Database settings
   DB_PROVIDER,
