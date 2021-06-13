@@ -1,5 +1,6 @@
 import Telegram from './chatbots/telegram';
 import Discord from './chatbots/discord';
+import Slack from './chatbots/slack';
 import startScheduler from './utils/scheduler';
 import Database from './database';
 import Cache from './cache';
@@ -19,6 +20,9 @@ Database.connect().then(async () => {
 
       // Run Discord BOT
       if (constants.DISCORD.ENABLE) Discord.run();
+
+      // Run Slack BOT
+      if (constants.SLACK.ENABLE) Slack.run();
 
       // Starting the scheduler for database refresher
       startScheduler();
