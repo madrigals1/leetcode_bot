@@ -36,6 +36,8 @@ const SERVER_MESSAGES = {
   DISCORD_BOT_IS_RUNNING: '>>> Discord BOT is running!',
   TELEGRAM_BOT_IS_CONNECTED: '>>> Telegram BOT is connected!',
   TELEGRAM_BOT_IS_RUNNING: '>>> Telegram BOT is running!',
+  SLACK_BOT_IS_CONNECTED: '>>> Slack BOT is connected!',
+  SLACK_BOT_IS_RUNNING: '>>> Slack BOT is running!',
 
   // LOGGING
   IMAGE_WAS_CREATED: 'The image was created',
