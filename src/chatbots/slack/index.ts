@@ -1,30 +1,48 @@
-import * as SlackBot from 'slackbots';
+import { App } from '@slack/bolt';
 
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
-import { log } from '../../utils/helper';
+import { error, log } from '../../utils/helper';
 
 import createBot from './bot';
 
 class Slack {
   token: string = constants.SLACK.TOKEN;
 
-  bot: SlackBot.Client;
+  signingSecret: string = constants.SLACK.SIGNING_SECRET;
+
+  appToken: string = constants.SLACK.APP_TOKEN;
+
+  bot: App;
 
   async run() {
-    // Create Bot with token
-    this.bot = await createBot(this.token);
+    // Create Bot with Slack credentials
+    this.bot = await createBot(this.token, this.signingSecret, this.appToken);
 
-    this.bot.on('start', () => {
-      const params = {
-        icon_emoji: ':robot_face:',
-      };
+    await this.bot.start();
 
-      this.bot.postMessageToChannel(
-        'Hello',
-        'LeetCode BOT is working correctly!',
-        params,
-      );
+    // Home page
+    this.bot.event('app_home_opened', async ({ event, client, context }) => {
+      try {
+        client.views.publish({
+          user_id: event.user,
+          view: {
+            type: 'home',
+            callback_id: 'home_view',
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: '*Welcome to _LeetCode BOT_* :robot_face:',
+                },
+              },
+            ],
+          },
+        });
+      } catch (err) {
+        error(err);
+      }
     });
 
     log(dictionary.SERVER_MESSAGES.SLACK_BOT_IS_RUNNING);
