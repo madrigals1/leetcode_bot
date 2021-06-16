@@ -1,4 +1,4 @@
-import { Context } from '../models';
+import { Context, SlackMessage } from '../models';
 
 // Change bold, italic and code from HTML to Markdown
 export function formatMessage(message: string): string {
@@ -9,21 +9,35 @@ export function formatMessage(message: string): string {
 }
 
 export function reply(message: string, context: Context): Promise<string> {
-  // Get channel from context
-  const { channel, photoUrl } = context;
+  const { channel, photoUrl, args } = context;
 
-  // Format message to Markdown style, requested by Discord
+  // Get Username from args
+  const username = args[0];
+  const userText = formatMessage(`User - *\`${username}\`*`);
+
+  // Format message to Slack style
   const formattedMessage: string = formatMessage(message);
 
   // Send message back to channel
   return new Promise((resolve, reject) => {
-    if (channel) {
-      if (photoUrl) channel.send(formattedMessage, { files: [photoUrl] });
-      else channel.send(formattedMessage);
-      resolve('Success');
-    } else {
+    if (!channel) {
       reject(Error('Channel is not provided in context'));
     }
+
+    const processedMessage: SlackMessage = !photoUrl
+      ? { text: formattedMessage }
+      : {
+        text: userText,
+        attachments: [
+          {
+            fallback: userText,
+            image_url: photoUrl,
+          },
+        ],
+      };
+
+    channel.send(processedMessage);
+    resolve('Success');
   });
 }
 
