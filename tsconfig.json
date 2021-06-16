@@ -5,7 +5,8 @@
         "target": "es5",
         "module": "CommonJS",
         "sourceMap": true,
-        "types": ["node", "jest"]
+        "types": ["node", "jest"],
+        "allowSyntheticDefaultImports": true
     },
     "include": ["./src/**/*"],
     "exclude": ["./src/__tests__"]

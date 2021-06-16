@@ -1,3 +1,7 @@
+import {
+  SlackMessage, SlackBlock, SlackAccessory, SlackAttachment, SlackField,
+} from '../slack/slack.model';
+
 import { Context, Options } from './context.model';
 import { ReplyMarkupOptions } from './replyMarkup.model';
 import { Table } from './table.model';
@@ -16,4 +20,9 @@ export {
   TelegramTestCase,
   Args,
   DiscordTestCase,
+  SlackMessage,
+  SlackBlock,
+  SlackAccessory,
+  SlackAttachment,
+  SlackField,
 };
