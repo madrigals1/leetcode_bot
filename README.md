@@ -8,7 +8,10 @@ Leetcode Bot is an app, that gets data for **LeetCode Users** and creates **Rati
 4. megasaab 132
 ```
 
-**Telegram BOT** or **Discord BOT** are used to display this rating.
+**LeetCode BOT** is available on 3 platforms:
+- **Telegram**
+- **Discord**
+- **Slack**
 
 You can create your own rating by deploying this project on your machine!!!
 
@@ -33,6 +36,7 @@ Starting page that contains links to all other actions
 | Arguments | - |
 | Telegram | Yes |
 | Discord | Yes |
+| Slack | Yes |
 | Admin | No |
 
 | Request | Response |
@@ -50,6 +54,7 @@ Prints out rating of users if called without args and data for specific user if 
 | Arguments | [1] `username` - username of User in LeetCode. If specified, bot will get data of this specific User and print out. |
 | Telegram | Yes |
 | Discord | Limited |
+| Slack | Limited |
 | Admin | No |
 
 | Request | Response |
@@ -68,6 +73,7 @@ Takes list of Users separated by whitespaces. Saves usernames into Database. Loa
 | Arguments | [1+] `username ...` - usernames of Users in LeetCode |
 | Telegram | Yes |
 | Discord | Yes |
+| Slack | Yes |
 | Admin | No |
 
 | Request | Response |
@@ -85,6 +91,7 @@ Returns avatar of User from LeetCode as image
 | Arguments | [1] `username` - username of User in LeetCode |
 | Telegram | Yes |
 | Discord | Limited |
+| Slack | Limited |
 | Admin | No |
 
 | Request | Response |
@@ -103,6 +110,7 @@ Gets submission data of User, converts that data into visualization using [VizAP
 | Arguments | [1] `username` - username of User in LeetCode |
 | Telegram | Yes |
 | Discord | Limited |
+| Slack | Limited |
 | Admin | No |
 
 | Request | Response |
@@ -122,6 +130,7 @@ Creates small comparison visualization between 2 users using [VizAPI](https://gi
 | | [2] `username2` - username of User in LeetCode |
 | Telegram | Yes |
 | Discord | Yes |
+| Slack | Yes |
 | Admin | No |
 
 | Request | Response |
@@ -139,6 +148,7 @@ Manual refresh of database. By default, database is refreshed once in 15 minutes
 | Arguments | - |
 | Telegram | Yes |
 | Discord | Yes |
+| Slack | Yes |
 | Admin | No |
 
 | Request | Response |
@@ -157,6 +167,7 @@ Admin action, that removes specified User from Database and Cache
 | | [2] `master_password` - MASTER_PASSWORD, specified in .env |
 | Telegram | Yes |
 | Discord | Yes |
+| Slack | Yes |
 | Admin | Yes |
 
 | Request | Response |
@@ -174,6 +185,7 @@ Admin action, that clears Database and Cache from all Users
 | Arguments | [1] `master_password` - MASTER_PASSWORD, specified in .env |
 | Telegram | Yes |
 | Discord | Yes |
+| Slack | Yes |
 | Admin | Yes |
 
 | Request | Response |
@@ -191,6 +203,7 @@ Admin action, that shows some lets us see some part of data, only accessible by 
 | Arguments | [1] `master_password` - MASTER_PASSWORD, specified in .env |
 | Telegram | Yes |
 | Discord | Yes |
+| Slack | Yes |
 | Admin | Yes |
 
 | Request | Response |
@@ -221,7 +234,7 @@ Make sure you have installed these:
     cp .env.example .env
     ```
 
-2. To enable **Telegram BOT** or **Discord BOT**, change respective values inside `.env`
+2. To enable specific chatbot, change respective values inside `.env`
 
     ```dotenv
     # Change TELEGRAM_TOKEN to your own token you get from https://t.me/botfather
@@ -231,6 +244,16 @@ Make sure you have installed these:
     # Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
     DISCORD_ENABLE=False
     DISCORD_TOKEN=*****************************************
+    
+    # Change SLACK credentials to your own token you get from https://api.slack.com/apps
+    SLACK_ENABLE=False
+    SLACK_TOKEN=*******************************************
+    SLACK_SIGNING_SECRET=**********************************
+    SLACK_APP_TOKEN=***************************************
+    SLACK_TEST_ENABLE=False
+    SLACK_TEST_TOKEN=**************************************
+    SLACK_TEST_SIGNING_SECRET=*****************************
+    SLACK_TEST_APP_TOKEN=**********************************
     ```
 
 3. Change **MASTER_PASSWORD** value to secure password, that will be used for deleting data.
