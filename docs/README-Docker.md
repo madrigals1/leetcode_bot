@@ -32,6 +32,16 @@ TELEGRAM_TOKEN=****************************************
 # Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
 DISCORD_ENABLE=True
 DISCORD_TOKEN=*****************************************
+
+# Change SLACK_TOKEN to your own token you get from https://api.slack.com/apps
+SLACK_ENABLE=False
+SLACK_TOKEN=*******************************************
+SLACK_SIGNING_SECRET=**********************************
+SLACK_APP_TOKEN=***************************************
+SLACK_TEST_ENABLE=False
+SLACK_TEST_TOKEN=**************************************
+SLACK_TEST_SIGNING_SECRET=*****************************
+SLACK_TEST_APP_TOKEN=**********************************
 ```
 
 Change **MASTER_PASSWORD** value to secure password, that will be used for deleting data.
