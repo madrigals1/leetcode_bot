@@ -17,7 +17,7 @@ export const getCSRFToken = new Promise((resolve, reject) => {
     .get(constants.LEETCODE_URL)
     .then((response) => {
       // Get CSRF Token from Header to use in GraphQL Responses
-      const csrfTokenHeader = response.headers['set-cookie'][1];
+      const csrfTokenHeader = response.headers['set-cookie'][0];
       resolve(csrfTokenHeader.split('; ')[0].split('='));
     })
     .catch((err) => {
