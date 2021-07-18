@@ -185,42 +185,11 @@ const actions = [
   {
     name: 'rating',
     execute: async (context: Context): Promise<string> => {
-      const { args, reply } = context;
+      const { reply } = context;
 
-      // If more than 1 User was sent
-      if (args.length > 1) {
-        return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
-      }
-
-      // If 1 User was sent
-      if (args.length === 1) {
-        const username: string = args[0].toLowerCase();
-        const user: User = Cache.loadUser(username);
-
-        // If user does exist, return user data with reply markup
-        if (user) {
-          // Rating button
-          const ratingButton: ReplyMarkupCommand = {
-            text: `${constants.EMOJI.CARD_FILE_BOX} Rating`,
-            action: '/rating',
-          };
-
-          context.options.reply_markup = generateReplyMarkup({
-            buttons: [ratingButton],
-          });
-
-          return reply(dictionary.BOT_MESSAGES.USER_TEXT(user), context);
-        }
-
-        return reply(
-          dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username),
-          context,
-        );
-      }
-
-      // If 0 User was sent, add reply markup context for User
+      // Add user buttons
       context.options.reply_markup = generateReplyMarkup({
-        buttons: createButtonsFromUsers({ action: 'rating' }),
+        buttons: createButtonsFromUsers({ action: 'profile' }),
         isClosable: true,
       });
 
@@ -228,6 +197,40 @@ const actions = [
         dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers()),
         context,
       );
+    },
+  },
+  {
+    name: 'profile',
+    execute: async (context: Context): Promise<string> => {
+      const { args, reply } = context;
+
+      // Check, if username was sent
+      if (args.length !== 1) {
+        return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
+      }
+
+      // Get User from username
+      const username: string = args[0].toLowerCase();
+      const user: User = Cache.loadUser(username);
+
+      if (!user) {
+        return reply(
+          dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username),
+          context,
+        );
+      }
+
+      // Rating button
+      const ratingButton: ReplyMarkupCommand = {
+        text: `${constants.EMOJI.CARD_FILE_BOX} Rating`,
+        action: '/rating',
+      };
+
+      context.options.reply_markup = generateReplyMarkup({
+        buttons: [ratingButton],
+      });
+
+      return reply(dictionary.BOT_MESSAGES.USER_TEXT(user), context);
     },
   },
   {
