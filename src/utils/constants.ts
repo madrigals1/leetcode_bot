@@ -74,6 +74,12 @@ const EMOJI = {
   WASTEBASKET: '🗑️',
   CARD_FILE_BOX: '🗃️',
   PEOPLE: '👥',
+  SCROLL: '📜',
+  BACK_ARROW: '🔙',
+  GREEN_SQUARE: '🟩',
+  YELLOW_SQUARE: '🟨',
+  RED_SQUARE: '🟥',
+  BLUE_SQUARE: '🟦',
 };
 
 const STATUS = {
