@@ -4,6 +4,12 @@
 class DatabaseProvider {
   isRefreshing = false;
 
+  savedUsers;
+
+  fakeResult = true;
+
+  users = [];
+
   async connect(): Promise<any> {
     throw new Error('Not Implemented');
   }
