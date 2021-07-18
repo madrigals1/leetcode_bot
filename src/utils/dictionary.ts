@@ -108,26 +108,26 @@ const BOT_MESSAGES = {
 
   // BIG TEXTS
   WELCOME_TEXT(prefix: string): string {
-    return `Welcome! This is Leetcode Rating bot Elite ${constants.EMOJI.COOL} Boys
+    return `Welcome! This is Leetcode Rating Bot Elite ${constants.EMOJI.COOL} Boys
 
 <b>Main commands:</b>
 <b><i>${prefix}start</i></b> - Starting Page
-<b><i>${prefix}rating</i></b> - Overall rating
-<b><i>${prefix}refresh</i></b> - Manual refresh of database 
-<b><i>${prefix}add username1 username2</i></b> ... - adding Users
-<b><i>${prefix}submissions</i></b> - Submissions list
-<b><i>${prefix}avatar</i></b> - Avatar list
+<b><i>${prefix}rating</i></b> - Overall rating of Users
+<b><i>${prefix}refresh</i></b> - Manual refresh of Database 
+<b><i>${prefix}submissions</i></b> - Submissions for Users
+<b><i>${prefix}avatar</i></b> - Avatars for Users
 
-<b>User related commands:</b> 
+<b>User related commands:</b>
+<b><i>${prefix}add username1 username2</i></b> ... - adding Users
 <b><i>${prefix}profile username</i></b> - Profile for separate User
 <b><i>${prefix}avatar username</i></b> - Avatar for User
 <b><i>${prefix}submissions username</i></b> - Get all recent submissions for User as Table
-<b><i>${prefix}compare username1 username2</i></b> - Compare 2 users' stats
+<b><i>${prefix}compare username1 username2</i></b> - Compare 2 Users' stats
 
 <b>Admin commands:</b>
 <b><i>${prefix}remove username master_password</i></b> - Remove User
-<b><i>${prefix}clear master_password</i></b> - Clear Database
-<b><i>${prefix}stats master_password</i></b> - Show Stats for this BOT
+<b><i>${prefix}clear master_password</i></b> - Clear Database from all Users
+<b><i>${prefix}stats master_password</i></b> - Show Stats for this Bot
 `;
   },
   USER_TEXT(user: User): string {
