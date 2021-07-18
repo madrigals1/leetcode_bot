@@ -47,7 +47,7 @@ Starting page that contains links to all other actions
 
 ### Rating
 
-Prints out rating of users if called without args and data for specific user if called with args.
+Prints out rating of Users and buttons leading to Users' profile in Telegram.
 
 | Name | Rating |
 | --- | --- |
