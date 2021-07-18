@@ -119,7 +119,7 @@ const BOT_MESSAGES = {
 <b><i>${prefix}avatar</i></b> - Avatar list
 
 <b>User related commands:</b> 
-<b><i>${prefix}rating username</i></b> - Rating for separate User
+<b><i>${prefix}profile username</i></b> - Profile for separate User
 <b><i>${prefix}avatar username</i></b> - Avatar for User
 <b><i>${prefix}submissions username</i></b> - Get all recent submissions for User as Table
 <b><i>${prefix}compare username1 username2</i></b> - Compare 2 users' stats
@@ -131,19 +131,21 @@ const BOT_MESSAGES = {
 `;
   },
   USER_TEXT(user: User): string {
-    return `<b>Name:</b> ${user.name || 'No name'}
-<b>Username:</b> ${user.username}
-<b>Link:</b> <b>${user.link}</b>
-<b>Solved:</b> ${user.solved} / ${user.all}
+    const { acSubmissionNum } = user.submitStats;
 
-<b>Last ${user.submissions.length} Submissions:</b>
-${user.submissions.slice(0, parseInt(constants.SUBMISSION_COUNT, 10)).map((submission) => `
-<b>${submission.name}</b>
-<b>Link:</b> <b>${submission.link}</b>
-<b>Status:</b> ${submission.status}
-<b>Language:</b> ${submission.language}
-<b>Time:</b> ${submission.time}
-`).join('\n')}`;
+    // Get submissions for different difficulty levels
+    const easy = acSubmissionNum.find((sc) => (sc.difficulty === 'Easy'));
+    const medium = acSubmissionNum.find((sc) => (sc.difficulty === 'Medium'));
+    const hard = acSubmissionNum.find((sc) => (sc.difficulty === 'Hard'));
+    const all = acSubmissionNum.find((sc) => (sc.difficulty === 'All'));
+
+    return `<b>${user.name || 'No name'}</b> - <b>${user.link}</b>
+
+Solved Problems:
+${constants.EMOJI.GREEN_SQUARE} Easy - <b>${easy.count}</b>
+${constants.EMOJI.YELLOW_SQUARE} Medium - <b>${medium.count}</b>
+${constants.EMOJI.RED_SQUARE} Hard - <b>${hard.count}</b>
+${constants.EMOJI.BLUE_SQUARE} All - <b>${all.count} / ${user.all}</b>`;
   },
   RATING_TEXT(users: User[]): string {
     if (!users || users.length === 0) {
