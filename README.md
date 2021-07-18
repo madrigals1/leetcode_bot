@@ -51,7 +51,7 @@ Prints out rating of users if called without args and data for specific user if 
 
 | Name | Rating |
 | --- | --- |
-| Arguments | [1] `username` - username of User in LeetCode. If specified, bot will get data of this specific User and print out. |
+| Arguments | - |
 | Telegram | Yes |
 | Discord | Limited |
 | Slack | Limited |
@@ -60,7 +60,27 @@ Prints out rating of users if called without args and data for specific user if 
 | Request | Response |
 | --- | --- |
 | `/rating` | ![Rating](https://i.imgur.com/56qWPO7.png) |
-| `/rating username` | ![Rating username](https://i.imgur.com/mjHCA9X.png) | 
+
+---
+
+### Profile
+
+Prints data of specific User, that inclues:
+- User's real name
+- Link, that leads to User's profile in LeetCode
+- Amount of solved problems in different levels of difficulty
+
+| Name | Profile |
+| --- | --- |
+| Arguments | [1] `username` - username of User in LeetCode. |
+| Telegram | Yes |
+| Discord | Limited |
+| Slack | Limited |
+| Admin | No |
+
+| Request | Response |
+| --- | --- |
+| `/profile username` | ![Profile username](https://i.imgur.com/a0PbJ7a.png) | 
 
 ---
 
