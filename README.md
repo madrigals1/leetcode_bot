@@ -47,7 +47,7 @@ Starting page that contains links to all other actions
 
 ### Rating
 
-Prints out rating of Users and buttons leading to Users' profile in Telegram.
+Prints out rating of Users and buttons leading to Users' profile.
 
 | Name | Rating |
 | --- | --- |
