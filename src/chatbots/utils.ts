@@ -5,7 +5,12 @@ import { log, error } from '../utils/helper';
 import dictionary from '../utils/dictionary';
 import { User } from '../leetcode/models';
 
-import { ReplyMarkupOptions, TableResponse, CompareUser } from './models';
+import {
+  ReplyMarkupOptions,
+  TableResponse,
+  CompareUser,
+  ReplyMarkupCommand,
+} from './models';
 
 export function getCompareDataFromUser(user: User): CompareUser {
   return {
@@ -150,4 +155,27 @@ export function createUserListReplyMarkup(options: ReplyMarkupOptions): string {
   }]);
 
   return JSON.stringify({ inline_keyboard: usersInlineKeyboard });
+}
+
+export function generateReplyMarkup(buttons: ReplyMarkupCommand[]): string {
+  // Inline keyboard
+  const inlineKeyboard = [];
+
+  // Make 3 buttons on each row
+  for (let i = 0; i < Math.ceil(buttons.length / 3); i++) {
+    const row = [];
+
+    for (let j = 0; j < 3; j++) {
+      const index = (i * 3) + j;
+
+      if (index < buttons.length) {
+        const button = buttons[index];
+        row.push({ text: button.text, callback_data: button.action });
+      }
+    }
+
+    inlineKeyboard.push(row);
+  }
+
+  return JSON.stringify({ inline_keyboard: inlineKeyboard });
 }
