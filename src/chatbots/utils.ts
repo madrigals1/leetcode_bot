@@ -56,7 +56,7 @@ export function getCompareDataFromUser(user: User): CompareUser {
   };
 }
 
-export function compareMenu(
+export async function compareMenu(
   leftUser: User, rightUser: User,
 ): Promise<TableResponse> {
   return axios
@@ -75,7 +75,7 @@ export function compareMenu(
     });
 }
 
-export function tableForSubmissions(user: User): Promise<TableResponse> {
+export async function tableForSubmissions(user: User): Promise<TableResponse> {
   if (!user) {
     const errorMessage = 'Username not found';
     return new Promise((resolve) => resolve({

@@ -1,14 +1,14 @@
-export function log(...args): void {
+export function log(...args: any[]): void {
   // eslint-disable-next-line no-console
   console.log(...args);
 }
 
-export function error(...args): void {
+export function error(...args: any[]): void {
   // eslint-disable-next-line no-console
   console.error(...args);
 }
 
-export function delay(msTime: number) {
+export function delay(msTime: number): Promise<void> {
   return new Promise((res) => setTimeout(res, msTime));
 }
 export function isTrue(value: string | number | boolean): boolean {

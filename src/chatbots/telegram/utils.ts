@@ -1,6 +1,6 @@
 import { Context } from '../models';
 
-export function reply(message, context: Context) {
+export function reply(message: string, context: Context) {
   const {
     chatId, options, bot, photoUrl,
   } = context;

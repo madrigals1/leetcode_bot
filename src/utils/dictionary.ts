@@ -1,4 +1,5 @@
 import { User } from '../leetcode/models';
+import Cache from '../cache';
 
 import constants from './constants';
 
@@ -156,7 +157,7 @@ ${constants.EMOJI.BLUE_SQUARE} All - <b>${all.count} / ${user.all}</b>`;
     ).join('\n');
   },
 
-  STATS_TEXT(providerName: string, cache): string {
+  STATS_TEXT(providerName: string, cache: typeof Cache): string {
     const { userLimit, users } = cache;
 
     // Get prefix for provider
