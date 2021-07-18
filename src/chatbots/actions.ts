@@ -220,14 +220,23 @@ const actions = [
         );
       }
 
-      // Rating button
+      const submissionsButtion: ReplyMarkupCommand = {
+        text: `${constants.EMOJI.SCROLL} Submissions`,
+        action: `/submissions ${username}`,
+      };
+
+      const avatarButton: ReplyMarkupCommand = {
+        text: `${constants.EMOJI.PEOPLE} Avatar`,
+        action: `/avatar ${username}`,
+      };
+
       const ratingButton: ReplyMarkupCommand = {
-        text: `${constants.EMOJI.CARD_FILE_BOX} Rating`,
+        text: `${constants.EMOJI.BACK_ARROW} Back to Rating`,
         action: '/rating',
       };
 
       context.options.reply_markup = generateReplyMarkup({
-        buttons: [ratingButton],
+        buttons: [submissionsButtion, avatarButton, ratingButton],
       });
 
       return reply(dictionary.BOT_MESSAGES.USER_TEXT(user), context);

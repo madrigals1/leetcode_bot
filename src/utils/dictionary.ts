@@ -134,16 +134,7 @@ const BOT_MESSAGES = {
     return `<b>Name:</b> ${user.name || 'No name'}
 <b>Username:</b> ${user.username}
 <b>Link:</b> <b>${user.link}</b>
-<b>Solved:</b> ${user.solved} / ${user.all}
-
-<b>Last ${user.submissions.length} Submissions:</b>
-${user.submissions.slice(0, parseInt(constants.SUBMISSION_COUNT, 10)).map((submission) => `
-<b>${submission.name}</b>
-<b>Link:</b> <b>${submission.link}</b>
-<b>Status:</b> ${submission.status}
-<b>Language:</b> ${submission.language}
-<b>Time:</b> ${submission.time}
-`).join('\n')}`;
+<b>Solved:</b> ${user.solved} / ${user.all}`;
   },
   RATING_TEXT(users: User[]): string {
     if (!users || users.length === 0) {
