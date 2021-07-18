@@ -83,10 +83,16 @@ test('chatbots.discord.utils.reply function', async () => {
   testCases.forEach(async ({
     message, context, expected, expectedMessage, expectedOptions,
   }, i) => {
-    reply(message, context).then((result) => {
-      expect(result).toBe(expected);
-      expect(expectedMessage).toBe(mockDiscordInstances[i].formattedMessage);
-      expect(expectedOptions).toEqual(mockDiscordInstances[i].options);
-    });
+    reply(message, context)
+      .then((result) => {
+        expect(result).toBe(expected);
+        expect(expectedMessage).toBe(mockDiscordInstances[i].formattedMessage);
+        expect(expectedOptions).toEqual(mockDiscordInstances[i].options);
+      })
+      .catch((err: Error) => {
+        expect(err).toEqual(expected);
+        expect(expectedMessage).toBe(mockDiscordInstances[i].formattedMessage);
+        expect(expectedOptions).toEqual(mockDiscordInstances[i].options);
+      });
   });
 });
