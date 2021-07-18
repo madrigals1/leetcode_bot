@@ -119,7 +119,7 @@ const BOT_MESSAGES = {
 <b><i>${prefix}avatar</i></b> - Avatar list
 
 <b>User related commands:</b> 
-<b><i>${prefix}profile username</i></b> - Profile for separate user
+<b><i>${prefix}profile username</i></b> - Profile for separate User
 <b><i>${prefix}avatar username</i></b> - Avatar for User
 <b><i>${prefix}submissions username</i></b> - Get all recent submissions for User as Table
 <b><i>${prefix}compare username1 username2</i></b> - Compare 2 users' stats
