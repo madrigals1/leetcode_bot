@@ -1,4 +1,4 @@
-name: Run test cases
+name: Node.js CI
 
 on:
   push:
@@ -7,13 +7,13 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [ v14.15.4 ]
 
     steps:
     - uses: actions/checkout@v2
