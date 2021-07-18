@@ -4,8 +4,15 @@ import constants from '../utils/constants';
 import { log, error } from '../utils/helper';
 import dictionary from '../utils/dictionary';
 import { User } from '../leetcode/models';
+import Cache from '../cache';
 
-import { ReplyMarkupOptions, TableResponse, CompareUser } from './models';
+import {
+  ReplyMarkupOptions,
+  TableResponse,
+  CompareUser,
+  ReplyMarkupCommand,
+  ButtonOptions,
+} from './models';
 
 export function getCompareDataFromUser(user: User): CompareUser {
   return {
@@ -105,49 +112,49 @@ export function tableForSubmissions(user: User): Promise<TableResponse> {
     });
 }
 
-export function createUserListReplyMarkup(options: ReplyMarkupOptions): string {
-  // Get users from context
-  const { users } = options;
+export function generateReplyMarkup(options: ReplyMarkupOptions): string {
+  const { buttons, isClosable } = options;
 
-  // Create menu for users
-  const usersInlineKeyboard = [];
+  // Inline keyboard
+  const inlineKeyboard = [];
 
-  // If only header is needed to be returned
-  if (options.isOnlyHeader) {
-    // Add header
-    usersInlineKeyboard.push([{
-      text: options.header,
-      callback_data: options.command,
-    }]);
-
-    return JSON.stringify({ inline_keyboard: usersInlineKeyboard });
-  }
-
-  for (let i = 0; i < Math.ceil(users.length / 3); i++) {
+  // Make 3 buttons on each row
+  for (let i = 0; i < Math.ceil(buttons.length / 3); i++) {
     const row = [];
+
     for (let j = 0; j < 3; j++) {
       const index = (i * 3) + j;
-      if (index < users.length) {
-        const user = users[index];
-        const dataWithoutPassword = `${options.command} ${user.username}`;
-        const dataWithPassword = options.password
-          ? `${dataWithoutPassword} ${options.password}`
-          : `${dataWithoutPassword}`;
 
-        row.push({
-          text: `${user.username}`,
-          callback_data: dataWithPassword,
-        });
+      if (index < buttons.length) {
+        const button = buttons[index];
+        row.push({ text: button.text, callback_data: button.action });
       }
     }
-    usersInlineKeyboard.push(row);
+
+    inlineKeyboard.push(row);
   }
 
-  // Button for closing Keyboard Menu
-  usersInlineKeyboard.push([{
-    text: options.footer,
-    callback_data: 'placeholder',
-  }]);
+  // Add close button
+  if (isClosable) {
+    inlineKeyboard.push([{
+      text: `${constants.EMOJI.CROSS_MARK} Close`,
+      callback_data: 'placeholder',
+    }]);
+  }
 
-  return JSON.stringify({ inline_keyboard: usersInlineKeyboard });
+  return JSON.stringify({ inline_keyboard: inlineKeyboard });
+}
+
+export function createButtonsFromUsers(
+  options: ButtonOptions,
+): ReplyMarkupCommand[] {
+  const { action, password } = options;
+
+  // Get all user from Cache and create Button for each
+  const buttons = Cache.allUsers().map((user: User) => ({
+    text: user.username,
+    action: `/${action} ${user.username} ${password || ''}`,
+  }));
+
+  return buttons;
 }

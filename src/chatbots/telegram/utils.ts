@@ -14,7 +14,7 @@ export function reply(message, context: Context) {
 
 export function getArgs(message: string): string[] {
   // Get all args from message
-  const args = message.split(' ');
+  const args = message.trim().split(' ');
 
   // Remove action name
   args.shift();
