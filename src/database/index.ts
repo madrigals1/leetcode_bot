@@ -1,5 +1,6 @@
 import constants from '../utils/constants';
 
+import DatabaseProvider from './database.proto';
 import MongoDB from './mongo';
 import Postgres from './postgres';
 import SQLite from './sqlite3';
@@ -12,13 +13,9 @@ const databaseMap = {
   sqlite: SQLite,
 };
 
-function getDatabaseProvider(
-  providerName: string,
-): typeof MongoDB | typeof Postgres | typeof SQLite {
-  return databaseMap[providerName] || SQLite;
-}
-
-// Get current database
-const Database = getDatabaseProvider(constants.DB_PROVIDER);
+// Get specific Database
+const Database: typeof DatabaseProvider = (
+  databaseMap[constants.DB_PROVIDER] || SQLite
+);
 
 export default new Database();
