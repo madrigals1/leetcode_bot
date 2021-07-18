@@ -4,12 +4,14 @@ import constants from '../utils/constants';
 import { log, error } from '../utils/helper';
 import dictionary from '../utils/dictionary';
 import { User } from '../leetcode/models';
+import Cache from '../cache';
 
 import {
   ReplyMarkupOptions,
   TableResponse,
   CompareUser,
   ReplyMarkupCommand,
+  ButtonOptions,
 } from './models';
 
 export function getCompareDataFromUser(user: User): CompareUser {
@@ -110,54 +112,9 @@ export function tableForSubmissions(user: User): Promise<TableResponse> {
     });
 }
 
-export function createUserListReplyMarkup(options: ReplyMarkupOptions): string {
-  // Get users from context
-  const { users } = options;
+export function generateReplyMarkup(options: ReplyMarkupOptions): string {
+  const { buttons, isClosable } = options;
 
-  // Create menu for users
-  const usersInlineKeyboard = [];
-
-  // If only header is needed to be returned
-  if (options.isOnlyHeader) {
-    // Add header
-    usersInlineKeyboard.push([{
-      text: options.header,
-      callback_data: options.command,
-    }]);
-
-    return JSON.stringify({ inline_keyboard: usersInlineKeyboard });
-  }
-
-  for (let i = 0; i < Math.ceil(users.length / 3); i++) {
-    const row = [];
-    for (let j = 0; j < 3; j++) {
-      const index = (i * 3) + j;
-      if (index < users.length) {
-        const user = users[index];
-        const dataWithoutPassword = `${options.command} ${user.username}`;
-        const dataWithPassword = options.password
-          ? `${dataWithoutPassword} ${options.password}`
-          : `${dataWithoutPassword}`;
-
-        row.push({
-          text: `${user.username}`,
-          callback_data: dataWithPassword,
-        });
-      }
-    }
-    usersInlineKeyboard.push(row);
-  }
-
-  // Button for closing Keyboard Menu
-  usersInlineKeyboard.push([{
-    text: options.footer,
-    callback_data: 'placeholder',
-  }]);
-
-  return JSON.stringify({ inline_keyboard: usersInlineKeyboard });
-}
-
-export function generateReplyMarkup(buttons: ReplyMarkupCommand[]): string {
   // Inline keyboard
   const inlineKeyboard = [];
 
@@ -177,5 +134,27 @@ export function generateReplyMarkup(buttons: ReplyMarkupCommand[]): string {
     inlineKeyboard.push(row);
   }
 
+  // Add close button
+  if (isClosable) {
+    inlineKeyboard.push([{
+      text: `${constants.EMOJI.CROSS_MARK} Close`,
+      callback_data: 'placeholder',
+    }]);
+  }
+
   return JSON.stringify({ inline_keyboard: inlineKeyboard });
+}
+
+export function createButtonsFromUsers(
+  options: ButtonOptions,
+): ReplyMarkupCommand[] {
+  const { action, password } = options;
+
+  // Get all user from Cache and create Button for each
+  const buttons = Cache.allUsers().map((user: User) => ({
+    text: user.username,
+    action: `/${action} ${user.username} ${password || ''}`,
+  }));
+
+  return buttons;
 }

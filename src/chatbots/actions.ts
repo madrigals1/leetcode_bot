@@ -5,9 +5,12 @@ import constants from '../utils/constants';
 import { CacheResponse } from '../cache/response.model';
 import { User } from '../leetcode/models';
 
-import { Context, TableResponse } from './models';
+import { Context, TableResponse, ReplyMarkupCommand } from './models';
 import {
-  tableForSubmissions, createUserListReplyMarkup, compareMenu,
+  tableForSubmissions,
+  compareMenu,
+  generateReplyMarkup,
+  createButtonsFromUsers,
 } from './utils';
 
 const actions = [
@@ -95,11 +98,9 @@ const actions = [
         }
 
         // Add Buttons with User List
-        context.options.reply_markup = createUserListReplyMarkup({
-          users: Cache.allUsers(),
-          footer: `${constants.EMOJI.CROSS_MARK} Close`,
-          command: '/remove',
-          password,
+        context.options.reply_markup = generateReplyMarkup({
+          buttons: createButtonsFromUsers({ action: 'remove', password }),
+          isClosable: true,
         });
 
         return reply(dictionary.BOT_MESSAGES.USER_LIST_REMOVE, context);
@@ -198,10 +199,14 @@ const actions = [
 
         // If user does exist, return user data with reply markup
         if (user) {
-          context.options.reply_markup = createUserListReplyMarkup({
-            isOnlyHeader: true,
-            header: `${constants.EMOJI.CARD_FILE_BOX} Rating`,
-            command: '/rating',
+          // Rating button
+          const ratingButton: ReplyMarkupCommand = {
+            text: `${constants.EMOJI.CARD_FILE_BOX} Rating`,
+            action: '/rating',
+          };
+
+          context.options.reply_markup = generateReplyMarkup({
+            buttons: [ratingButton],
           });
 
           return reply(dictionary.BOT_MESSAGES.USER_TEXT(user), context);
@@ -214,10 +219,9 @@ const actions = [
       }
 
       // If 0 User was sent, add reply markup context for User
-      context.options.reply_markup = createUserListReplyMarkup({
-        users: Cache.allUsers(),
-        footer: `${constants.EMOJI.CROSS_MARK} Close`,
-        command: '/rating',
+      context.options.reply_markup = generateReplyMarkup({
+        buttons: createButtonsFromUsers({ action: 'rating' }),
+        isClosable: true,
       });
 
       return reply(
@@ -255,10 +259,9 @@ const actions = [
       }
 
       // If 0 User was sent, add reply markup context for User
-      context.options.reply_markup = createUserListReplyMarkup({
-        users: Cache.allUsers(),
-        footer: `${constants.EMOJI.CROSS_MARK} Close`,
-        command: '/avatar',
+      context.options.reply_markup = generateReplyMarkup({
+        buttons: createButtonsFromUsers({ action: 'avatar' }),
+        isClosable: true,
       });
 
       // If 0 User was sent
@@ -310,10 +313,9 @@ const actions = [
       }
 
       // If 0 User was sent, add reply markup context for User
-      context.options.reply_markup = createUserListReplyMarkup({
-        users: Cache.allUsers(),
-        footer: `${constants.EMOJI.CROSS_MARK} Close`,
-        command: '/submissions',
+      context.options.reply_markup = generateReplyMarkup({
+        buttons: createButtonsFromUsers({ action: 'submissions' }),
+        isClosable: true,
       });
 
       // If 0 User was sent
