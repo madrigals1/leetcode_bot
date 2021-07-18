@@ -12,7 +12,13 @@ const databaseMap = {
   sqlite: SQLite,
 };
 
+function getDatabaseProvider(
+  providerName: string,
+): typeof MongoDB | typeof Postgres | typeof SQLite {
+  return databaseMap[providerName] || SQLite;
+}
+
 // Get current database
-const Database = databaseMap[constants.DB_PROVIDER];
+const Database = getDatabaseProvider(constants.DB_PROVIDER);
 
 export default new Database();
