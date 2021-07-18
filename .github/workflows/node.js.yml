@@ -12,9 +12,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      CI: true
+
     strategy:
       matrix:
-        node-version: [ v14.15.4 ]
+        node-version: [ v12, v14, v16 ]
 
     steps:
     - uses: actions/checkout@v2
