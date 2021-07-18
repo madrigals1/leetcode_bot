@@ -131,10 +131,21 @@ const BOT_MESSAGES = {
 `;
   },
   USER_TEXT(user: User): string {
-    return `<b>Name:</b> ${user.name || 'No name'}
-<b>Username:</b> ${user.username}
-<b>Link:</b> <b>${user.link}</b>
-<b>Solved:</b> ${user.solved} / ${user.all}`;
+    const { acSubmissionNum } = user.submitStats;
+
+    // Get submissions for different difficulty levels
+    const easy = acSubmissionNum.find((sc) => (sc.difficulty === 'Easy'));
+    const medium = acSubmissionNum.find((sc) => (sc.difficulty === 'Medium'));
+    const hard = acSubmissionNum.find((sc) => (sc.difficulty === 'Hard'));
+    const all = acSubmissionNum.find((sc) => (sc.difficulty === 'All'));
+
+    return `<b>${user.name || 'No name'}</b> - <b>${user.link}</b>
+
+Solved Problems:
+${constants.EMOJI.GREEN_SQUARE} Easy - <b>${easy.count}</b>
+${constants.EMOJI.YELLOW_SQUARE} Medium - <b>${medium.count}</b>
+${constants.EMOJI.RED_SQUARE} Hard - <b>${hard.count}</b>
+${constants.EMOJI.BLUE_SQUARE} All - <b>${all.count} / ${user.all}</b>`;
   },
   RATING_TEXT(users: User[]): string {
     if (!users || users.length === 0) {
