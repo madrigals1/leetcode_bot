@@ -1,5 +1,4 @@
 import { User } from '../../leetcode/models';
-import DatabaseProvider from '../../database/database.proto';
 
 import users from './data.mock';
 
@@ -7,7 +6,7 @@ const mockUser1: User = users[0];
 
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
-class MockDatabaseProvider extends DatabaseProvider {
+class MockDatabaseProvider {
   isRefreshing = false;
 
   savedUsers: User[] = (
