@@ -14,7 +14,7 @@ afterAll(async () => {
   jest.setTimeout(5000);
 });
 
-test('chatbots.discord.index.run function', async () => {
+test('chatbots.discord.index.run function', async (done) => {
   if (!constants.DISCORD.TEST_ENABLE) return;
 
   await DiscordBotInstance.run();
@@ -23,4 +23,6 @@ test('chatbots.discord.index.run function', async () => {
   expect(console.log).toHaveBeenCalledWith(
     dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING,
   );
+
+  done();
 });
