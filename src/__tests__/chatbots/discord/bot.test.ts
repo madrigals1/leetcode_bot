@@ -6,8 +6,8 @@ import constants from '../../../utils/constants';
 import dictionary from '../../../utils/dictionary';
 import DiscordBotInstance from '../../../chatbots/discord';
 
-const te = constants.DISCORD.TEST_ENABLE;
-const { DISCORD_TEST_ENABLE: teo } = process.env;
+const te = process.env.DISCORD_TEST_ENABLE;
+const tt = process.env.DISCORD_TEST_TOKEN;
 
 beforeAll(async () => {
   jest.setTimeout(30000);
@@ -17,7 +17,7 @@ afterAll(async () => {
   jest.setTimeout(5000);
 });
 
-test(`chatbots.discord.bot.createBot function (${typeof te}, ${te}) (${typeof teo}, ${teo})`, async () => {
+test(`chatbots.discord.bot.createBot function (${typeof te}, ${te}) (${typeof tt}, ${tt})`, async () => {
   if (!constants.DISCORD.TEST_ENABLE) return;
 
   expect(typeof createBot).toBe('function');
