@@ -28,6 +28,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+      env:
+        DISCORD_TEST_ENABLE: ${{ secrets.DISCORD_TEST_ENABLE }}
+        DISCORD_TEST_TOKEN: ${{ secrets.DISCORD_TEST_TOKEN }} 
+        TELEGRAM_TEST_ENABLE: ${{ secrets.TELEGRAM_TEST_ENABLE }}
+        TELEGRAM_TEST_TOKEN: ${{ secrets.TELEGRAM_TEST_TOKEN }} 
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
