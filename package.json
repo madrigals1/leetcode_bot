@@ -7,7 +7,8 @@
     "start": "npm run build && node dist/index.js",
     "fix": "eslint --fix src/*",
     "test": "jest --forceExit",
-    "test:leaks": "jest --runInBand --watch --detectOpenHandles",
+    "test:debug": "jest --watch",
+    "test:leaks": "jest --runInBand --detectOpenHandles",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
     "lint": "eslint ./src --ext .js,.ts"
   },
