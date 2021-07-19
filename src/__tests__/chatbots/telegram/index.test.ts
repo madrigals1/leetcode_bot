@@ -14,20 +14,20 @@ afterAll(async () => {
   jest.setTimeout(5000);
 });
 
-test('chatbots.telegram.index.run function', async () => {
-  expect(TelegramBotInstance.token).toBe(constants.TELEGRAM.TEST_TOKEN);
+if (constants.TELEGRAM.TEST_ENABLE) {
+  test('chatbots.telegram.index.run function', async () => {
+    expect(TelegramBotInstance.token).toBe(constants.TELEGRAM.TEST_TOKEN);
 
-  if (!constants.TELEGRAM.TEST_ENABLE) return;
+    TelegramBotInstance.run();
 
-  TelegramBotInstance.run();
+    // eslint-disable-next-line no-console
+    expect(console.log).toHaveBeenCalledWith(
+      dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_CONNECTED,
+    );
 
-  // eslint-disable-next-line no-console
-  expect(console.log).toHaveBeenCalledWith(
-    dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_CONNECTED,
-  );
-
-  // eslint-disable-next-line no-console
-  expect(console.log).toHaveBeenCalledWith(
-    dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_RUNNING,
-  );
-});
+    // eslint-disable-next-line no-console
+    expect(console.log).toHaveBeenCalledWith(
+      dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_RUNNING,
+    );
+  });
+}

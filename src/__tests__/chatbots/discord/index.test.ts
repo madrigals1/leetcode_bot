@@ -14,13 +14,13 @@ afterAll(async () => {
   jest.setTimeout(5000);
 });
 
-test('chatbots.discord.index.run function', async () => {
-  expect(DiscordBotInstance.token).toBe(constants.DISCORD.TEST_TOKEN);
+if (constants.DISCORD.TEST_ENABLE) {
+  test('chatbots.discord.index.run function', async () => {
+    await DiscordBotInstance.run();
 
-  await DiscordBotInstance.run();
-
-  // eslint-disable-next-line no-console
-  expect(console.log).toHaveBeenCalledWith(
-    dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING,
-  );
-});
+    // eslint-disable-next-line no-console
+    expect(console.log).toHaveBeenCalledWith(
+      dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING,
+    );
+  });
+}
