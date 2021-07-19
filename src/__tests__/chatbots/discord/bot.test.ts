@@ -7,7 +7,7 @@ import dictionary from '../../../utils/dictionary';
 import DiscordBotInstance from '../../../chatbots/discord';
 
 const te = constants.DISCORD.TEST_ENABLE;
-const { teo } = process.env;
+const { DISCORD_TEST_ENABLE: teo } = process.env;
 
 beforeAll(async () => {
   jest.setTimeout(30000);
