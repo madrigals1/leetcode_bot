@@ -14,27 +14,27 @@ afterAll(async () => {
   jest.setTimeout(5000);
 });
 
-if (constants.DISCORD.TEST_ENABLE) {
-  test('chatbots.discord.bot.createBot function', async () => {
-    expect(typeof createBot).toBe('function');
+test('chatbots.discord.bot.createBot function', async () => {
+  if (!constants.DISCORD.TEST_ENABLE) return;
 
-    // Create a test bot with test token
-    const bot: DiscordBot.Client = (
-      await createBot(constants.DISCORD.TEST_TOKEN)
-    );
+  expect(typeof createBot).toBe('function');
 
-    expect(bot instanceof DiscordBot.Client).toBe(true);
+  // Create a test bot with test token
+  const bot: DiscordBot.Client = (
+    await createBot(constants.DISCORD.TEST_TOKEN)
+  );
 
-    // eslint-disable-next-line no-console
-    expect(console.log).toHaveBeenCalledWith(
-      dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_CONNECTED,
-    );
+  expect(bot instanceof DiscordBot.Client).toBe(true);
 
-    await DiscordBotInstance.run();
+  // eslint-disable-next-line no-console
+  expect(console.log).toHaveBeenCalledWith(
+    dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_CONNECTED,
+  );
 
-    // eslint-disable-next-line no-console
-    expect(console.log).toHaveBeenCalledWith(
-      dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING,
-    );
-  });
-}
+  await DiscordBotInstance.run();
+
+  // eslint-disable-next-line no-console
+  expect(console.log).toHaveBeenCalledWith(
+    dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING,
+  );
+});
