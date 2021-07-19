@@ -39,7 +39,7 @@ test('chatbots.discord.bot.createBot function', async () => {
   );
 });
 
-if (constants.DISCORD.TEST_ENABLE) {
+if (constants.DISCORD.TEST_ENABLE === true) {
   test('>>> will run only if DISCORD.TEST_ENABLE', async () => {
     expect(1).toEqual(1);
   });
