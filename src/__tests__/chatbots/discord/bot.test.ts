@@ -38,3 +38,9 @@ test('chatbots.discord.bot.createBot function', async () => {
     dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING,
   );
 });
+
+if (constants.DISCORD.TEST_ENABLE) {
+  test('>>> will run only if DISCORD.TEST_ENABLE', async () => {
+    expect(1).toEqual(1);
+  });
+}
