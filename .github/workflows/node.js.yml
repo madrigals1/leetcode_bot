@@ -28,7 +28,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: |
+    - name: create .env file and add secrets
+      run: |
       touch .env
       echo DISCORD_TEST_ENABLE=${{ secrets.DISCORD_TEST_ENABLE }} >> .env
       echo DISCORD_TEST_TOKEN=${{ secrets.DISCORD_TEST_TOKEN }} >> .env
