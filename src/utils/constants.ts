@@ -1,4 +1,3 @@
-import { Emoji } from 'discord.js';
 import * as dotenv from 'dotenv';
 
 import { isTrue } from './helper';
@@ -15,9 +14,10 @@ const EMOJI = {
   STRONG: '🦾',
   JOKE: '🤣',
   CRY: '😢',
-  THING: '🤔',
+  THINK: '🤔',
   FEAR: '😱',
-  CENCOR: '🤬',
+  USER_WITH_LAPTOP: '👨‍💻',
+  CENSOR: '🤬',
   WASTEBASKET: '🗑️',
   CARD_FILE_BOX: '🗃️',
   PEOPLE: '👥',
@@ -84,11 +84,10 @@ const STATUS_MAP = {
   'Runtime Error': `${EMOJI.JOKE} Runtime Error`,
   'Compile Error': `${EMOJI.JOKE} Compile Error`,
   'Wrong Answer': `${EMOJI.CRY} Wrong Answer`,
-  'Time Limit Exceeded': `${EMOJI.CENCOR} Time Limit Exceeded`,
-  'Memory Limit Exceeded': `${EMOJI.THING} Time Limit Exceeded`,
+  'Time Limit Exceeded': `${EMOJI.CENSOR} Time Limit Exceeded`,
+  'Memory Limit Exceeded': `${EMOJI.THINK} Time Limit Exceeded`,
   'Output Limit Exceeded': `${EMOJI.FEAR} Output Limit Exceeded`,
 };
-
 
 const STATUS = {
   ERROR: 'error',
