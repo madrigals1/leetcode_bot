@@ -1,8 +1,33 @@
+import { Emoji } from 'discord.js';
 import * as dotenv from 'dotenv';
 
 import { isTrue } from './helper';
 
 dotenv.config();
+
+const EMOJI = {
+  ERROR: '❗',
+  CROSS_MARK: '❌',
+  SUCCESS: '✅',
+  WAITING: '⏳',
+  WARNING: '⚠️',
+  COOL: '😎',
+  STRONG: '🦾',
+  JOKE: '🤣',
+  CRY: '😢',
+  THING: '🤔',
+  FEAR: '😱',
+  CENCOR: '🤬',
+  WASTEBASKET: '🗑️',
+  CARD_FILE_BOX: '🗃️',
+  PEOPLE: '👥',
+  SCROLL: '📜',
+  BACK_ARROW: '🔙',
+  GREEN_SQUARE: '🟩',
+  YELLOW_SQUARE: '🟨',
+  RED_SQUARE: '🟥',
+  BLUE_SQUARE: '🟦',
+};
 
 // ENV Variables
 const {
@@ -55,32 +80,15 @@ const {
 const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
 
 const STATUS_MAP = {
-  Accepted: '💚 Accepted',
-  'Runtime Error': '🤣 Runtime Error',
-  'Compile Error': '🤣 Compile Error',
-  'Wrong Answer': '😢 Wrong Answer',
-  'Time Limit Exceeded': '🤬 Time Limit Exceeded',
-  'Memory Limit Exceeded': '🤔 Time Limit Exceeded',
-  'Output Limit Exceeded': '😱 Output Limit Exceeded',
+  Accepted: `${EMOJI.STRONG} Accepted`,
+  'Runtime Error': `${EMOJI.JOKE} Runtime Error`,
+  'Compile Error': `${EMOJI.JOKE} Compile Error`,
+  'Wrong Answer': `${EMOJI.CRY} Wrong Answer`,
+  'Time Limit Exceeded': `${EMOJI.CENCOR} Time Limit Exceeded`,
+  'Memory Limit Exceeded': `${EMOJI.THING} Time Limit Exceeded`,
+  'Output Limit Exceeded': `${EMOJI.FEAR} Output Limit Exceeded`,
 };
 
-const EMOJI = {
-  ERROR: '❗',
-  CROSS_MARK: '❌',
-  SUCCESS: '✅',
-  WAITING: '⏳',
-  WARNING: '⚠️',
-  COOL: '😎',
-  WASTEBASKET: '🗑️',
-  CARD_FILE_BOX: '🗃️',
-  PEOPLE: '👥',
-  SCROLL: '📜',
-  BACK_ARROW: '🔙',
-  GREEN_SQUARE: '🟩',
-  YELLOW_SQUARE: '🟨',
-  RED_SQUARE: '🟥',
-  BLUE_SQUARE: '🟦',
-};
 
 const STATUS = {
   ERROR: 'error',
