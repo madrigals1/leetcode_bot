@@ -72,6 +72,7 @@ const EMOJI = {
   WARNING: '⚠️',
   COOL: '😎',
   WASTEBASKET: '🗑️',
+  USER_WITH_LAPTOP: '👨‍💻',
   CARD_FILE_BOX: '🗃️',
   PEOPLE: '👥',
   SCROLL: '📜',

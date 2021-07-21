@@ -187,12 +187,6 @@ const actions = [
     execute: async (context: Context): Promise<string> => {
       const { reply } = context;
 
-      // Add user buttons
-      context.options.reply_markup = generateReplyMarkup({
-        buttons: createButtonsFromUsers({ action: 'profile' }),
-        isClosable: true,
-      });
-
       return reply(
         dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers()),
         context,
@@ -206,7 +200,16 @@ const actions = [
 
       // Check, if username was sent
       if (args.length !== 1) {
-        return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
+         // Add user buttons
+         context.options.reply_markup = generateReplyMarkup({
+            buttons: createButtonsFromUsers({ action: 'profile' }),
+            isClosable: true,
+          });
+
+          return reply(
+            dictionary.BOT_MESSAGES.USER_LIST_USERS,
+            context,
+          );
       }
 
       // Get User from username
