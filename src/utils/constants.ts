@@ -4,6 +4,26 @@ import { isTrue } from './helper';
 
 dotenv.config();
 
+// Emoji
+const EMOJI = {
+  ERROR: '❗',
+  CROSS_MARK: '❌',
+  SUCCESS: '✅',
+  WAITING: '⏳',
+  WARNING: '⚠️',
+  COOL: '😎',
+  WASTEBASKET: '🗑️',
+  CARD_FILE_BOX: '🗃️',
+  USER_WITH_LAPTOP: '👨‍💻',
+  PEOPLE: '👥',
+  SCROLL: '📜',
+  BACK_ARROW: '🔙',
+  GREEN_SQUARE: '🟩',
+  YELLOW_SQUARE: '🟨',
+  RED_SQUARE: '🟥',
+  BLUE_SQUARE: '🟦',
+};
+
 // ENV Variables
 const {
   // Chatbot settings
@@ -62,24 +82,6 @@ const STATUS_MAP = {
   'Time Limit Exceeded': '🤬 Time Limit Exceeded',
   'Memory Limit Exceeded': '🤔 Time Limit Exceeded',
   'Output Limit Exceeded': '😱 Output Limit Exceeded',
-};
-
-const EMOJI = {
-  ERROR: '❗',
-  CROSS_MARK: '❌',
-  SUCCESS: '✅',
-  WAITING: '⏳',
-  WARNING: '⚠️',
-  COOL: '😎',
-  WASTEBASKET: '🗑️',
-  CARD_FILE_BOX: '🗃️',
-  PEOPLE: '👥',
-  SCROLL: '📜',
-  BACK_ARROW: '🔙',
-  GREEN_SQUARE: '🟩',
-  YELLOW_SQUARE: '🟨',
-  RED_SQUARE: '🟥',
-  BLUE_SQUARE: '🟦',
 };
 
 const STATUS = {
