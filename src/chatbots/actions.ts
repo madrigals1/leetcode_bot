@@ -197,7 +197,13 @@ const actions = [
     name: 'profile',
     execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
-
+      // Check if args more than one
+      if (args.length > 1) {
+        return reply(
+          dictionary.BOT_MESSAGES.INCORRECT_INPUT,
+          context,
+        );
+      }
       // Check, if username was sent
       if (args.length !== 1) {
         // Add user buttons
