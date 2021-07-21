@@ -198,7 +198,7 @@ const actions = [
     execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
-      // Check, if username was sent
+      // Check, if username was sent 
       if (args.length !== 1) {
          // Add user buttons
          context.options.reply_markup = generateReplyMarkup({
