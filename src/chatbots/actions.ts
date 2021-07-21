@@ -187,12 +187,6 @@ const actions = [
     execute: async (context: Context): Promise<string> => {
       const { reply } = context;
 
-      // Add user buttons
-      context.options.reply_markup = generateReplyMarkup({
-        buttons: createButtonsFromUsers({ action: 'profile' }),
-        isClosable: true,
-      });
-
       return reply(
         dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers()),
         context,
@@ -203,43 +197,50 @@ const actions = [
     name: 'profile',
     execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
-
+      let user: User;
+      let username: string;
       // Check, if username was sent
       if (args.length !== 1) {
-        return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
-      }
+        // Add user buttons
+        context.options.reply_markup = generateReplyMarkup({
+          buttons: createButtonsFromUsers({ action: 'profile' }),
+          isClosable: true,
+        });
+  
+        return reply(dictionary.BOT_MESSAGES.USER_LIST_USERS, context);
+      } else {
+          // Get User from username
+          username = args[0].toLowerCase();
+          user = Cache.loadUser(username);
 
-      // Get User from username
-      const username: string = args[0].toLowerCase();
-      const user: User = Cache.loadUser(username);
-
-      if (!user) {
-        return reply(
-          dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username),
-          context,
-        );
-      }
-
-      const submissionsButtion: ReplyMarkupCommand = {
-        text: `${constants.EMOJI.SCROLL} Submissions`,
-        action: `/submissions ${username}`,
-      };
-
-      const avatarButton: ReplyMarkupCommand = {
-        text: `${constants.EMOJI.PEOPLE} Avatar`,
-        action: `/avatar ${username}`,
-      };
-
-      const ratingButton: ReplyMarkupCommand = {
-        text: `${constants.EMOJI.BACK_ARROW} Back to Rating`,
-        action: '/rating',
-      };
-
-      context.options.reply_markup = generateReplyMarkup({
-        buttons: [submissionsButtion, avatarButton, ratingButton],
-      });
-
-      return reply(dictionary.BOT_MESSAGES.USER_TEXT(user), context);
+          if (!user) {
+            return reply(
+              dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username),
+              context
+            )
+          } else {
+            const submissionsButtion: ReplyMarkupCommand = {
+              text: `${constants.EMOJI.SCROLL} Submissions`,
+              action: `/submissions ${username}`,
+            };
+      
+            const avatarButton: ReplyMarkupCommand = {
+              text: `${constants.EMOJI.PEOPLE} Avatar`,
+              action: `/avatar ${username}`,
+            };
+      
+            const ratingButton: ReplyMarkupCommand = {
+              text: `${constants.EMOJI.BACK_ARROW} Back to Rating`,
+              action: '/rating',
+            };
+      
+            context.options.reply_markup = generateReplyMarkup({
+              buttons: [submissionsButtion, avatarButton, ratingButton],
+            });
+      
+            return reply(dictionary.BOT_MESSAGES.USER_TEXT(user), context);
+          }
+       }
     },
   },
   {
