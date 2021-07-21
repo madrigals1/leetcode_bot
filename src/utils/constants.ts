@@ -86,7 +86,7 @@ const STATUS_MAP = {
   'Compile Error': `${EMOJI.JOKE} Compile Error`,
   'Wrong Answer': `${EMOJI.CRY} Wrong Answer`,
   'Time Limit Exceeded': `${EMOJI.INVALID} Time Limit Exceeded`,
-  'Memory Limit Exceeded': `${EMOJI.THINK} Time Limit Exceeded`,
+  'Memory Limit Exceeded': `${EMOJI.THINK} Memory Limit Exceeded`,
   'Output Limit Exceeded': `${EMOJI.FEAR} Output Limit Exceeded`,
 };
 
