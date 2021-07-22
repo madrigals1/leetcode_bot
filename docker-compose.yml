@@ -4,7 +4,9 @@ services:
   backend:
     container_name: leetcode_bot
     restart: always
-    build: .
+    build:
+      context: .
+      dockerfile: ./deployment/Dockerfile
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
