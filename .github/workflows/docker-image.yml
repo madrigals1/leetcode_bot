@@ -17,15 +17,5 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Start container
-      run: docker-compose -f "docker-compose.yml" up -d --build
-
-    - name: Install Testing dependencies
-      run: docker-compose run npm ci
-
-    - name: Run tests
-      run: docker-compose run npm test
-
-    - name: Stop containers
-      if: always()
-      run: docker-compose -f "docker-compose.yml" down
+    - name: Build container and run test
+      run: docker build . --file deployment/Dockerfile.test
