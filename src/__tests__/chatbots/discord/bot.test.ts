@@ -14,7 +14,7 @@ afterAll(async () => {
   jest.setTimeout(5000);
 });
 
-test('chatbots.discord.bot.createBot function', async (done) => {
+test('chatbots.discord.bot.createBot function', async () => {
   if (!constants.DISCORD.TEST_ENABLE) return;
 
   expect(typeof createBot).toBe('function');
@@ -37,6 +37,4 @@ test('chatbots.discord.bot.createBot function', async (done) => {
   expect(console.log).toHaveBeenCalledWith(
     dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING,
   );
-
-  done();
 });
