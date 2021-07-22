@@ -17,5 +17,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Build container and run test
-      run: docker build . --file deployment/Dockerfile.test
+    - name: Build original image
+      run: docker build -t leetcode_bot --file deployment/Dockerfile .
+
+    - name: Build test image
+      run: docker build -t leetcode_bot_test --file deployment/Dockerfile.test .
+
+    - name: Run tests
+      run: docker run --rm leetcode_bot_test
