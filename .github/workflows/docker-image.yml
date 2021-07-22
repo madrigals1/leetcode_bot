@@ -1,4 +1,4 @@
-name: Test on Docker
+name: Docker
 
 on:
   push:
@@ -8,6 +8,8 @@ on:
 
 jobs:
   docker:
+    name: Test
+    
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
