@@ -99,7 +99,7 @@ Takes list of Users separated by whitespaces. Saves usernames into Database. Loa
 
 | Request | Response |
 | --- | --- |
-| `/add username1 username2 ...` | ![Add username1 username2](https://i.imgur.com/oibWs44.png) |
+| `/add username1 username2 ...` | ![Add username1 username2](https://i.imgur.com/m8289XQ.png) |
 
 ---
 
@@ -176,7 +176,7 @@ Manual refresh of database. By default, database is refreshed once in 15 minutes
 
 | Request | Response |
 | --- | --- |
-| `/refresh` | ![Refresh](https://i.imgur.com/Mmcyv7P.png) |
+| `/refresh` | ![Refresh](https://i.imgur.com/rn9ppHD.png) |
 
 ---
 
@@ -195,7 +195,8 @@ Admin action, that removes specified User from Database and Cache
 
 | Request | Response |
 | --- | --- |
-| `/remove madrigals1 password` | ![Remove](https://i.imgur.com/SvwimOi.png) |
+| `/remove password` | ![Remove](https://i.imgur.com/kbuzG4O.png) |
+| `/remove madrigals1 password` | ![Remove](https://i.imgur.com/2SvP59r.png) |
 
 ---
 
@@ -213,7 +214,7 @@ Admin action, that clears Database and Cache from all Users
 
 | Request | Response |
 | --- | --- |
-| `/clear password` | ![Clear](https://i.imgur.com/SvwimOi.png) |
+| `/clear password` | ![Clear](https://i.imgur.com/5L9PS8X.png) |
 
 ---
 
@@ -231,7 +232,7 @@ Admin action, that shows some lets us see some part of data, only accessible by 
 
 | Request | Response |
 | --- | --- |
-| `/stats password` | ![Stats](https://i.imgur.com/JvvOSa8.png) |
+| `/stats password` | ![Stats](https://i.imgur.com/lFWBTmE.png) |
 
 ## Installation
 
