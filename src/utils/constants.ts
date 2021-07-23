@@ -60,7 +60,7 @@ const STATUS_MAP = {
   'Compile Error': '🤣 Compile Error',
   'Wrong Answer': '😢 Wrong Answer',
   'Time Limit Exceeded': '🤬 Time Limit Exceeded',
-  'Memory Limit Exceeded': '🤔 Time Limit Exceeded',
+  'Memory Limit Exceeded': '🤔 Memory Limit Exceeded',
   'Output Limit Exceeded': '😱 Output Limit Exceeded',
 };
 
