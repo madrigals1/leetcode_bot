@@ -41,7 +41,7 @@ Starting page that contains links to all other actions
 
 | Request | Response |
 | --- | --- |
-| `/start` | ![Start](https://i.imgur.com/EDZk84y.png) | 
+| `/start` | ![Start](https://i.imgur.com/NTsU0Oa.png) | 
 
 ---
 
@@ -59,7 +59,7 @@ Prints out rating of Users and buttons leading to Users' profile.
 
 | Request | Response |
 | --- | --- |
-| `/rating` | ![Rating](https://i.imgur.com/56qWPO7.png) |
+| `/rating` | ![Rating](https://i.imgur.com/G3yLVoG.png) |
 
 ---
 
@@ -80,7 +80,7 @@ Prints data of specific User, that inclues:
 
 | Request | Response |
 | --- | --- |
-| `/profile username` | ![Profile username](https://i.imgur.com/a0PbJ7a.png) | 
+| `/profile username` | ![Profile username](https://i.imgur.com/JGdSsNb.png) | 
 
 ---
 
@@ -116,8 +116,8 @@ Returns avatar of User from LeetCode as image
 
 | Request | Response |
 | --- | --- |
-| `/avatar` | ![Avatar](https://i.imgur.com/UVMvVOo.png) |
-| `/avatar username` | ![Avatar username](https://i.imgur.com/spGTNmN.png) |
+| `/avatar` | ![Avatar](https://i.imgur.com/AnMGzQK.png) |
+| `/avatar username` | ![Avatar username](https://i.imgur.com/7yeNN0l.png) |
 
 ---
 
@@ -135,8 +135,8 @@ Gets submission data of User, converts that data into visualization using [VizAP
 
 | Request | Response |
 | --- | --- |
-| `/submissions` | ![Submissions](https://i.imgur.com/FHo6fta.png) |
-| `/submissions username` | ![Submissions username](https://i.imgur.com/5yotx36.png) |
+| `/submissions` | ![Submissions](https://i.imgur.com/f5RlHRM.png) |
+| `/submissions username` | ![Submissions username](https://i.imgur.com/PWUYubx.png) |
 
 ---
 
