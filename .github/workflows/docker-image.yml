@@ -1,4 +1,4 @@
-name: Test on Docker
+name: Docker
 
 on:
   push:
@@ -8,6 +8,8 @@ on:
 
 jobs:
   docker:
+    name: Test
+
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
@@ -15,20 +17,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Start container
-      run: docker-compose -f "docker-compose.yml" up -d --build
+    - name: Build original image
+      run: docker build -t leetcode_bot --file deployment/Dockerfile .
 
-    - name: Install node
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14.15.4
-
-    - name: Install dependencies
-      run: npm ci
+    - name: Build test image
+      run: docker build -t leetcode_bot_test --file deployment/Dockerfile.test .
 
     - name: Run tests
-      run: npm test
-
-    - name: Stop containers
-      if: always()
-      run: docker-compose -f "docker-compose.yml" down
+      run: docker run --rm leetcode_bot_test

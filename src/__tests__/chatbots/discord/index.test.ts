@@ -15,7 +15,7 @@ afterAll(async () => {
 });
 
 test('chatbots.discord.index.run function', async () => {
-  expect(DiscordBotInstance.token).toBe(constants.DISCORD.TEST_TOKEN);
+  if (!constants.DISCORD.TEST_ENABLE) return;
 
   await DiscordBotInstance.run();
 
