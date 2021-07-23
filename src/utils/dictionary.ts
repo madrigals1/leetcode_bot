@@ -115,7 +115,8 @@ const BOT_MESSAGES = {
 <b>Main commands:</b>
 <b><i>${prefix}start</i></b> - Starting Page
 <b><i>${prefix}rating</i></b> - Overall rating of Users
-<b><i>${prefix}refresh</i></b> - Manual refresh of Database 
+<b><i>${prefix}refresh</i></b> - Manual refresh of Database
+<b><i>${prefix}profile</i></b> - Profiles of Users
 <b><i>${prefix}submissions</i></b> - Submissions for Users
 <b><i>${prefix}avatar</i></b> - Avatars for Users
 
