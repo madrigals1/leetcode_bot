@@ -39,6 +39,8 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
   };
   const userData: UserProfile = await gqlQuery<UserProfile>(userProfileContext);
 
+  if (!userData.matchedUser) return { exists: false };
+
   // Get User Recent Submissions Data from GraphQL
   const submissionsQuery: GraphQLQuery = (
     recentSubmissionListGraphQLQuery(username)
@@ -78,6 +80,7 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
   const contestData: Contest = await gqlQuery<Contest>(contestContext);
 
   return {
+    exists: true,
     name: userData.matchedUser.profile.realName,
     link: getLeetcodeUsernameLink(username),
     username,
