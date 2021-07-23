@@ -198,9 +198,22 @@ const actions = [
     execute: async (context: Context): Promise<string> => {
       const { args, reply } = context;
 
-      // Check, if username was sent
-      if (args.length !== 1) {
+      // Check, if action is /profile or /profile username
+      if (![0, 1].includes(args.length)) {
         return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
+      }
+
+      if (args.length === 0) {
+        // Add user buttons
+        context.options.reply_markup = generateReplyMarkup({
+          buttons: createButtonsFromUsers({ action: 'profile' }),
+          isClosable: true,
+        });
+
+        return reply(
+          dictionary.BOT_MESSAGES.USER_LIST_PROFILES,
+          context,
+        );
       }
 
       // Get User from username
@@ -225,8 +238,8 @@ const actions = [
       };
 
       const ratingButton: ReplyMarkupCommand = {
-        text: `${constants.EMOJI.BACK_ARROW} Back to Rating`,
-        action: '/rating',
+        text: `${constants.EMOJI.BACK_ARROW} Back to Profiles`,
+        action: '/profile',
       };
 
       context.options.reply_markup = generateReplyMarkup({

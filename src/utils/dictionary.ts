@@ -101,6 +101,7 @@ const BOT_MESSAGES = {
   USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions Menu`,
   USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars Menu`,
   USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove Menu`,
+  USER_LIST_PROFILES: `${constants.EMOJI.PERSON} Profiles`,
 
   // DATABASE
   DATABASE_WILL_BE_CLEARED: `${constants.EMOJI.WASTEBASKET} Database will be cleared`,
