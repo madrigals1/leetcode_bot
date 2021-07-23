@@ -108,6 +108,10 @@ const BOT_MESSAGES = {
   DATABASE_WAS_CLEARED: `${constants.EMOJI.SUCCESS} Database was cleared`,
   DATABASE_WAS_NOT_CLEARED: `${constants.EMOJI.ERROR} Database was not cleared`,
 
+  // COMPARE ACTION
+  SELECT_LEFT_USER: `${constants.EMOJI.PERSON} Select Left User`,
+  SELECT_RIGHT_USER: `${constants.EMOJI.PERSON} Select Right User`,
+
   // BIG TEXTS
   WELCOME_TEXT(prefix: string): string {
     return `Welcome! This is Leetcode Rating Bot Elite ${constants.EMOJI.COOL} Boys
