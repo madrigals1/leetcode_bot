@@ -54,16 +54,6 @@ const {
 
 const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
 
-const STATUS_MAP = {
-  Accepted: '💚 Accepted',
-  'Runtime Error': '🤣 Runtime Error',
-  'Compile Error': '🤣 Compile Error',
-  'Wrong Answer': '😢 Wrong Answer',
-  'Time Limit Exceeded': '🤬 Time Limit Exceeded',
-  'Memory Limit Exceeded': '🤔 Memory Limit Exceeded',
-  'Output Limit Exceeded': '😱 Output Limit Exceeded',
-};
-
 const EMOJI = {
   ERROR: '❗',
   CROSS_MARK: '❌',
@@ -80,6 +70,22 @@ const EMOJI = {
   YELLOW_SQUARE: '🟨',
   RED_SQUARE: '🟥',
   BLUE_SQUARE: '🟦',
+  HEART: '💚',
+  ROFL: '🤣',
+  CRY: '😢',
+  SWEAR: '🤬',
+  THINK: '🤔',
+  FEAR: '😱',
+};
+
+const STATUS_MAP = {
+  Accepted: `${EMOJI.HEART} Accepted`,
+  'Runtime Error': `${EMOJI.ROFL} Runtime Error`,
+  'Compile Error': `${EMOJI.ROFL} Compile Error`,
+  'Wrong Answer': `${EMOJI.CRY} Wrong Answer`,
+  'Time Limit Exceeded': `${EMOJI.SWEAR} Time Limit Exceeded`,
+  'Memory Limit Exceeded': `${EMOJI.THINK} Memory Limit Exceeded`,
+  'Output Limit Exceeded': `${EMOJI.FEAR} Output Limit Exceeded`,
 };
 
 const STATUS = {
