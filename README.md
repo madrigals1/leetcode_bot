@@ -29,7 +29,7 @@ You can create your own rating by deploying this project on your machine!!!
 
 ### Start
 
-Starting page that contains links to all other actions
+Starting page that contains links to all other actions.
 
 | Name | Start |
 | --- | --- |
@@ -41,31 +41,31 @@ Starting page that contains links to all other actions
 
 | Request | Response |
 | --- | --- |
-| `/start` | ![Start](https://i.imgur.com/NTsU0Oa.png) | 
+| `/start` | ![Start](https://i.imgur.com/fxH0iad.png) | 
 
 ---
 
 ### Rating
 
-Prints out rating of Users and buttons leading to Users' profile.
+Prints out rating of Users.
 
 | Name | Rating |
 | --- | --- |
 | Arguments | - |
 | Telegram | Yes |
-| Discord | Limited |
-| Slack | Limited |
+| Discord | Yes |
+| Slack | Yes |
 | Admin | No |
 
 | Request | Response |
 | --- | --- |
-| `/rating` | ![Rating](https://i.imgur.com/G3yLVoG.png) |
+| `/rating` | ![Rating](https://i.imgur.com/GM26BLT.png) |
 
 ---
 
 ### Profile
 
-Prints data of specific User, that inclues:
+Prints data of Users, that inclues:
 - User's real name
 - Link, that leads to User's profile in LeetCode
 - Amount of solved problems in different levels of difficulty
@@ -80,6 +80,7 @@ Prints data of specific User, that inclues:
 
 | Request | Response |
 | --- | --- |
+| `/profile` | ![Profile](https://i.imgur.com/ui2FvMu.png) |
 | `/profile username` | ![Profile username](https://i.imgur.com/JGdSsNb.png) | 
 
 ---

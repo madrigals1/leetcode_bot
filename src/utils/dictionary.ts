@@ -101,6 +101,7 @@ const BOT_MESSAGES = {
   USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions Menu`,
   USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars Menu`,
   USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove Menu`,
+  USER_LIST_PROFILES: `${constants.EMOJI.PERSON} Profiles`,
 
   // DATABASE
   DATABASE_WILL_BE_CLEARED: `${constants.EMOJI.WASTEBASKET} Database will be cleared`,
@@ -114,7 +115,8 @@ const BOT_MESSAGES = {
 <b>Main commands:</b>
 <b><i>${prefix}start</i></b> - Starting Page
 <b><i>${prefix}rating</i></b> - Overall rating of Users
-<b><i>${prefix}refresh</i></b> - Manual refresh of Database 
+<b><i>${prefix}refresh</i></b> - Manual refresh of Database
+<b><i>${prefix}profile</i></b> - Profiles of Users
 <b><i>${prefix}submissions</i></b> - Submissions for Users
 <b><i>${prefix}avatar</i></b> - Avatars for Users
 
