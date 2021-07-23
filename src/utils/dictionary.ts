@@ -143,10 +143,10 @@ const BOT_MESSAGES = {
     return `<b>${user.name || 'No name'}</b> - <b>${user.link}</b>
 
 Solved Problems:
-${constants.EMOJI.GREEN_SQUARE} Easy - <b>${easy.count}</b>
-${constants.EMOJI.YELLOW_SQUARE} Medium - <b>${medium.count}</b>
-${constants.EMOJI.RED_SQUARE} Hard - <b>${hard.count}</b>
-${constants.EMOJI.BLUE_SQUARE} All - <b>${all.count} / ${user.all}</b>`;
+${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${easy.count}</b>
+${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${medium.count}</b>
+${constants.EMOJI.RED_CIRCLE} Hard - <b>${hard.count}</b>
+${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
   },
   RATING_TEXT(users: User[]): string {
     if (!users || users.length === 0) {
