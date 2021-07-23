@@ -221,12 +221,12 @@ const actions = [
       }
 
       const submissionsButtion: ReplyMarkupCommand = {
-        text: `${constants.EMOJI.SCROLL} Submissions`,
+        text: `${constants.EMOJI.CLIPBOARD} Submissions`,
         action: `/submissions ${username}`,
       };
 
       const avatarButton: ReplyMarkupCommand = {
-        text: `${constants.EMOJI.PEOPLE} Avatar`,
+        text: `${constants.EMOJI.PERSON} Avatar`,
         action: `/avatar ${username}`,
       };
 

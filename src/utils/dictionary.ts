@@ -98,8 +98,8 @@ const BOT_MESSAGES = {
   USERNAME_NOT_ADDED_USER_LIMIT(username: string, userLimit: number): string {
     return `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`;
   },
-  USER_LIST_SUBMISSIONS: `${constants.EMOJI.CARD_FILE_BOX} Submissions Menu`,
-  USER_LIST_AVATARS: `${constants.EMOJI.PEOPLE} Avatars Menu`,
+  USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions Menu`,
+  USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars Menu`,
   USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove Menu`,
 
   // DATABASE
@@ -143,10 +143,10 @@ const BOT_MESSAGES = {
     return `<b>${user.name || 'No name'}</b> - <b>${user.link}</b>
 
 Solved Problems:
-${constants.EMOJI.GREEN_SQUARE} Easy - <b>${easy.count}</b>
-${constants.EMOJI.YELLOW_SQUARE} Medium - <b>${medium.count}</b>
-${constants.EMOJI.RED_SQUARE} Hard - <b>${hard.count}</b>
-${constants.EMOJI.BLUE_SQUARE} All - <b>${all.count} / ${user.all}</b>`;
+${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${easy.count}</b>
+${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${medium.count}</b>
+${constants.EMOJI.RED_CIRCLE} Hard - <b>${hard.count}</b>
+${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
   },
   RATING_TEXT(users: User[]): string {
     if (!users || users.length === 0) {
