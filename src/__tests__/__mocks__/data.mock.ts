@@ -8,6 +8,7 @@ import { MockDatabaseInterface } from './models/mockData.model';
 
 export const users: User[] = [
   {
+    exists: true,
     name: 'Random User Name',
     link: getLeetcodeUsernameLink('random_username'),
     username: 'random_username',
@@ -82,6 +83,7 @@ export const users: User[] = [
     },
   },
   {
+    exists: true,
     name: 'Random User Name 2',
     link: getLeetcodeUsernameLink('random_username_2'),
     username: 'random_username_2',

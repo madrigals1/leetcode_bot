@@ -79,7 +79,7 @@ class Cache {
         const userData = await this.getLeetcodeDataFromUsername(username);
 
         // If UserData was returned from Backend, replace User in cache
-        if (userData) {
+        if (userData.exists) {
           this.addOrReplaceUserInCache(username, userData);
           log(dictionary.SERVER_MESSAGES.USERNAME_WAS_REFRESHED(username));
         } else {
@@ -142,7 +142,7 @@ class Cache {
       // Load data from LeetCode by Username
       const userData = await this.getLeetcodeDataFromUsername(username);
 
-      if (userData) {
+      if (userData.exists) {
         this.users.push(userData);
 
         // Sort objects after adding
