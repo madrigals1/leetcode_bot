@@ -347,8 +347,28 @@ const actions = [
       const { args, reply } = context;
 
       // If incorrect number of args provided, return incorrect input
-      if (args.length !== 2) {
+      if (args.length > 2) {
         return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
+      }
+
+      if (args.length === 0) {
+        context.options.reply_markup = generateReplyMarkup({
+          buttons: createButtonsFromUsers({ action: 'compare' }),
+          isClosable: true,
+        });
+
+        return reply(dictionary.BOT_MESSAGES.SELECT_LEFT_USER, context);
+      }
+
+      if (args.length === 1) {
+        const username: string = args[0].toLowerCase();
+
+        context.options.reply_markup = generateReplyMarkup({
+          buttons: createButtonsFromUsers({ action: `compare ${username}` }),
+          isClosable: true,
+        });
+
+        return reply(dictionary.BOT_MESSAGES.SELECT_RIGHT_USER, context);
       }
 
       // Get Users from args

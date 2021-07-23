@@ -156,7 +156,9 @@ Creates small comparison visualization between 2 users using [VizAPI](https://gi
 
 | Request | Response |
 | --- | --- |
-| `/compare username1 username2` | ![Compare](https://i.imgur.com/UlYzT2n.png) |
+| `/compare` | ![Compare](https://i.imgur.com/vsvynWh.png) |
+| `/compare username1` | ![Compare username1](https://i.imgur.com/oZqdnKn.png) |
+| `/compare username1 username2` | ![Compare username1 username2](https://i.imgur.com/bUPH7Df.png) |
 
 ---
 
