@@ -40,6 +40,7 @@ class Discord {
         const action = actions[i];
         if (action.name === command) {
           const context: Context = {
+            text: args.join(' '),
             args,
             reply,
             channel,

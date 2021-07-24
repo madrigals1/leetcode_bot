@@ -32,6 +32,7 @@ class Slack {
 
         // Create context for message
         const context: Context = {
+          text: command.text,
           args,
           reply,
           channel: {

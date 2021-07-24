@@ -15,7 +15,8 @@ export interface Channel {
 }
 
 export interface Context {
-  args: string[];
+  text: string;
+  args?: string[];
   reply: (message: string, context: Context) => Promise<string>;
   channel?: DiscordBot.TextChannel
     | DiscordBot.DMChannel
