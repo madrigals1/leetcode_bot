@@ -3,7 +3,7 @@ import * as DiscordBot from 'discord.js';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
 import { log } from '../../utils/helper';
-import actions from '../actions';
+import Actions, { registeredActions } from '../actions';
 import { Context } from '../models';
 
 import createBot from './bot';
@@ -36,11 +36,11 @@ class Discord {
       args = args.splice(1);
 
       // Find appropriate action by name and execute it
-      for (let i = 0; i < actions.length; i++) {
-        const action = actions[i];
-        if (action.name === command) {
+      for (let i = 0; i < registeredActions.length; i++) {
+        const { name, property } = registeredActions[i];
+        if (name === command) {
           const context: Context = {
-            text: args.join(' '),
+            text: content,
             args,
             reply,
             channel,
@@ -49,7 +49,7 @@ class Discord {
             options: {},
           };
           channel.startTyping().then();
-          action.execute(context);
+          Actions[property](context);
           channel.stopTyping();
 
           // Stop searching after action is found

@@ -1,11 +1,10 @@
 import { App } from '@slack/bolt';
 
-import Actions from '../actions';
+import Actions, { registeredActions } from '../actions';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
-import { registeredActions } from '../decorators';
 
 import { getArgs, reply } from './utils';
 import createBot from './bot';

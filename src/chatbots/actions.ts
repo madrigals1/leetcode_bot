@@ -13,6 +13,8 @@ import {
   createButtonsFromUsers,
 } from './utils';
 
+export const registeredActions = [];
+
 export default class Actions {
   @action('start', [0])
   static start(context: Context): string {

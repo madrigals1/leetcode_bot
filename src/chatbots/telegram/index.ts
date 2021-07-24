@@ -4,11 +4,10 @@ process.env.NTBA_FIX_319 = '1';
 import * as TelegramBot from 'node-telegram-bot-api';
 
 import { log } from '../../utils/helper';
-import { registeredActions } from '../decorators';
+import Actions, { registeredActions } from '../actions';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
 import { Options, Context } from '../models';
-import Actions from '../actions';
 
 import { getArgs, reply } from './utils';
 
