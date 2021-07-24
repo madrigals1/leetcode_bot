@@ -40,9 +40,3 @@ export function reply(message: string, context: Context): Promise<string> {
     resolve('Success');
   });
 }
-
-export function getArgs(message: string): string[] {
-  if (message === '') return [];
-
-  return message.split(' ');
-}

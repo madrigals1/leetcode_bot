@@ -1,5 +1,6 @@
 import { Context } from '../models';
 
+// eslint-disable-next-line import/prefer-default-export
 export function reply(message: string, context: Context) {
   const {
     chatId, options, bot, photoUrl,
@@ -10,14 +11,4 @@ export function reply(message: string, context: Context) {
   }
 
   return bot.sendMessage(chatId, message, options);
-}
-
-export function getArgs(message: string): string[] {
-  // Get all args from message
-  const args = message.trim().split(' ');
-
-  // Remove action name
-  args.shift();
-
-  return args;
 }

@@ -26,14 +26,13 @@ class Discord {
       if (!content.startsWith(constants.DISCORD.PREFIX) || author.bot) return;
 
       // Turn "!rating username arg1" into ["!rating", "username", "arg1"]
-      let args: string[] = content
+      const args: string[] = content
         .slice(constants.DISCORD.PREFIX.length)
         .trim()
         .split(' ');
 
       // Get command and arguments from args list
       const command: string = args[0];
-      args = args.splice(1);
 
       // Find appropriate action by name and execute it
       for (let i = 0; i < registeredActions.length; i++) {
@@ -41,7 +40,6 @@ class Discord {
         if (name === command) {
           const context: Context = {
             text: content,
-            args,
             reply,
             channel,
             provider: constants.DISCORD.NAME,

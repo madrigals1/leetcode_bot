@@ -6,7 +6,7 @@ import dictionary from '../../utils/dictionary';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
 
-import { getArgs, reply } from './utils';
+import { reply } from './utils';
 import createBot from './bot';
 
 class Slack {
@@ -27,13 +27,9 @@ class Slack {
     // Add regular actions
     registeredActions.forEach(({ name, property }) => {
       this.bot.command(name, async ({ command, ack, say }) => {
-        // Get args from message
-        const args: string[] = getArgs(command.text);
-
         // Create context for message
         const context: Context = {
           text: command.text,
-          args,
           reply,
           channel: {
             send: say,

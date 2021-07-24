@@ -9,7 +9,7 @@ import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
 import { Options, Context } from '../models';
 
-import { getArgs, reply } from './utils';
+import { reply } from './utils';
 
 class Telegram {
   token: string = constants.TELEGRAM.TOKEN;
@@ -20,11 +20,9 @@ class Telegram {
 
   getContext(message, text: string = null): Context {
     const textCorrect = text || message.text;
-    const args = getArgs(textCorrect);
 
     return {
       text: textCorrect,
-      args,
       reply,
       provider: constants.TELEGRAM.NAME,
       chatId: message.chat.id,
