@@ -6,7 +6,8 @@
         "module": "CommonJS",
         "sourceMap": true,
         "types": ["node", "jest"],
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true
     },
     "include": ["./src/**/*"],
     "exclude": ["./src/__tests__"]
