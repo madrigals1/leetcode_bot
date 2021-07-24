@@ -3,17 +3,9 @@
 import dictionary from '../../utils/dictionary';
 import { Context } from '../models';
 
+import getArgs from './utils';
+
 export const registeredActions = [];
-
-export function getArgs(message: string): string[] {
-  // Get all args from message
-  const args = message.trim().split(' ');
-
-  // Remove action name
-  args.shift();
-
-  return args;
-}
 
 export function action(name: string, argsCount: number[]): any {
   return function (
@@ -38,7 +30,7 @@ export function action(name: string, argsCount: number[]): any {
         return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, updatedContext);
       }
 
-      const message = await originalMethod.apply(this, updatedContext);
+      const message = await originalMethod(updatedContext);
       return reply(message, updatedContext);
     };
 

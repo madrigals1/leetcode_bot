@@ -8,7 +8,7 @@ import { registeredActions } from '../decorators';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
 import { Options, Context } from '../models';
-import Actions from '../actionManager';
+import Actions from '../actions';
 
 import { getArgs, reply } from './utils';
 
