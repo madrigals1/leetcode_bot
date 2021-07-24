@@ -21,7 +21,7 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.WELCOME_TEXT(context.prefix);
   }
 
-  @action('add', [1])
+  @action('add', '+')
   static async add(context: Context): Promise<string> {
     const { args } = context;
 

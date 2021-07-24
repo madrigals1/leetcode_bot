@@ -14,7 +14,19 @@ export function getArgs(message: string): string[] {
   return args;
 }
 
-export function action(name: string, argsCount: number[]): any {
+export function isValidArgsCount(
+  args: string[], argsCount: number[] | string,
+): boolean {
+  if (typeof argsCount === 'object') return argsCount.includes(args.length);
+
+  if (argsCount === '+') return args.length > 1;
+
+  if (argsCount === '?') return true;
+
+  throw new Error(`Invalid argument argsCount: ${argsCount}`);
+}
+
+export function action(name: string, argsCount: number[] | string): any {
   return function (
     target: any,
     propertyKey: string,
@@ -33,7 +45,7 @@ export function action(name: string, argsCount: number[]): any {
       const updatedContext = { ...context, args };
 
       // If inccorrect args amount was sent
-      if (!argsCount.includes(args.length)) {
+      if (!isValidArgsCount(args, argsCount)) {
         return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, updatedContext);
       }
 
