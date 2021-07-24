@@ -22,9 +22,7 @@ export default class Actions {
   }
 
   @action('add', '+')
-  static async add(context: Context): Promise<string> {
-    const { args } = context;
-
+  static async add(context: Context, args: string[]): Promise<string> {
     // Variable to store text to return back to chat
     let userDetails = '';
 
@@ -44,9 +42,11 @@ export default class Actions {
   }
 
   @action('refresh', [0])
-  static async refresh(context: Context): Promise<string> {
-    const { reply } = context;
-
+  static async refresh(
+    context: Context,
+    args: string[],
+    reply: (message: string, _: Context) => Promise<string>,
+  ): Promise<string> {
     // Force refresh
     Cache.database.isRefreshing = false;
 
@@ -57,9 +57,11 @@ export default class Actions {
   }
 
   @action('remove', [1, 2])
-  static async remove(context: Context): Promise<string> {
-    const { args, reply } = context;
-
+  static async remove(
+    context: Context,
+    args: string[],
+    reply: (message: string, _: Context) => Promise<string>,
+  ): Promise<string> {
     // Handle case with /remove <master_password>
     if (args.length === 1) {
       // Get password from message
@@ -100,9 +102,11 @@ export default class Actions {
   }
 
   @action('clear', [1])
-  static async clear(context: Context): Promise<string> {
-    const { args, reply } = context;
-
+  static async clear(
+    context: Context,
+    args: string[],
+    reply: (message: string, _: Context) => Promise<string>,
+  ): Promise<string> {
     // Get password from message
     const password: string = args[0];
 
@@ -121,9 +125,7 @@ export default class Actions {
   }
 
   @action('stats', [1])
-  static async stats(context: Context): Promise<string> {
-    const { args } = context;
-
+  static async stats(context: Context, args: string[]): Promise<string> {
     // Get password from message
     const password: string = args[0];
 
@@ -137,14 +139,12 @@ export default class Actions {
   }
 
   @action('rating', [0])
-  static async rating(context: Context): Promise<string> {
+  static async rating(): Promise<string> {
     return dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers());
   }
 
   @action('profile', [0, 1])
-  static async profile(context: Context): Promise<string> {
-    const { args } = context;
-
+  static async profile(context: Context, args: string[]): Promise<string> {
     if (args.length === 0) {
       // Add user buttons
       context.options.reply_markup = generateReplyMarkup({
@@ -184,9 +184,7 @@ export default class Actions {
   }
 
   @action('avatar', [0, 1])
-  static async avatar(context: Context): Promise<string> {
-    const { args } = context;
-
+  static async avatar(context: Context, args: string[]): Promise<string> {
     // If 1 User was sent
     if (args.length === 1) {
       // Get User from args
@@ -213,9 +211,7 @@ export default class Actions {
   }
 
   @action('submissions', [0, 1])
-  static async submissions(context: Context): Promise<string> {
-    const { args } = context;
-
+  static async submissions(context: Context, args: string[]): Promise<string> {
     // If 1 User was sent
     if (args.length === 1) {
       // Get User from args
@@ -258,9 +254,8 @@ export default class Actions {
   }
 
   @action('compare', [0, 1, 2])
-  static async compare(context: Context): Promise<string> {
-    const { args } = context;
-
+  static async compare(context: Context, args: string[]): Promise<string> {
+    // Getting left User
     if (args.length === 0) {
       context.options.reply_markup = generateReplyMarkup({
         buttons: createButtonsFromUsers({ action: 'compare' }),
@@ -270,6 +265,7 @@ export default class Actions {
       return dictionary.BOT_MESSAGES.SELECT_LEFT_USER;
     }
 
+    // Getting right User
     if (args.length === 1) {
       const username: string = args[0].toLowerCase();
 

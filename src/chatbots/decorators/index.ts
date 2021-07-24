@@ -49,7 +49,7 @@ export function action(name: string, argsCount: number[] | string): any {
         return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, updatedContext);
       }
 
-      const message = await originalMethod(updatedContext);
+      const message = await originalMethod(updatedContext, args, reply);
       return reply(message, updatedContext);
     };
 
