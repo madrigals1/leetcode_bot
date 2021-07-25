@@ -1,12 +1,13 @@
 import { Context } from '../../../chatbots/models';
 import Actions, { registeredActions } from '../../../chatbots/actions';
+import constants from '../../../utils/constants';
 
 export default class Mockbot {
   output: string[] = [];
 
-  name = 'Mockbot';
+  name = constants.MOCKBOT.NAME;
 
-  prefix = '/';
+  prefix = constants.MOCKBOT.PREFIX;
 
   gus = 'Man';
 

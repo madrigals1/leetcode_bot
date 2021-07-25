@@ -124,9 +124,15 @@ const SLACK = {
   PREFIX: '/',
 };
 
+const MOCKBOT = {
+  NAME: 'mockbot',
+  PREFIX: '/',
+};
+
 const PROVIDERS = [
   TELEGRAM,
   DISCORD,
+  MOCKBOT,
 ];
 
 const MONGO = {
@@ -151,6 +157,7 @@ export default {
   DISCORD,
   TELEGRAM,
   SLACK,
+  MOCKBOT,
   PROVIDERS,
   // Database settings
   DB_PROVIDER,
