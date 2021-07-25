@@ -5,6 +5,8 @@ import constants from '../../../utils/constants';
 export default class Mockbot {
   output: string[] = [];
 
+  context: Context;
+
   name = constants.MOCKBOT.NAME;
 
   prefix = constants.MOCKBOT.PREFIX;
@@ -31,10 +33,15 @@ export default class Mockbot {
       if (name === command) {
         const context: Context = {
           text: message,
-          reply: (msg): Promise<string> => new Promise((resolve) => {
-            this.setOutput(msg);
-            return resolve('');
-          }),
+          reply: (msg: string, ctx: Context): Promise<string> => {
+            const promise: Promise<string> = new Promise((resolve) => {
+              this.setOutput(msg);
+              this.setContext(ctx);
+              return resolve('');
+            });
+
+            return promise;
+          },
           provider: this.name,
           chatId: 123123123,
           prefix: this.prefix,
@@ -62,7 +69,16 @@ export default class Mockbot {
     this.output.push(message);
   }
 
+  setContext(context: Context): void {
+    this.context = context;
+  }
+
+  getContext(): Context {
+    return this.context;
+  }
+
   clear(): void {
     this.output = [];
+    this.context = null;
   }
 }

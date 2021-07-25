@@ -248,3 +248,34 @@ test('chatbots.actions.profile action', async () => {
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
 });
+
+test('chatbots.actions.avatar action', async () => {
+  // Test with correct arguments (all users)
+  await mockbot.send('/avatar');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.USER_LIST_AVATARS);
+  /* TODO: Test buttons */
+
+  // Test with correct arguments (single user)
+  await mockbot.send('/add random_username');
+  await mockbot.send('/avatar random_username');
+
+  const user = Cache.loadUser('random_username');
+  const context = mockbot.getContext();
+
+  expect(context.photoUrl).toEqual(user.profile.userAvatar);
+  expect(mockbot.lastMessage()).toEqual('');
+
+  // Test with incorrect arguments (Username not found)
+  await mockbot.send('/avatar not_found');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND('not_found'));
+
+  // Test with incorrect arguments (argument count)
+  await mockbot.send('/avatar asd asd');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+});
