@@ -34,3 +34,18 @@ export async function mockTableForSubmissions(
     resolve({ link: 'http://random_link' });
   });
 }
+
+export async function mockCompareMenu(
+  leftUser: User, rightUser: User,
+): Promise<TableResponse> {
+  if (!leftUser.name || !rightUser.name) {
+    return {
+      error: 'placeholder',
+      reason: 'placeholder',
+    };
+  }
+
+  return new Promise((resolve) => {
+    resolve({ link: 'http://random_link_compare' });
+  });
+}

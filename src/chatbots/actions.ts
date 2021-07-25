@@ -17,6 +17,7 @@ export const registeredActions = [];
 
 export const vizapiActions = {
   tableForSubmissions,
+  compareMenu,
 };
 
 export default class Actions {
@@ -297,7 +298,9 @@ export default class Actions {
       return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(rightUsername);
     }
 
-    const response: TableResponse = await compareMenu(leftUser, rightUser);
+    const response: TableResponse = (
+      await vizapiActions.compareMenu(leftUser, rightUser)
+    );
 
     // If image was created
     if (response.link) {
