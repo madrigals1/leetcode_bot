@@ -40,7 +40,8 @@ export default class Mockbot {
           options: {},
         };
 
-        Actions[property](context);
+        // eslint-disable-next-line no-await-in-loop
+        await Actions[property](context);
 
         // Stop searching after action is found
         break;
