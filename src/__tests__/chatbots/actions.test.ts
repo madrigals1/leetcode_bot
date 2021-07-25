@@ -64,4 +64,10 @@ test('chatbots.actions.add action', async () => {
   );
 
   expect(mockbot.lastMessage()).toEqual(`User List:\n${message5}${message6}`);
+
+  // Test error cases (incorrect arguments)
+  await mockbot.send('/add');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
 });
