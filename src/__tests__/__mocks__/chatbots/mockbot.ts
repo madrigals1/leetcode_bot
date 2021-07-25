@@ -2,7 +2,7 @@ import { Context } from '../../../chatbots/models';
 import Actions, { registeredActions } from '../../../chatbots/actions';
 
 export default class Mockbot {
-  output: string;
+  output: string[] = [];
 
   name = 'Mockbot';
 
@@ -49,15 +49,19 @@ export default class Mockbot {
     }
   }
 
-  receive(): string {
+  receive(): string[] {
     return this.output;
   }
 
+  lastMessage(): string {
+    return this.output[this.output.length - 1];
+  }
+
   setOutput(message: string): void {
-    this.output = message;
+    this.output.push(message);
   }
 
   clear(): void {
-    this.output = null;
+    this.output = [];
   }
 }

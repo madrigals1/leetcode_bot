@@ -15,14 +15,14 @@ test('chatbots.actions.start action', async () => {
   // Test with correct arguments
   await mockbot.send('/start');
 
-  expect(mockbot.receive()).toEqual(
-    dictionary.BOT_MESSAGES.WELCOME_TEXT(mockbot.prefix),
-  );
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.WELCOME_TEXT(mockbot.prefix));
 
   // Test with incorrect arguments
   await mockbot.send('/start excess_arg');
 
-  expect(mockbot.receive()).toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
 });
 
 test('chatbots.actions.add action', async () => {
@@ -36,7 +36,7 @@ test('chatbots.actions.add action', async () => {
     'random_username_2', Cache.userAmount, Cache.userLimit,
   );
 
-  expect(mockbot.receive()).toEqual(`User List:\n${message1}${message2}`);
+  expect(mockbot.lastMessage()).toEqual(`User List:\n${message1}${message2}`);
 
   // Test error cases (existing username, invalid username)
   await mockbot.send('/add random_username incorrect_username');
@@ -48,7 +48,7 @@ test('chatbots.actions.add action', async () => {
     'incorrect_username',
   );
 
-  expect(mockbot.receive()).toEqual(`User List:\n${message3}${message4}`);
+  expect(mockbot.lastMessage()).toEqual(`User List:\n${message3}${message4}`);
 
   // Test error cases (user limit)
   await Cache.clearUsers();
@@ -63,5 +63,5 @@ test('chatbots.actions.add action', async () => {
     'random_username_2', Cache.userLimit,
   );
 
-  expect(mockbot.receive()).toEqual(`User List:\n${message5}${message6}`);
+  expect(mockbot.lastMessage()).toEqual(`User List:\n${message5}${message6}`);
 });
