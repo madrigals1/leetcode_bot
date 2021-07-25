@@ -128,6 +128,11 @@ test('chatbots.actions.remove action', async () => {
   expect(mockbot.lastMessage())
     .toBe(dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT);
 
+  await mockbot.send('/remove incorrect_password');
+
+  expect(mockbot.lastMessage())
+    .toBe(dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT);
+
   // Test with incorrect arguments (Arguments count)
   await mockbot.send('/remove');
 
