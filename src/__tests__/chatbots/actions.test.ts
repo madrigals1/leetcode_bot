@@ -144,3 +144,36 @@ test('chatbots.actions.remove action', async () => {
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
 });
+
+test('chatbots.actions.clear action', async () => {
+  // Test with correct arguments
+  await mockbot.send('/add random_username random_username_2');
+
+  expect(Cache.users.length).toBe(2);
+
+  await mockbot.send(`/clear ${mockPassword}`);
+
+  expect(Cache.users.length).toBe(0);
+
+  const messages = mockbot.messages(2);
+
+  expect(messages[0]).toEqual(dictionary.BOT_MESSAGES.DATABASE_WILL_BE_CLEARED);
+  expect(messages[1]).toEqual(dictionary.BOT_MESSAGES.DATABASE_WAS_CLEARED);
+
+  // Test with incorrect arguments (incorrect password)
+  await mockbot.send('/clear incorrect_password');
+
+  expect(mockbot.lastMessage())
+    .toBe(dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT);
+
+  // Test with incorrect arguments (argument count)
+  await mockbot.send('/clear');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+
+  await mockbot.send('/clear asd asd');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+});
