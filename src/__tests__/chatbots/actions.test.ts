@@ -202,3 +202,17 @@ test('chatbots.actions.stats action', async () => {
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
 });
+
+test('chatbots.actions.rating action', async () => {
+  // Test with correct arguments
+  await mockbot.send('/rating');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers()));
+
+  // Test with incorrect arguments (argument count)
+  await mockbot.send('/rating asd');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+});
