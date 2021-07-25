@@ -4,28 +4,9 @@ import dictionary from '../../utils/dictionary';
 import { Context } from '../models';
 import { registeredActions } from '../actions';
 
-export function getArgs(message: string): string[] {
-  // Get all args from message
-  const args = message.trim().split(' ');
+import { getArgs, isValidArgsCount } from './utils';
 
-  // Remove action name
-  args.shift();
-
-  return args;
-}
-
-export function isValidArgsCount(
-  args: string[], argsCount: number[] | string,
-): boolean {
-  if (typeof argsCount === 'object') return argsCount.includes(args.length);
-
-  if (argsCount === '+') return args.length > 1;
-
-  if (argsCount === '?') return true;
-
-  throw new Error(`Invalid argument argsCount: ${argsCount}`);
-}
-
+// eslint-disable-next-line import/prefer-default-export
 export function action(name: string, argsCount: number[] | string): any {
   return function (
     target: any,
