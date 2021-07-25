@@ -49,8 +49,8 @@ export default class Mockbot {
     }
   }
 
-  messages(): string[] {
-    return this.output;
+  messages(amount: number = this.output.length): string[] {
+    return this.output.slice(this.output.length - amount, this.output.length);
   }
 
   lastMessage(): string {
