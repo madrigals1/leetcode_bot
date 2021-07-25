@@ -49,7 +49,7 @@ export default class Mockbot {
     }
   }
 
-  receive(): string[] {
+  messages(): string[] {
     return this.output;
   }
 

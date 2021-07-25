@@ -71,3 +71,19 @@ test('chatbots.actions.add action', async () => {
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
 });
+
+test('chatbots.actions.refresh action', async () => {
+  // Test with correct arguments
+  await mockbot.send('/refresh');
+
+  const messages = mockbot.messages();
+
+  expect(messages[0]).toBe(dictionary.BOT_MESSAGES.STARTED_REFRESH);
+  expect(messages[1]).toBe(dictionary.BOT_MESSAGES.IS_REFRESHED);
+
+  // Test with incorrect arguments
+  await mockbot.send('/refresh excess_arg');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+});
