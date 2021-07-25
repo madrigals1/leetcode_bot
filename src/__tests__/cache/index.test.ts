@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
 import Cache from '../../cache';
-import getLeetcodeDataFromUsername from '../__mocks__/utils.mock';
+import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import { users, mockDatabaseData } from '../__mocks__/data.mock';
 import dictionary from '../../utils/dictionary';
@@ -10,7 +10,7 @@ import { CacheResponse } from '../../cache/response.model';
 import { User } from '../../leetcode/models';
 
 Cache.database = new MockDatabaseProvider();
-Cache.getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
+Cache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 Cache.delayTime = 0;
 const mockUser1: User = users[0];
 
@@ -70,7 +70,7 @@ test('cache.index.Cache.addOrReplaceUserInCache method', async () => {
 
   // Replace 1st User with 2nd User and compare data
   const secondUserDataBefore: User = (
-    await getLeetcodeDataFromUsername('random_username_2')
+    await mockGetLeetcodeDataFromUsername('random_username_2')
   );
   Cache.addOrReplaceUserInCache('random_username', secondUserDataBefore);
   const secondUserData: User = Cache.users[0];
@@ -80,7 +80,7 @@ test('cache.index.Cache.addOrReplaceUserInCache method', async () => {
 
   // Replace non-existing User with 1st User (Add)
   const firstUserReaddedBefore: User = (
-    await getLeetcodeDataFromUsername('random_username')
+    await mockGetLeetcodeDataFromUsername('random_username')
   );
   Cache.addOrReplaceUserInCache('unexisting_username', firstUserReaddedBefore);
   const firstUserReaddedAfter: User = Cache.users[1];
@@ -226,7 +226,7 @@ test('cache.index.Cache.addUser method', async () => {
     .toBe('https://example.com/random_link');
   expect(firstUserData.submissions.length).toBe(2);
   const firstUserDataDirect: User = (
-    await getLeetcodeDataFromUsername('random_username')
+    await mockGetLeetcodeDataFromUsername('random_username')
   );
   expect(_.isEqual(firstUserData, firstUserDataDirect)).toBe(true);
 
@@ -320,7 +320,9 @@ test('cache.index.Cache.loadUser method', async () => {
   await Cache.addUser('random_username_2');
 
   // Check if loadUser returns correct data
-  const userData: User = await getLeetcodeDataFromUsername('random_username');
+  const userData: User = (
+    await mockGetLeetcodeDataFromUsername('random_username')
+  );
   const cachedUserData: User = Cache.loadUser('random_username');
   expect(_.isEqual(userData, cachedUserData)).toBe(true);
 

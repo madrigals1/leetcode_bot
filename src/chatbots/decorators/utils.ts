@@ -13,7 +13,7 @@ export function isValidArgsCount(
 ): boolean {
   if (typeof argsCount === 'object') return argsCount.includes(args.length);
 
-  if (argsCount === '+') return args.length > 1;
+  if (argsCount === '+') return args.length > 0;
 
   if (argsCount === '?') return true;
 

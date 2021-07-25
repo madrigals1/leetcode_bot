@@ -15,6 +15,11 @@ import {
 
 export const registeredActions = [];
 
+export const vizapiActions = {
+  tableForSubmissions,
+  compareMenu,
+};
+
 export default class Actions {
   @action('start', [0])
   static start(context: Context): string {
@@ -224,7 +229,9 @@ export default class Actions {
       }
 
       // Create HTML image with Table
-      const response: TableResponse = await tableForSubmissions(user);
+      const response: TableResponse = (
+        await vizapiActions.tableForSubmissions(user)
+      );
 
       // If image was created
       if (response.link) {
@@ -291,7 +298,9 @@ export default class Actions {
       return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(rightUsername);
     }
 
-    const response: TableResponse = await compareMenu(leftUser, rightUser);
+    const response: TableResponse = (
+      await vizapiActions.compareMenu(leftUser, rightUser)
+    );
 
     // If image was created
     if (response.link) {
