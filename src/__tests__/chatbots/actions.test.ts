@@ -1,5 +1,5 @@
-import Mockbot from '../../__mocks__/chatbots/mockbot';
-import dictionary from '../../../utils/dictionary';
+import Mockbot from '../__mocks__/chatbots/mockbot';
+import dictionary from '../../utils/dictionary';
 
 const mockbot = new Mockbot();
 
