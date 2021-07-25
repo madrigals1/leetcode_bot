@@ -177,3 +177,28 @@ test('chatbots.actions.clear action', async () => {
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
 });
+
+test('chatbots.actions.stats action', async () => {
+  // Test with correct arguments
+  await mockbot.send(`/stats ${mockPassword}`);
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.STATS_TEXT(mockbot.name, Cache));
+
+  // Test with incorrect arguments (incorrect password)
+  await mockbot.send('/stats incorrect_password');
+
+  expect(mockbot.lastMessage())
+    .toBe(dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT);
+
+  // Test with incorrect arguments (argument count)
+  await mockbot.send('/stats');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+
+  await mockbot.send('/stats asd asd');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+});
