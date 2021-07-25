@@ -216,3 +216,35 @@ test('chatbots.actions.rating action', async () => {
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
 });
+
+test('chatbots.actions.profile action', async () => {
+  // Test with correct arguments (all users)
+  await mockbot.send('/profile');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.USER_LIST_PROFILES);
+  /* TODO: Test buttons */
+
+  // Test with correct arguments (single user)
+  await mockbot.send('/add random_username');
+
+  await mockbot.send('/profile random_username');
+
+  const user = Cache.loadUser('random_username');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.USER_TEXT(user));
+  /* TODO: Test buttons */
+
+  // Test with incorrect arguments (Username not found)
+  await mockbot.send('/profile not_found');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND('not_found'));
+
+  // Test with incorrect arguments (argument count)
+  await mockbot.send('/profile asd asd');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+});

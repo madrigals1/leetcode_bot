@@ -72,6 +72,21 @@ export const users: User[] = [
           difficulty: 'Easy',
           submissions: 123,
         },
+        {
+          count: 2321,
+          difficulty: 'Medium',
+          submissions: 341,
+        },
+        {
+          count: 2231,
+          difficulty: 'Hard',
+          submissions: 312,
+        },
+        {
+          count: 12000,
+          difficulty: 'All',
+          submissions: 1000,
+        },
       ],
       totalSubmissionNum: [
         {
@@ -143,9 +158,24 @@ export const users: User[] = [
     submitStats: {
       acSubmissionNum: [
         {
-          count: 12312,
+          count: 12315,
           difficulty: 'Easy',
-          submissions: 123,
+          submissions: 125,
+        },
+        {
+          count: 2325,
+          difficulty: 'Medium',
+          submissions: 345,
+        },
+        {
+          count: 2235,
+          difficulty: 'Hard',
+          submissions: 315,
+        },
+        {
+          count: 12005,
+          difficulty: 'All',
+          submissions: 1005,
         },
       ],
       totalSubmissionNum: [
