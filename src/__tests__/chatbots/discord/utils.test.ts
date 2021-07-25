@@ -31,6 +31,7 @@ test('chatbots.discord.utils.reply function', async () => {
     {
       message: '<b>Message 1</b>',
       context: {
+        text: 'asd asd asd',
         channel: {
           send(message: string, options: Options = {}) {
             mockDiscordInstances[0].formattedMessage = message;
@@ -38,7 +39,6 @@ test('chatbots.discord.utils.reply function', async () => {
           },
         },
         photoUrl: 'random_url',
-        args: ['asd', 'asd', 'asd'],
         reply: () => new Promise(() => 'asd'),
         provider: 'Random',
         prefix: '!',
@@ -50,13 +50,13 @@ test('chatbots.discord.utils.reply function', async () => {
     {
       message: '<i>Message 2</i>',
       context: {
+        text: 'asd asd asd',
         channel: {
           send(message: string, options: Options = {}) {
             mockDiscordInstances[1].formattedMessage = message;
             mockDiscordInstances[1].options = options;
           },
         },
-        args: ['asd', 'asd', 'asd'],
         reply: () => new Promise(() => 'asd'),
         provider: 'Random',
         prefix: '!',
@@ -68,8 +68,8 @@ test('chatbots.discord.utils.reply function', async () => {
     {
       message: '<i>Message 3</i>',
       context: {
+        text: 'asd asd asd',
         photoUrl: 'random_url_3',
-        args: ['asd', 'asd', 'asd'],
         reply: () => new Promise(() => 'asd'),
         provider: 'Random',
         prefix: '!',
