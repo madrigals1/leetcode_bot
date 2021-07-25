@@ -3,7 +3,7 @@ import * as DiscordBot from 'discord.js';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
 import { log } from '../../utils/helper';
-import actions from '../actions';
+import Actions, { registeredActions } from '../actions';
 import { Context } from '../models';
 
 import createBot from './bot';
@@ -26,21 +26,20 @@ class Discord {
       if (!content.startsWith(constants.DISCORD.PREFIX) || author.bot) return;
 
       // Turn "!rating username arg1" into ["!rating", "username", "arg1"]
-      let args: string[] = content
+      const args: string[] = content
         .slice(constants.DISCORD.PREFIX.length)
         .trim()
         .split(' ');
 
       // Get command and arguments from args list
       const command: string = args[0];
-      args = args.splice(1);
 
       // Find appropriate action by name and execute it
-      for (let i = 0; i < actions.length; i++) {
-        const action = actions[i];
-        if (action.name === command) {
+      for (let i = 0; i < registeredActions.length; i++) {
+        const { name, property } = registeredActions[i];
+        if (name === command) {
           const context: Context = {
-            args,
+            text: content,
             reply,
             channel,
             provider: constants.DISCORD.NAME,
@@ -48,7 +47,7 @@ class Discord {
             options: {},
           };
           channel.startTyping().then();
-          action.execute(context);
+          Actions[property](context);
           channel.stopTyping();
 
           // Stop searching after action is found

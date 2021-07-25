@@ -1,12 +1,12 @@
 import { App } from '@slack/bolt';
 
-import actions from '../actions';
+import Actions, { registeredActions } from '../actions';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
 
-import { getArgs, reply } from './utils';
+import { reply } from './utils';
 import createBot from './bot';
 
 class Slack {
@@ -25,14 +25,11 @@ class Slack {
     await this.bot.start();
 
     // Add regular actions
-    actions.forEach((action) => {
-      this.bot.command(`/${action.name}`, async ({ command, ack, say }) => {
-        // Get args from message
-        const args: string[] = getArgs(command.text);
-
+    registeredActions.forEach(({ name, property }) => {
+      this.bot.command(name, async ({ command, ack, say }) => {
         // Create context for message
         const context: Context = {
-          args,
+          text: command.text,
           reply,
           channel: {
             send: say,
@@ -44,7 +41,7 @@ class Slack {
 
         await ack();
 
-        action.execute(context);
+        Actions[property](context);
       });
     });
 
