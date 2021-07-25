@@ -1,13 +1,20 @@
+import * as _ from 'lodash';
+
 import Mockbot from '../__mocks__/chatbots/mockbot';
 import dictionary from '../../utils/dictionary';
 import Cache from '../../cache';
-import getLeetcodeDataFromUsername from '../__mocks__/utils.mock';
+import {
+  mockGetLeetcodeDataFromUsername, mockTableForSubmissions,
+} from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import constants from '../../utils/constants';
+import { vizapiActions } from '../../chatbots/actions';
+import { tableForSubmissions } from '../../chatbots/utils';
+import users from '../__mocks__/data.mock';
 
 const mockbot = new Mockbot();
 Cache.database = new MockDatabaseProvider();
-Cache.getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
+Cache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 Cache.delayTime = 0;
 
 const mockPassword = 'random_password';
@@ -17,6 +24,7 @@ beforeEach(() => {
   mockbot.clear();
   Cache.clearUsers();
   Cache.userLimit = parseInt(constants.USER_AMOUNT_LIMIT, 10);
+  vizapiActions.tableForSubmissions = tableForSubmissions;
 });
 
 test('chatbots.actions.start action', async () => {
@@ -275,6 +283,67 @@ test('chatbots.actions.avatar action', async () => {
 
   // Test with incorrect arguments (argument count)
   await mockbot.send('/avatar asd asd');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+});
+
+test('chatbots.actions.submissions action', async () => {
+  // Test with correct arguments (all users)
+  await mockbot.send('/submissions');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.USER_LIST_SUBMISSIONS);
+  /* TODO: Test buttons */
+
+  // Test with correct arguments (single user)
+  await mockbot.send('/add random_username');
+
+  vizapiActions.tableForSubmissions = mockTableForSubmissions;
+
+  await mockbot.send('/submissions random_username');
+
+  const context = mockbot.getContext();
+
+  expect(context.photoUrl).toEqual('http://random_link');
+  expect(mockbot.lastMessage()).toEqual('');
+
+  // Test with incorrect arguments (Username not found)
+  await mockbot.send('/submissions not_found');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND('not_found'));
+
+  // Test with incorrect arguments (User has no submissions)
+  const newUser = _.cloneDeep(Cache.users[0]);
+  newUser.username = 'clone_username';
+  newUser.submitStats.acSubmissionNum = [];
+  users.push(newUser);
+  await mockbot.send('/add clone_username');
+
+  await mockbot.send('/submissions clone_username');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.USER_NO_SUBMISSIONS('clone_username'));
+
+  users.pop();
+
+  // Test with incorrect arguments (Error on the server)
+  const newUser2 = _.cloneDeep(Cache.users[0]);
+  newUser2.username = 'clone_username_2';
+  newUser2.submitStats = null;
+  users.push(newUser2);
+  await mockbot.send('/add clone_username_2');
+
+  await mockbot.send('/submissions clone_username_2');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.ERROR_ON_THE_SERVER);
+
+  users.pop();
+
+  // Test with incorrect arguments (argument count)
+  await mockbot.send('/submissions asd asd');
 
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);

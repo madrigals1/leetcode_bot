@@ -15,6 +15,10 @@ import {
 
 export const registeredActions = [];
 
+export const vizapiActions = {
+  tableForSubmissions,
+};
+
 export default class Actions {
   @action('start', [0])
   static start(context: Context): string {
@@ -224,7 +228,9 @@ export default class Actions {
       }
 
       // Create HTML image with Table
-      const response: TableResponse = await tableForSubmissions(user);
+      const response: TableResponse = (
+        await vizapiActions.tableForSubmissions(user)
+      );
 
       // If image was created
       if (response.link) {
