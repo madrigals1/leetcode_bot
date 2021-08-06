@@ -1,5 +1,5 @@
 export interface ActionContext {
-  name?: string,
-  argsCount?: number[] | string,
+  name: string,
+  argsCount: number[] | string,
   password?: string,
 }
