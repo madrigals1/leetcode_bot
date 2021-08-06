@@ -21,12 +21,12 @@ export const vizapiActions = {
 };
 
 export default class Actions {
-  @action('start', [0])
+  @action({ name: 'start', argsCount: [0] })
   static start(context: Context): string {
     return dictionary.BOT_MESSAGES.WELCOME_TEXT(context.prefix);
   }
 
-  @action('add', '+')
+  @action({ name: 'add', argsCount: '+' })
   static async add(context: Context, args: string[]): Promise<string> {
     // Variable to store text to return back to chat
     let userDetails = '';
@@ -46,7 +46,7 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.USER_LIST(userDetails);
   }
 
-  @action('refresh', [0])
+  @action({ name: 'refresh', argsCount: [0] })
   static async refresh(
     context: Context,
     args: string[],
@@ -61,7 +61,7 @@ export default class Actions {
     return result.detail;
   }
 
-  @action('remove', [1, 2])
+  @action({ name: 'remove', argsCount: [1, 2] })
   static async remove(
     context: Context,
     args: string[],
@@ -106,7 +106,7 @@ export default class Actions {
     return result.detail;
   }
 
-  @action('clear', [1])
+  @action({ name: 'clear', argsCount: [1] })
   static async clear(
     context: Context,
     args: string[],
@@ -129,7 +129,7 @@ export default class Actions {
     return result.detail;
   }
 
-  @action('stats', [1])
+  @action({ name: 'stats', argsCount: [1] })
   static async stats(context: Context, args: string[]): Promise<string> {
     // Get password from message
     const password: string = args[0];
@@ -143,12 +143,12 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.STATS_TEXT(context.provider, Cache);
   }
 
-  @action('rating', [0])
+  @action({ name: 'rating', argsCount: [0] })
   static async rating(): Promise<string> {
     return dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers());
   }
 
-  @action('profile', [0, 1])
+  @action({ name: 'profile', argsCount: [0, 1] })
   static async profile(context: Context, args: string[]): Promise<string> {
     if (args.length === 0) {
       // Add user buttons
@@ -188,7 +188,7 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.USER_TEXT(user);
   }
 
-  @action('avatar', [0, 1])
+  @action({ name: 'avatar', argsCount: [0, 1] })
   static async avatar(context: Context, args: string[]): Promise<string> {
     // If 1 User was sent
     if (args.length === 1) {
@@ -215,7 +215,7 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.USER_LIST_AVATARS;
   }
 
-  @action('submissions', [0, 1])
+  @action({ name: 'submissions', argsCount: [0, 1] })
   static async submissions(context: Context, args: string[]): Promise<string> {
     // If 1 User was sent
     if (args.length === 1) {
@@ -260,7 +260,7 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.USER_LIST_SUBMISSIONS;
   }
 
-  @action('compare', [0, 1, 2])
+  @action({ name: 'compare', argsCount: [0, 1, 2] })
   static async compare(context: Context, args: string[]): Promise<string> {
     // Getting left User
     if (args.length === 0) {

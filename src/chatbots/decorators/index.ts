@@ -4,15 +4,18 @@ import dictionary from '../../utils/dictionary';
 import { Context } from '../models';
 import { registeredActions } from '../actions';
 
+import { ActionContext } from './models';
 import { getArgs, isValidArgsCount } from './utils';
 
 // eslint-disable-next-line import/prefer-default-export
-export function action(name: string, argsCount: number[] | string): any {
+export function action(actionContext: ActionContext): any {
   return function (
     target: any,
     propertyKey: string,
     descriptor: PropertyDescriptor,
   ): PropertyDescriptor {
+    const { name, argsCount } = actionContext;
+
     const originalMethod = descriptor.value;
 
     // eslint-disable-next-line no-param-reassign
