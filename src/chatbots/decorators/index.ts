@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import dictionary from '../../utils/dictionary';
 import { Context } from '../models';
 import { registeredActions } from '../actions';
@@ -8,9 +7,13 @@ import { ActionContext } from './models';
 import { getArgs, isValidArgsCount } from './utils';
 
 // eslint-disable-next-line import/prefer-default-export
-export function action(actionContext: ActionContext): any {
+export function action(actionContext: ActionContext): (
+  target: unknown,
+  propertyKey: string,
+  descriptor: PropertyDescriptor,
+) => PropertyDescriptor {
   return (
-    target: any,
+    target: unknown,
     propertyKey: string,
     descriptor: PropertyDescriptor,
   ) => {
