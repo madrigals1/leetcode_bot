@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable func-names */
 import dictionary from '../../utils/dictionary';
 import { Context } from '../models';
 import { registeredActions } from '../actions';
@@ -10,17 +9,17 @@ import { getArgs, isValidArgsCount } from './utils';
 
 // eslint-disable-next-line import/prefer-default-export
 export function action(actionContext: ActionContext): any {
-  return function (
+  return (
     target: any,
     propertyKey: string,
     descriptor: PropertyDescriptor,
-  ): PropertyDescriptor {
+  ) => {
     const { name, argsCount, isAdmin } = actionContext;
 
     const originalMethod = descriptor.value;
 
     // eslint-disable-next-line no-param-reassign
-    descriptor.value = async function (context: Context) {
+    descriptor.value = async (context: Context) => {
       const { reply, text } = context;
 
       // Get args list from message text
