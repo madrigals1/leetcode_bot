@@ -28,4 +28,5 @@ export interface Context {
   options?: Options;
   bot?: DiscordBot.Client | TelegramBot;
   photoUrl?: string;
+  password?: string;
 }
