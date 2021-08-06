@@ -36,7 +36,7 @@ export function action(actionContext: ActionContext): (
         return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, updatedContext);
       }
 
-      // Add password to context
+      // Check password if action is Admin Action
       if (isAdmin) {
         // Password should be last argument of message
         const password = args[args.length - 1];
