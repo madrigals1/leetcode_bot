@@ -3,6 +3,7 @@
 import dictionary from '../../utils/dictionary';
 import { Context } from '../models';
 import { registeredActions } from '../actions';
+import constants from '../../utils/constants';
 
 import { ActionContext } from './models';
 import { getArgs, isValidArgsCount } from './utils';
@@ -14,7 +15,7 @@ export function action(actionContext: ActionContext): any {
     propertyKey: string,
     descriptor: PropertyDescriptor,
   ): PropertyDescriptor {
-    const { name, argsCount } = actionContext;
+    const { name, argsCount, isAdmin } = actionContext;
 
     const originalMethod = descriptor.value;
 
@@ -31,6 +32,20 @@ export function action(actionContext: ActionContext): any {
       // If inccorrect args amount was sent
       if (!isValidArgsCount(args, argsCount)) {
         return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, updatedContext);
+      }
+
+      // Add password to context
+      if (isAdmin) {
+        // Password should be last argument of message
+        const password = args[args.length - 1];
+
+        if (password !== constants.MASTER_PASSWORD) {
+          return reply(
+            dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT, updatedContext,
+          );
+        }
+
+        updatedContext.args.pop();
       }
 
       const message = await originalMethod(updatedContext, args, reply);

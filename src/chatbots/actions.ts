@@ -61,39 +61,27 @@ export default class Actions {
     return result.detail;
   }
 
-  @action({ name: 'remove', argsCount: [1, 2] })
+  @action({ name: 'remove', argsCount: [1, 2], isAdmin: true })
   static async remove(
     context: Context,
     args: string[],
     reply: (message: string, _: Context) => Promise<string>,
   ): Promise<string> {
     // Handle case with /remove <master_password>
-    if (args.length === 1) {
-      // Get password from message
-      const password: string = args[0];
-
-      // If password is incorrect, return error message
-      if (password !== constants.MASTER_PASSWORD) {
-        return dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT;
-      }
-
+    if (args.length === 0) {
       // Add Buttons with User List
       context.options.reply_markup = generateReplyMarkup({
-        buttons: createButtonsFromUsers({ action: 'remove', password }),
+        buttons: createButtonsFromUsers({
+          action: 'remove', password: context.password,
+        }),
         isClosable: true,
       });
 
       return dictionary.BOT_MESSAGES.USER_LIST_REMOVE;
     }
 
-    // Get username and password from message
+    // Get username from message
     const username: string = args[0].toLowerCase();
-    const password: string = args[1];
-
-    // If password is incorrect, return error message
-    if (password !== constants.MASTER_PASSWORD) {
-      return dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT;
-    }
 
     await reply(
       dictionary.BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username),
@@ -106,20 +94,12 @@ export default class Actions {
     return result.detail;
   }
 
-  @action({ name: 'clear', argsCount: [1] })
+  @action({ name: 'clear', argsCount: [1], isAdmin: true })
   static async clear(
     context: Context,
     args: string[],
     reply: (message: string, _: Context) => Promise<string>,
   ): Promise<string> {
-    // Get password from message
-    const password: string = args[0];
-
-    // If password is incorrect, return error message
-    if (password !== constants.MASTER_PASSWORD) {
-      return dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT;
-    }
-
     // Send message, that Database will be cleared
     await reply(dictionary.BOT_MESSAGES.DATABASE_WILL_BE_CLEARED, context);
 
@@ -129,16 +109,8 @@ export default class Actions {
     return result.detail;
   }
 
-  @action({ name: 'stats', argsCount: [1] })
-  static async stats(context: Context, args: string[]): Promise<string> {
-    // Get password from message
-    const password: string = args[0];
-
-    // If password is incorrect, return error message
-    if (password !== constants.MASTER_PASSWORD) {
-      return dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT;
-    }
-
+  @action({ name: 'stats', argsCount: [1], isAdmin: true })
+  static async stats(context: Context): Promise<string> {
     // Send message with stats
     return dictionary.BOT_MESSAGES.STATS_TEXT(context.provider, Cache);
   }
