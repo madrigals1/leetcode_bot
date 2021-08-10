@@ -11,8 +11,6 @@ export default class Mockbot {
 
   prefix = constants.PROVIDERS.MOCKBOT.PREFIX;
 
-  gus = 'Man';
-
   async send(message: string): Promise<void> {
     // If message is not command, ignore it
     if (!message.startsWith(this.prefix)) return;
