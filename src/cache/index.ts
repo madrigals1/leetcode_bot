@@ -14,11 +14,11 @@ class Cache {
 
   database = Database;
 
-  userLimit: number = parseInt(constants.USER_AMOUNT_LIMIT, 10);
+  userLimit: number = constants.USER_AMOUNT_LIMIT;
 
   getLeetcodeDataFromUsername: CallableFunction = getLeetcodeDataFromUsername;
 
-  delayTime: number = parseInt(constants.DELAY_TIME_MS, 10);
+  delayTime: number = constants.DELAY_TIME_MS;
 
   // Return all users
   allUsers(): User[] {

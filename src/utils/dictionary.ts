@@ -188,7 +188,6 @@ ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
 <b>User amount limit:</b> ${userLimit}
 
 <b>SYSTEM RELATED</b>
-<b>Submissions:</b> ${constants.SUBMISSION_COUNT}
 <b>Delay between calls:</b> ${constants.DELAY_TIME_MS}
 
 <b>USER LIST</b>

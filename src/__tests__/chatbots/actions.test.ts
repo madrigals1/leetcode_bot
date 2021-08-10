@@ -23,7 +23,7 @@ constants.MASTER_PASSWORD = mockPassword;
 beforeEach(() => {
   mockbot.clear();
   Cache.clearUsers();
-  Cache.userLimit = parseInt(constants.USER_AMOUNT_LIMIT, 10);
+  Cache.userLimit = constants.USER_AMOUNT_LIMIT;
   vizapiActions.tableForSubmissions = tableForSubmissions;
   vizapiActions.compareMenu = compareMenu;
 });

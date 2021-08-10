@@ -46,7 +46,6 @@ const {
   // System settings
   MASTER_PASSWORD,
   LEETCODE_URL,
-  SUBMISSION_COUNT,
   USER_AMOUNT_LIMIT,
   DELAY_TIME_MS,
   NODE_SCHEDULE_TIME,
@@ -164,12 +163,11 @@ export default {
   MONGO,
   POSTGRES,
   // System settings
-  MASTER_PASSWORD,
-  LEETCODE_URL,
-  SUBMISSION_COUNT,
-  USER_AMOUNT_LIMIT,
-  DELAY_TIME_MS,
-  NODE_SCHEDULE_TIME,
+  MASTER_PASSWORD: MASTER_PASSWORD || 'admin',
+  LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',
+  USER_AMOUNT_LIMIT: parseInt(USER_AMOUNT_LIMIT, 10) || 30,
+  DELAY_TIME_MS: parseInt(DELAY_TIME_MS, 10) || 4000,
+  NODE_SCHEDULE_TIME: NODE_SCHEDULE_TIME || '*/30 * * * *',
   // External Microservices
   VIZAPI_LINK,
   // Constants
