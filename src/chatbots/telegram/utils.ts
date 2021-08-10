@@ -1,7 +1,7 @@
 import { Context } from '../models';
 
 // eslint-disable-next-line import/prefer-default-export
-export function reply(message: string, context: Context): void {
+export function reply(message: string, context: Context): Promise<string> {
   const {
     chatId, options, bot, photoUrl,
   } = context;
