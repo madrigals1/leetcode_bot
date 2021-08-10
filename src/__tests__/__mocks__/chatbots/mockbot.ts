@@ -7,9 +7,9 @@ export default class Mockbot {
 
   context: Context;
 
-  name = constants.MOCKBOT.NAME;
+  name = constants.PROVIDERS.MOCKBOT.NAME;
 
-  prefix = constants.MOCKBOT.PREFIX;
+  prefix = constants.PROVIDERS.MOCKBOT.PREFIX;
 
   gus = 'Man';
 

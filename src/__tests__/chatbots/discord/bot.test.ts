@@ -15,13 +15,13 @@ afterAll(async () => {
 });
 
 test('chatbots.discord.bot.createBot function', async () => {
-  if (!constants.DISCORD.TEST_ENABLE) return;
+  if (!constants.PROVIDERS.DISCORD.TEST_ENABLE) return;
 
   expect(typeof createBot).toBe('function');
 
   // Create a test bot with test token
   const bot: DiscordBot.Client = (
-    await createBot(constants.DISCORD.TEST_TOKEN)
+    await createBot(constants.PROVIDERS.DISCORD.TEST_TOKEN)
   );
 
   expect(bot instanceof DiscordBot.Client).toBe(true);

@@ -12,7 +12,7 @@ import { Options, Context } from '../models';
 import { reply } from './utils';
 
 class Telegram {
-  token: string = constants.TELEGRAM.TOKEN;
+  token: string = constants.PROVIDERS.TELEGRAM.TOKEN;
 
   options: Options = { polling: true };
 
@@ -24,9 +24,9 @@ class Telegram {
     return {
       text: textCorrect,
       reply,
-      provider: constants.TELEGRAM.NAME,
+      provider: constants.PROVIDERS.TELEGRAM.NAME,
       chatId: message.chat.id,
-      prefix: constants.TELEGRAM.PREFIX,
+      prefix: constants.PROVIDERS.TELEGRAM.PREFIX,
       options: { parse_mode: 'HTML' },
       bot: this.bot,
     };

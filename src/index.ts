@@ -16,13 +16,13 @@ Database.connect().then(async () => {
   Cache.refreshUsers()
     .then(() => {
       // Run Telegram BOT
-      if (constants.TELEGRAM.ENABLE) Telegram.run();
+      if (constants.PROVIDERS.TELEGRAM.ENABLE) Telegram.run();
 
       // Run Discord BOT
-      if (constants.DISCORD.ENABLE) Discord.run();
+      if (constants.PROVIDERS.DISCORD.ENABLE) Discord.run();
 
       // Run Slack BOT
-      if (constants.SLACK.ENABLE) Slack.run();
+      if (constants.PROVIDERS.SLACK.ENABLE) Slack.run();
 
       // Starting the scheduler for database refresher
       startScheduler();

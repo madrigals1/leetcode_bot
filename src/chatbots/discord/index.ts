@@ -10,7 +10,7 @@ import createBot from './bot';
 import { reply } from './utils';
 
 class Discord {
-  token: string = constants.DISCORD.TOKEN;
+  token: string = constants.PROVIDERS.DISCORD.TOKEN;
 
   bot: DiscordBot.Client;
 
@@ -23,11 +23,14 @@ class Discord {
       const { content, author, channel } = message;
 
       // If message doesn't start with ! (prefix) OR author is BOT, then ignore
-      if (!content.startsWith(constants.DISCORD.PREFIX) || author.bot) return;
+      if (
+        !content.startsWith(constants.PROVIDERS.DISCORD.PREFIX)
+        || author.bot
+      ) return;
 
       // Turn "!rating username arg1" into ["!rating", "username", "arg1"]
       const args: string[] = content
-        .slice(constants.DISCORD.PREFIX.length)
+        .slice(constants.PROVIDERS.DISCORD.PREFIX.length)
         .trim()
         .split(' ');
 
@@ -42,8 +45,8 @@ class Discord {
             text: content,
             reply,
             channel,
-            provider: constants.DISCORD.NAME,
-            prefix: constants.DISCORD.PREFIX,
+            provider: constants.PROVIDERS.DISCORD.NAME,
+            prefix: constants.PROVIDERS.DISCORD.PREFIX,
             options: {},
           };
           channel.startTyping().then();

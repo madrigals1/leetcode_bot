@@ -46,7 +46,6 @@ const {
   // System settings
   MASTER_PASSWORD,
   LEETCODE_URL,
-  SUBMISSION_COUNT,
   USER_AMOUNT_LIMIT,
   DELAY_TIME_MS,
   NODE_SCHEDULE_TIME,
@@ -129,11 +128,12 @@ const MOCKBOT = {
   PREFIX: '/',
 };
 
-const PROVIDERS = [
+const PROVIDERS = {
   TELEGRAM,
   DISCORD,
+  SLACK,
   MOCKBOT,
-];
+};
 
 const MONGO = {
   DB_URL: MONGO_DB_URL,
@@ -152,24 +152,22 @@ const POSTGRES = {
   DB_PORT: POSTGRES_DB_PORT,
 };
 
-export default {
-  // Chatbot data objects
-  DISCORD,
-  TELEGRAM,
-  SLACK,
-  MOCKBOT,
-  PROVIDERS,
-  // Database settings
-  DB_PROVIDER,
+const DB = {
   MONGO,
   POSTGRES,
+};
+
+export default {
+  PROVIDERS,
+  // Database settings
+  DB,
+  DB_PROVIDER,
   // System settings
-  MASTER_PASSWORD,
-  LEETCODE_URL,
-  SUBMISSION_COUNT,
-  USER_AMOUNT_LIMIT,
-  DELAY_TIME_MS,
-  NODE_SCHEDULE_TIME,
+  MASTER_PASSWORD: MASTER_PASSWORD || 'admin',
+  LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',
+  USER_AMOUNT_LIMIT: parseInt(USER_AMOUNT_LIMIT, 10) || 30,
+  DELAY_TIME_MS: parseInt(DELAY_TIME_MS, 10) || 4000,
+  NODE_SCHEDULE_TIME: NODE_SCHEDULE_TIME || '*/30 * * * *',
   // External Microservices
   VIZAPI_LINK,
   // Constants

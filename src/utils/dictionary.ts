@@ -167,9 +167,8 @@ ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
     const { userLimit, users } = cache;
 
     // Get prefix for provider
-    const prefix = constants.PROVIDERS
-      .find((provider) => (provider.NAME === providerName))
-      .PREFIX;
+    const provider = Object.keys(constants.PROVIDERS)
+      .find((key) => constants.PROVIDERS[key].NAME === providerName);
 
     const userNameList = users.map(
       (user) => (`<b>- ${user.username}</b>`),
@@ -178,9 +177,9 @@ ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
     return `
 <b>PROVIDER RELATED</b>
 <b>Provider:</b> ${providerName}
-<b>Prefix:</b> ${prefix}
-<b>Discord enabled:</b> ${constants.DISCORD.ENABLE}
-<b>Telegram enabled:</b> ${constants.TELEGRAM.ENABLE}
+<b>Prefix:</b> ${constants.PROVIDERS[provider].prefix}
+<b>Discord enabled:</b> ${constants.PROVIDERS.DISCORD.ENABLE}
+<b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
 
 <b>DATABASE RELATED</b>
 <b>Database:</b> ${constants.DB_PROVIDER}
@@ -188,7 +187,6 @@ ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
 <b>User amount limit:</b> ${userLimit}
 
 <b>SYSTEM RELATED</b>
-<b>Submissions:</b> ${constants.SUBMISSION_COUNT}
 <b>Delay between calls:</b> ${constants.DELAY_TIME_MS}
 
 <b>USER LIST</b>
