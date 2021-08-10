@@ -99,7 +99,7 @@ Takes list of Users separated by whitespaces. Saves usernames into Database. Loa
 
 | Request | Response |
 | --- | --- |
-| `/add username1 username2 ...` | ![Add username1 username2](https://i.imgur.com/m8289XQ.png) |
+| `/add username1 username2 ...` | ![Add username1 username2](https://i.imgur.com/ahSSzry.png) |
 
 ---
 
