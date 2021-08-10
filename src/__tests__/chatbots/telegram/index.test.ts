@@ -4,7 +4,7 @@ import TelegramBotInstance from '../../../chatbots/telegram';
 import constants from '../../../utils/constants';
 import dictionary from '../../../utils/dictionary';
 
-TelegramBotInstance.token = constants.TELEGRAM.TOKEN;
+TelegramBotInstance.token = constants.PROVIDERS.TELEGRAM.TOKEN;
 
 beforeAll(async () => {
   jest.setTimeout(30000);
@@ -15,7 +15,7 @@ afterAll(async () => {
 });
 
 test('chatbots.telegram.index.run function', async () => {
-  if (!constants.TELEGRAM.TEST_ENABLE) return;
+  if (!constants.PROVIDERS.TELEGRAM.TEST_ENABLE) return;
 
   TelegramBotInstance.run();
 

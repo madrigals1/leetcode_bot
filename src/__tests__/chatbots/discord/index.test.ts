@@ -4,7 +4,7 @@ import constants from '../../../utils/constants';
 import dictionary from '../../../utils/dictionary';
 import DiscordBotInstance from '../../../chatbots/discord';
 
-DiscordBotInstance.token = constants.DISCORD.TEST_TOKEN;
+DiscordBotInstance.token = constants.PROVIDERS.DISCORD.TEST_TOKEN;
 
 beforeAll(async () => {
   jest.setTimeout(30000);
@@ -15,7 +15,7 @@ afterAll(async () => {
 });
 
 test('chatbots.discord.index.run function', async () => {
-  if (!constants.DISCORD.TEST_ENABLE) return;
+  if (!constants.PROVIDERS.DISCORD.TEST_ENABLE) return;
 
   await DiscordBotInstance.run();
 

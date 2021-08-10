@@ -128,11 +128,12 @@ const MOCKBOT = {
   PREFIX: '/',
 };
 
-const PROVIDERS = [
+const PROVIDERS = {
   TELEGRAM,
   DISCORD,
+  SLACK,
   MOCKBOT,
-];
+};
 
 const MONGO = {
   DB_URL: MONGO_DB_URL,
@@ -152,11 +153,6 @@ const POSTGRES = {
 };
 
 export default {
-  // Chatbot data objects
-  DISCORD,
-  TELEGRAM,
-  SLACK,
-  MOCKBOT,
   PROVIDERS,
   // Database settings
   DB_PROVIDER,

@@ -10,11 +10,11 @@ import { reply } from './utils';
 import createBot from './bot';
 
 class Slack {
-  token: string = constants.SLACK.TOKEN;
+  token: string = constants.PROVIDERS.SLACK.TOKEN;
 
-  signingSecret: string = constants.SLACK.SIGNING_SECRET;
+  signingSecret: string = constants.PROVIDERS.SLACK.SIGNING_SECRET;
 
-  appToken: string = constants.SLACK.APP_TOKEN;
+  appToken: string = constants.PROVIDERS.SLACK.APP_TOKEN;
 
   bot: App;
 
@@ -34,8 +34,8 @@ class Slack {
           channel: {
             send: say,
           },
-          provider: constants.SLACK.NAME,
-          prefix: constants.SLACK.PREFIX,
+          provider: constants.PROVIDERS.SLACK.NAME,
+          prefix: constants.PROVIDERS.SLACK.PREFIX,
           options: {},
         };
 
