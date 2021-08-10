@@ -11,17 +11,17 @@ import UserModel from './schemas';
 class MongoDB extends DatabaseProvider {
     // If authentication credentials were provided in environment, use them.
     // If not, use empty string in MongoDB connection
-    credentials: string = constants.MONGO.DB_AUTHENTICATION_ENABLED
-      ? `${constants.MONGO.DB_USER}:${constants.MONGO.DB_PASSWORD}@`
+    credentials: string = constants.DB.MONGO.DB_AUTHENTICATION_ENABLED
+      ? `${constants.DB.MONGO.DB_USER}:${constants.DB.MONGO.DB_PASSWORD}@`
       : '';
 
     // Set Authentication Source to connect to MongoDB database
-    authSource: string = constants.MONGO.DB_AUTHENTICATION_ENABLED
+    authSource: string = constants.DB.MONGO.DB_AUTHENTICATION_ENABLED
       ? '?authSource=admin'
       : '';
 
     // URL for Connection to MongoDB, is already usable for connection.
-    databaseUrl = `${constants.MONGO.DB_URL}:${constants.MONGO.DB_PORT}/${constants.MONGO.DB_NAME}`;
+    databaseUrl = `${constants.DB.MONGO.DB_URL}:${constants.DB.MONGO.DB_PORT}/${constants.DB.MONGO.DB_NAME}`;
 
     // URL for Connection to MongoDB, that contains authentication
     mongoUrl = `mongodb://${this.credentials}${this.databaseUrl}${this.authSource}`;

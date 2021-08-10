@@ -152,12 +152,16 @@ const POSTGRES = {
   DB_PORT: POSTGRES_DB_PORT,
 };
 
+const DB = {
+  MONGO,
+  POSTGRES,
+};
+
 export default {
   PROVIDERS,
   // Database settings
+  DB,
   DB_PROVIDER,
-  MONGO,
-  POSTGRES,
   // System settings
   MASTER_PASSWORD: MASTER_PASSWORD || 'admin',
   LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',

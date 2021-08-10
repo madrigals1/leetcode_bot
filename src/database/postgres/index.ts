@@ -9,11 +9,11 @@ import QUERIES from './queries';
 
 class Postgres extends DatabaseProvider {
   client = new pg.Client({
-    user: constants.POSTGRES.DB_USER,
-    host: constants.POSTGRES.DB_URL,
-    database: constants.POSTGRES.DB_NAME,
-    password: constants.POSTGRES.DB_PASSWORD,
-    port: constants.POSTGRES.DB_PORT,
+    user: constants.DB.POSTGRES.DB_USER,
+    host: constants.DB.POSTGRES.DB_URL,
+    database: constants.DB.POSTGRES.DB_NAME,
+    password: constants.DB.POSTGRES.DB_PASSWORD,
+    port: constants.DB.POSTGRES.DB_PORT,
   });
 
   // Connect database
