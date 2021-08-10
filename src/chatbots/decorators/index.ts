@@ -47,6 +47,10 @@ export function action(actionContext: ActionContext): (
           );
         }
 
+        // Add password to context
+        updatedContext.password = password;
+
+        // Remove password argument
         updatedContext.args.pop();
       }
 
