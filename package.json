@@ -15,14 +15,6 @@
   "keywords": [],
   "author": "Adi Sabyrbayev",
   "license": "ISC",
-  "jest": {
-    "coverageThreshold": {
-      "global": {
-        "statements": 80,
-        "lines": 80
-      }
-    }
-  },
   "husky": {
     "hooks": {
       "pre-commit": "npm run test:coverage"
