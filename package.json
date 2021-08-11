@@ -9,12 +9,25 @@
     "test": "jest --forceExit",
     "test:debug": "jest --watch",
     "test:leaks": "jest --runInBand --detectOpenHandles",
-    "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
+    "test:coverage": "jest --coverage",
     "lint": "eslint ./src --ext .js,.ts"
   },
   "keywords": [],
   "author": "Adi Sabyrbayev",
   "license": "ISC",
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "statements": 80,
+        "lines": 80
+      }
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test:coverage"
+    }
+  },
   "dependencies": {
     "@slack/bolt": "^3.5.0",
     "axios": "^0.21.1",
@@ -41,6 +54,7 @@
     "eslint": "^7.31.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
+    "husky": "^7.0.1",
     "ts-jest": "^26.5.6"
   }
 }
