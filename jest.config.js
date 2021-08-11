@@ -10,4 +10,12 @@ module.exports = {
   modulePathIgnorePatterns: filesToIgnore,
   testEnvironment: 'node',
   transform: { '\\.ts$': ['ts-jest'] },
+  coverageThreshold: {
+    global: {
+      branches: 58,
+      functions: 47,
+      lines: 72,
+      statements: 71,
+    },
+  },
 };

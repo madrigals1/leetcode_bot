@@ -19,6 +19,7 @@ export function action(actionContext: ActionContext): (
   ) => {
     const { name, argsCount, isAdmin } = actionContext;
 
+    // Random comment
     const originalMethod = descriptor.value;
 
     // eslint-disable-next-line no-param-reassign
