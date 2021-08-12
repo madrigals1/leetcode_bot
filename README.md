@@ -13,7 +13,7 @@ Leetcode Bot is an app, that gets data for **LeetCode Users** and creates **Rati
 - **Discord**
 - **Slack**
 
-![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/madrigals1/7f7d863e8c39212c7cb20b638370187a/raw/leetcode_bot__heads_main.json)
+![Coverage Status](https://coveralls.io/repos/github/madrigals1/leetcode_bot/badge.svg?branch=master)
 
 You can create your own rating by deploying this project on your machine!!!
 
