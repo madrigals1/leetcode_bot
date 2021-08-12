@@ -10,6 +10,7 @@
     "test:debug": "jest --watch",
     "test:leaks": "jest --runInBand --detectOpenHandles",
     "test:coverage": "jest --coverage",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "lint": "eslint ./src --ext .js,.ts"
   },
   "keywords": [],
@@ -43,6 +44,7 @@
     "@types/lodash": "^4.14.171",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
+    "coveralls": "^3.1.1",
     "eslint": "^7.31.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
