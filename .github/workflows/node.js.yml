@@ -37,4 +37,10 @@ jobs:
         && echo TELEGRAM_TEST_TOKEN=${{ secrets.TELEGRAM_TEST_TOKEN }} >> .env
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - run: npm run test:coveralls
+
+    # Send coverage report to Coveralls
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
