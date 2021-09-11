@@ -17,9 +17,11 @@ export async function mockTableForSubmissions(
   user: User,
 ): Promise<TableResponse> {
   if (!user.submitStats) {
+    const error = 'placeholder';
+
     return {
-      error: 'placeholder',
-      reason: 'placeholder',
+      error,
+      reason: dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(error),
     };
   }
 
