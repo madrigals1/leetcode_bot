@@ -11,6 +11,7 @@ export function error(...args: unknown[]): void {
 export function delay(msTime: number): Promise<void> {
   return new Promise((res) => setTimeout(res, msTime));
 }
+
 export function isTrue(value: string | number | boolean): boolean {
   return ['true', 'True', '1', 't', 'T', 1, true].includes(value);
 }
