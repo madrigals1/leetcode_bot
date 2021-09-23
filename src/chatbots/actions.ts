@@ -149,7 +149,7 @@ export default class Actions {
 
           return { ...user, solved };
         })
-        .sort((user) => user.solved);
+        .sort((user1, user2) => user2.solved - user1.solved);
 
       return dictionary.BOT_MESSAGES.CML_RATING_TEXT(cmlRating);
     }
