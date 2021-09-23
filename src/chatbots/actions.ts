@@ -115,9 +115,47 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.STATS_TEXT(context.provider, Cache);
   }
 
-  @action({ name: 'rating', argsCount: [0] })
-  static async rating(): Promise<string> {
-    return dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers());
+  @action({ name: 'rating', argsCount: [0, 1] })
+  static async rating(context: Context, args: string[]): Promise<string> {
+    // Regular rating with "Problem Solved" count
+    if (args.length === 0) {
+      return dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers());
+    }
+
+    // Cumulative rating:
+    // - Easy - 1 point
+    // - Medium - 2 points
+    // - Hard - 3 points
+    if (args[0] === 'cml') {
+      const users = Cache.allUsers();
+
+      const cmlRating = users
+        .map((user) => {
+          const { acSubmissionNum } = user.submitStats;
+
+          // Get submissions for different difficulty levels
+          const easy = acSubmissionNum
+            .find((sc) => sc.difficulty === 'Easy')
+            .count;
+          const medium = acSubmissionNum
+            .find((sc) => sc.difficulty === 'Medium')
+            .count;
+          const hard = acSubmissionNum
+            .find((sc) => sc.difficulty === 'Hard')
+            .count;
+
+          // Calculate cumulative rating
+          const solved = easy * 1 + medium * 2 + hard * 3;
+
+          return { ...user, solved };
+        })
+        .sort((user) => user.solved);
+
+      return dictionary.BOT_MESSAGES.CML_RATING_TEXT(cmlRating);
+    }
+
+    // Fallback to incorrect input
+    return dictionary.BOT_MESSAGES.INCORRECT_INPUT;
   }
 
   @action({ name: 'profile', argsCount: [0, 1] })

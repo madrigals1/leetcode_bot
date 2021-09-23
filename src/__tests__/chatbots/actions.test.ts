@@ -220,6 +220,24 @@ test('chatbots.actions.rating action', async () => {
     .toEqual(dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers()));
 
   // Test with incorrect arguments (argument count)
+  await mockbot.send('/rating cml');
+
+  // Predefined data
+  const cmlRating = Cache.allUsers().map((user) => {
+    switch (user.username) {
+      case 'random_username':
+        return { ...user, solved: 1741 };
+      case 'random_username_2':
+        return { ...user, solved: 1760 };
+      default:
+        return user;
+    }
+  });
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.CML_RATING_TEXT(cmlRating));
+
+  // Test with incorrect arguments (argument count)
   await mockbot.send('/rating asd');
 
   expect(mockbot.lastMessage())
