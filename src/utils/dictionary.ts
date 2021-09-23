@@ -141,10 +141,10 @@ const BOT_MESSAGES = {
     const { acSubmissionNum } = user.submitStats;
 
     // Get submissions for different difficulty levels
-    const easy = acSubmissionNum.find((sc) => (sc.difficulty === 'Easy'));
-    const medium = acSubmissionNum.find((sc) => (sc.difficulty === 'Medium'));
-    const hard = acSubmissionNum.find((sc) => (sc.difficulty === 'Hard'));
-    const all = acSubmissionNum.find((sc) => (sc.difficulty === 'All'));
+    const easy = acSubmissionNum.find((sc) => sc.difficulty === 'Easy');
+    const medium = acSubmissionNum.find((sc) => sc.difficulty === 'Medium');
+    const hard = acSubmissionNum.find((sc) => sc.difficulty === 'Hard');
+    const all = acSubmissionNum.find((sc) => sc.difficulty === 'All');
 
     return `<b>${user.name || 'No name'}</b> - <b>${user.link}</b>
 
@@ -161,6 +161,25 @@ ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
     return users.map(
       (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.solved}`),
     ).join('\n');
+  },
+
+  CML_RATING_TEXT(users: User[]): string {
+    if (!users || users.length === 0) {
+      return NO_USERS;
+    }
+
+    const prefix = `Cumulative Rating:
+${constants.EMOJI.GREEN_CIRCLE} Easy - <b>1 point</b>
+${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>2 points</b>
+${constants.EMOJI.RED_CIRCLE} Hard - <b>3 points</b>
+
+`;
+
+    const rating = prefix + users.map(
+      (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.solved}`),
+    ).join('\n');
+
+    return rating;
   },
 
   STATS_TEXT(providerName: string, cache: typeof Cache): string {
