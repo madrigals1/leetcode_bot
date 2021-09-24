@@ -213,6 +213,10 @@ test('chatbots.actions.stats action', async () => {
 });
 
 test('chatbots.actions.rating action', async () => {
+  // Confirm that 2 users exist in Database
+  await mockbot.send('/add random_username random_username_2');
+  expect(Cache.users.length).toBe(2);
+
   // Test regular rating with correct arguments
   await mockbot.send('/rating');
 
@@ -226,9 +230,9 @@ test('chatbots.actions.rating action', async () => {
   const cmlRating = Cache.allUsers().map((user) => {
     switch (user.username) {
       case 'random_username':
-        return { ...user, solved: 1741 };
+        return { ...user, solved: 23647 };
       case 'random_username_2':
-        return { ...user, solved: 1760 };
+        return { ...user, solved: 23670 };
       default:
         return user;
     }
