@@ -213,13 +213,13 @@ test('chatbots.actions.stats action', async () => {
 });
 
 test('chatbots.actions.rating action', async () => {
-  // Test with correct arguments
+  // Test regular rating with correct arguments
   await mockbot.send('/rating');
 
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers()));
 
-  // Test with incorrect arguments (argument count)
+  // Test cumulative rating with correct arguments
   await mockbot.send('/rating cml');
 
   // Predefined data
