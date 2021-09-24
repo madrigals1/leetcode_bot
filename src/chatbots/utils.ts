@@ -158,3 +158,39 @@ export function createButtonsFromUsers(
 
   return buttons;
 }
+
+export function calculateCml(
+  easySolvedCount: number,
+  mediumSolvedCount: number,
+  hardSolvedCount: number,
+): number {
+  return (easySolvedCount * constants.CML.EASY_POINTS)
+    + (mediumSolvedCount * constants.CML.MEDIUM_POINTS)
+    + (hardSolvedCount * constants.CML.HARD_POINTS);
+}
+
+export function getCmlFromUser(user: User): number {
+  const { acSubmissionNum } = user.submitStats;
+
+  // Get submissions for different difficulty levels
+  const easySolvedCount = acSubmissionNum
+    .find((sc) => sc.difficulty === 'Easy')
+    .count;
+  const mediumSolvedCount = acSubmissionNum
+    .find((sc) => sc.difficulty === 'Medium')
+    .count;
+  const hardSolvedCount = acSubmissionNum
+    .find((sc) => sc.difficulty === 'Hard')
+    .count;
+
+  return calculateCml(easySolvedCount, mediumSolvedCount, hardSolvedCount);
+}
+
+export function convertToCmlRating(rating: User[]): User[] {
+  return rating
+    .map((user) => ({
+      ...user,
+      solved: getCmlFromUser(user),
+    }))
+    .sort((user1, user2) => user2.solved - user1.solved);
+}

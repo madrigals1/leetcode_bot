@@ -9,7 +9,11 @@ import {
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import constants from '../../utils/constants';
 import { vizapiActions } from '../../chatbots/actions';
-import { tableForSubmissions, compareMenu } from '../../chatbots/utils';
+import {
+  tableForSubmissions,
+  compareMenu,
+  getCmlFromUser,
+} from '../../chatbots/utils';
 import users from '../__mocks__/data.mock';
 
 const mockbot = new Mockbot();
@@ -230,9 +234,9 @@ test('chatbots.actions.rating action', async () => {
   const cmlRating = Cache.allUsers().map((user) => {
     switch (user.username) {
       case 'random_username':
-        return { ...user, solved: 23647 };
+        return { ...user, solved: getCmlFromUser(user) };
       case 'random_username_2':
-        return { ...user, solved: 23670 };
+        return { ...user, solved: getCmlFromUser(user) };
       default:
         return user;
     }
