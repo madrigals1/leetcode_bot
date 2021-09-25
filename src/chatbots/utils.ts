@@ -83,20 +83,19 @@ export async function tableForSubmissions(user: User): Promise<TableResponse> {
     }));
   }
 
+  const userSubmissionData = user.submissions.map((submission) => ({
+    Name: submission.name,
+    Time: submission.time,
+    Language: submission.language,
+    Status: submission.status,
+  }));
+
   return axios
-    .post(`${constants.VIZAPI_LINK}/table`, {
-      table: user.submissions.map((submission) => (
-        {
-          Name: submission.name,
-          Time: submission.time,
-          Language: submission.language,
-          Status: submission.status,
-        }
-      )),
-    })
+    .post(`${constants.VIZAPI_LINK}/table`, { table: userSubmissionData })
     .then((res) => {
       log(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
-      if (res.data.detail === 'Please, provide \'table\' in request body') {
+      const errorMsg = 'Please, provide non-empty \'table\' in request body';
+      if (res.data.failure === errorMsg) {
         return {
           error: dictionary.BOT_MESSAGES.USER_NO_SUBMISSIONS(user.username),
           reason: dictionary.SERVER_MESSAGES.NO_SUBMISSIONS,

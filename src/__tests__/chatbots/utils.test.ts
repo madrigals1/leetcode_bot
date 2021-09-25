@@ -1,12 +1,31 @@
 /* eslint-disable no-console */
 import { user1, user2 } from '../__mocks__/data.mock';
-import { getCompareDataFromUser, compareMenu } from '../../chatbots/utils';
+import {
+  getCompareDataFromUser,
+  compareMenu,
+  tableForSubmissions,
+} from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
 import constants from '../../utils/constants';
 
+const { VIZAPI_LINK } = constants;
+
 beforeEach(() => {
+  // Fix VizAPI link before each test case
+  constants.VIZAPI_LINK = VIZAPI_LINK;
+});
+
+afterEach(() => {
   //
+});
+
+beforeAll(async () => {
+  jest.setTimeout(100000);
+});
+
+afterAll(async () => {
+  jest.setTimeout(5000);
 });
 
 test('chatbots.utils.getCompareDataFromUser action', async () => {
@@ -61,23 +80,64 @@ test('chatbots.utils.getCompareDataFromUser action', async () => {
 });
 
 test('chatbots.utils.compareMenu action', async () => {
-  // Get compare data from users
+  // Valid
   const compareResponse = await compareMenu(user1, user2);
 
-  // Check correct response
   expect(console.log)
     .toHaveBeenCalledWith(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
   expect(isValidHttpUrl(compareResponse.link)).toBe(true);
   expect(compareResponse.error).toBe(undefined);
   expect(compareResponse.reason).toBe(undefined);
 
-  // Get compare data from user
+  // Invalid: Invalid url
   constants.VIZAPI_LINK = 'incorrect_url';
   const compareResponseFailure = await compareMenu(user1, user2);
 
-  // Check incorrect response
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure.error === undefined).toBe(false);
   expect(compareResponseFailure.reason)
+    .toBe(dictionary.SERVER_MESSAGES.API_NOT_WORKING);
+});
+
+test('chatbots.utils.tableForSubmissions action', async () => {
+  // Valid
+  const tableForSubmissionsResponse = await tableForSubmissions(user1);
+
+  expect(console.log)
+    .toHaveBeenCalledWith(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
+  expect(isValidHttpUrl(tableForSubmissionsResponse.link)).toBe(true);
+  expect(tableForSubmissionsResponse.error).toBe(undefined);
+  expect(tableForSubmissionsResponse.reason).toBe(undefined);
+
+  // Invalid: User is not sent
+  const compareResponseFailure1 = await tableForSubmissions(undefined);
+  const errorMessage = 'Username not found';
+
+  expect(console.log).toHaveBeenCalled();
+  expect(compareResponseFailure1.error).toBe(errorMessage);
+  expect(compareResponseFailure1.reason)
+    .toBe(dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(errorMessage));
+
+  // Invalid: User has no submissions
+  const userWithoutSubmissions = { ...user1, submissions: [] };
+  const compareResponseFailure2 = (
+    await tableForSubmissions(userWithoutSubmissions)
+  );
+  const dictMessageWithoutSubmissions = (
+    dictionary.BOT_MESSAGES.USER_NO_SUBMISSIONS(userWithoutSubmissions.username)
+  );
+
+  expect(console.log).toHaveBeenCalled();
+  expect(compareResponseFailure2.error).toBe(dictMessageWithoutSubmissions);
+  expect(compareResponseFailure2.reason)
+    .toBe(dictionary.SERVER_MESSAGES.NO_SUBMISSIONS);
+
+  // Invalid: Incorrect URL
+  constants.VIZAPI_LINK = 'incorrect_url';
+  const compareResponseFailure3 = await tableForSubmissions(user1);
+
+  expect(console.log).toHaveBeenCalled();
+  expect(compareResponseFailure3.error === undefined).toBe(false);
+  expect(compareResponseFailure3.reason)
     .toBe(dictionary.SERVER_MESSAGES.API_NOT_WORKING);
 });
