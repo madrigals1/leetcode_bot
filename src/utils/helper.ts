@@ -19,3 +19,15 @@ export function isTrue(value: string | number | boolean): boolean {
 export function isPromise(obj: unknown): boolean {
   return !!(obj instanceof Promise && Promise.resolve(obj));
 }
+
+export function isValidHttpUrl(urlString: string): boolean {
+  let url: URL;
+
+  try {
+    url = new URL(urlString);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === 'http:' || url.protocol === 'https:';
+}

@@ -1,5 +1,9 @@
-import { user1 } from '../__mocks__/data.mock';
-import { getCompareDataFromUser } from '../../chatbots/utils';
+/* eslint-disable no-console */
+import { user1, user2 } from '../__mocks__/data.mock';
+import { getCompareDataFromUser, compareMenu } from '../../chatbots/utils';
+import dictionary from '../../utils/dictionary';
+import { isValidHttpUrl } from '../../utils/helper';
+import constants from '../../utils/constants';
 
 beforeEach(() => {
   //
@@ -54,4 +58,26 @@ test('chatbots.utils.getCompareDataFromUser action', async () => {
   });
 
   expect(compareData.image).toBe(user1.profile.userAvatar);
+});
+
+test('chatbots.utils.compareMenu action', async () => {
+  // Get compare data from users
+  const compareResponse = await compareMenu(user1, user2);
+
+  // Check correct response
+  expect(console.log)
+    .toHaveBeenCalledWith(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
+  expect(isValidHttpUrl(compareResponse.link)).toBe(true);
+  expect(compareResponse.error).toBe(undefined);
+  expect(compareResponse.reason).toBe(undefined);
+
+  // Get compare data from user
+  constants.VIZAPI_LINK = 'incorrect_url';
+  const compareResponseFailure = await compareMenu(user1, user2);
+
+  // Check incorrect response
+  expect(console.log).toHaveBeenCalled();
+  expect(compareResponseFailure.error === undefined).toBe(false);
+  expect(compareResponseFailure.reason)
+    .toBe(dictionary.SERVER_MESSAGES.API_NOT_WORKING);
 });
