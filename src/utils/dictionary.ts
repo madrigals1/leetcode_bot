@@ -42,7 +42,9 @@ const SERVER_MESSAGES = {
 
   // LOGGING
   IMAGE_WAS_CREATED: 'The image was created',
-  IMAGE_WAS_NOT_CREATED: 'The image was NOT created',
+  IMAGE_WAS_NOT_CREATED(err: Error | string): string {
+    return `The image was NOT created: ${err}`;
+  },
 
   // TABLE API
   API_NOT_WORKING: 'api_not_working',

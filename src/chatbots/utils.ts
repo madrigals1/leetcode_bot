@@ -69,8 +69,7 @@ export async function compareMenu(
       return { link: res.data.link };
     })
     .catch((err) => {
-      error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED);
-      error(err);
+      error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED(err));
       return { error: err, reason: dictionary.SERVER_MESSAGES.API_NOT_WORKING };
     });
 }
@@ -106,8 +105,7 @@ export async function tableForSubmissions(user: User): Promise<TableResponse> {
       return { link: res.data.link };
     })
     .catch((err) => {
-      error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED);
-      error(err);
+      error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED(err));
       return { error: err, reason: dictionary.SERVER_MESSAGES.API_NOT_WORKING };
     });
 }
