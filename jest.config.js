@@ -12,10 +12,10 @@ module.exports = {
   transform: { '\\.ts$': ['ts-jest'] },
   coverageThreshold: {
     global: {
-      branches: 58,
-      functions: 47,
-      lines: 70,
-      statements: 70,
+      branches: 63,
+      functions: 58,
+      lines: 76,
+      statements: 74,
     },
   },
 };
