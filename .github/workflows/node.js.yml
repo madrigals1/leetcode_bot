@@ -31,10 +31,9 @@ jobs:
     - name: create .env file and add secrets
       run: >
         touch .env
-        && echo DISCORD_TEST_ENABLE=${{ secrets.DISCORD_TEST_ENABLE }} >> .env
         && echo DISCORD_TEST_TOKEN=${{ secrets.DISCORD_TEST_TOKEN }} >> .env
-        && echo TELEGRAM_TEST_ENABLE=${{ secrets.TELEGRAM_TEST_ENABLE }} >> .env
         && echo TELEGRAM_TEST_TOKEN=${{ secrets.TELEGRAM_TEST_TOKEN }} >> .env
+        && echo VIZAPI_LINK=${{ secrets.VIZAPI_LINK }} >> .env
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
