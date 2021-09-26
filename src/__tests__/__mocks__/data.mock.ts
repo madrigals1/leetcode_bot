@@ -3,7 +3,7 @@ import {
 } from '../../leetcode/utils';
 import constants from '../../utils/constants';
 import { User } from '../../leetcode/models';
-import { ReplyMarkupOptions } from '../../chatbots/models';
+import { ReplyMarkupOptions, ButtonOptions } from '../../chatbots/models';
 
 import { MockDatabaseInterface } from './models/mockData.model';
 
@@ -218,4 +218,10 @@ export function mockReplyMarkupOptions(
     buttons,
     isClosable,
   };
+}
+
+export function mockButtonOptions(
+  action: string, password?: string,
+): ButtonOptions {
+  return { action, password };
 }

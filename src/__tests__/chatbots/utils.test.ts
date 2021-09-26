@@ -1,21 +1,27 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
-import { mockReplyMarkupOptions, user1, user2 } from '../__mocks__/data.mock';
+import {
+  mockReplyMarkupOptions, mockButtonOptions, user1, user2, users,
+} from '../__mocks__/data.mock';
 import {
   getCompareDataFromUser,
   compareMenu,
   tableForSubmissions,
   generateReplyMarkup,
+  createButtonsFromUsers,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
 import constants from '../../utils/constants';
+import Cache from '../../cache';
 
 const { VIZAPI_LINK } = constants;
+const savedUsers = [...Cache.users];
 
 beforeEach(() => {
-  // Fix VizAPI link before each test case
+  // Fix changed values before each test case
   constants.VIZAPI_LINK = VIZAPI_LINK;
+  Cache.users = [...savedUsers];
 });
 
 afterEach(() => {
@@ -154,6 +160,8 @@ test('chatbots.utils.generateReplyMarkup action', async () => {
 
   const firstRow = parsedResponse.inline_keyboard[0];
 
+  expect(firstRow.length).toBe(3);
+
   for (let i = 0; i < firstRow.length; i++) {
     const { text, callback_data } = firstRow[i];
 
@@ -168,10 +176,12 @@ test('chatbots.utils.generateReplyMarkup action', async () => {
 
   expect(parsedResponseClose.inline_keyboard === undefined).toBe(false);
 
-  const secondRow = parsedResponseClose.inline_keyboard[1][0];
+  const secondRow = parsedResponseClose.inline_keyboard[1];
 
-  expect(secondRow.text).toBe(`${constants.EMOJI.CROSS_MARK} Close`);
-  expect(secondRow.callback_data).toBe('placeholder');
+  expect(secondRow.length).toBe(1);
+
+  expect(secondRow[0].text).toBe(`${constants.EMOJI.CROSS_MARK} Close`);
+  expect(secondRow[0].callback_data).toBe('placeholder');
 
   // Valid: 8 buttons
   const mockOptions8buttons = mockReplyMarkupOptions(8, false);
@@ -191,4 +201,51 @@ test('chatbots.utils.generateReplyMarkup action', async () => {
     expect(text).toBe(`Button ${i + 1}`);
     expect(callback_data).toBe(`Action ${i + 1}`);
   }
+});
+
+test('chatbots.utils.createButtonsFromUsers action', async () => {
+  // Valid: 2 users
+  const action1 = 'action1';
+  Cache.users = users;
+  const mockOptions1 = mockButtonOptions(action1);
+  const buttonsResponse1 = createButtonsFromUsers(mockOptions1);
+
+  expect(buttonsResponse1.length).toBe(2);
+
+  const user1response1 = buttonsResponse1[0];
+  const user2response1 = buttonsResponse1[1];
+
+  expect(user1response1.text).toBe(user1.username);
+  expect(user2response1.text).toBe(user2.username);
+
+  expect(user1response1.action).toBe(`/${action1} ${user1.username} `);
+  expect(user2response1.action).toBe(`/${action1} ${user2.username} `);
+
+  // Valid: 3 users
+  const action2 = 'action2';
+  Cache.users = [...users, { ...user1, username: 'other_username' }];
+  const mockOptions2 = mockButtonOptions(action2);
+  const buttonsResponse2 = createButtonsFromUsers(mockOptions2);
+
+  expect(buttonsResponse2.length).toBe(3);
+
+  // Valid: Add password
+  const action3 = 'action3';
+  const password3 = 'password3';
+  Cache.users = [...users];
+  const mockOptions3 = mockButtonOptions(action3, password3);
+  const buttonsResponse3 = createButtonsFromUsers(mockOptions3);
+
+  const user1response2 = buttonsResponse3[0];
+  const user2response2 = buttonsResponse3[1];
+
+  expect(user1response2.action).toBe(`/${action3} ${user1.username} ${password3}`);
+  expect(user2response2.action).toBe(`/${action3} ${user2.username} ${password3}`);
+
+  // Valid: No users
+  Cache.users = [];
+  const mockOptions4 = mockButtonOptions('');
+  const buttonsResponse4 = createButtonsFromUsers(mockOptions4);
+
+  expect(buttonsResponse4.length).toBe(0);
 });
