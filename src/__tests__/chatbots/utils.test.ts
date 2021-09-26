@@ -1,9 +1,11 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-console */
-import { user1, user2 } from '../__mocks__/data.mock';
+import { mockReplyMarkupOptions, user1, user2 } from '../__mocks__/data.mock';
 import {
   getCompareDataFromUser,
   compareMenu,
   tableForSubmissions,
+  generateReplyMarkup,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
@@ -140,4 +142,53 @@ test('chatbots.utils.tableForSubmissions action', async () => {
   expect(compareResponseFailure3.error === undefined).toBe(false);
   expect(compareResponseFailure3.reason)
     .toBe(dictionary.SERVER_MESSAGES.API_NOT_WORKING);
+});
+
+test('chatbots.utils.generateReplyMarkup action', async () => {
+  // Valid: Without close button
+  const mockOptions = mockReplyMarkupOptions(3, false);
+  const replyMarkupResponse = generateReplyMarkup(mockOptions);
+  const parsedResponse = JSON.parse(replyMarkupResponse);
+
+  expect(parsedResponse.inline_keyboard === undefined).toBe(false);
+
+  const firstRow = parsedResponse.inline_keyboard[0];
+
+  for (let i = 0; i < firstRow.length; i++) {
+    const { text, callback_data } = firstRow[i];
+
+    expect(text).toBe(`Button ${i + 1}`);
+    expect(callback_data).toBe(`Action ${i + 1}`);
+  }
+
+  // Valid: With close button
+  const mockOptionsWithClose = mockReplyMarkupOptions(3, true);
+  const replyMarkupResponseClose = generateReplyMarkup(mockOptionsWithClose);
+  const parsedResponseClose = JSON.parse(replyMarkupResponseClose);
+
+  expect(parsedResponseClose.inline_keyboard === undefined).toBe(false);
+
+  const secondRow = parsedResponseClose.inline_keyboard[1][0];
+
+  expect(secondRow.text).toBe(`${constants.EMOJI.CROSS_MARK} Close`);
+  expect(secondRow.callback_data).toBe('placeholder');
+
+  // Valid: 8 buttons
+  const mockOptions8buttons = mockReplyMarkupOptions(8, false);
+  const replyMarkupResponse8buttons = generateReplyMarkup(mockOptions8buttons);
+  const parsedResponse8buttons = JSON.parse(replyMarkupResponse8buttons);
+
+  expect(parsedResponse8buttons.inline_keyboard === undefined).toBe(false);
+
+  for (let i = 0; i < 8; i++) {
+    const x = Math.floor(i / 3);
+    const y = i % 3;
+
+    const { text, callback_data } = (
+      parsedResponse8buttons.inline_keyboard[x][y]
+    );
+
+    expect(text).toBe(`Button ${i + 1}`);
+    expect(callback_data).toBe(`Action ${i + 1}`);
+  }
 });

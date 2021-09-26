@@ -2,7 +2,7 @@ import { TableResponse } from '../../chatbots/models';
 import { User } from '../../leetcode/models';
 import dictionary from '../../utils/dictionary';
 
-import users from './data.mock';
+import { users } from './data.mock';
 
 export async function mockGetLeetcodeDataFromUsername(
   username: string,

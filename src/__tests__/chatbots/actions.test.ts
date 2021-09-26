@@ -14,7 +14,7 @@ import {
   compareMenu,
   getCmlFromUser,
 } from '../../chatbots/utils';
-import users from '../__mocks__/data.mock';
+import { users } from '../__mocks__/data.mock';
 
 const mockbot = new Mockbot();
 Cache.database = new MockDatabaseProvider();
