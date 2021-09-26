@@ -9,18 +9,20 @@ import {
   tableForSubmissions,
   generateReplyMarkup,
   createButtonsFromUsers,
+  calculateCml,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
 import constants from '../../utils/constants';
 import Cache from '../../cache';
 
-const { VIZAPI_LINK } = constants;
+const { VIZAPI_LINK, CML } = constants;
 const savedUsers = [...Cache.users];
 
 beforeEach(() => {
   // Fix changed values before each test case
   constants.VIZAPI_LINK = VIZAPI_LINK;
+  constants.CML = CML;
   Cache.users = [...savedUsers];
 });
 
@@ -248,4 +250,30 @@ test('chatbots.utils.createButtonsFromUsers action', async () => {
   const buttonsResponse4 = createButtonsFromUsers(mockOptions4);
 
   expect(buttonsResponse4.length).toBe(0);
+});
+
+test('chatbots.utils.calculateCml action', async () => {
+  const easySolved = 10;
+  const mediumSolved = 8;
+  const hardSolved = 13;
+
+  // Valid: Check with regular values
+  constants.CML = {
+    EASY_POINTS: 1,
+    MEDIUM_POINTS: 2,
+    HARD_POINTS: 3,
+  };
+  const cml1 = calculateCml(easySolved, mediumSolved, hardSolved);
+
+  expect(cml1).toBe(65);
+
+  // Valid: Check with updated values
+  constants.CML = {
+    EASY_POINTS: 5,
+    MEDIUM_POINTS: 15,
+    HARD_POINTS: 50,
+  };
+  const cml2 = calculateCml(easySolved, mediumSolved, hardSolved);
+
+  expect(cml2).toBe(820);
 });
