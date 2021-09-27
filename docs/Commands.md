@@ -32,7 +32,8 @@ Prints out rating of Users. You can display cumulative rating by `/rating cml` c
 
 | Request | Response |
 | --- | --- |
-| `/rating` | ![Rating](https://i.imgur.com/GM26BLT.png) |
+| `/rating` | ![Regular Rating](https://i.imgur.com/EkbBnlo.png) |
+| `/rating cml` | ![Cumulative Rating](https://i.imgur.com/4rM623E.png) |
 
 ---
 
