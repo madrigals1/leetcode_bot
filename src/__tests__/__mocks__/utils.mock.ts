@@ -1,8 +1,13 @@
-import { TableResponse } from '../../chatbots/models';
+import * as _ from 'lodash';
+
+import {
+  TableResponse, ReplyMarkupOptions, ButtonOptions,
+} from '../../chatbots/models';
 import { User } from '../../leetcode/models';
 import dictionary from '../../utils/dictionary';
+import { generateString } from '../../utils/helper';
 
-import { users } from './data.mock';
+import { users, user1 } from './data.mock';
 
 export async function mockGetLeetcodeDataFromUsername(
   username: string,
@@ -50,4 +55,63 @@ export async function mockCompareMenu(
   return new Promise((resolve) => {
     resolve({ link: 'http://random_link_compare' });
   });
+}
+
+export function mockReplyMarkupOptions(
+  buttonCount: number, isClosable: boolean,
+): ReplyMarkupOptions {
+  const buttons = [];
+
+  for (let i = 0; i < buttonCount; i++) {
+    buttons.push({
+      text: `Button ${i + 1}`,
+      action: `Action ${i + 1}`,
+    });
+  }
+
+  return {
+    buttons,
+    isClosable,
+  };
+}
+
+export function mockButtonOptions(
+  action: string, password?: string,
+): ButtonOptions {
+  return { action, password };
+}
+
+export function mockUserWithSolved(
+  easySolved = 30,
+  mediumSolved = 20,
+  hardSolved = 10,
+  username = generateString(10),
+): User {
+  const newUser = _.cloneDeep(user1);
+
+  newUser.username = username;
+  newUser.submitStats.acSubmissionNum = [
+    {
+      count: easySolved,
+      difficulty: 'Easy',
+      submissions: 100,
+    },
+    {
+      count: mediumSolved,
+      difficulty: 'Medium',
+      submissions: 200,
+    },
+    {
+      count: hardSolved,
+      difficulty: 'Hard',
+      submissions: 300,
+    },
+    {
+      count: 600,
+      difficulty: 'All',
+      submissions: 600,
+    },
+  ];
+
+  return newUser;
 }

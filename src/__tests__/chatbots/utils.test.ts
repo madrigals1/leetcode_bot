@@ -1,10 +1,9 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
-import * as _ from 'lodash';
-
+import { user1, user2, users } from '../__mocks__/data.mock';
 import {
-  mockReplyMarkupOptions, mockButtonOptions, user1, user2, users,
-} from '../__mocks__/data.mock';
+  mockReplyMarkupOptions, mockButtonOptions, mockUserWithSolved,
+} from '../__mocks__/utils.mock';
 import {
   getCompareDataFromUser,
   compareMenu,
@@ -13,6 +12,7 @@ import {
   createButtonsFromUsers,
   calculateCml,
   getCmlFromUser,
+  convertToCmlRating,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
@@ -314,36 +314,30 @@ test('chatbots.utils.getCmlFromUser action', async () => {
     MEDIUM_POINTS: 2,
     HARD_POINTS: 3,
   };
-  const updatedUser1 = _.cloneDeep(user1);
+
   const easySolved = 100;
   const mediumSolved = 200;
   const hardSolved = 300;
-
-  updatedUser1.submitStats.acSubmissionNum = [
-    {
-      count: easySolved,
-      difficulty: 'Easy',
-      submissions: 100,
-    },
-    {
-      count: mediumSolved,
-      difficulty: 'Medium',
-      submissions: 200,
-    },
-    {
-      count: hardSolved,
-      difficulty: 'Hard',
-      submissions: 300,
-    },
-    {
-      count: 600,
-      difficulty: 'All',
-      submissions: 600,
-    },
-  ];
+  const updatedUser1 = mockUserWithSolved(easySolved, mediumSolved, hardSolved);
 
   const cml3 = getCmlFromUser(updatedUser1);
   const calculatedCml3 = calculateCml(easySolved, mediumSolved, hardSolved);
 
   expect(cml3).toBe(calculatedCml3);
+});
+
+test('chatbots.utils.convertToCmlRating action', async () => {
+  // Valid: Test with 10 users
+  const userList = [];
+
+  for (let i = 0; i < 10; i++) {
+    const easySolved = Math.floor(Math.random() * 1000);
+    const mediumSolved = Math.floor(Math.random() * 500);
+    const hardSolved = Math.floor(Math.random() * 300);
+    userList.push(mockUserWithSolved(easySolved, mediumSolved, hardSolved));
+  }
+
+  const userListSolved = userList.map((user) => user.solved);
+
+  expect(userListSolved.sort()).toBe(userListSolved);
 });

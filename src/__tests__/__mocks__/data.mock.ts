@@ -3,7 +3,6 @@ import {
 } from '../../leetcode/utils';
 import constants from '../../utils/constants';
 import { User } from '../../leetcode/models';
-import { ReplyMarkupOptions, ButtonOptions } from '../../chatbots/models';
 
 import { MockDatabaseInterface } from './models/mockData.model';
 
@@ -201,27 +200,3 @@ export const mockDatabaseData: MockDatabaseInterface = {
   },
   fakeResult: true,
 };
-
-export function mockReplyMarkupOptions(
-  buttonCount: number, isClosable: boolean,
-): ReplyMarkupOptions {
-  const buttons = [];
-
-  for (let i = 0; i < buttonCount; i++) {
-    buttons.push({
-      text: `Button ${i + 1}`,
-      action: `Action ${i + 1}`,
-    });
-  }
-
-  return {
-    buttons,
-    isClosable,
-  };
-}
-
-export function mockButtonOptions(
-  action: string, password?: string,
-): ButtonOptions {
-  return { action, password };
-}
