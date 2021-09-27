@@ -17,6 +17,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
+    - name: create .env file and add secrets
+      run: >
+        touch .env
+        && echo DISCORD_TEST_TOKEN=${{ secrets.DISCORD_TEST_TOKEN }} >> .env
+        && echo TELEGRAM_TEST_TOKEN=${{ secrets.TELEGRAM_TEST_TOKEN }} >> .env
+        && echo VIZAPI_LINK=${{ secrets.VIZAPI_LINK }} >> .env
+
     - name: Build original image
       run: docker build -t leetcode_bot --file deployment/Dockerfile .
 
