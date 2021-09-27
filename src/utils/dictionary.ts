@@ -73,6 +73,10 @@ const BOT_MESSAGES = {
     return `${constants.EMOJI.ERROR} User <b>${username}</b> does not have any submissions`;
   },
 
+  // RATING RELATED
+  CML_RATING: `${constants.EMOJI.ABACUS} Cumulative Rating`,
+  REGULAR_RATING: `${constants.EMOJI.CLIPBOARD} Regular Rating`,
+
   // USERNAME RELATED
   AT_LEAST_1_USERNAME(prefix: string): string {
     return `${constants.EMOJI.WARNING} Please, enter at least 1 username after <b>${prefix}add</b> command`;

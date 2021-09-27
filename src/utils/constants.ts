@@ -50,6 +50,7 @@ const {
 const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
 
 const EMOJI = {
+  ABACUS: '🧮',
   ERROR: '❗',
   CROSS_MARK: '❌',
   SUCCESS: '✅',
