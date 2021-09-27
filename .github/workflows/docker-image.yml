@@ -13,6 +13,8 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
+    environment: testing_environment
+
     steps:
     - name: Checkout
       uses: actions/checkout@v1
