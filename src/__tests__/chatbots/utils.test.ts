@@ -12,7 +12,6 @@ import {
   createButtonsFromUsers,
   calculateCml,
   getCmlFromUser,
-  convertToCmlRating,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
