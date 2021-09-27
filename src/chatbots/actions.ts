@@ -120,6 +120,14 @@ export default class Actions {
   static async rating(context: Context, args: string[]): Promise<string> {
     // Regular rating with "Problem Solved" count
     if (args.length === 0) {
+      context.options.reply_markup = generateReplyMarkup({
+        buttons: [{
+          text: dictionary.BOT_MESSAGES.CML_RATING,
+          action: '/rating cml',
+        }],
+        isClosable: false,
+      });
+
       return dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers());
     }
 
@@ -130,6 +138,14 @@ export default class Actions {
     if (args[0] === 'cml') {
       const users = Cache.allUsers();
       const usersWithCmlRating = convertToCmlRating(users);
+
+      context.options.reply_markup = generateReplyMarkup({
+        buttons: [{
+          text: dictionary.BOT_MESSAGES.REGULAR_RATING,
+          action: '/rating',
+        }],
+        isClosable: false,
+      });
 
       return dictionary.BOT_MESSAGES.CML_RATING_TEXT(usersWithCmlRating);
     }
