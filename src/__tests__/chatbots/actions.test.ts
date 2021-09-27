@@ -9,8 +9,12 @@ import {
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import constants from '../../utils/constants';
 import { vizapiActions } from '../../chatbots/actions';
-import { tableForSubmissions, compareMenu } from '../../chatbots/utils';
-import users from '../__mocks__/data.mock';
+import {
+  tableForSubmissions,
+  compareMenu,
+  getCmlFromUser,
+} from '../../chatbots/utils';
+import { users } from '../__mocks__/data.mock';
 
 const mockbot = new Mockbot();
 Cache.database = new MockDatabaseProvider();
@@ -213,22 +217,26 @@ test('chatbots.actions.stats action', async () => {
 });
 
 test('chatbots.actions.rating action', async () => {
-  // Test with correct arguments
+  // Confirm that 2 users exist in Database
+  await mockbot.send('/add random_username random_username_2');
+  expect(Cache.users.length).toBe(2);
+
+  // Test regular rating with correct arguments
   await mockbot.send('/rating');
 
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers()));
 
-  // Test with incorrect arguments (argument count)
+  // Test cumulative rating with correct arguments
   await mockbot.send('/rating cml');
 
   // Predefined data
   const cmlRating = Cache.allUsers().map((user) => {
     switch (user.username) {
       case 'random_username':
-        return { ...user, solved: 1741 };
+        return { ...user, solved: getCmlFromUser(user) };
       case 'random_username_2':
-        return { ...user, solved: 1760 };
+        return { ...user, solved: getCmlFromUser(user) };
       default:
         return user;
     }

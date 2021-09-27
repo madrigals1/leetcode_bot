@@ -42,7 +42,9 @@ const SERVER_MESSAGES = {
 
   // LOGGING
   IMAGE_WAS_CREATED: 'The image was created',
-  IMAGE_WAS_NOT_CREATED: 'The image was NOT created',
+  IMAGE_WAS_NOT_CREATED(err: Error | string): string {
+    return `The image was NOT created: ${err}`;
+  },
 
   // TABLE API
   API_NOT_WORKING: 'api_not_working',
@@ -169,9 +171,9 @@ ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
     }
 
     const prefix = `Cumulative Rating:
-${constants.EMOJI.GREEN_CIRCLE} Easy - <b>1 point</b>
-${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>2 points</b>
-${constants.EMOJI.RED_CIRCLE} Hard - <b>3 points</b>
+${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${constants.CML.EASY_POINTS} points</b>
+${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${constants.CML.MEDIUM_POINTS} points</b>
+${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
 
 `;
 

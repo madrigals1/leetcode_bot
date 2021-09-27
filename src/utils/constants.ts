@@ -35,6 +35,10 @@ const {
   POSTGRES_DB_PORT,
   // External Microservices
   VIZAPI_LINK,
+  // Cumulative Rating Settings
+  CML_EASY_POINTS,
+  CML_MEDIUM_POINTS,
+  CML_HARD_POINTS,
   // System settings
   MASTER_PASSWORD,
   LEETCODE_URL,
@@ -149,11 +153,19 @@ const DB = {
   POSTGRES,
 };
 
+const CML = {
+  EASY_POINTS: Number(CML_EASY_POINTS || 1),
+  MEDIUM_POINTS: Number(CML_MEDIUM_POINTS || 2),
+  HARD_POINTS: Number(CML_HARD_POINTS || 3),
+};
+
 export default {
   PROVIDERS,
   // Database settings
   DB,
   DB_PROVIDER,
+  // Cumulative rating
+  CML,
   // System settings
   MASTER_PASSWORD: MASTER_PASSWORD || 'admin',
   LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',

@@ -11,6 +11,7 @@ import {
   compareMenu,
   generateReplyMarkup,
   createButtonsFromUsers,
+  convertToCmlRating,
 } from './utils';
 
 export const registeredActions = [];
@@ -128,30 +129,9 @@ export default class Actions {
     // - Hard - 3 points
     if (args[0] === 'cml') {
       const users = Cache.allUsers();
+      const usersWithCmlRating = convertToCmlRating(users);
 
-      const cmlRating = users
-        .map((user) => {
-          const { acSubmissionNum } = user.submitStats;
-
-          // Get submissions for different difficulty levels
-          const easy = acSubmissionNum
-            .find((sc) => sc.difficulty === 'Easy')
-            .count;
-          const medium = acSubmissionNum
-            .find((sc) => sc.difficulty === 'Medium')
-            .count;
-          const hard = acSubmissionNum
-            .find((sc) => sc.difficulty === 'Hard')
-            .count;
-
-          // Calculate cumulative rating
-          const solved = easy * 1 + medium * 2 + hard * 3;
-
-          return { ...user, solved };
-        })
-        .sort((user1, user2) => user2.solved - user1.solved);
-
-      return dictionary.BOT_MESSAGES.CML_RATING_TEXT(cmlRating);
+      return dictionary.BOT_MESSAGES.CML_RATING_TEXT(usersWithCmlRating);
     }
 
     // Fallback to incorrect input
