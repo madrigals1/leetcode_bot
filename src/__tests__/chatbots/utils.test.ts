@@ -1,5 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
+import * as _ from 'lodash';
+
 import {
   mockReplyMarkupOptions, mockButtonOptions, user1, user2, users,
 } from '../__mocks__/data.mock';
@@ -10,6 +12,7 @@ import {
   generateReplyMarkup,
   createButtonsFromUsers,
   calculateCml,
+  getCmlFromUser,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
@@ -31,7 +34,7 @@ afterEach(() => {
 });
 
 beforeAll(async () => {
-  jest.setTimeout(100000);
+  jest.setTimeout(30000);
 });
 
 afterAll(async () => {
@@ -276,4 +279,71 @@ test('chatbots.utils.calculateCml action', async () => {
   const cml2 = calculateCml(easySolved, mediumSolved, hardSolved);
 
   expect(cml2).toBe(820);
+});
+
+test('chatbots.utils.getCmlFromUser action', async () => {
+  // Valid: Check with regular values
+  constants.CML = {
+    EASY_POINTS: 1,
+    MEDIUM_POINTS: 2,
+    HARD_POINTS: 3,
+  };
+  const cmlForUser1 = getCmlFromUser(user1);
+  // Default value for user1
+  // Easy: 12312
+  // Medium: 2321
+  // Hard: 2231
+  const calculatedCml1 = calculateCml(12312, 2321, 2231);
+
+  expect(cmlForUser1).toBe(calculatedCml1);
+
+  // Valid: Check with updated CML values
+  constants.CML = {
+    EASY_POINTS: 5,
+    MEDIUM_POINTS: 15,
+    HARD_POINTS: 50,
+  };
+  const cml2 = getCmlFromUser(user1);
+  const calculatedCml2 = calculateCml(12312, 2321, 2231);
+
+  expect(cml2).toBe(calculatedCml2);
+
+  // Valid: Check with updated Problem values
+  constants.CML = {
+    EASY_POINTS: 1,
+    MEDIUM_POINTS: 2,
+    HARD_POINTS: 3,
+  };
+  const updatedUser1 = _.cloneDeep(user1);
+  const easySolved = 100;
+  const mediumSolved = 200;
+  const hardSolved = 300;
+
+  updatedUser1.submitStats.acSubmissionNum = [
+    {
+      count: easySolved,
+      difficulty: 'Easy',
+      submissions: 100,
+    },
+    {
+      count: mediumSolved,
+      difficulty: 'Medium',
+      submissions: 200,
+    },
+    {
+      count: hardSolved,
+      difficulty: 'Hard',
+      submissions: 300,
+    },
+    {
+      count: 600,
+      difficulty: 'All',
+      submissions: 600,
+    },
+  ];
+
+  const cml3 = getCmlFromUser(updatedUser1);
+  const calculatedCml3 = calculateCml(easySolved, mediumSolved, hardSolved);
+
+  expect(cml3).toBe(calculatedCml3);
 });
