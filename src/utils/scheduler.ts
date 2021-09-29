@@ -4,11 +4,11 @@ import Cache from '../cache';
 
 import constants from './constants';
 
-export function startScheduler(): void {
+export function refreshUsersCron(): void {
   schedule.scheduleJob(
     constants.SYSTEM.USERS_REFRESH_DELAY,
     () => Cache.refreshUsers(),
   );
 }
 
-export default startScheduler;
+export default refreshUsersCron;
