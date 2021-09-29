@@ -7,89 +7,91 @@ import DatabaseProvider from '../database.proto';
 
 import UserModel from './schemas';
 
+const { MONGO } = constants.DATABASE;
+
 // Main class for MongoDB Database
 class MongoDB extends DatabaseProvider {
-    // If authentication credentials were provided in environment, use them.
-    // If not, use empty string in MongoDB connection
-    credentials: string = constants.DB.MONGO.DB_AUTHENTICATION_ENABLED
-      ? `${constants.DB.MONGO.DB_USER}:${constants.DB.MONGO.DB_PASSWORD}@`
-      : '';
+  // If authentication credentials were provided in environment, use them.
+  // If not, use empty string in MongoDB connection
+  credentials: string = MONGO.DB_AUTHENTICATION_ENABLED
+    ? `${MONGO.DB_USER}:${MONGO.DB_PASSWORD}@`
+    : '';
 
-    // Set Authentication Source to connect to MongoDB database
-    authSource: string = constants.DB.MONGO.DB_AUTHENTICATION_ENABLED
-      ? '?authSource=admin'
-      : '';
+  // Set Authentication Source to connect to MongoDB database
+  authSource: string = MONGO.DB_AUTHENTICATION_ENABLED
+    ? '?authSource=admin'
+    : '';
 
-    // URL for Connection to MongoDB, is already usable for connection.
-    databaseUrl = `${constants.DB.MONGO.DB_URL}:${constants.DB.MONGO.DB_PORT}/${constants.DB.MONGO.DB_NAME}`;
+  // URL for Connection to MongoDB, is already usable for connection.
+  databaseUrl = `${MONGO.DB_URL}:${MONGO.DB_PORT}/${MONGO.DB_NAME}`;
 
-    // URL for Connection to MongoDB, that contains authentication
-    mongoUrl = `mongodb://${this.credentials}${this.databaseUrl}${this.authSource}`;
+  // URL for Connection to MongoDB, that contains authentication
+  mongoUrl = `mongodb://${this.credentials}${this.databaseUrl}${this.authSource}`;
 
-    // Indicator to see, if Database is already refreshing
-    isRefreshing = false;
+  // Indicator to see, if Database is already refreshing
+  isRefreshing = false;
 
-    UserModel = UserModel;
+  UserModel = UserModel;
 
-    // Connect to Database
-    async connect(): Promise<void> {
-      await mongoose
-        .connect(this.mongoUrl, {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-          useFindAndModify: false,
-          useCreateIndex: true,
-        })
-        .then(() => {
-          log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
-        })
-        .catch((err) => {
-          error(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
-        });
-    }
+  // Connect to Database
+  async connect(): Promise<void> {
+    await mongoose
+      .connect(this.mongoUrl, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        useCreateIndex: true,
+      })
+      .then(() => {
+        log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
+      })
+      .catch((err) => {
+        error(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
+      });
+  }
 
-    // Find all Users
-    async findAllUsers() {
-      return this.UserModel.find();
-    }
+  // Find all Users
+  async findAllUsers() {
+    return this.UserModel.find();
+  }
 
-    // Load User by `username`
-    async loadUser(username: string) {
-      return this.UserModel.findOne({ username });
-    }
+  // Load User by `username`
+  async loadUser(username: string) {
+    return this.UserModel.findOne({ username });
+  }
 
-    // Add User to Database
-    async addUser(username: string) {
-      const existingUser = await this.loadUser(username);
+  // Add User to Database
+  async addUser(username: string) {
+    const existingUser = await this.loadUser(username);
 
-      // If User does exist, no need to add new
-      if (existingUser) return null;
+    // If User does exist, no need to add new
+    if (existingUser) return null;
 
-      // Create new User and save
-      const newUser = new this.UserModel({ username });
-      await newUser.save();
+    // Create new User and save
+    const newUser = new this.UserModel({ username });
+    await newUser.save();
 
-      return newUser;
-    }
+    return newUser;
+  }
 
-    async removeUser(username: string): Promise<boolean> {
-      const user = await this.loadUser(username);
+  async removeUser(username: string): Promise<boolean> {
+    const user = await this.loadUser(username);
 
-      // If User does exist, no delete him, otherwise
-      if (!user) return false;
+    // If User does exist, no delete him, otherwise
+    if (!user) return false;
 
-      // If User exists, delete him
-      await this.UserModel.deleteOne({ username });
+    // If User exists, delete him
+    await this.UserModel.deleteOne({ username });
 
-      return true;
-    }
+    return true;
+  }
 
-    async removeAllUsers(): Promise<boolean> {
+  async removeAllUsers(): Promise<boolean> {
     // Delete all users
-      await this.UserModel.deleteMany({});
+    await this.UserModel.deleteMany({});
 
-      return true;
-    }
+    return true;
+  }
 }
 
 export default MongoDB;

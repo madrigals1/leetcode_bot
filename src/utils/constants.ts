@@ -149,7 +149,7 @@ const POSTGRES = {
   DB_PORT: POSTGRES_DB_PORT,
 };
 
-const DB = {
+const DATABASE = {
   MONGO,
   POSTGRES,
   PROVIDER: DB_PROVIDER || 'sqlite3',
@@ -164,7 +164,7 @@ const CML = {
 export default {
   PROVIDERS,
   // Database settings
-  DB,
+  DATABASE,
   // Cumulative rating
   CML,
   // System settings
