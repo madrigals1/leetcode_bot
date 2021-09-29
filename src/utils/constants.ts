@@ -2,12 +2,15 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-// ENV Variables
 const {
+  // ---------------------------------------------------------------------------
   // Chatbot settings
+  // ---------------------------------------------------------------------------
+
   // Telegram
   TELEGRAM_TOKEN,
   TELEGRAM_TEST_TOKEN,
+
   // Slack
   SLACK_TOKEN,
   SLACK_TEST_TOKEN,
@@ -15,39 +18,52 @@ const {
   SLACK_TEST_SIGNING_SECRET,
   SLACK_APP_TOKEN,
   SLACK_TEST_APP_TOKEN,
+
   // Discord
   DISCORD_TOKEN,
   DISCORD_TEST_TOKEN,
+
+  // ---------------------------------------------------------------------------
   // Database settings
+  // ---------------------------------------------------------------------------
+
+  // Database provider (sqlite3, mongo or postgres)
   DB_PROVIDER,
-  // 1) MongoDB settings
+
+  // MongoDB
   MONGO_DB_URL,
   MONGO_DB_NAME,
   MONGO_DB_USER,
   MONGO_DB_PASSWORD,
   MONGO_DB_PORT,
   MONGO_DB_AUTHENTICATION_ENABLED,
-  // 2) Postgres settings
+
+  // Postgres
   POSTGRES_DB_URL,
   POSTGRES_DB_NAME,
   POSTGRES_DB_USER,
   POSTGRES_DB_PASSWORD,
   POSTGRES_DB_PORT,
+
+  // ---------------------------------------------------------------------------
+  // MISC
+  // ---------------------------------------------------------------------------
+
   // External Microservices
   VIZAPI_LINK,
+
   // Cumulative Rating Settings
   CML_EASY_POINTS,
   CML_MEDIUM_POINTS,
   CML_HARD_POINTS,
+
   // System settings
   MASTER_PASSWORD,
   LEETCODE_URL,
   USER_AMOUNT_LIMIT,
-  DELAY_TIME_MS,
-  NODE_SCHEDULE_TIME,
+  USER_REQUEST_DELAY_MS,
+  USERS_REFRESH_DELAY,
 } = process.env;
-
-const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
 
 const EMOJI = {
   ABACUS: '🧮',
@@ -73,7 +89,7 @@ const EMOJI = {
   FEAR: '😱',
 };
 
-const STATUS_MAP = {
+const SUBMISSION_STATUS_MAP = {
   Accepted: `${EMOJI.HEART} Accepted`,
   'Runtime Error': `${EMOJI.ROFL} Runtime Error`,
   'Compile Error': `${EMOJI.ROFL} Compile Error`,
@@ -86,6 +102,9 @@ const STATUS_MAP = {
 const STATUS = {
   ERROR: 'error',
   SUCCESS: 'success',
+};
+
+const CHAT_STATUS = {
   TYPING: 'typing',
 };
 
@@ -133,25 +152,26 @@ const PROVIDERS = {
 };
 
 const MONGO = {
-  DB_URL: MONGO_DB_URL,
-  DB_NAME: MONGO_DB_NAME,
-  DB_PORT: MONGO_DB_PORT,
-  DB_PASSWORD: MONGO_DB_PASSWORD,
-  DB_USER: MONGO_DB_USER,
-  DB_AUTHENTICATION_ENABLED: MONGO_DB_AUTHENTICATION_ENABLED,
+  URL: MONGO_DB_URL,
+  NAME: MONGO_DB_NAME,
+  PORT: MONGO_DB_PORT,
+  PASSWORD: MONGO_DB_PASSWORD,
+  USER: MONGO_DB_USER,
+  AUTHENTICATION_ENABLED: MONGO_DB_AUTHENTICATION_ENABLED,
 };
 
 const POSTGRES = {
-  DB_URL: POSTGRES_DB_URL,
-  DB_NAME: POSTGRES_DB_NAME,
-  DB_USER: POSTGRES_DB_USER,
-  DB_PASSWORD: POSTGRES_DB_PASSWORD,
-  DB_PORT: POSTGRES_DB_PORT,
+  URL: POSTGRES_DB_URL,
+  NAME: POSTGRES_DB_NAME,
+  USER: POSTGRES_DB_USER,
+  PASSWORD: POSTGRES_DB_PASSWORD,
+  PORT: POSTGRES_DB_PORT,
 };
 
-const DB = {
+const DATABASE = {
   MONGO,
   POSTGRES,
+  PROVIDER: DB_PROVIDER || 'sqlite3',
 };
 
 const CML = {
@@ -160,24 +180,23 @@ const CML = {
   HARD_POINTS: Number(CML_HARD_POINTS || 3),
 };
 
-export default {
-  PROVIDERS,
-  // Database settings
-  DB,
-  DB_PROVIDER,
-  // Cumulative rating
-  CML,
-  // System settings
+const SYSTEM = {
   MASTER_PASSWORD: MASTER_PASSWORD || 'admin',
   LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',
   USER_AMOUNT_LIMIT: parseInt(USER_AMOUNT_LIMIT, 10) || 30,
-  DELAY_TIME_MS: parseInt(DELAY_TIME_MS, 10) || 4000,
-  NODE_SCHEDULE_TIME: NODE_SCHEDULE_TIME || '*/30 * * * *',
-  // External Microservices
+  USER_REQUEST_DELAY_MS: parseInt(USER_REQUEST_DELAY_MS, 10) || 4000,
+  USERS_REFRESH_DELAY: USERS_REFRESH_DELAY || '*/30 * * * *',
+  DATE_FORMAT: 'YYYY-MM-DD hh:mm a',
+};
+
+export default {
+  PROVIDERS,
+  DATABASE,
+  CML,
+  SYSTEM,
   VIZAPI_LINK,
-  // Constants
-  DATE_FORMAT,
-  STATUS_MAP,
+  SUBMISSION_STATUS_MAP,
   EMOJI,
   STATUS,
+  CHAT_STATUS,
 };

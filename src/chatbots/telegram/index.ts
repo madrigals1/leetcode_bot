@@ -48,7 +48,7 @@ class Telegram {
         // If action is send from User, send typing indicator
         if (message.chat) {
           this.bot
-            .sendChatAction(message.chat.id, constants.STATUS.TYPING)
+            .sendChatAction(message.chat.id, constants.CHAT_STATUS.TYPING)
             .then();
         }
 

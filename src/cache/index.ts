@@ -9,16 +9,18 @@ import { User } from '../leetcode/models';
 
 import { CacheResponse } from './response.model';
 
+const { DATE_FORMAT } = constants.SYSTEM;
+
 class Cache {
   users: User[] = [];
 
   database = Database;
 
-  userLimit: number = constants.USER_AMOUNT_LIMIT;
+  userLimit: number = constants.SYSTEM.USER_AMOUNT_LIMIT;
 
   getLeetcodeDataFromUsername: CallableFunction = getLeetcodeDataFromUsername;
 
-  delayTime: number = constants.DELAY_TIME_MS;
+  delayTime: number = constants.SYSTEM.USER_REQUEST_DELAY_MS;
 
   // Return all users
   allUsers(): User[] {
@@ -56,7 +58,7 @@ class Cache {
 
     // Set database as refreshing and get refresh time
     this.database.isRefreshing = true;
-    const refreshedStartedAt: string = dayjs().format(constants.DATE_FORMAT);
+    const refreshedStartedAt: string = dayjs().format(DATE_FORMAT);
 
     // Log when refresh started
     log(dictionary.SERVER_MESSAGES.DATABASE_STARTED_REFRESH(
@@ -99,7 +101,7 @@ class Cache {
 
     // Set database indicators
     this.database.isRefreshing = false;
-    const refreshFinishedAt = dayjs().format(constants.DATE_FORMAT);
+    const refreshFinishedAt = dayjs().format(DATE_FORMAT);
 
     // Log when refresh started
     log(dictionary.SERVER_MESSAGES.DATABASE_FINISHED_REFRESH(

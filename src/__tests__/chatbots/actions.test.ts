@@ -22,12 +22,12 @@ Cache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 Cache.delayTime = 0;
 
 const mockPassword = 'random_password';
-constants.MASTER_PASSWORD = mockPassword;
+constants.SYSTEM.MASTER_PASSWORD = mockPassword;
 
 beforeEach(() => {
   mockbot.clear();
   Cache.clearUsers();
-  Cache.userLimit = constants.USER_AMOUNT_LIMIT;
+  Cache.userLimit = constants.SYSTEM.USER_AMOUNT_LIMIT;
   vizapiActions.tableForSubmissions = tableForSubmissions;
   vizapiActions.compareMenu = compareMenu;
 });

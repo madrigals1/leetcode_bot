@@ -207,12 +207,12 @@ ${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
 <b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
 
 <b>DATABASE RELATED</b>
-<b>Database:</b> ${constants.DB_PROVIDER}
+<b>Database:</b> ${constants.DATABASE.PROVIDER}
 <b>User Count:</b> ${users.length}
 <b>User amount limit:</b> ${userLimit}
 
 <b>SYSTEM RELATED</b>
-<b>Delay between calls:</b> ${constants.DELAY_TIME_MS}
+<b>Delay between calls:</b> ${constants.SYSTEM.USER_REQUEST_DELAY_MS}
 
 <b>USER LIST</b>
 ${userNameList}

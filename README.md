@@ -108,10 +108,10 @@ Make sure you have installed these:
     SUBMISSION_COUNT=5
     ```
 
-6. Delay time is set to 4s, depends on LeetCode RPM.
+6. Delay time after loading each User is set to 4s, depends on LeetCode RPM.
 
     ```dotenv
-    DELAY_TIME_MS=4000
+    USER_REQUEST_DELAY_MS=4000
     ```
 
 7. Install npm packages
