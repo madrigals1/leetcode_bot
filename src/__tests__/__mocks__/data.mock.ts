@@ -29,14 +29,14 @@ export const user1: User = {
   submissions: [
     {
       link: getLeetcodeProblemLink('random_problem_slug'),
-      status: constants.STATUS_MAP.Accepted,
+      status: constants.SUBMISSION_STATUS_MAP.Accepted,
       language: 'cpp',
       name: 'Random Problem Name',
       time: '10 minutes ago',
     },
     {
       link: getLeetcodeProblemLink('random_problem_slug_2'),
-      status: constants.STATUS_MAP['Runtime Error'],
+      status: constants.SUBMISSION_STATUS_MAP['Runtime Error'],
       language: 'python',
       name: 'Random Problem Name 2',
       time: '2 weeks ago',
@@ -120,14 +120,14 @@ export const user2: User = {
   submissions: [
     {
       link: getLeetcodeProblemLink('random_problem_slug_3'),
-      status: constants.STATUS_MAP.Accepted,
+      status: constants.SUBMISSION_STATUS_MAP.Accepted,
       language: 'java',
       name: 'Random Problem Name 3',
       time: '2 hours ago',
     },
     {
       link: getLeetcodeProblemLink('random_problem_slug_4'),
-      status: constants.STATUS_MAP['Runtime Error'],
+      status: constants.SUBMISSION_STATUS_MAP['Runtime Error'],
       language: 'javascript',
       name: 'Random Problem Name 4',
       time: '9 hours ago',
