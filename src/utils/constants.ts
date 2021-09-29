@@ -2,12 +2,15 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-// ENV Variables
 const {
+  // ---------------------------------------------------------------------------
   // Chatbot settings
+  // ---------------------------------------------------------------------------
+
   // Telegram
   TELEGRAM_TOKEN,
   TELEGRAM_TEST_TOKEN,
+
   // Slack
   SLACK_TOKEN,
   SLACK_TEST_TOKEN,
@@ -15,30 +18,45 @@ const {
   SLACK_TEST_SIGNING_SECRET,
   SLACK_APP_TOKEN,
   SLACK_TEST_APP_TOKEN,
+
   // Discord
   DISCORD_TOKEN,
   DISCORD_TEST_TOKEN,
+
+  // ---------------------------------------------------------------------------
   // Database settings
+  // ---------------------------------------------------------------------------
+
+  // Database provider (sqlite3, mongo or postgres)
   DB_PROVIDER,
-  // 1) MongoDB settings
+
+  // MongoDB
   MONGO_DB_URL,
   MONGO_DB_NAME,
   MONGO_DB_USER,
   MONGO_DB_PASSWORD,
   MONGO_DB_PORT,
   MONGO_DB_AUTHENTICATION_ENABLED,
-  // 2) Postgres settings
+
+  // Postgres
   POSTGRES_DB_URL,
   POSTGRES_DB_NAME,
   POSTGRES_DB_USER,
   POSTGRES_DB_PASSWORD,
   POSTGRES_DB_PORT,
+
+  // ---------------------------------------------------------------------------
+  // MISC
+  // ---------------------------------------------------------------------------
+
   // External Microservices
   VIZAPI_LINK,
+
   // Cumulative Rating Settings
   CML_EASY_POINTS,
   CML_MEDIUM_POINTS,
   CML_HARD_POINTS,
+
   // System settings
   MASTER_PASSWORD,
   LEETCODE_URL,
@@ -46,8 +64,6 @@ const {
   DELAY_TIME_MS,
   NODE_SCHEDULE_TIME,
 } = process.env;
-
-const DATE_FORMAT = 'YYYY-MM-DD hh:mm a';
 
 const EMOJI = {
   ABACUS: '🧮',
@@ -164,22 +180,21 @@ const CML = {
   HARD_POINTS: Number(CML_HARD_POINTS || 3),
 };
 
-export default {
-  PROVIDERS,
-  // Database settings
-  DATABASE,
-  // Cumulative rating
-  CML,
-  // System settings
+const SYSTEM = {
   MASTER_PASSWORD: MASTER_PASSWORD || 'admin',
   LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',
   USER_AMOUNT_LIMIT: parseInt(USER_AMOUNT_LIMIT, 10) || 30,
   DELAY_TIME_MS: parseInt(DELAY_TIME_MS, 10) || 4000,
   NODE_SCHEDULE_TIME: NODE_SCHEDULE_TIME || '*/30 * * * *',
-  // External Microservices
+  DATE_FORMAT: 'YYYY-MM-DD hh:mm a',
+};
+
+export default {
+  PROVIDERS,
+  DATABASE,
+  CML,
+  SYSTEM,
   VIZAPI_LINK,
-  // Misc
-  DATE_FORMAT,
   SUBMISSION_STATUS_MAP,
   EMOJI,
   STATUS,

@@ -6,7 +6,7 @@ import constants from './constants';
 
 export function startScheduler(): void {
   schedule.scheduleJob(
-    constants.NODE_SCHEDULE_TIME,
+    constants.SYSTEM.NODE_SCHEDULE_TIME,
     () => Cache.refreshUsers(),
   );
 }

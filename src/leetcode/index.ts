@@ -28,7 +28,7 @@ dayjs.extend(relativeTime);
 
 async function getLeetcodeDataFromUsername(username: string): Promise<User> {
   // Data for GraphQL Response
-  const graphQLLink = `${constants.LEETCODE_URL}/graphql`;
+  const graphQLLink = `${constants.SYSTEM.LEETCODE_URL}/graphql`;
 
   // Get User Profile Data from GraphQL
   const userProfileQuery: GraphQLQuery = userProfileGraphQLQuery(username);

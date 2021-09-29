@@ -41,7 +41,7 @@ export function action(actionContext: ActionContext): (
         // Password should be last argument of message
         const password = args[args.length - 1];
 
-        if (password !== constants.MASTER_PASSWORD) {
+        if (password !== constants.SYSTEM.MASTER_PASSWORD) {
           return reply(
             dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT, updatedContext,
           );
