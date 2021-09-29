@@ -48,7 +48,7 @@ Make sure you have installed these:
 
 ### Installation Steps
 
-1. Make a copy of .env.example file named .env
+1. Make a copy of `.env.example` file named `.env`
 
     ```shell script
     cp .env.example .env
@@ -58,28 +58,21 @@ Make sure you have installed these:
 
     ```dotenv
     # Change TELEGRAM_TOKEN to your own token you get from https://t.me/botfather
-    TELEGRAM_ENABLE=True
-    TELEGRAM_TOKEN=****************************************
+    TELEGRAM_TOKEN=
 
     # Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
-    DISCORD_ENABLE=False
-    DISCORD_TOKEN=*****************************************
+    DISCORD_TOKEN=
     
     # Change SLACK credentials to your own token you get from https://api.slack.com/apps
-    SLACK_ENABLE=False
-    SLACK_TOKEN=*******************************************
-    SLACK_SIGNING_SECRET=**********************************
-    SLACK_APP_TOKEN=***************************************
-    SLACK_TEST_ENABLE=False
-    SLACK_TEST_TOKEN=**************************************
-    SLACK_TEST_SIGNING_SECRET=*****************************
-    SLACK_TEST_APP_TOKEN=**********************************
+    SLACK_TOKEN=
+    SLACK_SIGNING_SECRET=
+    SLACK_APP_TOKEN=
     ```
 
-3. Change **MASTER_PASSWORD** value to secure password, that will be used for deleting data.
+3. Change **MASTER_PASSWORD** value to secure password, that will be used for admin actions
 
     ```dotenv
-    MASTER_PASSWORD=***************************************
+    MASTER_PASSWORD=admin
     ```
 
 4. Change settings for **Database**
@@ -105,18 +98,13 @@ Make sure you have installed these:
         POSTGRES_DB_PORT=5432
         ```
 
-5. Change submission count, that will be shown for each User - `/rating <username>`
-    ```dotenv
-    SUBMISSION_COUNT=5
-    ```
-
-6. Delay time after loading each User is set to 4s, depends on LeetCode RPM.
+5. Delay time after loading each User is set to 4s, depends on LeetCode RPM
 
     ```dotenv
     USER_REQUEST_DELAY_MS=4000
     ```
 
-7. Install npm packages
+6. Install npm packages
 
     ```
     npm ci
