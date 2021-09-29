@@ -20,7 +20,7 @@ class Cache {
 
   getLeetcodeDataFromUsername: CallableFunction = getLeetcodeDataFromUsername;
 
-  delayTime: number = constants.SYSTEM.DELAY_TIME_MS;
+  delayTime: number = constants.SYSTEM.USER_REQUEST_DELAY_MS;
 
   // Return all users
   allUsers(): User[] {

@@ -78,10 +78,10 @@ Change submission count, that will be shown for each User - `/rating <username>`
 SUBMISSION_COUNT=5
 ```
 
-Delay time is set to 4s, depends on LeetCode RPM, which I don't know.
+Delay time after loading each User is set to 4s, depends on LeetCode RPM.
 
 ```dotenv
-DELAY_TIME_MS=4000
+USER_REQUEST_DELAY_MS=4000
 ```
 
 Build **Docker Compose**
