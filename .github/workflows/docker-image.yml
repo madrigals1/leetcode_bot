@@ -8,7 +8,7 @@ on:
 
 jobs:
   docker:
-    name: Test
+    name: Test inside Container
 
     timeout-minutes: 10
     runs-on: ubuntu-latest
