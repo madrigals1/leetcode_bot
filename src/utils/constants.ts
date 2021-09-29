@@ -73,7 +73,7 @@ const EMOJI = {
   FEAR: '😱',
 };
 
-const STATUS_MAP = {
+const SUBMISSION_STATUS_MAP = {
   Accepted: `${EMOJI.HEART} Accepted`,
   'Runtime Error': `${EMOJI.ROFL} Runtime Error`,
   'Compile Error': `${EMOJI.ROFL} Compile Error`,
@@ -86,6 +86,9 @@ const STATUS_MAP = {
 const STATUS = {
   ERROR: 'error',
   SUCCESS: 'success',
+};
+
+const CHAT_STATUS = {
   TYPING: 'typing',
 };
 
@@ -175,9 +178,10 @@ export default {
   NODE_SCHEDULE_TIME: NODE_SCHEDULE_TIME || '*/30 * * * *',
   // External Microservices
   VIZAPI_LINK,
-  // Constants
+  // Misc
   DATE_FORMAT,
-  STATUS_MAP,
+  SUBMISSION_STATUS_MAP,
   EMOJI,
   STATUS,
+  CHAT_STATUS,
 };

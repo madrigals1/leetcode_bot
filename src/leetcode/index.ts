@@ -60,7 +60,7 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
 
       return {
         link: getLeetcodeProblemLink(submission.titleSlug),
-        status: constants.STATUS_MAP[submission.statusDisplay],
+        status: constants.SUBMISSION_STATUS_MAP[submission.statusDisplay],
         language: submissionData.languageList.find((language: LanguageNode) => (
           language.name === submission.lang
         )).verboseName,
