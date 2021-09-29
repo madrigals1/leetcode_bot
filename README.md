@@ -8,6 +8,8 @@ Leetcode Bot is an app, that gets data for **LeetCode Users** and creates **Rati
 4. megasaab 132
 ```
 
+![Demo](https://i.imgur.com/tdg7Wwr.png)
+
 **LeetCode BOT** is available on 3 platforms:
 - **Telegram**
 - **Discord**
