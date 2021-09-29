@@ -152,6 +152,7 @@ const POSTGRES = {
 const DB = {
   MONGO,
   POSTGRES,
+  PROVIDER: DB_PROVIDER || 'sqlite3',
 };
 
 const CML = {
@@ -164,7 +165,6 @@ export default {
   PROVIDERS,
   // Database settings
   DB,
-  DB_PROVIDER,
   // Cumulative rating
   CML,
   // System settings

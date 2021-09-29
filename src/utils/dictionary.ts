@@ -207,7 +207,7 @@ ${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
 <b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
 
 <b>DATABASE RELATED</b>
-<b>Database:</b> ${constants.DB_PROVIDER}
+<b>Database:</b> ${constants.DB.PROVIDER}
 <b>User Count:</b> ${users.length}
 <b>User amount limit:</b> ${userLimit}
 
