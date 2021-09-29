@@ -13,17 +13,17 @@ const { MONGO } = constants.DATABASE;
 class MongoDB extends DatabaseProvider {
   // If authentication credentials were provided in environment, use them.
   // If not, use empty string in MongoDB connection
-  credentials: string = MONGO.DB_AUTHENTICATION_ENABLED
-    ? `${MONGO.DB_USER}:${MONGO.DB_PASSWORD}@`
+  credentials: string = MONGO.AUTHENTICATION_ENABLED
+    ? `${MONGO.USER}:${MONGO.PASSWORD}@`
     : '';
 
   // Set Authentication Source to connect to MongoDB database
-  authSource: string = MONGO.DB_AUTHENTICATION_ENABLED
+  authSource: string = MONGO.AUTHENTICATION_ENABLED
     ? '?authSource=admin'
     : '';
 
   // URL for Connection to MongoDB, is already usable for connection.
-  databaseUrl = `${MONGO.DB_URL}:${MONGO.DB_PORT}/${MONGO.DB_NAME}`;
+  databaseUrl = `${MONGO.URL}:${MONGO.PORT}/${MONGO.NAME}`;
 
   // URL for Connection to MongoDB, that contains authentication
   mongoUrl = `mongodb://${this.credentials}${this.databaseUrl}${this.authSource}`;

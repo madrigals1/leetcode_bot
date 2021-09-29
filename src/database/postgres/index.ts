@@ -11,11 +11,11 @@ const { POSTGRES } = constants.DATABASE;
 
 class Postgres extends DatabaseProvider {
   client = new pg.Client({
-    user: POSTGRES.DB_USER,
-    host: POSTGRES.DB_URL,
-    database: POSTGRES.DB_NAME,
-    password: POSTGRES.DB_PASSWORD,
-    port: POSTGRES.DB_PORT,
+    user: POSTGRES.USER,
+    host: POSTGRES.URL,
+    database: POSTGRES.NAME,
+    password: POSTGRES.PASSWORD,
+    port: POSTGRES.PORT,
   });
 
   // Connect database
