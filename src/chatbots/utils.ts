@@ -5,8 +5,6 @@ import { log, error } from '../utils/helper';
 import dictionary from '../utils/dictionary';
 import { User } from '../leetcode/models';
 import Cache from '../cache';
-import { UserProblemsSolvedData } from '../leetcode/models/user.model';
-import { SubmissionsCountNode } from '../leetcode/models/profile.model';
 
 import {
   ReplyMarkupOptions,
@@ -156,43 +154,4 @@ export function createButtonsFromUsers(
   }));
 
   return buttons;
-}
-
-export function calculateCml(
-  easySolvedCount: number,
-  mediumSolvedCount: number,
-  hardSolvedCount: number,
-): number {
-  return (easySolvedCount * constants.CML.EASY_POINTS)
-    + (mediumSolvedCount * constants.CML.MEDIUM_POINTS)
-    + (hardSolvedCount * constants.CML.HARD_POINTS);
-}
-
-export function getProblemsSolved(
-  submissions: SubmissionsCountNode[],
-): UserProblemsSolvedData {
-  // Get submissions for different difficulty levels
-  const easySolvedCount = submissions
-    .find((sc) => sc.difficulty === 'Easy')
-    .count;
-  const mediumSolvedCount = submissions
-    .find((sc) => sc.difficulty === 'Medium')
-    .count;
-  const hardSolvedCount = submissions
-    .find((sc) => sc.difficulty === 'Hard')
-    .count;
-
-  // Get overall value for ratings
-  const allSolvedCount = easySolvedCount + mediumSolvedCount + hardSolvedCount;
-  const cumulativeSolvedCount = calculateCml(
-    easySolvedCount, mediumSolvedCount, hardSolvedCount,
-  );
-
-  return {
-    easy: easySolvedCount,
-    medium: mediumSolvedCount,
-    hard: hardSolvedCount,
-    all: allSolvedCount,
-    cumulative: cumulativeSolvedCount,
-  };
 }

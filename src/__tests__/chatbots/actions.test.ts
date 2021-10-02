@@ -239,6 +239,8 @@ test('chatbots.actions.rating action', async () => {
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.CML_RATING_TEXT(cmlRating));
 
+  // TODO: Test with 10 users
+
   // Test with incorrect arguments (argument count)
   await mockbot.send('/rating asd');
 

@@ -1,4 +1,4 @@
-import { UserProfile } from './profile.model';
+import { UserProfile, SubmissionsCountNode } from './profile.model';
 import { GraphQLQuery } from './graphqlQuery.model';
 import { GraphQLContext } from './graphqlContext.model';
 import {
@@ -6,7 +6,7 @@ import {
 } from './recentSubmissionsList.model';
 import { Contest } from './contest.model';
 import { SubmissionData } from './submissionData.model';
-import { User } from './user.model';
+import { User, UserProblemsSolvedData } from './user.model';
 
 export {
   UserProfile,
@@ -18,4 +18,6 @@ export {
   Contest,
   SubmissionData,
   User,
+  SubmissionsCountNode,
+  UserProblemsSolvedData,
 };

@@ -1,29 +1,20 @@
-import * as dayjs from 'dayjs';
-import * as duration from 'dayjs/plugin/duration';
-import * as relativeTime from 'dayjs/plugin/relativeTime';
-
-import constants from '../utils/constants';
-import { getProblemsSolved } from '../chatbots/utils';
-
+import {
+  getProblemsSolved,
+  getLeetcodeUsernameLink,
+  getRecentSubmissions,
+} from './utils';
 import {
   UserProfile,
   RecentSubmissionList,
-  SubmissionDumpNode,
-  LanguageNode,
   Contest,
   User,
-  SubmissionData,
 } from './models';
-import { getLeetcodeUsernameLink, getLeetcodeProblemLink } from './utils';
 import {
   getUserProfileContext,
   getRecentSubmissionListContext,
   getContestRankingContext,
 } from './graphql';
 import gqlQuery from './graphql/utils';
-
-dayjs.extend(duration);
-dayjs.extend(relativeTime);
 
 async function getLeetcodeDataFromUsername(username: string): Promise<User> {
   // ---------------------------------------------------------------------------
@@ -37,35 +28,20 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
 
   // Get User Recent Submissions Data
   const submissionDataContext = getRecentSubmissionListContext(username);
-  const submissionData: RecentSubmissionList = (
+  const submissionData = (
     await gqlQuery<RecentSubmissionList>(submissionDataContext)
   );
 
   // Get Contest Data
   const contestDataContext = getContestRankingContext(username);
-  const contestData: Contest = await gqlQuery<Contest>(contestDataContext);
+  const contestData = await gqlQuery<Contest>(contestDataContext);
 
   // ---------------------------------------------------------------------------
   // Compute data
   // ---------------------------------------------------------------------------
 
   // Compute recent submissions in correct format
-  const now: number = dayjs().unix();
-  const submissions: SubmissionData[] = submissionData.recentSubmissionList.map(
-    (submission: SubmissionDumpNode) => {
-      const unixTime: number = parseInt(submission.timestamp, 10);
-
-      return {
-        link: getLeetcodeProblemLink(submission.titleSlug),
-        status: constants.SUBMISSION_STATUS_MAP[submission.statusDisplay],
-        language: submissionData.languageList.find((language: LanguageNode) => (
-          language.name === submission.lang
-        )).verboseName,
-        name: submission.title,
-        time: dayjs.duration((unixTime - now) * 1000).humanize(true),
-      };
-    },
-  );
+  const submissions = getRecentSubmissions(submissionData);
 
   // Compute solved problems
   const { submitStats } = userData.matchedUser;
