@@ -24,7 +24,7 @@ You can create your own rating by deploying this project on your machine!!!
 
 ## Table of Contents
 
-- [Commands](docs/Commands)
+- [Commands](docs/Commands.md)
 - [Installation](#Installation)
 - [Running](#Running)
 - [Testing](#Testing)
