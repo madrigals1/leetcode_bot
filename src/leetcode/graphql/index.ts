@@ -1,10 +1,11 @@
-import userProfileGraphQLQuery from './queries/userProfile.graphql';
-import recentSubmissionListGraphQLQuery
-  from './queries/recentSubmissionList.graphql';
-import contestRankingGraphQLQuery from './queries/contestRankingData.graphql';
+import { getUserProfileContext } from './queries/userProfile.graphql';
+import {
+  getRecentSubmissionListContext,
+} from './queries/recentSubmissionList.graphql';
+import { getContestRankingContext } from './queries/contestRankingData.graphql';
 
 export {
-  userProfileGraphQLQuery,
-  recentSubmissionListGraphQLQuery,
-  contestRankingGraphQLQuery,
+  getUserProfileContext,
+  getRecentSubmissionListContext,
+  getContestRankingContext,
 };

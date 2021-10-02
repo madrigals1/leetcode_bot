@@ -1,9 +1,12 @@
-import { GraphQLQuery } from '../../models';
+import { GraphQLContext, GraphQLQuery } from '../../models';
+import { getGraphqlLink } from '../../utils';
 
-export default function recentSubmissionListGraphQLQuery(
+export function getRecentSubmissionListContext(
   username: string,
-): GraphQLQuery {
-  return {
+): GraphQLContext {
+  const graphqlLink: string = getGraphqlLink();
+
+  const recentSubmissionListQuery: GraphQLQuery = {
     operationName: 'getRecentSubmissionList',
     query: `
       query getRecentSubmissionList($username: String!, $limit: Int) {
@@ -26,5 +29,11 @@ export default function recentSubmissionListGraphQLQuery(
     variables: {
       username,
     },
+  };
+
+  return {
+    link: graphqlLink,
+    query: recentSubmissionListQuery,
+    headers: {},
   };
 }

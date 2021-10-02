@@ -1,9 +1,10 @@
-import { GraphQLQuery } from '../../models';
+import { GraphQLContext, GraphQLQuery } from '../../models';
+import { getGraphqlLink } from '../../utils';
 
-export default function userProfileGraphQLQuery(
-  username: string,
-): GraphQLQuery {
-  return {
+export function getUserProfileContext(username: string): GraphQLContext {
+  const graphqlLink: string = getGraphqlLink();
+
+  const userProfileQuery: GraphQLQuery = {
     operationName: 'getUserProfile',
     query: `
       query getUserProfile($username: String!) {
@@ -74,5 +75,11 @@ export default function userProfileGraphQLQuery(
     variables: {
       username,
     },
+  };
+
+  return {
+    link: graphqlLink,
+    query: userProfileQuery,
+    headers: {},
   };
 }

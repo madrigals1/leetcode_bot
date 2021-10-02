@@ -1,9 +1,10 @@
-import { GraphQLQuery } from '../../models';
+import { GraphQLContext, GraphQLQuery } from '../../models';
+import { getGraphqlLink } from '../../utils';
 
-export default function contestRankingGraphQLQuery(
-  username: string,
-): GraphQLQuery {
-  return {
+export function getContestRankingContext(username: string): GraphQLContext {
+  const graphqlLink: string = getGraphqlLink();
+
+  const contestRankingQuery: GraphQLQuery = {
     operationName: 'getContestRankingData',
     query: `
       query getContestRankingData($username: String!) {
@@ -16,5 +17,11 @@ export default function contestRankingGraphQLQuery(
     variables: {
       username,
     },
+  };
+
+  return {
+    link: graphqlLink,
+    query: contestRankingQuery,
+    headers: {},
   };
 }

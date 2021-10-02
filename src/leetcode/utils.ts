@@ -9,3 +9,7 @@ export function getLeetcodeUsernameLink(username: string): string {
 export function getLeetcodeProblemLink(title: string): string {
   return `${LEETCODE_URL}/problems/${title}`;
 }
+
+export function getGraphqlLink(): string {
+  return `${LEETCODE_URL}/graphql`;
+}

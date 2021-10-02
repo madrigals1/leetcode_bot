@@ -17,9 +17,9 @@ import {
 } from './models';
 import { getLeetcodeUsernameLink, getLeetcodeProblemLink } from './utils';
 import {
-  userProfileGraphQLQuery,
-  recentSubmissionListGraphQLQuery,
-  contestRankingGraphQLQuery,
+  getUserProfileContext,
+  getRecentSubmissionListContext,
+  getContestRankingContext,
 } from './graphql';
 import gqlQuery from './graphql/utils';
 
@@ -27,32 +27,17 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
 async function getLeetcodeDataFromUsername(username: string): Promise<User> {
-  // Data for GraphQL Response
-  const graphQLLink = `${constants.SYSTEM.LEETCODE_URL}/graphql`;
-
-  // Get User Profile Data from GraphQL
-  const userProfileQuery: GraphQLQuery = userProfileGraphQLQuery(username);
-  const userProfileContext: GraphQLContext = {
-    link: graphQLLink,
-    query: userProfileQuery,
-    headers: {},
-  };
-  const userData: UserProfile = await gqlQuery<UserProfile>(userProfileContext);
+  // Data related to User
+  const userData = await gqlQuery<UserProfile>(getUserProfileContext(username));
 
   if (!userData.matchedUser) return { exists: false };
 
-  // Get User Recent Submissions Data from GraphQL
-  const submissionsQuery: GraphQLQuery = (
-    recentSubmissionListGraphQLQuery(username)
-  );
-  const submissionContext: GraphQLContext = {
-    link: graphQLLink,
-    query: submissionsQuery,
-    headers: {},
-  };
+  // Get User Recent Submissions Data
+  const submissionDataContext = getRecentSubmissionListContext(username);
   const submissionData: RecentSubmissionList = (
-    await gqlQuery<RecentSubmissionList>(submissionContext)
+    await gqlQuery<RecentSubmissionList>(submissionDataContext)
   );
+
   const now: number = dayjs().unix();
   const submissions: SubmissionData[] = submissionData.recentSubmissionList.map(
     (submission: SubmissionDumpNode) => {
@@ -70,14 +55,9 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
     },
   );
 
-  // Get Contest Data from GraphQL
-  const contestQuery: GraphQLQuery = contestRankingGraphQLQuery(username);
-  const contestContext: GraphQLContext = {
-    link: graphQLLink,
-    query: contestQuery,
-    headers: {},
-  };
-  const contestData: Contest = await gqlQuery<Contest>(contestContext);
+  // Get Contest Data
+  const contestDataContext = getContestRankingContext(username);
+  const contestData: Contest = await gqlQuery<Contest>(contestDataContext);
 
   return {
     exists: true,
