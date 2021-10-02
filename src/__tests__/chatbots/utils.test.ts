@@ -11,7 +11,7 @@ import {
   generateReplyMarkup,
   createButtonsFromUsers,
   calculateCml,
-  getCmlFromUser,
+  getProblemsSolved,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
@@ -131,7 +131,13 @@ test('chatbots.utils.tableForSubmissions action', async () => {
     .toBe(dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(errorMessage));
 
   // Invalid: User has no submissions
-  const userWithoutSubmissions = { ...user1, computed: { submissions: [] } };
+  const userWithoutSubmissions = {
+    ...user1,
+    computed: {
+      submissions: [],
+      problemsSolved: user1.computed.problemsSolved,
+    },
+  };
   const compareResponseFailure2 = (
     await tableForSubmissions(userWithoutSubmissions)
   );
@@ -280,21 +286,21 @@ test('chatbots.utils.calculateCml action', async () => {
   expect(cml2).toBe(820);
 });
 
-test('chatbots.utils.getCmlFromUser action', async () => {
+test('chatbots.utils.getProblemsSolved action', async () => {
   // Valid: Check with regular values
   constants.CML = {
     EASY_POINTS: 1,
     MEDIUM_POINTS: 2,
     HARD_POINTS: 3,
   };
-  const cmlForUser1 = getCmlFromUser(user1);
+  const cmlForUser1 = getProblemsSolved(user1.submitStats.acSubmissionNum);
   // Default value for user1
   // Easy: 12312
   // Medium: 2321
   // Hard: 2231
   const calculatedCml1 = calculateCml(12312, 2321, 2231);
 
-  expect(cmlForUser1).toBe(calculatedCml1);
+  expect(cmlForUser1.cumulative).toBe(calculatedCml1);
 
   // Valid: Check with updated CML values
   constants.CML = {
@@ -302,10 +308,10 @@ test('chatbots.utils.getCmlFromUser action', async () => {
     MEDIUM_POINTS: 15,
     HARD_POINTS: 50,
   };
-  const cml2 = getCmlFromUser(user1);
+  const cml2 = getProblemsSolved(user1.submitStats.acSubmissionNum);
   const calculatedCml2 = calculateCml(12312, 2321, 2231);
 
-  expect(cml2).toBe(calculatedCml2);
+  expect(cml2.cumulative).toBe(calculatedCml2);
 
   // Valid: Check with updated Problem values
   constants.CML = {
@@ -319,10 +325,10 @@ test('chatbots.utils.getCmlFromUser action', async () => {
   const hardSolved = 300;
   const updatedUser1 = mockUserWithSolved(easySolved, mediumSolved, hardSolved);
 
-  const cml3 = getCmlFromUser(updatedUser1);
+  const cml3 = getProblemsSolved(updatedUser1.submitStats.acSubmissionNum);
   const calculatedCml3 = calculateCml(easySolved, mediumSolved, hardSolved);
 
-  expect(cml3).toBe(calculatedCml3);
+  expect(cml3.cumulative).toBe(calculatedCml3);
 });
 
 test('chatbots.utils.convertToCmlRating action', async () => {

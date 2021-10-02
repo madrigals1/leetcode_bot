@@ -4,8 +4,17 @@ import {
 import { Contest } from './contest.model';
 import { SubmissionData } from './submissionData.model';
 
+export interface UserProblemsSolvedData {
+  easy: number;
+  medium: number;
+  hard: number;
+  all: number;
+  cumulative: number;
+}
+
 export interface UserComputedData {
-  submissions?: SubmissionData[];
+  submissions: SubmissionData[];
+  problemsSolved: UserProblemsSolvedData;
 }
 
 export interface User {

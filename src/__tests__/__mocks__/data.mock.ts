@@ -43,6 +43,13 @@ export const user1: User = {
         time: '2 weeks ago',
       },
     ],
+    problemsSolved: {
+      easy: 1000,
+      medium: 1000,
+      hard: 1000,
+      all: 3000,
+      cumulative: 5000,
+    },
   },
   contributions: {
     points: 1000,
@@ -136,6 +143,13 @@ export const user2: User = {
         time: '9 hours ago',
       },
     ],
+    problemsSolved: {
+      easy: 2000,
+      medium: 1000,
+      hard: 1000,
+      all: 4000,
+      cumulative: 6000,
+    },
   },
   contributions: {
     points: 1000,

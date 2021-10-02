@@ -3,6 +3,7 @@ import * as duration from 'dayjs/plugin/duration';
 import * as relativeTime from 'dayjs/plugin/relativeTime';
 
 import constants from '../utils/constants';
+import { getProblemsSolved } from '../chatbots/utils';
 
 import {
   UserProfile,
@@ -48,7 +49,7 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
   // Compute data
   // ---------------------------------------------------------------------------
 
-  // Compute submissions in correct format
+  // Compute recent submissions in correct format
   const now: number = dayjs().unix();
   const submissions: SubmissionData[] = submissionData.recentSubmissionList.map(
     (submission: SubmissionDumpNode) => {
@@ -66,6 +67,10 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
     },
   );
 
+  // Compute solved problems
+  const { submitStats } = userData.matchedUser;
+  const problemsSolved = getProblemsSolved(submitStats.acSubmissionNum);
+
   return {
     exists: true,
     name: userData.matchedUser.profile.realName,
@@ -79,6 +84,7 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
     submitStats: userData.matchedUser.submitStats,
     computed: {
       submissions,
+      problemsSolved,
     },
   };
 }

@@ -11,7 +11,6 @@ import {
   compareMenu,
   generateReplyMarkup,
   createButtonsFromUsers,
-  convertToCmlRating,
 } from './utils';
 
 export const registeredActions = [];
@@ -136,8 +135,11 @@ export default class Actions {
     // - Medium - 2 points
     // - Hard - 3 points
     if (args[0] === 'cml') {
-      const users = Cache.allUsers();
-      const usersWithCmlRating = convertToCmlRating(users);
+      const usersWithCmlRating = Cache.allUsers().sort((user1, user2) => {
+        const cml1 = user1.computed.problemsSolved.cumulative;
+        const cml2 = user2.computed.problemsSolved.cumulative;
+        return cml2 - cml1;
+      });
 
       context.options.reply_markup = generateReplyMarkup({
         buttons: [{

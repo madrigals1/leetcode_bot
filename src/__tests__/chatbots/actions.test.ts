@@ -12,7 +12,6 @@ import { vizapiActions } from '../../chatbots/actions';
 import {
   tableForSubmissions,
   compareMenu,
-  getCmlFromUser,
 } from '../../chatbots/utils';
 import { users } from '../__mocks__/data.mock';
 
@@ -231,15 +230,10 @@ test('chatbots.actions.rating action', async () => {
   await mockbot.send('/rating cml');
 
   // Predefined data
-  const cmlRating = Cache.allUsers().map((user) => {
-    switch (user.username) {
-      case 'random_username':
-        return { ...user, solved: getCmlFromUser(user) };
-      case 'random_username_2':
-        return { ...user, solved: getCmlFromUser(user) };
-      default:
-        return user;
-    }
+  const cmlRating = Cache.allUsers().sort((user1, user2) => {
+    const cml1 = user1.computed.problemsSolved.cumulative;
+    const cml2 = user2.computed.problemsSolved.cumulative;
+    return cml2 - cml1;
   });
 
   expect(mockbot.lastMessage())
