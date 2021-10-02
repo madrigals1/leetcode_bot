@@ -131,7 +131,7 @@ test('chatbots.utils.tableForSubmissions action', async () => {
     .toBe(dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(errorMessage));
 
   // Invalid: User has no submissions
-  const userWithoutSubmissions = { ...user1, submissions: [] };
+  const userWithoutSubmissions = { ...user1, computed: { submissions: [] } };
   const compareResponseFailure2 = (
     await tableForSubmissions(userWithoutSubmissions)
   );

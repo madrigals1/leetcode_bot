@@ -83,7 +83,7 @@ export async function tableForSubmissions(user: User): Promise<TableResponse> {
     }));
   }
 
-  const userSubmissionData = user.submissions.map((submission) => ({
+  const userSubmissionData = user.computed.submissions.map((submission) => ({
     Name: submission.name,
     Time: submission.time,
     Language: submission.language,

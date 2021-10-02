@@ -4,6 +4,10 @@ import {
 import { Contest } from './contest.model';
 import { SubmissionData } from './submissionData.model';
 
+export interface UserComputedData {
+  submissions?: SubmissionData[];
+}
+
 export interface User {
   exists: boolean;
   name?: string;
@@ -15,5 +19,5 @@ export interface User {
   contributions?: UserContributionNode;
   contestData?: Contest;
   submitStats?: UserSubmitStatsNode;
-  submissions?: SubmissionData[];
+  computed?: UserComputedData;
 }

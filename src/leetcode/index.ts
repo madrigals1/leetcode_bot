@@ -25,6 +25,10 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
 async function getLeetcodeDataFromUsername(username: string): Promise<User> {
+  // ---------------------------------------------------------------------------
+  // Get all data from GraphQL
+  // ---------------------------------------------------------------------------
+
   // Data related to User
   const userData = await gqlQuery<UserProfile>(getUserProfileContext(username));
 
@@ -36,6 +40,15 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
     await gqlQuery<RecentSubmissionList>(submissionDataContext)
   );
 
+  // Get Contest Data
+  const contestDataContext = getContestRankingContext(username);
+  const contestData: Contest = await gqlQuery<Contest>(contestDataContext);
+
+  // ---------------------------------------------------------------------------
+  // Compute data
+  // ---------------------------------------------------------------------------
+
+  // Compute submissions in correct format
   const now: number = dayjs().unix();
   const submissions: SubmissionData[] = submissionData.recentSubmissionList.map(
     (submission: SubmissionDumpNode) => {
@@ -53,10 +66,6 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
     },
   );
 
-  // Get Contest Data
-  const contestDataContext = getContestRankingContext(username);
-  const contestData: Contest = await gqlQuery<Contest>(contestDataContext);
-
   return {
     exists: true,
     name: userData.matchedUser.profile.realName,
@@ -68,7 +77,9 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
     contributions: userData.matchedUser.contributions,
     contestData,
     submitStats: userData.matchedUser.submitStats,
-    submissions,
+    computed: {
+      submissions,
+    },
   };
 }
 
