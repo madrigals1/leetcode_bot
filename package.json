@@ -9,7 +9,7 @@
     "test": "jest --forceExit",
     "test:debug": "jest --watch",
     "test:leaks": "jest --runInBand --detectOpenHandles",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "jest --forceExit --coverage",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "lint": "eslint ./src --ext .js,.ts"
   },
