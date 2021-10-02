@@ -78,6 +78,12 @@ Build **Docker Compose**
 docker-compose up --build -d
 ```
 
+Create database network with name **DATABASE_NETWORK**
+
+```shell script
+docker network create database_network
+```
+
 > If you are using **MongoDB** or **PostgreSQL**, be sure to set up correct networking between **LeetCode BOT** container and DBMS instances.
 
 ## Running
