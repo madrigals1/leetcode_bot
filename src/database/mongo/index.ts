@@ -36,12 +36,7 @@ class MongoDB extends DatabaseProvider {
   // Connect to Database
   async connect(): Promise<void> {
     await mongoose
-      .connect(this.mongoUrl, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false,
-        useCreateIndex: true,
-      })
+      .connect(this.mongoUrl)
       .then(() => {
         log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
       })
