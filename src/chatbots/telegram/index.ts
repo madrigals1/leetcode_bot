@@ -11,7 +11,7 @@ import { Options, Context, TelegramMessage } from '../models';
 
 import { reply } from './utils';
 
-class Telegram {
+export default class Telegram {
   token: string = constants.PROVIDERS.TELEGRAM.TOKEN;
 
   options: Options = { polling: true };
@@ -32,7 +32,7 @@ class Telegram {
     };
   }
 
-  run() {
+  run(): void {
     // Start the bot
     this.bot = new TelegramBot(this.token, this.options);
 
@@ -97,5 +97,3 @@ class Telegram {
     log(dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_RUNNING);
   }
 }
-
-export default new Telegram();

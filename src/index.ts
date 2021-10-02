@@ -16,7 +16,7 @@ Database.connect().then(async () => {
   Cache.refreshUsers()
     .then(() => {
       // Run Telegram BOT
-      if (constants.PROVIDERS.TELEGRAM.ENABLE) Telegram.run();
+      if (constants.PROVIDERS.TELEGRAM.ENABLE) new Telegram().run();
 
       // Run Discord BOT
       if (constants.PROVIDERS.DISCORD.ENABLE) Discord.run();
