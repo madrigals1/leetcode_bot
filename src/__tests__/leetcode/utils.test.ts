@@ -4,6 +4,7 @@ import {
   calculateCml,
   getProblemsSolved,
   getGraphqlLink,
+  getLeetcodeUsernameLink,
 } from '../../leetcode/utils';
 import constants from '../../utils/constants';
 
@@ -13,6 +14,23 @@ beforeEach(() => {
   // Fix changed values before each test case
   constants.CML = CML;
   constants.SYSTEM = SYSTEM;
+});
+
+test('leetcode.utils.getLeetcodeUsernameLink action', async () => {
+  // Valid: Regular Case
+  const leetcodeUrl = SYSTEM.LEETCODE_URL;
+  const username1 = 'test_username1';
+  const link1 = getLeetcodeUsernameLink(username1);
+
+  expect(link1).toBe(`${leetcodeUrl}/${username1}`);
+
+  // Valid: Updated Case
+  const randomUrl = 'random_url';
+  const username2 = 'test_username2';
+  constants.SYSTEM.LEETCODE_URL = randomUrl;
+  const link2 = getLeetcodeUsernameLink(username2);
+
+  expect(link2).toBe(`${randomUrl}/${username2}`);
 });
 
 test('leetcode.utils.getGraphqlLink action', async () => {
