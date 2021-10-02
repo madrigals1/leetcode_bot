@@ -26,22 +26,31 @@ export const user1: User = {
     starRating: 4.5,
     websites: ['https://example.com/random_website'],
   },
-  submissions: [
-    {
-      link: getLeetcodeProblemLink('random_problem_slug'),
-      status: constants.SUBMISSION_STATUS_MAP.Accepted,
-      language: 'cpp',
-      name: 'Random Problem Name',
-      time: '10 minutes ago',
+  computed: {
+    submissions: [
+      {
+        link: getLeetcodeProblemLink('random_problem_slug'),
+        status: constants.SUBMISSION_STATUS_MAP.Accepted,
+        language: 'cpp',
+        name: 'Random Problem Name',
+        time: '10 minutes ago',
+      },
+      {
+        link: getLeetcodeProblemLink('random_problem_slug_2'),
+        status: constants.SUBMISSION_STATUS_MAP['Runtime Error'],
+        language: 'python',
+        name: 'Random Problem Name 2',
+        time: '2 weeks ago',
+      },
+    ],
+    problemsSolved: {
+      easy: 1000,
+      medium: 1000,
+      hard: 1000,
+      all: 3000,
+      cumulative: 5000,
     },
-    {
-      link: getLeetcodeProblemLink('random_problem_slug_2'),
-      status: constants.SUBMISSION_STATUS_MAP['Runtime Error'],
-      language: 'python',
-      name: 'Random Problem Name 2',
-      time: '2 weeks ago',
-    },
-  ],
+  },
   contributions: {
     points: 1000,
     questionCount: 123,
@@ -117,22 +126,31 @@ export const user2: User = {
     starRating: 4.5,
     websites: ['https://example.com/random_website'],
   },
-  submissions: [
-    {
-      link: getLeetcodeProblemLink('random_problem_slug_3'),
-      status: constants.SUBMISSION_STATUS_MAP.Accepted,
-      language: 'java',
-      name: 'Random Problem Name 3',
-      time: '2 hours ago',
+  computed: {
+    submissions: [
+      {
+        link: getLeetcodeProblemLink('random_problem_slug_3'),
+        status: constants.SUBMISSION_STATUS_MAP.Accepted,
+        language: 'java',
+        name: 'Random Problem Name 3',
+        time: '2 hours ago',
+      },
+      {
+        link: getLeetcodeProblemLink('random_problem_slug_4'),
+        status: constants.SUBMISSION_STATUS_MAP['Runtime Error'],
+        language: 'javascript',
+        name: 'Random Problem Name 4',
+        time: '9 hours ago',
+      },
+    ],
+    problemsSolved: {
+      easy: 2000,
+      medium: 1000,
+      hard: 1000,
+      all: 4000,
+      cumulative: 6000,
     },
-    {
-      link: getLeetcodeProblemLink('random_problem_slug_4'),
-      status: constants.SUBMISSION_STATUS_MAP['Runtime Error'],
-      language: 'javascript',
-      name: 'Random Problem Name 4',
-      time: '9 hours ago',
-    },
-  ],
+  },
   contributions: {
     points: 1000,
     questionCount: 123,

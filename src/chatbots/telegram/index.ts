@@ -7,18 +7,18 @@ import { log } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
-import { Options, Context } from '../models';
+import { Options, Context, TelegramMessage } from '../models';
 
 import { reply } from './utils';
 
-class Telegram {
+export default class Telegram {
   token: string = constants.PROVIDERS.TELEGRAM.TOKEN;
 
   options: Options = { polling: true };
 
   bot: TelegramBot;
 
-  getContext(message, text: string = null): Context {
+  getContext(message: TelegramMessage, text: string = null): Context {
     const textCorrect = text || message.text;
 
     return {
@@ -32,7 +32,7 @@ class Telegram {
     };
   }
 
-  run() {
+  run(): void {
     // Start the bot
     this.bot = new TelegramBot(this.token, this.options);
 
@@ -97,5 +97,3 @@ class Telegram {
     log(dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_RUNNING);
   }
 }
-
-export default new Telegram();

@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import { user1, user2, users } from '../__mocks__/data.mock';
 import {
-  mockReplyMarkupOptions, mockButtonOptions, mockUserWithSolved,
+  mockReplyMarkupOptions, mockButtonOptions,
 } from '../__mocks__/utils.mock';
 import {
   getCompareDataFromUser,
@@ -10,21 +10,18 @@ import {
   tableForSubmissions,
   generateReplyMarkup,
   createButtonsFromUsers,
-  calculateCml,
-  getCmlFromUser,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
 import constants from '../../utils/constants';
 import Cache from '../../cache';
 
-const { VIZAPI_LINK, CML } = constants;
+const { VIZAPI_LINK } = constants;
 const savedUsers = [...Cache.users];
 
 beforeEach(() => {
   // Fix changed values before each test case
   constants.VIZAPI_LINK = VIZAPI_LINK;
-  constants.CML = CML;
   Cache.users = [...savedUsers];
 });
 
@@ -131,7 +128,13 @@ test('chatbots.utils.tableForSubmissions action', async () => {
     .toBe(dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(errorMessage));
 
   // Invalid: User has no submissions
-  const userWithoutSubmissions = { ...user1, submissions: [] };
+  const userWithoutSubmissions = {
+    ...user1,
+    computed: {
+      submissions: [],
+      problemsSolved: user1.computed.problemsSolved,
+    },
+  };
   const compareResponseFailure2 = (
     await tableForSubmissions(userWithoutSubmissions)
   );
@@ -252,91 +255,4 @@ test('chatbots.utils.createButtonsFromUsers action', async () => {
   const buttonsResponse4 = createButtonsFromUsers(mockOptions4);
 
   expect(buttonsResponse4.length).toBe(0);
-});
-
-test('chatbots.utils.calculateCml action', async () => {
-  const easySolved = 10;
-  const mediumSolved = 8;
-  const hardSolved = 13;
-
-  // Valid: Check with regular values
-  constants.CML = {
-    EASY_POINTS: 1,
-    MEDIUM_POINTS: 2,
-    HARD_POINTS: 3,
-  };
-  const cml1 = calculateCml(easySolved, mediumSolved, hardSolved);
-
-  expect(cml1).toBe(65);
-
-  // Valid: Check with updated values
-  constants.CML = {
-    EASY_POINTS: 5,
-    MEDIUM_POINTS: 15,
-    HARD_POINTS: 50,
-  };
-  const cml2 = calculateCml(easySolved, mediumSolved, hardSolved);
-
-  expect(cml2).toBe(820);
-});
-
-test('chatbots.utils.getCmlFromUser action', async () => {
-  // Valid: Check with regular values
-  constants.CML = {
-    EASY_POINTS: 1,
-    MEDIUM_POINTS: 2,
-    HARD_POINTS: 3,
-  };
-  const cmlForUser1 = getCmlFromUser(user1);
-  // Default value for user1
-  // Easy: 12312
-  // Medium: 2321
-  // Hard: 2231
-  const calculatedCml1 = calculateCml(12312, 2321, 2231);
-
-  expect(cmlForUser1).toBe(calculatedCml1);
-
-  // Valid: Check with updated CML values
-  constants.CML = {
-    EASY_POINTS: 5,
-    MEDIUM_POINTS: 15,
-    HARD_POINTS: 50,
-  };
-  const cml2 = getCmlFromUser(user1);
-  const calculatedCml2 = calculateCml(12312, 2321, 2231);
-
-  expect(cml2).toBe(calculatedCml2);
-
-  // Valid: Check with updated Problem values
-  constants.CML = {
-    EASY_POINTS: 1,
-    MEDIUM_POINTS: 2,
-    HARD_POINTS: 3,
-  };
-
-  const easySolved = 100;
-  const mediumSolved = 200;
-  const hardSolved = 300;
-  const updatedUser1 = mockUserWithSolved(easySolved, mediumSolved, hardSolved);
-
-  const cml3 = getCmlFromUser(updatedUser1);
-  const calculatedCml3 = calculateCml(easySolved, mediumSolved, hardSolved);
-
-  expect(cml3).toBe(calculatedCml3);
-});
-
-test('chatbots.utils.convertToCmlRating action', async () => {
-  // Valid: Test with 10 users
-  const userList = [];
-
-  for (let i = 0; i < 10; i++) {
-    const easySolved = Math.floor(Math.random() * 1000);
-    const mediumSolved = Math.floor(Math.random() * 500);
-    const hardSolved = Math.floor(Math.random() * 300);
-    userList.push(mockUserWithSolved(easySolved, mediumSolved, hardSolved));
-  }
-
-  const userListSolved = userList.map((user) => user.solved);
-
-  expect(userListSolved.sort()).toBe(userListSolved);
 });

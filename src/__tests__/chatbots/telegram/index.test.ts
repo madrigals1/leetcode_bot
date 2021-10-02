@@ -1,31 +1,16 @@
-import { jest } from '@jest/globals';
+import * as TelegramTester from 'telegram-test';
 
-import TelegramBotInstance from '../../../chatbots/telegram';
-import constants from '../../../utils/constants';
-import dictionary from '../../../utils/dictionary';
+import Telegram from '../../../chatbots/telegram';
 
-TelegramBotInstance.token = constants.PROVIDERS.TELEGRAM.TOKEN;
+// Create and Run telegram bot
+const telegramBot = new Telegram();
+telegramBot.token = 'random_token';
+telegramBot.run();
 
-beforeAll(async () => {
-  jest.setTimeout(30000);
-});
+// Initialize test bot
+const telegramTest = new TelegramTester(telegramBot.bot);
 
-afterAll(async () => {
-  jest.setTimeout(5000);
-});
-
-test('chatbots.telegram.index.run function', async () => {
-  if (!constants.PROVIDERS.TELEGRAM.TEST_ENABLE) return;
-
-  TelegramBotInstance.run();
-
-  // eslint-disable-next-line no-console
-  expect(console.log).toHaveBeenCalledWith(
-    dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_CONNECTED,
-  );
-
-  // eslint-disable-next-line no-console
-  expect(console.log).toHaveBeenCalledWith(
-    dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_RUNNING,
-  );
+test('chatbots.telegram > /ping action', async () => {
+  telegramTest.sendUpdate(1, '/ping')
+    .then((data) => (expect(data.text).toBe('pong')));
 });

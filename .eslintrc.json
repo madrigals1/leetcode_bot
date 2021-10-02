@@ -22,25 +22,47 @@
         "ecmaVersion": 11
     },
     "rules": {
-        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+        "no-plusplus": [
+            "error",
+            {
+                "allowForLoopAfterthoughts": true
+            }
+        ],
         "no-console": 2,
-        "import/order": ["error", {"newlines-between": "always"}],
-        "max-len": ["error", { "code": 80, "ignoreTemplateLiterals": true }],
+        "import/order": [
+            "error",
+            {
+                "newlines-between": "always"
+            }
+        ],
+        "max-len": [
+            "error",
+            {
+                "code": 80,
+                "ignoreTemplateLiterals": true
+            }
+        ],
         "import/extensions": [
             "error",
             "ignorePackages",
             {
-              "js": "never",
-              "jsx": "never",
-              "ts": "never",
-              "tsx": "never"
+                "js": "never",
+                "jsx": "never",
+                "ts": "never",
+                "tsx": "never"
             }
-         ]
+        ],
+        "import/prefer-default-export": 0
     },
     "settings": {
         "import/resolver": {
             "node": {
-                "extensions": [".js", ".jsx", ".ts", ".tsx"]
+                "extensions": [
+                    ".js",
+                    ".jsx",
+                    ".ts",
+                    ".tsx"
+                ]
             }
         }
     }

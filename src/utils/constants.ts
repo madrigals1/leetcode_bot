@@ -81,6 +81,7 @@ const EMOJI = {
   YELLOW_CIRCLE: '🟡',
   RED_CIRCLE: '🔴',
   BLUE_CIRCLE: '🔵',
+  BLUE_DIAMOND: '🔷',
   HEART: '💚',
   ROFL: '🤣',
   CRY: '😢',

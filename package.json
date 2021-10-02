@@ -9,7 +9,7 @@
     "test": "jest --forceExit",
     "test:debug": "jest --watch",
     "test:leaks": "jest --runInBand --detectOpenHandles",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "jest --forceExit --coverage",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "lint": "eslint ./src --ext .js,.ts"
   },
@@ -44,6 +44,7 @@
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.2",
+    "telegram-test": "^0.1.8",
     "ts-jest": "^27.0.5"
   }
 }

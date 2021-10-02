@@ -12,7 +12,6 @@ import { vizapiActions } from '../../chatbots/actions';
 import {
   tableForSubmissions,
   compareMenu,
-  getCmlFromUser,
 } from '../../chatbots/utils';
 import { users } from '../__mocks__/data.mock';
 
@@ -30,6 +29,19 @@ beforeEach(() => {
   Cache.userLimit = constants.SYSTEM.USER_AMOUNT_LIMIT;
   vizapiActions.tableForSubmissions = tableForSubmissions;
   vizapiActions.compareMenu = compareMenu;
+});
+
+test('chatbots.actions.ping action', async () => {
+  // Test with correct arguments
+  await mockbot.send('/ping');
+
+  expect(mockbot.lastMessage()).toEqual('pong');
+
+  // Test with incorrect arguments
+  await mockbot.send('/ping excess_arg');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
 });
 
 test('chatbots.actions.start action', async () => {
@@ -231,19 +243,16 @@ test('chatbots.actions.rating action', async () => {
   await mockbot.send('/rating cml');
 
   // Predefined data
-  const cmlRating = Cache.allUsers().map((user) => {
-    switch (user.username) {
-      case 'random_username':
-        return { ...user, solved: getCmlFromUser(user) };
-      case 'random_username_2':
-        return { ...user, solved: getCmlFromUser(user) };
-      default:
-        return user;
-    }
+  const cmlRating = Cache.allUsers().sort((user1, user2) => {
+    const cml1 = user1.computed.problemsSolved.cumulative;
+    const cml2 = user2.computed.problemsSolved.cumulative;
+    return cml2 - cml1;
   });
 
   expect(mockbot.lastMessage())
     .toEqual(dictionary.BOT_MESSAGES.CML_RATING_TEXT(cmlRating));
+
+  // TODO: Test with 10 users
 
   // Test with incorrect arguments (argument count)
   await mockbot.send('/rating asd');

@@ -144,21 +144,18 @@ const BOT_MESSAGES = {
 `;
   },
   USER_TEXT(user: User): string {
-    const { acSubmissionNum } = user.submitStats;
-
-    // Get submissions for different difficulty levels
-    const easy = acSubmissionNum.find((sc) => sc.difficulty === 'Easy');
-    const medium = acSubmissionNum.find((sc) => sc.difficulty === 'Medium');
-    const hard = acSubmissionNum.find((sc) => sc.difficulty === 'Hard');
-    const all = acSubmissionNum.find((sc) => sc.difficulty === 'All');
+    const {
+      easy, medium, hard, all, cumulative,
+    } = user.computed.problemsSolved;
 
     return `<b>${user.name || 'No name'}</b> - <b>${user.link}</b>
 
 Solved Problems:
-${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${easy.count}</b>
-${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${medium.count}</b>
-${constants.EMOJI.RED_CIRCLE} Hard - <b>${hard.count}</b>
-${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
+${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${easy}</b>
+${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${medium}</b>
+${constants.EMOJI.RED_CIRCLE} Hard - <b>${hard}</b>
+${constants.EMOJI.BLUE_CIRCLE} All - <b>${all} / ${user.all}</b>
+${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
   },
   RATING_TEXT(users: User[]): string {
     if (!users || users.length === 0) {
