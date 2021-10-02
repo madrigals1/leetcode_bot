@@ -1,5 +1,5 @@
 language: node_js
-node_js:
-  - '14'
-script:
-  - npm run coveralls
+scripts:
+  - npm install codecov -g
+after_success:
+  - codecov
