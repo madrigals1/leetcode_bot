@@ -5,6 +5,7 @@ import {
   getProblemsSolved,
   getGraphqlLink,
   getLeetcodeUsernameLink,
+  getLeetcodeProblemLink,
 } from '../../leetcode/utils';
 import constants from '../../utils/constants';
 
@@ -31,6 +32,23 @@ test('leetcode.utils.getLeetcodeUsernameLink action', async () => {
   const link2 = getLeetcodeUsernameLink(username2);
 
   expect(link2).toBe(`${randomUrl}/${username2}`);
+});
+
+test('leetcode.utils.getLeetcodeProblemLink action', async () => {
+  // Valid: Regular Case
+  const leetcodeUrl = SYSTEM.LEETCODE_URL;
+  const title1 = 'test_title1';
+  const link1 = getLeetcodeProblemLink(title1);
+
+  expect(link1).toBe(`${leetcodeUrl}/problems/${title1}`);
+
+  // Valid: Updated Case
+  const randomUrl = 'random_url';
+  const title2 = 'test_title2';
+  constants.SYSTEM.LEETCODE_URL = randomUrl;
+  const link2 = getLeetcodeProblemLink(title2);
+
+  expect(link2).toBe(`${randomUrl}/problems/${title2}`);
 });
 
 test('leetcode.utils.getGraphqlLink action', async () => {
