@@ -107,5 +107,7 @@ jobs:
         && echo CODECOV_TOKEN=${{ secrets.CODECOV_TOKEN }} >> .env
     - run: npm ci
     - run: npm run build --if-present
+    - name: create coverage file
+      run: touch coverage/coverage.json
     - run: nyc report --reporter=json > coverage/coverage.json
 
