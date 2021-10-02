@@ -6,8 +6,6 @@ import constants from '../utils/constants';
 
 import {
   UserProfile,
-  GraphQLContext,
-  GraphQLQuery,
   RecentSubmissionList,
   SubmissionDumpNode,
   LanguageNode,
