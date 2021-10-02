@@ -3,25 +3,34 @@ import { mockUserWithSolved } from '../__mocks__/utils.mock';
 import {
   calculateCml,
   getProblemsSolved,
+  getGraphqlLink,
 } from '../../leetcode/utils';
 import constants from '../../utils/constants';
 
-const { CML } = constants;
+const { CML, SYSTEM } = constants;
 
 beforeEach(() => {
   // Fix changed values before each test case
   constants.CML = CML;
+  constants.SYSTEM = SYSTEM;
 });
 
-beforeAll(async () => {
-  jest.setTimeout(30000);
+test('leetcode.utils.getGraphqlLink action', async () => {
+  // Valid: Regular Case
+  const leetcodeUrl = SYSTEM.LEETCODE_URL;
+  const link1 = getGraphqlLink();
+
+  expect(link1).toBe(`${leetcodeUrl}/graphql`);
+
+  // Valid: Updated Case
+  const randomUrl = 'random_url';
+  constants.SYSTEM.LEETCODE_URL = randomUrl;
+  const link2 = getGraphqlLink();
+
+  expect(link2).toBe(`${randomUrl}/graphql`);
 });
 
-afterAll(async () => {
-  jest.setTimeout(5000);
-});
-
-test('chatbots.utils.calculateCml action', async () => {
+test('leetcode.utils.calculateCml action', async () => {
   const easySolved = 10;
   const mediumSolved = 8;
   const hardSolved = 13;
@@ -47,7 +56,7 @@ test('chatbots.utils.calculateCml action', async () => {
   expect(cml2).toBe(820);
 });
 
-test('chatbots.utils.getProblemsSolved action', async () => {
+test('leetcode.utils.getProblemsSolved action', async () => {
   // Valid: Check with regular values
   constants.CML = {
     EASY_POINTS: 1,

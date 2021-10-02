@@ -13,21 +13,19 @@ import {
   UserProblemsSolvedData,
 } from './models';
 
-const { LEETCODE_URL } = constants.SYSTEM;
-
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
 export function getLeetcodeUsernameLink(username: string): string {
-  return `${LEETCODE_URL}/${username}`;
+  return `${constants.SYSTEM.LEETCODE_URL}/${username}`;
 }
 
 export function getLeetcodeProblemLink(title: string): string {
-  return `${LEETCODE_URL}/problems/${title}`;
+  return `${constants.SYSTEM.LEETCODE_URL}/problems/${title}`;
 }
 
 export function getGraphqlLink(): string {
-  return `${LEETCODE_URL}/graphql`;
+  return `${constants.SYSTEM.LEETCODE_URL}/graphql`;
 }
 
 export function getRecentSubmissions(
