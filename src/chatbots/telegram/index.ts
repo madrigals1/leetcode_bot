@@ -7,7 +7,7 @@ import { log } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
-import { Options, Context } from '../models';
+import { Options, Context, TelegramMessage } from '../models';
 
 import { reply } from './utils';
 
@@ -18,7 +18,7 @@ class Telegram {
 
   bot: TelegramBot;
 
-  getContext(message, text: string = null): Context {
+  getContext(message: TelegramMessage, text: string = null): Context {
     const textCorrect = text || message.text;
 
     return {
