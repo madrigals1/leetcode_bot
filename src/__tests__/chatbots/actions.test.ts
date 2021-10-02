@@ -31,6 +31,19 @@ beforeEach(() => {
   vizapiActions.compareMenu = compareMenu;
 });
 
+test('chatbots.actions.ping action', async () => {
+  // Test with correct arguments
+  await mockbot.send('/ping');
+
+  expect(mockbot.lastMessage()).toEqual('pong');
+
+  // Test with incorrect arguments
+  await mockbot.send('/ping excess_arg');
+
+  expect(mockbot.lastMessage())
+    .toEqual(dictionary.BOT_MESSAGES.INCORRECT_INPUT);
+});
+
 test('chatbots.actions.start action', async () => {
   // Test with correct arguments
   await mockbot.send('/start');

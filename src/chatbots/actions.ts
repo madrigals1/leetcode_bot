@@ -21,6 +21,11 @@ export const vizapiActions = {
 };
 
 export default class Actions {
+  @action({ name: 'ping', argsCount: [0] })
+  static ping(): string {
+    return 'pong';
+  }
+
   @action({ name: 'start', argsCount: [0] })
   static start(context: Context): string {
     return dictionary.BOT_MESSAGES.WELCOME_TEXT(context.prefix);
