@@ -15,7 +15,7 @@ const databaseMap = {
 
 // Get specific Database
 const Database: typeof DatabaseProvider = (
-  databaseMap[constants.DB_PROVIDER] || SQLite
+  databaseMap[constants.DATABASE.PROVIDER] || SQLite
 );
 
 export default new Database();

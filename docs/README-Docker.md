@@ -26,28 +26,21 @@ To enable **Telegram BOT** or **Discord BOT**, change respective values inside `
 
 ```dotenv
 # Change TELEGRAM_TOKEN to your own TELEGRAM_TOKEN you get from https://t.me/botfather
-TELEGRAM_ENABLE=True
-TELEGRAM_TOKEN=****************************************
+TELEGRAM_TOKEN=
 
 # Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
-DISCORD_ENABLE=True
-DISCORD_TOKEN=*****************************************
+DISCORD_TOKEN=
 
 # Change SLACK_TOKEN to your own token you get from https://api.slack.com/apps
-SLACK_ENABLE=False
-SLACK_TOKEN=*******************************************
-SLACK_SIGNING_SECRET=**********************************
-SLACK_APP_TOKEN=***************************************
-SLACK_TEST_ENABLE=False
-SLACK_TEST_TOKEN=**************************************
-SLACK_TEST_SIGNING_SECRET=*****************************
-SLACK_TEST_APP_TOKEN=**********************************
+SLACK_TOKEN=
+SLACK_SIGNING_SECRET=
+SLACK_APP_TOKEN=
 ```
 
 Change **MASTER_PASSWORD** value to secure password, that will be used for deleting data.
 
 ```dotenv
-MASTER_PASSWORD=***************************************
+MASTER_PASSWORD=admin
 ```
 
 Change settings for Database
@@ -73,15 +66,10 @@ Change settings for Database
     POSTGRES_DB_PORT=5432
     ```
 
-Change submission count, that will be shown for each User - `/rating <username>`
-```dotenv
-SUBMISSION_COUNT=5
-```
-
-Delay time is set to 4s, depends on LeetCode RPM, which I don't know.
+Delay time after loading each User is set to 4s, depends on LeetCode RPM.
 
 ```dotenv
-DELAY_TIME_MS=4000
+USER_REQUEST_DELAY_MS=4000
 ```
 
 Build **Docker Compose**
@@ -90,11 +78,17 @@ Build **Docker Compose**
 docker-compose up --build -d
 ```
 
+Create database network with name **DATABASE_NETWORK**
+
+```shell script
+docker network create database_network
+```
+
 > If you are using **MongoDB** or **PostgreSQL**, be sure to set up correct networking between **LeetCode BOT** container and DBMS instances.
 
 ## Running
 
-To run Docker container
+To start Docker container
 
 ```shell script
 docker-compose up

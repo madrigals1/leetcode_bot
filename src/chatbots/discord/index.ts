@@ -49,9 +49,8 @@ class Discord {
             prefix: constants.PROVIDERS.DISCORD.PREFIX,
             options: {},
           };
-          channel.startTyping().then();
+          channel.sendTyping();
           Actions[property](context);
-          channel.stopTyping();
 
           // Stop searching after action is found
           return;

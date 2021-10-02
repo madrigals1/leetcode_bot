@@ -10,7 +10,11 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    ports:
-      - 8080:8000
-      - 9229:9229
     command: npm start
+    networks:
+      - database_network
+
+networks:
+  database_network:
+    external:
+      name: ${DATABASE_NETWORK}

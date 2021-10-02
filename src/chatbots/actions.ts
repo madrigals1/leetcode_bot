@@ -11,6 +11,7 @@ import {
   compareMenu,
   generateReplyMarkup,
   createButtonsFromUsers,
+  convertToCmlRating,
 } from './utils';
 
 export const registeredActions = [];
@@ -115,9 +116,42 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.STATS_TEXT(context.provider, Cache);
   }
 
-  @action({ name: 'rating', argsCount: [0] })
-  static async rating(): Promise<string> {
-    return dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers());
+  @action({ name: 'rating', argsCount: [0, 1] })
+  static async rating(context: Context, args: string[]): Promise<string> {
+    // Regular rating with "Problem Solved" count
+    if (args.length === 0) {
+      context.options.reply_markup = generateReplyMarkup({
+        buttons: [{
+          text: dictionary.BOT_MESSAGES.CML_RATING,
+          action: '/rating cml',
+        }],
+        isClosable: false,
+      });
+
+      return dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers());
+    }
+
+    // Cumulative rating:
+    // - Easy - 1 point
+    // - Medium - 2 points
+    // - Hard - 3 points
+    if (args[0] === 'cml') {
+      const users = Cache.allUsers();
+      const usersWithCmlRating = convertToCmlRating(users);
+
+      context.options.reply_markup = generateReplyMarkup({
+        buttons: [{
+          text: dictionary.BOT_MESSAGES.REGULAR_RATING,
+          action: '/rating',
+        }],
+        isClosable: false,
+      });
+
+      return dictionary.BOT_MESSAGES.CML_RATING_TEXT(usersWithCmlRating);
+    }
+
+    // Fallback to incorrect input
+    return dictionary.BOT_MESSAGES.INCORRECT_INPUT;
   }
 
   @action({ name: 'profile', argsCount: [0, 1] })

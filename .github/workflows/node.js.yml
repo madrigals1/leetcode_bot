@@ -31,10 +31,9 @@ jobs:
     - name: create .env file and add secrets
       run: >
         touch .env
-        && echo DISCORD_TEST_ENABLE=${{ secrets.DISCORD_TEST_ENABLE }} >> .env
         && echo DISCORD_TEST_TOKEN=${{ secrets.DISCORD_TEST_TOKEN }} >> .env
-        && echo TELEGRAM_TEST_ENABLE=${{ secrets.TELEGRAM_TEST_ENABLE }} >> .env
         && echo TELEGRAM_TEST_TOKEN=${{ secrets.TELEGRAM_TEST_TOKEN }} >> .env
+        && echo VIZAPI_LINK=${{ secrets.VIZAPI_LINK }} >> .env
     - run: npm ci
     - run: npm run build --if-present
     - run: npm run test:coveralls
@@ -44,3 +43,34 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  test_coverage:
+    name: Test Coverage
+
+    runs-on: ubuntu-latest
+
+    env:
+      CI: true
+
+    strategy:
+      matrix:
+        node-version: [ v14.15.4 ]
+
+    environment: testing_environment
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: create .env file and add secrets
+      run: >
+        touch .env
+        && echo DISCORD_TEST_TOKEN=${{ secrets.DISCORD_TEST_TOKEN }} >> .env
+        && echo TELEGRAM_TEST_TOKEN=${{ secrets.TELEGRAM_TEST_TOKEN }} >> .env
+        && echo VIZAPI_LINK=${{ secrets.VIZAPI_LINK }} >> .env
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm run test:coverage

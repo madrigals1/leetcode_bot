@@ -69,8 +69,7 @@ export async function compareMenu(
       return { link: res.data.link };
     })
     .catch((err) => {
-      error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED);
-      error(err);
+      error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED(err));
       return { error: err, reason: dictionary.SERVER_MESSAGES.API_NOT_WORKING };
     });
 }
@@ -84,20 +83,19 @@ export async function tableForSubmissions(user: User): Promise<TableResponse> {
     }));
   }
 
+  const userSubmissionData = user.submissions.map((submission) => ({
+    Name: submission.name,
+    Time: submission.time,
+    Language: submission.language,
+    Status: submission.status,
+  }));
+
   return axios
-    .post(`${constants.VIZAPI_LINK}/table`, {
-      table: user.submissions.map((submission) => (
-        {
-          Name: submission.name,
-          Time: submission.time,
-          Language: submission.language,
-          Status: submission.status,
-        }
-      )),
-    })
+    .post(`${constants.VIZAPI_LINK}/table`, { table: userSubmissionData })
     .then((res) => {
       log(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
-      if (res.data.detail === 'Please, provide \'table\' in request body') {
+      const errorMsg = 'Please, provide non-empty \'table\' in request body';
+      if (res.data.failure === errorMsg) {
         return {
           error: dictionary.BOT_MESSAGES.USER_NO_SUBMISSIONS(user.username),
           reason: dictionary.SERVER_MESSAGES.NO_SUBMISSIONS,
@@ -106,8 +104,7 @@ export async function tableForSubmissions(user: User): Promise<TableResponse> {
       return { link: res.data.link };
     })
     .catch((err) => {
-      error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED);
-      error(err);
+      error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED(err));
       return { error: err, reason: dictionary.SERVER_MESSAGES.API_NOT_WORKING };
     });
 }
@@ -157,4 +154,40 @@ export function createButtonsFromUsers(
   }));
 
   return buttons;
+}
+
+export function calculateCml(
+  easySolvedCount: number,
+  mediumSolvedCount: number,
+  hardSolvedCount: number,
+): number {
+  return (easySolvedCount * constants.CML.EASY_POINTS)
+    + (mediumSolvedCount * constants.CML.MEDIUM_POINTS)
+    + (hardSolvedCount * constants.CML.HARD_POINTS);
+}
+
+export function getCmlFromUser(user: User): number {
+  const { acSubmissionNum } = user.submitStats;
+
+  // Get submissions for different difficulty levels
+  const easySolvedCount = acSubmissionNum
+    .find((sc) => sc.difficulty === 'Easy')
+    .count;
+  const mediumSolvedCount = acSubmissionNum
+    .find((sc) => sc.difficulty === 'Medium')
+    .count;
+  const hardSolvedCount = acSubmissionNum
+    .find((sc) => sc.difficulty === 'Hard')
+    .count;
+
+  return calculateCml(easySolvedCount, mediumSolvedCount, hardSolvedCount);
+}
+
+export function convertToCmlRating(rating: User[]): User[] {
+  return rating
+    .map((user) => ({
+      ...user,
+      solved: getCmlFromUser(user),
+    }))
+    .sort((user1, user2) => user2.solved - user1.solved);
 }

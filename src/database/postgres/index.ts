@@ -7,13 +7,15 @@ import DatabaseProvider from '../database.proto';
 
 import QUERIES from './queries';
 
+const { POSTGRES } = constants.DATABASE;
+
 class Postgres extends DatabaseProvider {
   client = new pg.Client({
-    user: constants.DB.POSTGRES.DB_USER,
-    host: constants.DB.POSTGRES.DB_URL,
-    database: constants.DB.POSTGRES.DB_NAME,
-    password: constants.DB.POSTGRES.DB_PASSWORD,
-    port: constants.DB.POSTGRES.DB_PORT,
+    user: POSTGRES.USER,
+    host: POSTGRES.URL,
+    database: POSTGRES.NAME,
+    password: POSTGRES.PASSWORD,
+    port: POSTGRES.PORT,
   });
 
   // Connect database

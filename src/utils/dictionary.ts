@@ -42,7 +42,9 @@ const SERVER_MESSAGES = {
 
   // LOGGING
   IMAGE_WAS_CREATED: 'The image was created',
-  IMAGE_WAS_NOT_CREATED: 'The image was NOT created',
+  IMAGE_WAS_NOT_CREATED(err: Error | string): string {
+    return `The image was NOT created: ${err}`;
+  },
 
   // TABLE API
   API_NOT_WORKING: 'api_not_working',
@@ -70,6 +72,10 @@ const BOT_MESSAGES = {
   USER_NO_SUBMISSIONS(username: string): string {
     return `${constants.EMOJI.ERROR} User <b>${username}</b> does not have any submissions`;
   },
+
+  // RATING RELATED
+  CML_RATING: `${constants.EMOJI.ABACUS} Cumulative Rating`,
+  REGULAR_RATING: `${constants.EMOJI.CLIPBOARD} Regular Rating`,
 
   // USERNAME RELATED
   AT_LEAST_1_USERNAME(prefix: string): string {
@@ -141,10 +147,10 @@ const BOT_MESSAGES = {
     const { acSubmissionNum } = user.submitStats;
 
     // Get submissions for different difficulty levels
-    const easy = acSubmissionNum.find((sc) => (sc.difficulty === 'Easy'));
-    const medium = acSubmissionNum.find((sc) => (sc.difficulty === 'Medium'));
-    const hard = acSubmissionNum.find((sc) => (sc.difficulty === 'Hard'));
-    const all = acSubmissionNum.find((sc) => (sc.difficulty === 'All'));
+    const easy = acSubmissionNum.find((sc) => sc.difficulty === 'Easy');
+    const medium = acSubmissionNum.find((sc) => sc.difficulty === 'Medium');
+    const hard = acSubmissionNum.find((sc) => sc.difficulty === 'Hard');
+    const all = acSubmissionNum.find((sc) => sc.difficulty === 'All');
 
     return `<b>${user.name || 'No name'}</b> - <b>${user.link}</b>
 
@@ -161,6 +167,25 @@ ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
     return users.map(
       (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.solved}`),
     ).join('\n');
+  },
+
+  CML_RATING_TEXT(users: User[]): string {
+    if (!users || users.length === 0) {
+      return NO_USERS;
+    }
+
+    const prefix = `Cumulative Rating:
+${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${constants.CML.EASY_POINTS} points</b>
+${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${constants.CML.MEDIUM_POINTS} points</b>
+${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
+
+`;
+
+    const rating = prefix + users.map(
+      (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.solved}`),
+    ).join('\n');
+
+    return rating;
   },
 
   STATS_TEXT(providerName: string, cache: typeof Cache): string {
@@ -182,12 +207,12 @@ ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all.count} / ${user.all}</b>`;
 <b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
 
 <b>DATABASE RELATED</b>
-<b>Database:</b> ${constants.DB_PROVIDER}
+<b>Database:</b> ${constants.DATABASE.PROVIDER}
 <b>User Count:</b> ${users.length}
 <b>User amount limit:</b> ${userLimit}
 
 <b>SYSTEM RELATED</b>
-<b>Delay between calls:</b> ${constants.DELAY_TIME_MS}
+<b>Delay between calls:</b> ${constants.SYSTEM.USER_REQUEST_DELAY_MS}
 
 <b>USER LIST</b>
 ${userNameList}
