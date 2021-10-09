@@ -32,7 +32,7 @@ You can create your own rating by deploying this project on your machine!!!
 
 ## Installation
 
-> If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docs/README-Docker.md).
+> If you want to use [Docker](https://www.docker.com/), check this [tutorial](/docs/Docker.md).
 
 ### Prerequisites
 
