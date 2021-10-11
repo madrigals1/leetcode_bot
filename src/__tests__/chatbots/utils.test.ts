@@ -1,14 +1,11 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
 import { user1, user2, users } from '../__mocks__/data.mock';
-import {
-  mockGenerateButtonsOptions, mockButtonOptions,
-} from '../__mocks__/utils.mock';
+import { mockButtonOptions } from '../__mocks__/utils.mock';
 import {
   getCompareDataFromUser,
   compareMenu,
   tableForSubmissions,
-  generateButtons,
   createButtonsFromUsers,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
@@ -155,59 +152,6 @@ test('chatbots.utils.tableForSubmissions action', async () => {
   expect(compareResponseFailure3.error === undefined).toBe(false);
   expect(compareResponseFailure3.reason)
     .toBe(dictionary.SERVER_MESSAGES.API_NOT_WORKING);
-});
-
-test('chatbots.utils.generateButtons action', async () => {
-  // Valid: Without close button
-  const mockOptions = mockGenerateButtonsOptions(3, false);
-  const generateButtonsResponse = generateButtons(mockOptions);
-  const parsedResponse = JSON.parse(generateButtonsResponse);
-
-  expect(parsedResponse.inline_keyboard === undefined).toBe(false);
-
-  const firstRow = parsedResponse.inline_keyboard[0];
-
-  expect(firstRow.length).toBe(3);
-
-  for (let i = 0; i < firstRow.length; i++) {
-    const { text, callback_data } = firstRow[i];
-
-    expect(text).toBe(`Button ${i + 1}`);
-    expect(callback_data).toBe(`Action ${i + 1}`);
-  }
-
-  // Valid: With close button
-  const mockOptionsWithClose = mockGenerateButtonsOptions(3, true);
-  const generateButtonsResponseClose = generateButtons(mockOptionsWithClose);
-  const parsedResponseClose = JSON.parse(generateButtonsResponseClose);
-
-  expect(parsedResponseClose.inline_keyboard === undefined).toBe(false);
-
-  const secondRow = parsedResponseClose.inline_keyboard[1];
-
-  expect(secondRow.length).toBe(1);
-
-  expect(secondRow[0].text).toBe(`${constants.EMOJI.CROSS_MARK} Close`);
-  expect(secondRow[0].callback_data).toBe('placeholder');
-
-  // Valid: 8 buttons
-  const mockOptions8buttons = mockGenerateButtonsOptions(8, false);
-  const generateButtonsResponse8buttons = generateButtons(mockOptions8buttons);
-  const parsedResponse8buttons = JSON.parse(generateButtonsResponse8buttons);
-
-  expect(parsedResponse8buttons.inline_keyboard === undefined).toBe(false);
-
-  for (let i = 0; i < 8; i++) {
-    const x = Math.floor(i / 3);
-    const y = i % 3;
-
-    const { text, callback_data } = (
-      parsedResponse8buttons.inline_keyboard[x][y]
-    );
-
-    expect(text).toBe(`Button ${i + 1}`);
-    expect(callback_data).toBe(`Action ${i + 1}`);
-  }
 });
 
 test('chatbots.utils.createButtonsFromUsers action', async () => {

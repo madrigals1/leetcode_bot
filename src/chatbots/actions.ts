@@ -9,8 +9,8 @@ import { Context, TableResponse, Button } from './models';
 import {
   tableForSubmissions,
   compareMenu,
-  generateButtons,
   createButtonsFromUsers,
+  getCloseButton,
 } from './utils';
 
 export const registeredActions = [];
@@ -75,12 +75,12 @@ export default class Actions {
     // Handle case with /remove <master_password>
     if (args.length === 0) {
       // Add Buttons with User List
-      context.options.buttons = generateButtons({
+      context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'remove', password: context.password,
         }),
-        isClosable: true,
-      });
+        buttonPerRow: 3,
+      }, getCloseButton()];
 
       return dictionary.BOT_MESSAGES.USER_LIST_REMOVE;
     }
@@ -124,13 +124,14 @@ export default class Actions {
   static async rating(context: Context, args: string[]): Promise<string> {
     // Regular rating with "Problem Solved" count
     if (args.length === 0) {
-      context.options.buttons = generateButtons({
+      // Add button to open Cumulative Rating
+      context.options.buttons = [{
         buttons: [{
           text: dictionary.BOT_MESSAGES.CML_RATING,
           action: '/rating cml',
         }],
-        isClosable: false,
-      });
+        buttonPerRow: 1,
+      }];
 
       return dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers());
     }
@@ -146,13 +147,14 @@ export default class Actions {
         return cml2 - cml1;
       });
 
-      context.options.buttons = generateButtons({
+      // Add button to open Regular Rating
+      context.options.buttons = [{
         buttons: [{
           text: dictionary.BOT_MESSAGES.REGULAR_RATING,
           action: '/rating',
         }],
-        isClosable: false,
-      });
+        buttonPerRow: 1,
+      }];
 
       return dictionary.BOT_MESSAGES.CML_RATING_TEXT(usersWithCmlRating);
     }
@@ -165,10 +167,10 @@ export default class Actions {
   static async profile(context: Context, args: string[]): Promise<string> {
     if (args.length === 0) {
       // Add user buttons
-      context.options.buttons = generateButtons({
+      context.options.buttons = [{
         buttons: createButtonsFromUsers({ action: 'profile' }),
-        isClosable: true,
-      });
+        buttonPerRow: 3,
+      }, getCloseButton()];
 
       return dictionary.BOT_MESSAGES.USER_LIST_PROFILES;
     }
@@ -194,9 +196,10 @@ export default class Actions {
       action: '/profile',
     };
 
-    context.options.buttons = generateButtons({
+    context.options.buttons = [{
       buttons: [submissionsButtion, avatarButton, ratingButton],
-    });
+      buttonPerRow: 3,
+    }];
 
     return dictionary.BOT_MESSAGES.USER_TEXT(user);
   }
@@ -219,10 +222,10 @@ export default class Actions {
     }
 
     // If 0 User was sent, add reply markup context for User
-    context.options.buttons = generateButtons({
+    context.options.buttons = [{
       buttons: createButtonsFromUsers({ action: 'avatar' }),
-      isClosable: true,
-    });
+      buttonPerRow: 3,
+    }, getCloseButton()];
 
     // If 0 User was sent
     return dictionary.BOT_MESSAGES.USER_LIST_AVATARS;
@@ -264,10 +267,10 @@ export default class Actions {
     }
 
     // If 0 User was sent, add reply markup context for User
-    context.options.buttons = generateButtons({
+    context.options.buttons = [{
       buttons: createButtonsFromUsers({ action: 'submissions' }),
-      isClosable: true,
-    });
+      buttonPerRow: 3,
+    }, getCloseButton()];
 
     // If 0 User was sent
     return dictionary.BOT_MESSAGES.USER_LIST_SUBMISSIONS;
@@ -277,10 +280,10 @@ export default class Actions {
   static async compare(context: Context, args: string[]): Promise<string> {
     // Getting left User
     if (args.length === 0) {
-      context.options.buttons = generateButtons({
+      context.options.buttons = [{
         buttons: createButtonsFromUsers({ action: 'compare' }),
-        isClosable: true,
-      });
+        buttonPerRow: 3,
+      }, getCloseButton()];
 
       return dictionary.BOT_MESSAGES.SELECT_LEFT_USER;
     }
@@ -289,10 +292,10 @@ export default class Actions {
     if (args.length === 1) {
       const username: string = args[0].toLowerCase();
 
-      context.options.buttons = generateButtons({
+      context.options.buttons = [{
         buttons: createButtonsFromUsers({ action: `compare ${username}` }),
-        isClosable: true,
-      });
+        buttonPerRow: 3,
+      }, getCloseButton()];
 
       return dictionary.BOT_MESSAGES.SELECT_RIGHT_USER;
     }

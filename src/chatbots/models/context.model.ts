@@ -2,10 +2,12 @@
 import * as DiscordBot from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
 
+import { ButtonContainer } from './buttons.model';
+
 export interface Options {
   polling?: boolean;
   parseMode?: string;
-  buttons?: string;
+  buttons?: ButtonContainer[];
   files?: string[];
   baseApiUrl?: string;
 }

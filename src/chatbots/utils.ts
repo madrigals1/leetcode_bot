@@ -7,12 +7,12 @@ import { User } from '../leetcode/models';
 import Cache from '../cache';
 
 import {
-  GenerateButtonsOptions,
   TableResponse,
   CompareUser,
   Button,
   ButtonOptions,
 } from './models';
+import { ButtonContainer } from './models/buttons.model';
 
 export function getCompareDataFromUser(user: User): CompareUser {
   return {
@@ -109,39 +109,6 @@ export async function tableForSubmissions(user: User): Promise<TableResponse> {
     });
 }
 
-export function generateButtons(options: GenerateButtonsOptions): string {
-  const { buttons, isClosable } = options;
-
-  // Inline keyboard
-  const inlineKeyboard = [];
-
-  // Make 3 buttons on each row
-  for (let i = 0; i < Math.ceil(buttons.length / 3); i++) {
-    const row = [];
-
-    for (let j = 0; j < 3; j++) {
-      const index = (i * 3) + j;
-
-      if (index < buttons.length) {
-        const button = buttons[index];
-        row.push({ text: button.text, callback_data: button.action });
-      }
-    }
-
-    inlineKeyboard.push(row);
-  }
-
-  // Add close button
-  if (isClosable) {
-    inlineKeyboard.push([{
-      text: `${constants.EMOJI.CROSS_MARK} Close`,
-      callback_data: 'placeholder',
-    }]);
-  }
-
-  return JSON.stringify({ inline_keyboard: inlineKeyboard });
-}
-
 export function createButtonsFromUsers(
   options: ButtonOptions,
 ): Button[] {
@@ -154,4 +121,14 @@ export function createButtonsFromUsers(
   }));
 
   return buttons;
+}
+
+export function getCloseButton(): ButtonContainer {
+  return {
+    buttons: [{
+      text: `${constants.EMOJI.CROSS_MARK} Close`,
+      action: 'placeholder',
+    }],
+    buttonPerRow: 1,
+  };
 }

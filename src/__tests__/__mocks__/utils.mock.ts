@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
 
-import {
-  TableResponse, GenerateButtonsOptions, ButtonOptions,
-} from '../../chatbots/models';
+import { TableResponse, ButtonOptions } from '../../chatbots/models';
 import { User } from '../../leetcode/models';
 import dictionary from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
@@ -55,24 +53,6 @@ export async function mockCompareMenu(
   return new Promise((resolve) => {
     resolve({ link: 'http://random_link_compare' });
   });
-}
-
-export function mockGenerateButtonsOptions(
-  buttonCount: number, isClosable: boolean,
-): GenerateButtonsOptions {
-  const buttons = [];
-
-  for (let i = 0; i < buttonCount; i++) {
-    buttons.push({
-      text: `Button ${i + 1}`,
-      action: `Action ${i + 1}`,
-    });
-  }
-
-  return {
-    buttons,
-    isClosable,
-  };
 }
 
 export function mockButtonOptions(

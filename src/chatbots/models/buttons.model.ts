@@ -8,7 +8,7 @@ export interface ButtonOptions {
   password?: string,
 }
 
-export interface GenerateButtonsOptions {
+export interface ButtonContainer {
   buttons: Button[],
-  isClosable?: boolean,
+  buttonPerRow: number,
 }
