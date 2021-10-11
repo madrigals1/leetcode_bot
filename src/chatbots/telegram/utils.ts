@@ -7,10 +7,23 @@ export function reply(message: string, context: Context): Promise<string> {
   } = context;
 
   // Update options with Telegram specific data
+
+  const replyMarkupOptions = options.buttons
+    ? {
+      reply_markup: options.buttons,
+    }
+    : {};
+
+  const parseModeOptions = options.parseMode
+    ? {
+      parse_mode: options.parseMode,
+    }
+    : {};
+
   const updatedOptions = {
     ...options,
-    reply_markup: options.buttons,
-    parse_mode: options.parseMode,
+    ...replyMarkupOptions,
+    ...parseModeOptions,
   };
 
   if (photoUrl) {
