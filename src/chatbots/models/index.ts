@@ -4,10 +4,10 @@ import {
 
 import { Context, Options } from './context.model';
 import {
-  ReplyMarkupCommand,
+  Button,
   ButtonOptions,
-  ReplyMarkupOptions,
-} from './replyMarkup.model';
+  GenerateButtonsOptions,
+} from './generateButtons.model';
 import { Table } from './table.model';
 import { Compare, CompareUser } from './compare.model';
 import { TableResponse } from './response.model';
@@ -20,8 +20,8 @@ export {
   Context,
   Options,
   ButtonOptions,
-  ReplyMarkupOptions,
-  ReplyMarkupCommand,
+  GenerateButtonsOptions,
+  Button,
   Table,
   Compare,
   CompareUser,

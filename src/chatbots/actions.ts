@@ -5,11 +5,11 @@ import { CacheResponse } from '../cache/response.model';
 import { User } from '../leetcode/models';
 
 import { action } from './decorators';
-import { Context, TableResponse, ReplyMarkupCommand } from './models';
+import { Context, TableResponse, Button } from './models';
 import {
   tableForSubmissions,
   compareMenu,
-  generateReplyMarkup,
+  generateButtons,
   createButtonsFromUsers,
 } from './utils';
 
@@ -75,7 +75,7 @@ export default class Actions {
     // Handle case with /remove <master_password>
     if (args.length === 0) {
       // Add Buttons with User List
-      context.options.reply_markup = generateReplyMarkup({
+      context.options.reply_markup = generateButtons({
         buttons: createButtonsFromUsers({
           action: 'remove', password: context.password,
         }),
@@ -124,7 +124,7 @@ export default class Actions {
   static async rating(context: Context, args: string[]): Promise<string> {
     // Regular rating with "Problem Solved" count
     if (args.length === 0) {
-      context.options.reply_markup = generateReplyMarkup({
+      context.options.reply_markup = generateButtons({
         buttons: [{
           text: dictionary.BOT_MESSAGES.CML_RATING,
           action: '/rating cml',
@@ -146,7 +146,7 @@ export default class Actions {
         return cml2 - cml1;
       });
 
-      context.options.reply_markup = generateReplyMarkup({
+      context.options.reply_markup = generateButtons({
         buttons: [{
           text: dictionary.BOT_MESSAGES.REGULAR_RATING,
           action: '/rating',
@@ -165,7 +165,7 @@ export default class Actions {
   static async profile(context: Context, args: string[]): Promise<string> {
     if (args.length === 0) {
       // Add user buttons
-      context.options.reply_markup = generateReplyMarkup({
+      context.options.reply_markup = generateButtons({
         buttons: createButtonsFromUsers({ action: 'profile' }),
         isClosable: true,
       });
@@ -179,22 +179,22 @@ export default class Actions {
 
     if (!user) return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username);
 
-    const submissionsButtion: ReplyMarkupCommand = {
+    const submissionsButtion: Button = {
       text: `${constants.EMOJI.CLIPBOARD} Submissions`,
       action: `/submissions ${username}`,
     };
 
-    const avatarButton: ReplyMarkupCommand = {
+    const avatarButton: Button = {
       text: `${constants.EMOJI.PERSON} Avatar`,
       action: `/avatar ${username}`,
     };
 
-    const ratingButton: ReplyMarkupCommand = {
+    const ratingButton: Button = {
       text: `${constants.EMOJI.BACK_ARROW} Back to Profiles`,
       action: '/profile',
     };
 
-    context.options.reply_markup = generateReplyMarkup({
+    context.options.reply_markup = generateButtons({
       buttons: [submissionsButtion, avatarButton, ratingButton],
     });
 
@@ -219,7 +219,7 @@ export default class Actions {
     }
 
     // If 0 User was sent, add reply markup context for User
-    context.options.reply_markup = generateReplyMarkup({
+    context.options.reply_markup = generateButtons({
       buttons: createButtonsFromUsers({ action: 'avatar' }),
       isClosable: true,
     });
@@ -264,7 +264,7 @@ export default class Actions {
     }
 
     // If 0 User was sent, add reply markup context for User
-    context.options.reply_markup = generateReplyMarkup({
+    context.options.reply_markup = generateButtons({
       buttons: createButtonsFromUsers({ action: 'submissions' }),
       isClosable: true,
     });
@@ -277,7 +277,7 @@ export default class Actions {
   static async compare(context: Context, args: string[]): Promise<string> {
     // Getting left User
     if (args.length === 0) {
-      context.options.reply_markup = generateReplyMarkup({
+      context.options.reply_markup = generateButtons({
         buttons: createButtonsFromUsers({ action: 'compare' }),
         isClosable: true,
       });
@@ -289,7 +289,7 @@ export default class Actions {
     if (args.length === 1) {
       const username: string = args[0].toLowerCase();
 
-      context.options.reply_markup = generateReplyMarkup({
+      context.options.reply_markup = generateButtons({
         buttons: createButtonsFromUsers({ action: `compare ${username}` }),
         isClosable: true,
       });

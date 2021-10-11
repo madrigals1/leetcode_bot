@@ -7,10 +7,10 @@ import { User } from '../leetcode/models';
 import Cache from '../cache';
 
 import {
-  ReplyMarkupOptions,
+  GenerateButtonsOptions,
   TableResponse,
   CompareUser,
-  ReplyMarkupCommand,
+  Button,
   ButtonOptions,
 } from './models';
 
@@ -109,7 +109,7 @@ export async function tableForSubmissions(user: User): Promise<TableResponse> {
     });
 }
 
-export function generateReplyMarkup(options: ReplyMarkupOptions): string {
+export function generateButtons(options: GenerateButtonsOptions): string {
   const { buttons, isClosable } = options;
 
   // Inline keyboard
@@ -144,7 +144,7 @@ export function generateReplyMarkup(options: ReplyMarkupOptions): string {
 
 export function createButtonsFromUsers(
   options: ButtonOptions,
-): ReplyMarkupCommand[] {
+): Button[] {
   const { action, password } = options;
 
   // Get all user from Cache and create Button for each

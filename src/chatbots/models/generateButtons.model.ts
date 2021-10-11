@@ -1,4 +1,4 @@
-export interface ReplyMarkupCommand {
+export interface Button {
   text: string,
   action: string,
 }
@@ -8,7 +8,7 @@ export interface ButtonOptions {
   password?: string,
 }
 
-export interface ReplyMarkupOptions {
-  buttons: ReplyMarkupCommand[],
+export interface GenerateButtonsOptions {
+  buttons: Button[],
   isClosable?: boolean,
 }

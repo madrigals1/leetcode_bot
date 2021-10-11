@@ -2,13 +2,13 @@
 /* eslint-disable no-console */
 import { user1, user2, users } from '../__mocks__/data.mock';
 import {
-  mockReplyMarkupOptions, mockButtonOptions,
+  mockGenerateButtonsOptions, mockButtonOptions,
 } from '../__mocks__/utils.mock';
 import {
   getCompareDataFromUser,
   compareMenu,
   tableForSubmissions,
-  generateReplyMarkup,
+  generateButtons,
   createButtonsFromUsers,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
@@ -157,11 +157,11 @@ test('chatbots.utils.tableForSubmissions action', async () => {
     .toBe(dictionary.SERVER_MESSAGES.API_NOT_WORKING);
 });
 
-test('chatbots.utils.generateReplyMarkup action', async () => {
+test('chatbots.utils.generateButtons action', async () => {
   // Valid: Without close button
-  const mockOptions = mockReplyMarkupOptions(3, false);
-  const replyMarkupResponse = generateReplyMarkup(mockOptions);
-  const parsedResponse = JSON.parse(replyMarkupResponse);
+  const mockOptions = mockGenerateButtonsOptions(3, false);
+  const generateButtonsResponse = generateButtons(mockOptions);
+  const parsedResponse = JSON.parse(generateButtonsResponse);
 
   expect(parsedResponse.inline_keyboard === undefined).toBe(false);
 
@@ -177,9 +177,9 @@ test('chatbots.utils.generateReplyMarkup action', async () => {
   }
 
   // Valid: With close button
-  const mockOptionsWithClose = mockReplyMarkupOptions(3, true);
-  const replyMarkupResponseClose = generateReplyMarkup(mockOptionsWithClose);
-  const parsedResponseClose = JSON.parse(replyMarkupResponseClose);
+  const mockOptionsWithClose = mockGenerateButtonsOptions(3, true);
+  const generateButtonsResponseClose = generateButtons(mockOptionsWithClose);
+  const parsedResponseClose = JSON.parse(generateButtonsResponseClose);
 
   expect(parsedResponseClose.inline_keyboard === undefined).toBe(false);
 
@@ -191,9 +191,9 @@ test('chatbots.utils.generateReplyMarkup action', async () => {
   expect(secondRow[0].callback_data).toBe('placeholder');
 
   // Valid: 8 buttons
-  const mockOptions8buttons = mockReplyMarkupOptions(8, false);
-  const replyMarkupResponse8buttons = generateReplyMarkup(mockOptions8buttons);
-  const parsedResponse8buttons = JSON.parse(replyMarkupResponse8buttons);
+  const mockOptions8buttons = mockGenerateButtonsOptions(8, false);
+  const generateButtonsResponse8buttons = generateButtons(mockOptions8buttons);
+  const parsedResponse8buttons = JSON.parse(generateButtonsResponse8buttons);
 
   expect(parsedResponse8buttons.inline_keyboard === undefined).toBe(false);
 

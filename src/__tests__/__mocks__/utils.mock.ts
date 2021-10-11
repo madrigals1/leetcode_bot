@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
 import {
-  TableResponse, ReplyMarkupOptions, ButtonOptions,
+  TableResponse, GenerateButtonsOptions, ButtonOptions,
 } from '../../chatbots/models';
 import { User } from '../../leetcode/models';
 import dictionary from '../../utils/dictionary';
@@ -57,9 +57,9 @@ export async function mockCompareMenu(
   });
 }
 
-export function mockReplyMarkupOptions(
+export function mockGenerateButtonsOptions(
   buttonCount: number, isClosable: boolean,
-): ReplyMarkupOptions {
+): GenerateButtonsOptions {
   const buttons = [];
 
   for (let i = 0; i < buttonCount; i++) {
