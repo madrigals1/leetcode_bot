@@ -4,8 +4,8 @@ import TelegramBot from 'node-telegram-bot-api';
 
 export interface Options {
   polling?: boolean;
-  parse_mode?: string;
-  reply_markup?: string;
+  parseMode?: string;
+  buttons?: string;
   files?: string[];
   baseApiUrl?: string;
 }

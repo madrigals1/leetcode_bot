@@ -27,7 +27,7 @@ export default class Telegram {
       provider: constants.PROVIDERS.TELEGRAM.NAME,
       chatId: message.chat.id,
       prefix: constants.PROVIDERS.TELEGRAM.PREFIX,
-      options: { parse_mode: 'HTML' },
+      options: { parseMode: 'HTML' },
       bot: this.bot,
     };
   }
