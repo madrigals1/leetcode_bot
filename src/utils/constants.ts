@@ -22,6 +22,8 @@ const {
   // Discord
   DISCORD_TOKEN,
   DISCORD_TEST_TOKEN,
+  DISCORD_APP_ID,
+  DISCORD_GUILD_ID,
 
   // ---------------------------------------------------------------------------
   // Database settings
@@ -124,6 +126,8 @@ const DISCORD = {
   TOKEN: DISCORD_TOKEN,
   TEST_ENABLE: !!DISCORD_TEST_TOKEN,
   TEST_TOKEN: DISCORD_TEST_TOKEN,
+  APP_ID: DISCORD_APP_ID,
+  GUILD_ID: DISCORD_GUILD_ID,
   PREFIX: '!',
 };
 
