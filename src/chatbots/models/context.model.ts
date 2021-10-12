@@ -1,5 +1,5 @@
-/* eslint-disable camelcase */
 import * as DiscordBot from 'discord.js';
+import { TextChannel, NewsChannel, DMChannel } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
 
 import { ButtonContainer } from './buttons.model';
@@ -20,10 +20,8 @@ export interface Context {
   text: string;
   args?: string[];
   reply: (message: string, context: Context) => Promise<string>;
-  channel?: DiscordBot.TextChannel
-  | DiscordBot.DMChannel
-  | DiscordBot.NewsChannel
-  | Channel;
+  channel?: TextChannel | DMChannel | NewsChannel | Channel;
+  ireply?: (message: string) => Promise<void>,
   provider: string;
   prefix: string;
   chatId?: number;

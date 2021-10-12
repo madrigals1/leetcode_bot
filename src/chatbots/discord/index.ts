@@ -1,55 +1,74 @@
-import * as DiscordBot from 'discord.js';
+import { Client, Interaction } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v9';
 
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
-import { log } from '../../utils/helper';
+import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { Context } from '../models';
 
 import createBot from './bot';
 import { reply } from './utils';
 
-class Discord {
-  token: string = constants.PROVIDERS.DISCORD.TOKEN;
+const { DISCORD } = constants.PROVIDERS;
 
-  bot: DiscordBot.Client;
+class Discord {
+  token: string = DISCORD.TOKEN;
+
+  applicationId: string = DISCORD.APP_ID;
+
+  guildId: string = DISCORD.GUILD_ID;
+
+  bot: Client;
 
   async run() {
     // Create Bot with token
     this.bot = await createBot(this.token);
 
-    // Set Bot message listener (any message)
-    this.bot.on('message', (message: DiscordBot.Message) => {
-      const { content, author, channel } = message;
+    // Generate Discord commands from registered actions
+    const commands = registeredActions
+      .map(({ name }) => new SlashCommandBuilder()
+        .setName(name)
+        .setDescription(name)
+        .addStringOption((option) => option.setName('input')
+          .setDescription('The input to echo back')))
+      .map((command) => command.toJSON());
 
-      // If message doesn't start with ! (prefix) OR author is BOT, then ignore
-      if (
-        !content.startsWith(constants.PROVIDERS.DISCORD.PREFIX)
-        || author.bot
-      ) return;
+    // REST actions handler
+    const rest = new REST({ version: '9' }).setToken(this.token);
 
-      // Turn "!rating username arg1" into ["!rating", "username", "arg1"]
-      const args: string[] = content
-        .slice(constants.PROVIDERS.DISCORD.PREFIX.length)
-        .trim()
-        .split(' ');
+    // Register commands in Guild
+    rest
+      .put(
+        Routes.applicationGuildCommands(this.applicationId, this.guildId),
+        { body: commands },
+      )
+      .then(() => log('Successfully registered application commands.'))
+      .catch(error);
 
-      // Get command and arguments from args list
-      const command: string = args[0];
+    // Handle actions
+    this.bot.on('interactionCreate', async (interaction: Interaction) => {
+      if (!interaction.isCommand()) return;
+
+      const { commandName } = interaction;
 
       // Find appropriate action by name and execute it
       for (let i = 0; i < registeredActions.length; i++) {
         const { name, property } = registeredActions[i];
-        if (name === command) {
+        if (name === commandName) {
           const context: Context = {
-            text: content,
+            text: '',
             reply,
-            channel,
+            ireply: async (message: string) => {
+              await interaction.reply(message);
+            },
             provider: constants.PROVIDERS.DISCORD.NAME,
             prefix: constants.PROVIDERS.DISCORD.PREFIX,
             options: {},
           };
-          channel.sendTyping();
+
           Actions[property](context);
 
           // Stop searching after action is found

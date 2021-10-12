@@ -10,19 +10,14 @@ export function formatMessage(message: string): string {
 
 export function reply(message: string, context: Context): Promise<string> {
   // Get channel from context
-  const { channel, photoUrl } = context;
+  const { ireply } = context;
 
   // Format message to Markdown style, requested by Discord
   const formattedMessage: string = formatMessage(message);
 
   // Send message back to channel
-  return new Promise((resolve, reject) => {
-    if (channel) {
-      if (photoUrl) channel.send(formattedMessage, { files: [photoUrl] });
-      else channel.send(formattedMessage);
-      resolve('Success');
-    } else {
-      reject(Error('Channel is not provided in context'));
-    }
+  return new Promise((resolve) => {
+    ireply(formattedMessage);
+    resolve(formattedMessage);
   });
 }
