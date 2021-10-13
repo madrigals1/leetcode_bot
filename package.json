@@ -21,6 +21,7 @@
     "@discordjs/rest": "^0.1.0-canary.0",
     "@slack/bolt": "^3.7.0",
     "axios": "0.21.1",
+    "dataframe-js": "^1.4.4",
     "dayjs": "^1.10.7",
     "discord-api-types": "^0.23.1",
     "discord.js": "^13.2.0",
