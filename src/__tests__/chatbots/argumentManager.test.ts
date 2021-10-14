@@ -47,13 +47,47 @@ test('chatbots.argumentManager.get', async () => {
     generateArgument(),
     generateArgument(),
   ];
-  args.forEach((arg: ParsedArgument) => {
-    addArgument(argumentManager, arg);
-  });
+  args.forEach((arg: ParsedArgument) => addArgument(argumentManager, arg));
 
   // Get by key and index
   args.forEach((arg: ParsedArgument) => {
     expect(argumentManager.get(arg.index)).toEqual(arg);
     expect(argumentManager.get(arg.key)).toEqual(arg);
   });
+});
+
+test('chatbots.argumentManager.pop', async () => {
+  const argumentManager = new ArgumentManager();
+
+  // Shouldn't pop when no arguments are present
+  expect(argumentManager.pop('wrong_key')).toBe(undefined);
+  expect(argumentManager.pop(3)).toBe(undefined);
+
+  // Create 3 random arguments
+  const args = [
+    generateArgument(),
+    generateArgument(),
+    generateArgument(),
+  ];
+  args.forEach((arg: ParsedArgument) => addArgument(argumentManager, arg));
+
+  // Select random argument from 3
+  const randomArgument = args[randomNumber(args.length)];
+
+  // Pop first element
+  expect(argumentManager.pop(randomArgument.key)).toEqual(randomArgument);
+
+  // Should have 2 elements
+  expect(argumentManager.keyMap.size).toBe(2);
+  expect(argumentManager.indexMap.size).toBe(2);
+
+  // Select random argument from 2
+  const randomArgument2 = args[randomNumber(args.length)];
+
+  // Pop first element
+  expect(argumentManager.pop(randomArgument2.key)).toEqual(randomArgument2);
+
+  // Should have 1 element
+  expect(argumentManager.keyMap.size).toBe(1);
+  expect(argumentManager.indexMap.size).toBe(1);
 });
