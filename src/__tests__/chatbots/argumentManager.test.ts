@@ -77,12 +77,14 @@ test('chatbots.argumentManager.pop', async () => {
   // Pop first element
   expect(argumentManager.pop(randomArgument.key)).toEqual(randomArgument);
 
+  const argsLeft = args.filter((arg) => arg.key !== randomArgument.key);
+
   // Should have 2 elements
   expect(argumentManager.keyMap.size).toBe(2);
   expect(argumentManager.indexMap.size).toBe(2);
 
   // Select random argument from 2
-  const randomArgument2 = args[randomNumber(args.length)];
+  const randomArgument2 = argsLeft[randomNumber(argsLeft.length)];
 
   // Pop first element
   expect(argumentManager.pop(randomArgument2.key)).toEqual(randomArgument2);
