@@ -123,3 +123,27 @@ test('chatbots.argumentManager.getAll', async () => {
   // Should have correct args
   expect(argumentManager.getAll()).toEqual(argsLeft);
 });
+
+test('chatbots.argumentManager.clear', async () => {
+  const argumentManager = new ArgumentManager();
+
+  // Shouldn't have any elements
+  expect(argumentManager.getAll()).toEqual([]);
+
+  // Create 3 random arguments
+  const args = [
+    generateArgument(),
+    generateArgument(),
+    generateArgument(),
+  ];
+  args.forEach((arg: ParsedArgument) => addArgument(argumentManager, arg));
+
+  // Should have all 3 elements
+  expect(argumentManager.getAll().length).toEqual(3);
+
+  // Clear all arguments
+  argumentManager.clear();
+
+  // Shoult have no more elements after clearing
+  expect(argumentManager.getAll().length).toEqual(0);
+});
