@@ -91,3 +91,35 @@ test('chatbots.argumentManager.pop', async () => {
   expect(argumentManager.keyMap.size).toBe(1);
   expect(argumentManager.indexMap.size).toBe(1);
 });
+
+test('chatbots.argumentManager.getAll', async () => {
+  const argumentManager = new ArgumentManager();
+
+  // Shouldn't have any elements
+  expect(argumentManager.getAll()).toEqual([]);
+
+  // Create 3 random arguments
+  const args = [
+    generateArgument(),
+    generateArgument(),
+    generateArgument(),
+  ];
+  args.forEach((arg: ParsedArgument) => addArgument(argumentManager, arg));
+
+  // Should have all 3 elements
+  expect(argumentManager.getAll()).toEqual(args);
+
+  // Select random argument from 3
+  const randomArgument = args[randomNumber(args.length)];
+
+  // Pop random element
+  argumentManager.pop(randomArgument.key);
+
+  // Should have 2 left
+  expect(argumentManager.getAll().length).toEqual(2);
+
+  const argsLeft = args.filter((arg) => arg.key !== randomArgument.key);
+
+  // Should have correct args
+  expect(argumentManager.getAll()).toEqual(argsLeft);
+});
