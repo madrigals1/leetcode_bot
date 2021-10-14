@@ -177,3 +177,28 @@ test('chatbots.argumentManager.upsert', async () => {
   expect(argumentManager.getAll().length).toEqual(4);
   expect(argumentManager.getAll()).toEqual([randomArgument1, ...args]);
 });
+
+test('chatbots.argumentManager.remove', async () => {
+  const argumentManager = new ArgumentManager();
+
+  // Should not remove non-existing arguments
+  expect(argumentManager.remove(generateArgument())).toEqual([]);
+
+  // Generate 3 more args
+  const args = [
+    generateArgument(),
+    generateArgument(),
+    generateArgument(),
+  ];
+  args.forEach((arg: ParsedArgument) => argumentManager.upsert(arg));
+
+  // Select random argument from 3
+  const randomArgument1 = args[randomNumber(args.length)];
+
+  argumentManager.remove(randomArgument1);
+  expect(argumentManager.getAll().length).toEqual(2);
+
+  const argsLeft = args.filter((arg) => arg.key !== randomArgument1.key);
+
+  expect(argumentManager.getAll()).toEqual(argsLeft);
+});
