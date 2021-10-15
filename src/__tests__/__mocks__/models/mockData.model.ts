@@ -1,3 +1,4 @@
+import { Argument, ParsedArgument } from '../../../chatbots/decorators/models';
 import { User } from '../../../leetcode/models';
 
 export interface MockDatabaseInterface {
@@ -9,4 +10,16 @@ export interface MockDatabaseInterface {
 
 export interface OtherModel {
   field: string;
+}
+
+export interface ArgumentTestCase {
+  input: {
+    providedArgs: string[],
+    requestedArgs: Argument[],
+  }
+  output: {
+    byKey: Record<string, ParsedArgument>,
+    byIndex: Record<number, ParsedArgument>,
+  }
+  error?: Error,
 }
