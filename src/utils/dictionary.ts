@@ -9,6 +9,10 @@ const SERVER_MESSAGES = {
     return `Error on the server: ${error}`;
   },
 
+  // ERROR PREFIXES
+  ARGUMENT_EXCEPTION_PREFIX: 'ArgumentException: ',
+  INVALID_INPUT_EXCEPTION_PREFIX: 'InvalidInputException: ',
+
   // REFRESHING
   DATABASE_STARTED_REFRESH(time: string): string {
     return `Database started refresh at ${time}`;
