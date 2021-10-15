@@ -34,7 +34,7 @@ export function getRecentSubmissions(
   const now: number = dayjs().unix();
   return submissionData.recentSubmissionList.map(
     (submission: SubmissionDumpNode) => {
-      const unixTime: number = parseInt(submission.timestamp, 10);
+      const unixTime = Number(submission.timestamp);
 
       return {
         link: getLeetcodeProblemLink(submission.titleSlug),
