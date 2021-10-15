@@ -5,8 +5,16 @@ export interface ParsedArgument {
   value: string | string[];
 }
 
+export interface Argument {
+  key: string;
+  name: string;
+  index: number;
+  isRequired?: boolean;
+  isMultiple?: boolean;
+}
+
 export interface ActionContext {
-  name: string,
-  argsCount: number[] | string,
-  isAdmin?: boolean,
+  name: string;
+  args?: Argument[];
+  isAdmin?: boolean;
 }
