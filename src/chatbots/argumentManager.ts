@@ -7,6 +7,11 @@ export default class ArgumentManager {
 
   indexMap = new Map<number, ParsedArgument>();
 
+  // Get all arguments amount
+  get count(): number {
+    return this.getAll().length;
+  }
+
   // Get element by key or index
   get(kex: string | number): ParsedArgument {
     if (typeof kex === 'number') {

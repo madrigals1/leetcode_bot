@@ -3,12 +3,12 @@ import { ParsedArgument } from '../../chatbots/decorators/models';
 import { randomNumber, randomString } from '../__mocks__/randomUtils.test';
 
 function generateArgument(): ParsedArgument {
-  return {
-    key: randomString(),
-    index: randomNumber(),
-    name: randomString(),
-    value: randomString(),
-  };
+  return new ParsedArgument(
+    randomNumber(), // index
+    randomString(), // key
+    randomString(), // name
+    randomString(), // value
+  );
 }
 
 function addArgument(
@@ -184,7 +184,7 @@ test('chatbots.argumentManager.remove', async () => {
   // Should not remove non-existing arguments
   expect(argumentManager.remove(generateArgument())).toEqual([]);
 
-  // Generate 3 more args
+  // Generate 3 args
   const args = [
     generateArgument(),
     generateArgument(),
@@ -201,4 +201,31 @@ test('chatbots.argumentManager.remove', async () => {
   const argsLeft = args.filter((arg) => arg.key !== randomArgument1.key);
 
   expect(argumentManager.getAll()).toEqual(argsLeft);
+});
+
+test('chatbots.argumentManager.count', async () => {
+  const argumentManager = new ArgumentManager();
+
+  // Should not remove non-existing arguments
+  expect(argumentManager.remove(generateArgument())).toEqual([]);
+
+  // Argument amount should be 0
+  expect(argumentManager.count).toBe(0);
+
+  // Generate 3 args
+  const args = [
+    generateArgument(),
+    generateArgument(),
+    generateArgument(),
+  ];
+  args.forEach((arg: ParsedArgument) => argumentManager.upsert(arg));
+
+  // Argument amount should be 3
+  expect(argumentManager.count).toBe(3);
+
+  // Remove one of the arguments
+  argumentManager.remove(args[0]);
+
+  // Argument amount should be 2
+  expect(argumentManager.count).toEqual(2);
 });
