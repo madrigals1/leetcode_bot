@@ -1,8 +1,7 @@
-export interface ParsedArgument {
+export interface IParsedArgument {
   index: number;
   key: string;
   name?: string;
-  value: string | string[];
 }
 
 export interface Argument {
@@ -17,4 +16,39 @@ export interface ActionContext {
   name: string;
   args?: Argument[];
   isAdmin?: boolean;
+}
+
+export class ParsedArgument implements IParsedArgument {
+  index: number;
+
+  key: string;
+
+  name: string;
+
+  private _value: string | string[];
+
+  constructor(
+    index: number, key: string, name: string, value: string | string[],
+  ) {
+    this.index = index;
+    this.key = key;
+    this.name = name;
+    this._value = value;
+  }
+
+  public value(): string {
+    if (typeof this._value === 'string') {
+      return this._value;
+    }
+
+    return this._value.join(' ');
+  }
+
+  public values(): string[] {
+    if (typeof this._value === 'string') {
+      return [this._value];
+    }
+
+    return this._value;
+  }
 }
