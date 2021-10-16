@@ -95,13 +95,14 @@ export default class Actions {
   })
   static async remove(context: Context): Promise<string> {
     const usernameOrPassword = context.args.get('username_or_password').value;
+    const password = context.args.get('password').value;
 
     // Handle case with /remove <master_password>
-    if (usernameOrPassword === '') {
+    if (password === '') {
       // Add Buttons with User List
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
-          action: 'remove', password: context.password,
+          action: 'remove', password: usernameOrPassword,
         }),
         buttonPerRow: 3,
       }, getCloseButton()];
@@ -320,11 +321,11 @@ export default class Actions {
       },
     ],
   })
-  static async submissions(context: Context, args: string[]): Promise<string> {
+  static async submissions(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
 
     // If 1 User was sent
-    if (args.length === 1) {
+    if (username !== '') {
       // Get User from args
       const user: User = Cache.loadUser(username);
 
@@ -382,7 +383,7 @@ export default class Actions {
       },
     ],
   })
-  static async compare(context: Context, args: string[]): Promise<string> {
+  static async compare(context: Context): Promise<string> {
     const firstUsername = (
       context.args.get('first_username').value.toLowerCase()
     );
@@ -402,10 +403,8 @@ export default class Actions {
 
     // Getting right User
     if (secondUsername === '') {
-      const username: string = args[0].toLowerCase();
-
       context.options.buttons = [{
-        buttons: createButtonsFromUsers({ action: `compare ${username}` }),
+        buttons: createButtonsFromUsers({ action: `compare ${firstUsername}` }),
         buttonPerRow: 3,
       }, getCloseButton()];
 

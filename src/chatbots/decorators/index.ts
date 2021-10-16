@@ -7,6 +7,25 @@ import ArgumentManager from '../argumentManager';
 import { ActionContext } from './models';
 import { getArgs, getParsedArguments } from './utils';
 
+function getPassword(argumentManager: ArgumentManager): string {
+  const passwordArguments = ['password', 'username_or_password'];
+
+  for (let i = 0; i < passwordArguments.length; i++) {
+    const passwordArgument = passwordArguments[i];
+
+    const parsedArgument = argumentManager.get(passwordArgument);
+
+    if (parsedArgument && parsedArgument.value !== '') {
+      return parsedArgument.value;
+    }
+  }
+
+  const reason = 'Password not found in arguments';
+  const errMsg = dictionary.SERVER_MESSAGES.ARGUMENT_EXCEPTION_PREFIX + reason;
+
+  throw new Error(errMsg);
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export function action(actionContext: ActionContext): (
   target: unknown,
@@ -43,7 +62,13 @@ export function action(actionContext: ActionContext): (
       // Check password if action is Admin Action
       if (isAdmin) {
         // Password should be last argument of message
-        const password = argumentManager.get('password').value();
+        let password: string;
+
+        try {
+          password = getPassword(argumentManager);
+        } catch {
+          return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, updatedContext);
+        }
 
         if (password !== constants.SYSTEM.MASTER_PASSWORD) {
           return reply(
@@ -53,9 +78,6 @@ export function action(actionContext: ActionContext): (
 
         // Add password to context
         updatedContext.password = password;
-
-        // Remove password argument
-        argumentManager.pop('password');
       }
 
       const message = await originalMethod(updatedContext);
