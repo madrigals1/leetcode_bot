@@ -2,6 +2,8 @@ import * as DiscordBot from 'discord.js';
 import { TextChannel, NewsChannel, DMChannel } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
 
+import ArgumentManager from '../argumentManager';
+
 import { ButtonContainer } from './buttons.model';
 
 export interface Options {
@@ -18,7 +20,7 @@ export interface Channel {
 
 export interface Context {
   text: string;
-  args?: string[];
+  args?: ArgumentManager;
   reply: (message: string, context: Context) => Promise<string>;
   channel?: TextChannel | DMChannel | NewsChannel | Channel;
   ireply?: (message: string) => Promise<void>,

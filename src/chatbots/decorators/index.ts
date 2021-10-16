@@ -2,9 +2,10 @@ import dictionary from '../../utils/dictionary';
 import { Context } from '../models';
 import { registeredActions } from '../actions';
 import constants from '../../utils/constants';
+import ArgumentManager from '../argumentManager';
 
 import { ActionContext } from './models';
-import { getArgs, isValidArgsCount } from './utils';
+import { getArgs, getParsedArguments } from './utils';
 
 // eslint-disable-next-line import/prefer-default-export
 export function action(actionContext: ActionContext): (
@@ -17,7 +18,7 @@ export function action(actionContext: ActionContext): (
     propertyKey: string,
     descriptor: PropertyDescriptor,
   ) => {
-    const { name, argsCount, isAdmin } = actionContext;
+    const { name, args, isAdmin } = actionContext;
 
     const originalMethod = descriptor.value;
 
@@ -26,20 +27,23 @@ export function action(actionContext: ActionContext): (
       const { reply, text } = context;
 
       // Get args list from message text
-      const args = getArgs(text);
+      const messageArgs = getArgs(text);
+
+      let argumentManager: ArgumentManager;
+
+      try {
+        argumentManager = getParsedArguments(messageArgs, args);
+      } catch (e: unknown) {
+        return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
+      }
 
       // Add args to the context
-      const updatedContext = { ...context, args };
-
-      // If inccorrect args amount was sent
-      if (!isValidArgsCount(args, argsCount)) {
-        return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, updatedContext);
-      }
+      const updatedContext = { ...context, args: argumentManager };
 
       // Check password if action is Admin Action
       if (isAdmin) {
         // Password should be last argument of message
-        const password = args[args.length - 1];
+        const password = argumentManager.get('password').value();
 
         if (password !== constants.SYSTEM.MASTER_PASSWORD) {
           return reply(
@@ -51,10 +55,10 @@ export function action(actionContext: ActionContext): (
         updatedContext.password = password;
 
         // Remove password argument
-        updatedContext.args.pop();
+        argumentManager.pop('password');
       }
 
-      const message = await originalMethod(updatedContext, args, reply);
+      const message = await originalMethod(updatedContext);
       return reply(message, updatedContext);
     };
 

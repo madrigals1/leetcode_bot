@@ -21,59 +21,83 @@ export const vizapiActions = {
 };
 
 export default class Actions {
-  @action({ name: 'ping', argsCount: [0] })
+  @action({ name: 'ping' })
   static ping(): string {
     return 'pong';
   }
 
-  @action({ name: 'start', argsCount: [0] })
+  @action({ name: 'start' })
   static start(context: Context): string {
     return dictionary.BOT_MESSAGES.WELCOME_TEXT(context.prefix);
   }
 
-  @action({ name: 'add', argsCount: '+' })
-  static async add(context: Context, args: string[]): Promise<string> {
+  @action({
+    name: 'add',
+    args: [
+      {
+        key: 'username',
+        name: 'Username(s)',
+        index: 0,
+        isRequired: true,
+        isMultiple: true,
+      },
+    ],
+  })
+  static async add(context: Context): Promise<string> {
     // Variable to store text to return back to chat
-    let userDetails = '';
+    let message = '';
 
-    // Promise List with promises for adding users
-    for (let i = 0; i < args.length; i++) {
-      // Get username
-      const username: string = args[i];
+    // Get Usernames from arguments
+    const usernames = context.args.get('username').values;
 
+    // Add all Users 1 by 1 and log into message
+    for (let i = 0; i < usernames.length; i++) {
       // Get results of adding
       // eslint-disable-next-line no-await-in-loop
-      const result: CacheResponse = await Cache.addUser(username);
+      const result: CacheResponse = await Cache.addUser(usernames[i]);
 
-      userDetails += result.detail;
+      message += result.detail;
     }
 
-    return dictionary.BOT_MESSAGES.USER_LIST(userDetails);
+    return dictionary.BOT_MESSAGES.USER_LIST(message);
   }
 
-  @action({ name: 'refresh', argsCount: [0] })
-  static async refresh(
-    context: Context,
-    args: string[],
-    reply: (message: string, _: Context) => Promise<string>,
-  ): Promise<string> {
-    // Force refresh
+  @action({ name: 'refresh' })
+  static async refresh(context: Context): Promise<string> {
+    // Force refreshing start
     Cache.database.isRefreshing = false;
 
-    await reply(dictionary.BOT_MESSAGES.STARTED_REFRESH, context);
+    // Log that database started refresh
+    await context.reply(dictionary.BOT_MESSAGES.STARTED_REFRESH, context);
 
+    // Refresh and return result
     const result: CacheResponse = await Cache.refreshUsers();
     return result.detail;
   }
 
-  @action({ name: 'remove', argsCount: [1, 2], isAdmin: true })
-  static async remove(
-    context: Context,
-    args: string[],
-    reply: (message: string, _: Context) => Promise<string>,
-  ): Promise<string> {
+  @action({
+    name: 'remove',
+    args: [
+      {
+        key: 'username_or_password',
+        name: 'Username or Password',
+        index: 0,
+        isRequired: false,
+      },
+      {
+        key: 'password',
+        name: 'Password',
+        index: 1,
+        isRequired: false,
+      },
+    ],
+    isAdmin: true,
+  })
+  static async remove(context: Context): Promise<string> {
+    const usernameOrPassword = context.args.get('username_or_password').value;
+
     // Handle case with /remove <master_password>
-    if (args.length === 0) {
+    if (usernameOrPassword === '') {
       // Add Buttons with User List
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
@@ -85,10 +109,10 @@ export default class Actions {
       return dictionary.BOT_MESSAGES.USER_LIST_REMOVE;
     }
 
-    // Get username from message
-    const username: string = args[0].toLowerCase();
+    // We know for sure now, this is username
+    const username = usernameOrPassword;
 
-    await reply(
+    await context.reply(
       dictionary.BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username),
       context,
     );
@@ -99,14 +123,24 @@ export default class Actions {
     return result.detail;
   }
 
-  @action({ name: 'clear', argsCount: [1], isAdmin: true })
-  static async clear(
-    context: Context,
-    args: string[],
-    reply: (message: string, _: Context) => Promise<string>,
-  ): Promise<string> {
+  @action({
+    name: 'clear',
+    args: [
+      {
+        key: 'password',
+        name: 'Password',
+        index: 0,
+        isRequired: true,
+      },
+    ],
+    isAdmin: true,
+  })
+  static async clear(context: Context): Promise<string> {
     // Send message, that Database will be cleared
-    await reply(dictionary.BOT_MESSAGES.DATABASE_WILL_BE_CLEARED, context);
+    await context.reply(
+      dictionary.BOT_MESSAGES.DATABASE_WILL_BE_CLEARED,
+      context,
+    );
 
     // Remove all Users and send the result (success or failure)
     const result: CacheResponse = await Cache.clearUsers();
@@ -114,16 +148,39 @@ export default class Actions {
     return result.detail;
   }
 
-  @action({ name: 'stats', argsCount: [1], isAdmin: true })
+  @action({
+    name: 'stats',
+    args: [
+      {
+        key: 'password',
+        name: 'Password',
+        index: 0,
+        isRequired: true,
+      },
+    ],
+    isAdmin: true,
+  })
   static async stats(context: Context): Promise<string> {
     // Send message with stats
     return dictionary.BOT_MESSAGES.STATS_TEXT(context.provider, Cache);
   }
 
-  @action({ name: 'rating', argsCount: [0, 1] })
-  static async rating(context: Context, args: string[]): Promise<string> {
+  @action({
+    name: 'rating',
+    args: [
+      {
+        key: 'type',
+        name: 'Type',
+        index: 0,
+        isRequired: false,
+      },
+    ],
+  })
+  static async rating(context: Context): Promise<string> {
+    const type = context.args.get('type').value;
+
     // Regular rating with "Problem Solved" count
-    if (args.length === 0) {
+    if (type === '') {
       // Add button to open Cumulative Rating
       context.options.buttons = [{
         buttons: [{
@@ -140,7 +197,7 @@ export default class Actions {
     // - Easy - 1 point
     // - Medium - 2 points
     // - Hard - 3 points
-    if (args[0] === 'cml') {
+    if (type === 'cml') {
       const usersWithCmlRating = Cache.allUsers().sort((user1, user2) => {
         const cml1 = user1.computed.problemsSolved.cumulative;
         const cml2 = user2.computed.problemsSolved.cumulative;
@@ -163,9 +220,21 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.INCORRECT_INPUT;
   }
 
-  @action({ name: 'profile', argsCount: [0, 1] })
-  static async profile(context: Context, args: string[]): Promise<string> {
-    if (args.length === 0) {
+  @action({
+    name: 'profile',
+    args: [
+      {
+        key: 'username',
+        name: 'Username',
+        index: 0,
+        isRequired: false,
+      },
+    ],
+  })
+  static async profile(context: Context): Promise<string> {
+    const username = context.args.get('username').value.toLowerCase();
+
+    if (username === '') {
       // Add user buttons
       context.options.buttons = [{
         buttons: createButtonsFromUsers({ action: 'profile' }),
@@ -176,7 +245,6 @@ export default class Actions {
     }
 
     // Get User from username
-    const username: string = args[0].toLowerCase();
     const user: User = Cache.loadUser(username);
 
     if (!user) return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username);
@@ -204,12 +272,22 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.USER_TEXT(user);
   }
 
-  @action({ name: 'avatar', argsCount: [0, 1] })
-  static async avatar(context: Context, args: string[]): Promise<string> {
+  @action({
+    name: 'avatar',
+    args: [
+      {
+        key: 'username',
+        name: 'Username',
+        index: 0,
+        isRequired: false,
+      },
+    ],
+  })
+  static async avatar(context: Context): Promise<string> {
+    const username = context.args.get('username').value.toLowerCase();
+
     // If 1 User was sent
-    if (args.length === 1) {
-      // Get User from args
-      const username: string = args[0].toLowerCase();
+    if (username !== '') {
       const user: User = Cache.loadUser(username);
 
       if (user) {
@@ -231,12 +309,23 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.USER_LIST_AVATARS;
   }
 
-  @action({ name: 'submissions', argsCount: [0, 1] })
+  @action({
+    name: 'submissions',
+    args: [
+      {
+        key: 'username',
+        name: 'Username',
+        index: 0,
+        isRequired: false,
+      },
+    ],
+  })
   static async submissions(context: Context, args: string[]): Promise<string> {
+    const username = context.args.get('username').value.toLowerCase();
+
     // If 1 User was sent
     if (args.length === 1) {
       // Get User from args
-      const username: string = args[0].toLowerCase();
       const user: User = Cache.loadUser(username);
 
       // If User does not exist, return error message
@@ -276,10 +365,33 @@ export default class Actions {
     return dictionary.BOT_MESSAGES.USER_LIST_SUBMISSIONS;
   }
 
-  @action({ name: 'compare', argsCount: [0, 1, 2] })
+  @action({
+    name: 'compare',
+    args: [
+      {
+        key: 'first_username',
+        name: 'First Username',
+        index: 0,
+        isRequired: false,
+      },
+      {
+        key: 'second_username',
+        name: 'Second Username',
+        index: 1,
+        isRequired: false,
+      },
+    ],
+  })
   static async compare(context: Context, args: string[]): Promise<string> {
+    const firstUsername = (
+      context.args.get('first_username').value.toLowerCase()
+    );
+    const secondUsername = (
+      context.args.get('second_username').value.toLowerCase()
+    );
+
     // Getting left User
-    if (args.length === 0) {
+    if (firstUsername === '') {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({ action: 'compare' }),
         buttonPerRow: 3,
@@ -289,7 +401,7 @@ export default class Actions {
     }
 
     // Getting right User
-    if (args.length === 1) {
+    if (secondUsername === '') {
       const username: string = args[0].toLowerCase();
 
       context.options.buttons = [{
@@ -301,17 +413,15 @@ export default class Actions {
     }
 
     // Get Users from args
-    const leftUsername: string = args[0].toLowerCase();
-    const leftUser: User = Cache.loadUser(leftUsername);
-    const rightUsername: string = args[1].toLowerCase();
-    const rightUser: User = Cache.loadUser(rightUsername);
+    const leftUser: User = Cache.loadUser(firstUsername);
+    const rightUser: User = Cache.loadUser(secondUsername);
 
     if (!leftUser) {
-      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(leftUsername);
+      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(firstUsername);
     }
 
     if (!rightUser) {
-      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(rightUsername);
+      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(secondUsername);
     }
 
     const response: TableResponse = (

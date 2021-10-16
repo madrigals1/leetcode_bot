@@ -36,7 +36,7 @@ export class ParsedArgument implements IParsedArgument {
     this._value = value;
   }
 
-  public value(): string {
+  public get value(): string {
     if (typeof this._value === 'string') {
       return this._value;
     }
@@ -44,7 +44,7 @@ export class ParsedArgument implements IParsedArgument {
     return this._value.join(' ');
   }
 
-  public values(): string[] {
+  public get values(): string[] {
     if (typeof this._value === 'string') {
       return [this._value];
     }

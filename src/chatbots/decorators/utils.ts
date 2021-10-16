@@ -1,3 +1,15 @@
+import * as _ from 'lodash';
+
+import ArgumentManager from '../argumentManager';
+import dictionary from '../../utils/dictionary';
+
+import { Argument, ParsedArgument } from './models';
+
+const { SERVER_MESSAGES } = dictionary;
+const {
+  ARGUMENT_EXCEPTION_PREFIX, INVALID_INPUT_EXCEPTION_PREFIX,
+} = SERVER_MESSAGES;
+
 export function getArgs(message: string): string[] {
   // Get all args from message
   const args = message.trim().split(' ');
@@ -8,14 +20,231 @@ export function getArgs(message: string): string[] {
   return args;
 }
 
-export function isValidArgsCount(
-  args: string[], argsCount: number[] | string,
-): boolean {
-  if (typeof argsCount === 'object') return argsCount.includes(args.length);
+function confirmNoDuplicates(sortedArgs: Argument[]): void {
+  // Find all duplicate keys
+  const dupKeys = new Set<string>();
+  for (let i = 1; i < sortedArgs.length; i++) {
+    if (sortedArgs[i - 1].key === sortedArgs[i].key) {
+      dupKeys.add(sortedArgs[i].key);
+    }
+  }
 
-  if (argsCount === '+') return args.length > 0;
+  if (!_.isEmpty(dupKeys)) {
+    const reason = `Duplicate keys ${Array.from(dupKeys)} are found in arguments`;
+    const errMsg = ARGUMENT_EXCEPTION_PREFIX + reason;
+    throw new Error(errMsg);
+  }
 
-  if (argsCount === '?') return true;
+  const dupIndexes = new Set<number>();
+  for (let i = 1; i < sortedArgs.length; i++) {
+    if (sortedArgs[i - 1].index === sortedArgs[i].index) {
+      dupIndexes.add(sortedArgs[i].index);
+    }
+  }
 
-  throw new Error(`Invalid argument argsCount: ${argsCount}`);
+  if (!_.isEmpty(dupIndexes)) {
+    const reason = `Duplicate indexes ${Array.from(dupIndexes)} are found in arguments`;
+    const errMsg = ARGUMENT_EXCEPTION_PREFIX + reason;
+    throw new Error(errMsg);
+  }
+}
+
+function confirmValidArgCount(
+  maxIndexInRequestedArgs: number, providedArgCount: number,
+): void {
+  if (maxIndexInRequestedArgs > providedArgCount) {
+    const reason = 'Insufficient arguments in message';
+    const errMsg = INVALID_INPUT_EXCEPTION_PREFIX + reason;
+    throw new Error(errMsg);
+  }
+
+  if (maxIndexInRequestedArgs > 100) {
+    const reason = 'Should not request more than 100 arguments';
+    const errMsg = ARGUMENT_EXCEPTION_PREFIX + reason;
+    throw new Error(errMsg);
+  }
+
+  if (providedArgCount > 100) {
+    const reason = 'Should not provide more than 100 arguments';
+    const errMsg = INVALID_INPUT_EXCEPTION_PREFIX + reason;
+    throw new Error(errMsg);
+  }
+}
+
+function confirmNoRequiredAfterOptional(sortedArgs: Argument[]): void {
+  let optionalStarted = false;
+  for (let i = 0; i < sortedArgs.length; i++) {
+    const argument = sortedArgs[i];
+
+    if (!argument.isRequired) {
+      optionalStarted = true;
+    } else {
+      // If already started consuming optional arguments
+      if (optionalStarted) {
+        const reason = 'Should not have required arguments after optional '
+          + 'arguments';
+        const errMsg = ARGUMENT_EXCEPTION_PREFIX + reason;
+        throw new Error(errMsg);
+      }
+    }
+  }
+}
+
+export function getParsedArguments(
+  providedArgs: string[], requestedArgs: Argument[] = [],
+): ArgumentManager {
+  // Validated Arguments after processing
+  const argumentManager: ArgumentManager = new ArgumentManager();
+
+  // Arguments that will be left out after processing provided arguments
+  let unprocessedArgs = _.clone(requestedArgs ?? []);
+
+  if (_.isEmpty(requestedArgs)) {
+    // If no args are requested, no args should be provided
+    if (!_.isEmpty(providedArgs)) {
+      const reason = 'Message should not have any arguments';
+      const errMsg = INVALID_INPUT_EXCEPTION_PREFIX + reason;
+      throw new Error(errMsg);
+    }
+
+    return argumentManager;
+  }
+
+  // Sort arguments by index
+  const sortedArgs = requestedArgs.sort((a, b) => a.index - b.index);
+
+  confirmNoDuplicates(sortedArgs);
+  confirmNoRequiredAfterOptional(sortedArgs);
+
+  // Confirm argument count and limits
+  const providedArgCount = providedArgs.length;
+  const requiredArguments = sortedArgs.filter((arg) => arg.isRequired);
+  const lastRequiredArgument = requiredArguments[requiredArguments.length - 1];
+  const maxIndexInRequestedArgs = lastRequiredArgument
+    ? lastRequiredArgument.index + 1
+    : 0;
+  confirmValidArgCount(maxIndexInRequestedArgs, providedArgCount);
+
+  // Variable that holds data for MultiArgument
+  const curMultiArg = {
+    holder: [],
+    key: 'default',
+    name: 'Default',
+    index: -1,
+  };
+
+  let lastProseccedArgument: Argument = null;
+
+  for (let i = 0; i < providedArgCount; i++) {
+    // Find argument in requested arguments
+    const foundArgument = requestedArgs
+      .find((argument) => argument.index === i);
+
+    // If current index doesn't exist in arguments
+    if (!foundArgument) {
+      if (_.isEmpty(curMultiArg.holder)) {
+        const reason = `Index ${i} should be present in arguments`;
+        const errorMessage = ARGUMENT_EXCEPTION_PREFIX + reason;
+        throw new Error(errorMessage);
+      }
+
+      // If multi arg is collecting, fill it with current provided argument
+      curMultiArg.holder.push(providedArgs[i]);
+      continue;
+    }
+
+    // If key exists, finish collecting multi argument
+    if (!_.isEmpty(curMultiArg.holder)) {
+      const argument: ParsedArgument = new ParsedArgument(
+        curMultiArg.index,
+        curMultiArg.key,
+        curMultiArg.name,
+        curMultiArg.holder,
+      );
+
+      // Add to argumentManager both by Key and Index
+      argumentManager.upsert(argument);
+
+      curMultiArg.holder = [];
+      curMultiArg.key = 'default';
+      curMultiArg.name = 'Default';
+      curMultiArg.index = -1;
+    }
+
+    // Make argument processed by removing from unprocessed
+    unprocessedArgs = unprocessedArgs.filter((arg) => arg.index !== i);
+
+    // If argument is multiple, start collecting it
+    if (foundArgument.isMultiple) {
+      curMultiArg.holder = [providedArgs[i]];
+      curMultiArg.key = foundArgument.key;
+      curMultiArg.name = foundArgument.name;
+      curMultiArg.index = foundArgument.index;
+
+      // Set this argument as last processed
+      lastProseccedArgument = foundArgument;
+
+      // Go to next argument from message
+      continue;
+    } else {
+      const argument: ParsedArgument = new ParsedArgument(
+        foundArgument.index,
+        foundArgument.key,
+        foundArgument.name,
+        providedArgs[i],
+      );
+
+      argumentManager.upsert(argument);
+    }
+
+    // Save last processed argument
+    lastProseccedArgument = foundArgument;
+  }
+
+  // Add latest multi argument
+  if (!_.isEmpty(curMultiArg.holder)) {
+    const argument: ParsedArgument = new ParsedArgument(
+      curMultiArg.index,
+      curMultiArg.key,
+      curMultiArg.name,
+      curMultiArg.holder,
+    );
+
+    // Add to argumentManager both by Key and Index
+    argumentManager.upsert(argument);
+  }
+
+  // Sort argument by index
+  const sortedUnprocessedArgs = unprocessedArgs
+    .sort((a, b) => a.index - b.index);
+
+  // Make sure that no index is left out
+  for (let i = 0; i < sortedUnprocessedArgs.length; i++) {
+    const argument: Argument = sortedUnprocessedArgs[i];
+    const nextIndex = lastProseccedArgument
+      ? lastProseccedArgument.index + 1
+      : 0;
+
+    if (nextIndex !== argument.index) {
+      if (!lastProseccedArgument.isMultiple) {
+        const notFoundIndex = lastProseccedArgument.index + 1;
+        const reason = `Argument ${notFoundIndex} is not provided`;
+        const errMsg = ARGUMENT_EXCEPTION_PREFIX + reason;
+        throw new Error(errMsg);
+      }
+    }
+
+    // Add empty value optional argument
+    argumentManager.upsert(new ParsedArgument(
+      argument.index,
+      argument.key,
+      argument.name,
+      argument.isMultiple ? [] : '',
+    ));
+
+    // Save last processed argument
+    lastProseccedArgument = argument;
+  }
+
+  return argumentManager;
 }
