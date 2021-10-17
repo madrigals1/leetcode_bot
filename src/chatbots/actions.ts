@@ -99,7 +99,7 @@ export default class Actions {
     const usernameOrPassword = context.args.get('username_or_password').value;
     const password = context.args.get('password').value;
 
-    // Handle case with /remove <master_password>
+    // Handle case with /remove <username_or_password>
     if (password === '') {
       // Add Buttons with User List
       context.options.buttons = [{
@@ -114,6 +114,20 @@ export default class Actions {
 
     // We know for sure now, this is username
     const username = usernameOrPassword;
+
+    // Handle case with /remove <password>
+    // Discord specific
+    if (username === '') {
+      // Add Buttons with User List
+      context.options.buttons = [{
+        buttons: createButtonsFromUsers({
+          action: 'remove', password,
+        }),
+        buttonPerRow: 3,
+      }, getCloseButton()];
+
+      return dictionary.BOT_MESSAGES.USER_LIST_REMOVE;
+    }
 
     await context.reply(
       dictionary.BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username),

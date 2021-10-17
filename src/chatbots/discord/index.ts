@@ -8,10 +8,9 @@ import dictionary from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { Context } from '../models';
-import { getPositionalParsedArguments } from '../decorators/utils';
 
 import createBot from './bot';
-import { reply } from './utils';
+import { getKeyBasedParsedArguments, reply } from './utils';
 
 const { DISCORD } = constants.PROVIDERS;
 
@@ -63,7 +62,7 @@ class Discord {
     this.bot.on('interactionCreate', async (interaction: Interaction) => {
       if (!interaction.isCommand()) return;
 
-      const { commandName } = interaction;
+      const { commandName, options } = interaction;
 
       // Find appropriate action by name and execute it
       for (let i = 0; i < registeredActions.length; i++) {
@@ -72,10 +71,11 @@ class Discord {
           const context: Context = {
             text: '',
             reply,
-            ireply: async (message: string) => {
+            discordIReply: async (message: string) => {
               await interaction.reply(message);
             },
-            argumentParser: getPositionalParsedArguments,
+            discordProvidedArguments: options.data,
+            argumentParser: getKeyBasedParsedArguments,
             provider: constants.PROVIDERS.DISCORD.NAME,
             prefix: constants.PROVIDERS.DISCORD.PREFIX,
             options: {},

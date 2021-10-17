@@ -1,5 +1,10 @@
-import * as DiscordBot from 'discord.js';
-import { TextChannel, NewsChannel, DMChannel } from 'discord.js';
+import {
+  Client,
+  TextChannel,
+  NewsChannel,
+  DMChannel,
+  CommandInteractionOption,
+} from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
 
 import ArgumentManager from '../argumentManager';
@@ -24,7 +29,6 @@ export interface Context {
   args?: ArgumentManager;
   reply: (message: string, context: Context) => Promise<string>;
   channel?: TextChannel | DMChannel | NewsChannel | Channel;
-  ireply?: (message: string) => Promise<void>,
   argumentParser: (
     context: Context, requestedArgs: Argument[],
   ) => ArgumentManager;
@@ -32,7 +36,10 @@ export interface Context {
   prefix: string;
   chatId?: number;
   options?: Options;
-  bot?: DiscordBot.Client | TelegramBot;
+  bot?: Client | TelegramBot;
   photoUrl?: string;
   password?: string;
+  // Discord
+  discordProvidedArguments?: readonly CommandInteractionOption[],
+  discordIReply?: (message: string) => Promise<void>,
 }
