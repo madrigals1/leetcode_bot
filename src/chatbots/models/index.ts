@@ -11,6 +11,7 @@ import { TelegramTestCase, Args, DiscordTestCase } from './testCase.model';
 import {
   TelegramChat, TelegramEntity, TelegramUser, TelegramMessage,
 } from './ntba.model';
+import { RegisteredAction } from './registeredAction.model';
 
 export {
   Context,
@@ -33,4 +34,5 @@ export {
   TelegramEntity,
   TelegramUser,
   TelegramMessage,
+  RegisteredAction,
 };
