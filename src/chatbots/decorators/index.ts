@@ -5,7 +5,6 @@ import constants from '../../utils/constants';
 import ArgumentManager from '../argumentManager';
 
 import { ActionContext } from './models';
-import { getArgs, getParsedArguments } from './utils';
 
 function getPassword(argumentManager: ArgumentManager): string {
   const passwordArguments = ['password', 'username_or_password'];
@@ -37,22 +36,20 @@ export function action(actionContext: ActionContext): (
     propertyKey: string,
     descriptor: PropertyDescriptor,
   ) => {
-    const { name, args, isAdmin } = actionContext;
+    const { name, args: requestedArgs, isAdmin } = actionContext;
 
     const originalMethod = descriptor.value;
 
     // eslint-disable-next-line no-param-reassign
     descriptor.value = async (context: Context) => {
-      const { reply, text } = context;
+      const { reply, argumentParser } = context;
 
-      // Get args list from message text
-      const messageArgs = getArgs(text);
-
+      // Make it mutable, so that we can apply try-catch on it
       let argumentManager: ArgumentManager;
 
       try {
-        argumentManager = getParsedArguments(messageArgs, args);
-      } catch (e: unknown) {
+        argumentManager = argumentParser(context, requestedArgs);
+      } catch {
         return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
       }
 
@@ -85,7 +82,9 @@ export function action(actionContext: ActionContext): (
     };
 
     // Register action
-    registeredActions.push({ name, property: propertyKey });
+    registeredActions.push({
+      name, args: requestedArgs, property: propertyKey,
+    });
 
     return descriptor;
   };

@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 
 import ArgumentManager from '../argumentManager';
 import dictionary from '../../utils/dictionary';
+import { Context } from '../models';
 
 import { Argument, ParsedArgument } from './models';
 
@@ -90,9 +91,15 @@ function confirmNoRequiredAfterOptional(sortedArgs: Argument[]): void {
   }
 }
 
-export function getParsedArguments(
-  providedArgs: string[], requestedArgs: Argument[] = [],
+export function getPositionalParsedArguments(
+  providerContext: Context, requestedArgs: Argument[] = [],
 ): ArgumentManager {
+  // Get provided args from Context
+  const { text } = providerContext;
+
+  // Get args list from message text
+  const providedArgs = getArgs(text);
+
   // Validated Arguments after processing
   const argumentManager: ArgumentManager = new ArgumentManager();
 

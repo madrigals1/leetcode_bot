@@ -3,6 +3,7 @@ import { TextChannel, NewsChannel, DMChannel } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
 
 import ArgumentManager from '../argumentManager';
+import { Argument } from '../decorators/models';
 
 import { ButtonContainer } from './buttons.model';
 
@@ -24,6 +25,9 @@ export interface Context {
   reply: (message: string, context: Context) => Promise<string>;
   channel?: TextChannel | DMChannel | NewsChannel | Channel;
   ireply?: (message: string) => Promise<void>,
+  argumentParser: (
+    context: Context, requestedArgs: Argument[],
+  ) => ArgumentManager;
   provider: string;
   prefix: string;
   chatId?: number;

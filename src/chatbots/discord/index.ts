@@ -8,6 +8,7 @@ import dictionary from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { Context } from '../models';
+import { getPositionalParsedArguments } from '../decorators/utils';
 
 import createBot from './bot';
 import { reply } from './utils';
@@ -29,12 +30,22 @@ class Discord {
 
     // Generate Discord commands from registered actions
     const commands = registeredActions
-      .map(({ name }) => new SlashCommandBuilder()
-        .setName(name)
-        .setDescription(name)
-        .addStringOption((option) => option.setName('input')
-          .setDescription('The input to echo back')))
-      .map((command) => command.toJSON());
+      .map(({ name, args }) => {
+        const command = new SlashCommandBuilder()
+          .setName(name)
+          .setDescription(name);
+
+        const allIndexArguments = args;
+
+        allIndexArguments?.forEach((argument) => {
+          command
+            .addStringOption((option) => option
+              .setName(argument.key)
+              .setDescription(argument.name));
+        });
+
+        return command;
+      }).map((command) => command.toJSON());
 
     // REST actions handler
     const rest = new REST({ version: '9' }).setToken(this.token);
@@ -64,6 +75,7 @@ class Discord {
             ireply: async (message: string) => {
               await interaction.reply(message);
             },
+            argumentParser: getPositionalParsedArguments,
             provider: constants.PROVIDERS.DISCORD.NAME,
             prefix: constants.PROVIDERS.DISCORD.PREFIX,
             options: {},

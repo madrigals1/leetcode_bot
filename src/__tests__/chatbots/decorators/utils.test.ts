@@ -1,10 +1,11 @@
 /* eslint-disable camelcase */
 import {
-  getArgs, getParsedArguments,
+  getArgs, getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
 import { Args } from '../../../chatbots/models';
 import dictionary from '../../../utils/dictionary';
 import { ArgumentTestCase } from '../../__mocks__/models';
+import { mockContext } from '../../__mocks__/utils.mock';
 
 const {
   ARGUMENT_EXCEPTION_PREFIX, INVALID_INPUT_EXCEPTION_PREFIX,
@@ -1762,20 +1763,28 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
   testCases.forEach(({ input, output, error }) => {
     const { providedArgs, requestedArgs } = input;
 
+    // Add providedArgs to context
+    const context = mockContext();
+    context.text = providedArgs.join(' ');
+
     if (error) {
-      expect(() => getParsedArguments(providedArgs, requestedArgs))
+      expect(() => getPositionalParsedArguments(context, requestedArgs))
         .toThrowError(error);
     } else {
       const { byKey, byIndex } = output;
 
-      const argumentManager1 = getParsedArguments(providedArgs, requestedArgs);
+      const argumentManager1 = (
+        getPositionalParsedArguments(context, requestedArgs)
+      );
 
       // Check by Key
       Object.entries(byKey).forEach(([key, argument]) => {
         expect(argumentManager1.pop(key)).toEqual(argument);
       });
 
-      const argumentManager2 = getParsedArguments(providedArgs, requestedArgs);
+      const argumentManager2 = (
+        getPositionalParsedArguments(context, requestedArgs)
+      );
 
       // Check by Index
       Object.entries(byIndex).forEach(([index, argument]) => {

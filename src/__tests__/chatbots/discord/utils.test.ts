@@ -38,6 +38,7 @@ test('chatbots.discord.utils.reply function', async () => {
             mockDiscordInstances[0].options = options;
           },
         },
+        argumentParser: () => undefined,
         photoUrl: 'random_url',
         reply: () => new Promise(() => 'asd'),
         provider: 'Random',
@@ -58,6 +59,7 @@ test('chatbots.discord.utils.reply function', async () => {
           },
         },
         reply: () => new Promise(() => 'asd'),
+        argumentParser: () => undefined,
         provider: 'Random',
         prefix: '!',
       },
@@ -71,6 +73,7 @@ test('chatbots.discord.utils.reply function', async () => {
         text: 'asd asd asd',
         photoUrl: 'random_url_3',
         reply: () => new Promise(() => 'asd'),
+        argumentParser: () => undefined,
         provider: 'Random',
         prefix: '!',
       },
