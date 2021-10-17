@@ -3,13 +3,9 @@ import {
   getArgs, getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
 import { Args } from '../../../chatbots/models';
-import dictionary from '../../../utils/dictionary';
+import { ArgumentsError, InputError } from '../../../utils/errors';
 import { ArgumentTestCase } from '../../__mocks__/models';
 import { mockContext } from '../../__mocks__/utils.mock';
-
-const {
-  ARGUMENT_EXCEPTION_PREFIX, INVALID_INPUT_EXCEPTION_PREFIX,
-} = dictionary.SERVER_MESSAGES;
 
 test('chatbots.decorators.utils.getArgs function', async () => {
   const testCases: Args[] = [
@@ -1390,7 +1386,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${ARGUMENT_EXCEPTION_PREFIX}Duplicate keys ${['tc21_argument1']} are found in arguments`),
+    error: new ArgumentsError(`Duplicate keys ${['tc21_argument1']} are found `
+      + 'in arguments'),
   };
 
   // Error: duplicate keys (multiple duplicates)
@@ -1452,7 +1449,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${ARGUMENT_EXCEPTION_PREFIX}Duplicate keys ${['tc22_argument1', 'tc22_argument2', 'tc22_argument3']} are found in arguments`),
+    error: new ArgumentsError(`Duplicate keys ${['tc22_argument1', 'tc22_argument2', 'tc22_argument3']} are found in arguments`),
   };
 
   // Error: duplicate indexes (single duplicate)
@@ -1478,7 +1475,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${ARGUMENT_EXCEPTION_PREFIX}Duplicate indexes ${[0]} are found in arguments`),
+    error: new ArgumentsError(`Duplicate indexes ${[0]} are found in arguments`),
   };
 
   // Error: duplicate indexes (multiple duplicates)
@@ -1540,7 +1537,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${ARGUMENT_EXCEPTION_PREFIX}Duplicate indexes ${[0, 1, 2]} are found in arguments`),
+    error: new ArgumentsError(`Duplicate indexes ${[0, 1, 2]} are found in arguments`),
   };
 
   // Error: Insufficient arguments in message
@@ -1560,7 +1557,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${INVALID_INPUT_EXCEPTION_PREFIX}Insufficient arguments in message`),
+    error: Error('Insufficient arguments in message'),
   };
 
   // Error: Should not request more than 100 arguments
@@ -1580,7 +1577,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${ARGUMENT_EXCEPTION_PREFIX}Should not request more than 100 arguments`),
+    error: new ArgumentsError('Should not request more than 100 arguments'),
   };
 
   // Error: Should not provide more than 100 arguments
@@ -1600,7 +1597,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${INVALID_INPUT_EXCEPTION_PREFIX}Should not provide more than 100 arguments`),
+    error: new InputError('Should not provide more than 100 arguments'),
   };
 
   // Error: Should not have required arguments after optional arguments
@@ -1632,7 +1629,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${ARGUMENT_EXCEPTION_PREFIX}Should not have required arguments after optional arguments`),
+    error: new ArgumentsError('Should not have required arguments after '
+      + 'optional arguments'),
   };
 
   // Error: Message should not have any arguments
@@ -1645,7 +1643,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${INVALID_INPUT_EXCEPTION_PREFIX}Message should not have any arguments`),
+    error: new InputError('Message should not have any arguments'),
   };
 
   // Error: Index `i` should be present in arguments
@@ -1671,7 +1669,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${ARGUMENT_EXCEPTION_PREFIX}Index 1 should be present in arguments`),
+    error: new ArgumentsError('Index 1 should be present in arguments'),
   };
 
   // Error: Argument `notFoundIndex` is not provided
@@ -1709,7 +1707,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(`${ARGUMENT_EXCEPTION_PREFIX}Argument 3 is not provided`),
+    error: new ArgumentsError('Argument 3 is not provided'),
   };
 
   // Branches: requestedArgs can be null
