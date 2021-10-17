@@ -1,15 +1,10 @@
 import * as _ from 'lodash';
 
 import ArgumentManager from '../argumentManager';
-import dictionary from '../../utils/dictionary';
 import { Context } from '../models';
+import { ArgumentsError, InputError } from '../../utils/errors';
 
 import { Argument, ParsedArgument } from './models';
-
-const { SERVER_MESSAGES } = dictionary;
-const {
-  ARGUMENT_EXCEPTION_PREFIX, INVALID_INPUT_EXCEPTION_PREFIX,
-} = SERVER_MESSAGES;
 
 export function getArgs(message: string): string[] {
   // Get all args from message
@@ -31,11 +26,12 @@ function confirmNoDuplicates(sortedArgs: Argument[]): void {
   }
 
   if (!_.isEmpty(dupKeys)) {
-    const reason = `Duplicate keys ${Array.from(dupKeys)} are found in arguments`;
-    const errMsg = ARGUMENT_EXCEPTION_PREFIX + reason;
-    throw new Error(errMsg);
+    const reason = `Duplicate keys ${Array.from(dupKeys)}`
+      + ' are found in arguments';
+    throw new ArgumentsError(reason);
   }
 
+  // Find all duplicate indexes
   const dupIndexes = new Set<number>();
   for (let i = 1; i < sortedArgs.length; i++) {
     if (sortedArgs[i - 1].index === sortedArgs[i].index) {
@@ -44,9 +40,9 @@ function confirmNoDuplicates(sortedArgs: Argument[]): void {
   }
 
   if (!_.isEmpty(dupIndexes)) {
-    const reason = `Duplicate indexes ${Array.from(dupIndexes)} are found in arguments`;
-    const errMsg = ARGUMENT_EXCEPTION_PREFIX + reason;
-    throw new Error(errMsg);
+    const reason = `Duplicate indexes ${Array.from(dupIndexes)}`
+      + ' are found in arguments';
+    throw new ArgumentsError(reason);
   }
 }
 
@@ -55,20 +51,17 @@ function confirmValidArgCount(
 ): void {
   if (maxIndexInRequestedArgs > providedArgCount) {
     const reason = 'Insufficient arguments in message';
-    const errMsg = INVALID_INPUT_EXCEPTION_PREFIX + reason;
-    throw new Error(errMsg);
+    throw new InputError(reason);
   }
 
   if (maxIndexInRequestedArgs > 100) {
     const reason = 'Should not request more than 100 arguments';
-    const errMsg = ARGUMENT_EXCEPTION_PREFIX + reason;
-    throw new Error(errMsg);
+    throw new ArgumentsError(reason);
   }
 
   if (providedArgCount > 100) {
     const reason = 'Should not provide more than 100 arguments';
-    const errMsg = INVALID_INPUT_EXCEPTION_PREFIX + reason;
-    throw new Error(errMsg);
+    throw new InputError(reason);
   }
 }
 
@@ -84,8 +77,7 @@ function confirmNoRequiredAfterOptional(sortedArgs: Argument[]): void {
       if (optionalStarted) {
         const reason = 'Should not have required arguments after optional '
           + 'arguments';
-        const errMsg = ARGUMENT_EXCEPTION_PREFIX + reason;
-        throw new Error(errMsg);
+        throw new ArgumentsError(reason);
       }
     }
   }
@@ -110,8 +102,7 @@ export function getPositionalParsedArguments(
     // If no args are requested, no args should be provided
     if (!_.isEmpty(providedArgs)) {
       const reason = 'Message should not have any arguments';
-      const errMsg = INVALID_INPUT_EXCEPTION_PREFIX + reason;
-      throw new Error(errMsg);
+      throw new InputError(reason);
     }
 
     return argumentManager;
@@ -151,8 +142,7 @@ export function getPositionalParsedArguments(
     if (!foundArgument) {
       if (_.isEmpty(curMultiArg.holder)) {
         const reason = `Index ${i} should be present in arguments`;
-        const errorMessage = ARGUMENT_EXCEPTION_PREFIX + reason;
-        throw new Error(errorMessage);
+        throw new ArgumentsError(reason);
       }
 
       // If multi arg is collecting, fill it with current provided argument
@@ -236,8 +226,7 @@ export function getPositionalParsedArguments(
       if (!lastProseccedArgument.isMultiple) {
         const notFoundIndex = lastProseccedArgument.index + 1;
         const reason = `Argument ${notFoundIndex} is not provided`;
-        const errMsg = ARGUMENT_EXCEPTION_PREFIX + reason;
-        throw new Error(errMsg);
+        throw new ArgumentsError(reason);
       }
     }
 

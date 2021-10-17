@@ -3,6 +3,7 @@ import { Context } from '../models';
 import { registeredActions } from '../actions';
 import constants from '../../utils/constants';
 import ArgumentManager from '../argumentManager';
+import { ArgumentsError, InputError } from '../../utils/errors';
 
 import { ActionContext } from './models';
 
@@ -49,8 +50,18 @@ export function action(actionContext: ActionContext): (
 
       try {
         argumentManager = argumentParser(context, requestedArgs);
-      } catch {
-        return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, context);
+      } catch (e) {
+        // If error is caused by incorrect input, return error cause to User
+        if (e instanceof InputError) {
+          return reply(e.message, context);
+        }
+
+        // If error is caused by codebase issues, throw it
+        if (e instanceof ArgumentsError) {
+          reply(dictionary.BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
+        }
+
+        throw e;
       }
 
       // Add args to the context
