@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { TableResponse, ButtonOptions } from '../../chatbots/models';
+import { TableResponse, ButtonOptions, Context } from '../../chatbots/models';
 import { User } from '../../leetcode/models';
 import dictionary from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
@@ -94,4 +94,14 @@ export function mockUserWithSolved(
   ];
 
   return newUser;
+}
+
+export function mockContext(): Context {
+  return {
+    text: 'random_text',
+    reply: () => new Promise(() => ('asd')),
+    argumentParser: () => undefined,
+    provider: 'mockbot',
+    prefix: '/',
+  };
 }
