@@ -73,7 +73,6 @@ const EMOJI = {
   CROSS_MARK: '❌',
   SUCCESS: '✅',
   WAITING: '⏳',
-  WARNING: 'ℹ️',
   COOL: '😎',
   WASTEBASKET: '🗑️',
   PERSON: '👤',
