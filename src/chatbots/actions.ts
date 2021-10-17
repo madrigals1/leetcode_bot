@@ -5,7 +5,9 @@ import { CacheResponse } from '../cache/response.model';
 import { User } from '../leetcode/models';
 
 import { action } from './decorators';
-import { Context, TableResponse, Button } from './models';
+import {
+  Context, TableResponse, Button, RegisteredAction,
+} from './models';
 import {
   tableForSubmissions,
   compareMenu,
@@ -13,7 +15,7 @@ import {
   getCloseButton,
 } from './utils';
 
-export const registeredActions = [];
+export const registeredActions: RegisteredAction[] = [];
 
 export const vizapiActions = {
   tableForSubmissions,
