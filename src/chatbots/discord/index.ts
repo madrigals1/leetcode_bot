@@ -37,10 +37,9 @@ class Discord {
         const allIndexArguments = args;
 
         allIndexArguments?.forEach((argument) => {
-          command
-            .addStringOption((option) => option
-              .setName(argument.key)
-              .setDescription(argument.name));
+          command.addStringOption((option) => option
+            .setName(argument.key)
+            .setDescription(argument.name));
         });
 
         return command;
@@ -71,7 +70,7 @@ class Discord {
           const context: Context = {
             text: '',
             reply,
-            discordIReply: async (message: string) => {
+            discordIReply: async (message) => {
               await interaction.reply(message);
             },
             discordProvidedArguments: options.data,

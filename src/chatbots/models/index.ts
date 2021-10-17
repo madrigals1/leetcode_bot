@@ -3,7 +3,7 @@ import {
 } from '../slack/slack.model';
 
 import { Context, Options } from './context.model';
-import { Button, ButtonOptions } from './buttons.model';
+import { Button, ButtonOptions, ButtonContainer } from './buttons.model';
 import { Table } from './table.model';
 import { Compare, CompareUser } from './compare.model';
 import { TableResponse } from './response.model';
@@ -18,6 +18,7 @@ export {
   Options,
   ButtonOptions,
   Button,
+  ButtonContainer,
   Table,
   Compare,
   CompareUser,

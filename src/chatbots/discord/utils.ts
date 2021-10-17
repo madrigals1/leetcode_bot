@@ -1,7 +1,52 @@
+import {
+  MessageActionRow, MessageButton, MessageOptions, MessageSelectMenu,
+} from 'discord.js';
+
 import { ArgumentsError, InputError } from '../../utils/errors';
 import ArgumentManager from '../argumentManager';
 import { Argument, ParsedArgument } from '../decorators/models';
-import { Context } from '../models';
+import { Context, ButtonContainer } from '../models';
+
+export function getButtonComponents(
+  buttonContainers: ButtonContainer[],
+): MessageActionRow[] {
+  const rows: MessageActionRow[] = [];
+
+  buttonContainers.forEach((buttonContainer, index) => {
+    const { buttons } = buttonContainer;
+
+    const components = [];
+
+    switch (buttons.length) {
+      case 1:
+        components.push(
+          new MessageButton()
+            .setCustomId(buttons[0].text)
+            .setLabel(buttons[0].text)
+            .setStyle('PRIMARY'),
+        );
+        break;
+      default:
+        components.push(
+          new MessageSelectMenu()
+            .setCustomId(`select_${index}`)
+            .setPlaceholder('Username')
+            .addOptions(
+              buttons.map((button) => ({
+                label: button.text,
+                description: button.text,
+                value: button.action,
+              })),
+            ),
+        );
+        break;
+    }
+
+    rows.push(new MessageActionRow().addComponents(components));
+  });
+
+  return rows;
+}
 
 // Change bold, italic and code from HTML to Markdown
 export function formatMessage(message: string): string {
@@ -13,14 +58,20 @@ export function formatMessage(message: string): string {
 
 export function reply(message: string, context: Context): Promise<string> {
   // Get channel from context
-  const { discordIReply: ireply } = context;
+  const { discordIReply, options } = context;
 
   // Format message to Markdown style, requested by Discord
   const formattedMessage: string = formatMessage(message);
 
+  // Compose message options for Discord
+  const messageOptions: MessageOptions = {
+    content: formattedMessage,
+    components: getButtonComponents(options.buttons),
+  };
+
   // Send message back to channel
   return new Promise((resolve) => {
-    ireply(formattedMessage);
+    discordIReply(messageOptions);
     resolve(formattedMessage);
   });
 }
