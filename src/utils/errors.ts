@@ -1,6 +1,8 @@
+import constants from './constants';
+
 export class InputError extends Error {
   constructor(message: string) {
-    super(message);
+    super(`${constants.EMOJI.ERROR} ${message}`);
     this.name = 'InvalidInputError';
   }
 }
