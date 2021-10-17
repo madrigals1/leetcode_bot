@@ -219,8 +219,8 @@ export default class Actions {
       return dictionary.BOT_MESSAGES.CML_RATING_TEXT(usersWithCmlRating);
     }
 
-    // Fallback to incorrect input
-    return dictionary.BOT_MESSAGES.INCORRECT_INPUT;
+    // If type is not recognized
+    return dictionary.BOT_MESSAGES.INCORRECT_RATING_TYPE;
   }
 
   @action({

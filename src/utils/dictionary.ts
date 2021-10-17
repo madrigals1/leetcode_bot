@@ -9,10 +9,6 @@ const SERVER_MESSAGES = {
     return `Error on the server: ${error}`;
   },
 
-  // ERROR PREFIXES
-  ARGUMENT_EXCEPTION_PREFIX: 'ArgumentException: ',
-  INVALID_INPUT_EXCEPTION_PREFIX: 'InvalidInputException: ',
-
   // REFRESHING
   DATABASE_STARTED_REFRESH(time: string): string {
     return `Database started refresh at ${time}`;
@@ -59,7 +55,7 @@ const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;
 
 const BOT_MESSAGES = {
   // MISC
-  INCORRECT_INPUT: `${constants.EMOJI.ERROR} Incorrect input`,
+  INCORRECT_RATING_TYPE: `${constants.EMOJI.ERROR} Incorrect rating type`,
   PASSWORD_IS_INCORRECT: `${constants.EMOJI.ERROR} Password is incorrect`,
   ERROR_ON_THE_SERVER: `${constants.EMOJI.ERROR} Error on the server`,
 
@@ -82,9 +78,6 @@ const BOT_MESSAGES = {
   REGULAR_RATING: `${constants.EMOJI.CLIPBOARD} Regular Rating`,
 
   // USERNAME RELATED
-  AT_LEAST_1_USERNAME(prefix: string): string {
-    return `${constants.EMOJI.WARNING} Please, enter at least 1 username after <b>${prefix}add</b> command`;
-  },
   USERNAME_NOT_FOUND(username: string): string {
     return `${constants.EMOJI.ERROR} Username <b>${username}</b> was not found in database`;
   },

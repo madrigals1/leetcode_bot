@@ -21,9 +21,7 @@ function getPassword(argumentManager: ArgumentManager): string {
   }
 
   const reason = 'Password not found in arguments';
-  const errMsg = dictionary.SERVER_MESSAGES.ARGUMENT_EXCEPTION_PREFIX + reason;
-
-  throw new Error(errMsg);
+  throw new InputError(reason);
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -74,8 +72,13 @@ export function action(actionContext: ActionContext): (
 
         try {
           password = getPassword(argumentManager);
-        } catch {
-          return reply(dictionary.BOT_MESSAGES.INCORRECT_INPUT, updatedContext);
+        } catch (e) {
+          // If error is caused by incorrect input, return error cause to User
+          if (e instanceof InputError) {
+            return reply(e.message, context);
+          }
+
+          throw e;
         }
 
         if (password !== constants.SYSTEM.MASTER_PASSWORD) {
