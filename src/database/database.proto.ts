@@ -37,6 +37,10 @@ class DatabaseProvider {
     throw new Error('Not Implemented');
   }
 
+  async getSubscription(chatId: string): Promise<any> {
+    throw new Error('Not Implemented');
+  }
+
   async upsertSubscription(subscription: Subscription): Promise<any> {
     throw new Error('Not Implemented');
   }
