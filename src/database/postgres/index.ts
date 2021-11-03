@@ -4,6 +4,7 @@ import { error, log } from '../../utils/helper';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
 import DatabaseProvider from '../database.proto';
+import { Subscription } from '../../leetcode/models';
 
 import QUERIES from './queries';
 
@@ -19,23 +20,28 @@ class Postgres extends DatabaseProvider {
   });
 
   // Connect database
-  async connect() {
+  async connect(): Promise<void> {
     this.client.connect();
 
-    // Query for creating users table
-    const query = QUERIES.CREATE_USERS_TABLE;
+    // Queries for creating Users and Subscriptions table
+    const usersQuery = QUERIES.CREATE_USERS_TABLE;
+    const subscriptionsQuery = QUERIES.CREATE_SUBSCRIPTIONS_TABLE;
 
-    // Create table for users if not exist
-    return this.client.query(query)
-      .then(() => {
-        log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
-        return true;
-      })
+    this.client.query(usersQuery)
       .catch((err) => {
         error(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
         this.client.end();
-        return false;
+        return null;
       });
+
+    this.client.query(subscriptionsQuery)
+      .catch((err) => {
+        error(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
+        this.client.end();
+        return null;
+      });
+
+    log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
   }
 
   // Find all Users
@@ -98,6 +104,65 @@ class Postgres extends DatabaseProvider {
   async removeAllUsers() {
     return this.client.query(QUERIES.REMOVE_ALL_USERS)
       .then(() => true)
+      .catch((err) => {
+        error(err);
+        this.client.end();
+        return false;
+      });
+  }
+
+  async getSubscription(chatId: string): Promise<Subscription> {
+    return this.client.query(QUERIES.LOAD_SUBSCRIPTION(chatId))
+      .then((res) => ({
+        chatId: res.rows[0],
+        provider: res.rows[1],
+      }))
+      .catch((err) => {
+        error(err);
+        this.client.end();
+        return false;
+      });
+  }
+
+  async upsertSubscription(subscription: Subscription): Promise<boolean> {
+    const foundSubscription = this.getSubscription(subscription.chatId);
+    let res = false;
+
+    if (foundSubscription) {
+      this.client.query(QUERIES.UPDATE_SUBSCRIPTION(subscription))
+        .then(() => { res = true; })
+        .catch((err) => {
+          error(err);
+          this.client.end();
+        });
+    } else {
+      this.client.query(QUERIES.ADD_SUBSCRIPTION(subscription))
+        .then(() => { res = true; })
+        .catch((err) => {
+          error(err);
+          this.client.end();
+        });
+    }
+
+    return res;
+  }
+
+  async removeSubscription(chatId: string): Promise<boolean> {
+    return this.client.query(QUERIES.REMOVE_SUBSCRIPTION(chatId))
+      .then(() => true)
+      .catch((err) => {
+        error(err);
+        this.client.end();
+        return false;
+      });
+  }
+
+  async getAllSubscriptions(): Promise<Subscription[]> {
+    return this.client.query(QUERIES.GET_ALL_SUBSCRIPTIONS)
+      .then((rows) => rows.map((row) => ({
+        chatId: row[0],
+        provider: row[1],
+      })))
       .catch((err) => {
         error(err);
         this.client.end();
