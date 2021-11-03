@@ -1,11 +1,12 @@
 import * as mongoose from 'mongoose';
 
+import { Subscription } from '../../leetcode/models';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
 
-import UserModel from './schemas';
+import { UserModel, SubscriptionModel } from './schemas';
 
 const { MONGO } = constants.DATABASE;
 
@@ -32,6 +33,8 @@ class MongoDB extends DatabaseProvider {
   isRefreshing = false;
 
   UserModel = UserModel;
+
+  SubscriptionModel = SubscriptionModel;
 
   // Connect to Database
   async connect(): Promise<void> {
@@ -86,6 +89,29 @@ class MongoDB extends DatabaseProvider {
     await this.UserModel.deleteMany({});
 
     return true;
+  }
+
+  async getSubscription(chatId: string): Promise<Subscription> {
+    const document: any = this.SubscriptionModel.findOne({ chatId });
+    if (!document) return null;
+    return { chatId: document.chatId, provider: document.provider };
+  }
+
+  async upsertSubscription(subscription: Subscription): Promise<Subscription> {
+    const updatedSubscription = new this.SubscriptionModel(subscription);
+    updatedSubscription.save();
+    return subscription;
+  }
+
+  async removeSubscription(chatId: string): Promise<boolean> {
+    const foundSubscription = await this.getSubscription(chatId);
+    if (!foundSubscription) return false;
+    this.SubscriptionModel.deleteOne({ chatId });
+    return true;
+  }
+
+  async getAllSubscriptions() {
+    return this.SubscriptionModel.find();
   }
 }
 
