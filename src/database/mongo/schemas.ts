@@ -1,6 +1,5 @@
 import * as mongoose from 'mongoose';
 
-// MongoDB collection schemas
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -9,7 +8,19 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// MongoDB models
 const UserModel = mongoose.model('User', userSchema);
 
-export default UserModel;
+const subscriptionSchema = new mongoose.Schema({
+  chatId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  provider: {
+    type: String,
+  },
+});
+
+const SubscriptionModel = mongoose.model('Subscription', subscriptionSchema);
+
+export { UserModel, SubscriptionModel };
