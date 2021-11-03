@@ -7,6 +7,7 @@ import {
 import { Contest } from './contest.model';
 import { SubmissionData } from './submissionData.model';
 import { User, UserProblemsSolvedData } from './user.model';
+import { Subscription } from './subscription.model';
 
 export {
   UserProfile,
@@ -17,6 +18,7 @@ export {
   LanguageNode,
   Contest,
   SubmissionData,
+  Subscription,
   User,
   SubmissionsCountNode,
   UserProblemsSolvedData,
