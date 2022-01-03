@@ -68,7 +68,7 @@ export async function discordIReply(
   const messageOptions: MessageOptions = {
     content: message,
     files: photoUrl ? [photoUrl] : undefined,
-    components: getButtonComponents(options.buttons),
+    components: getButtonComponents(options?.buttons),
   };
 
   // Edit message, if second message is sent
