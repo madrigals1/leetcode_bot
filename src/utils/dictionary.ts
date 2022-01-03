@@ -60,6 +60,32 @@ const BOT_MESSAGES = {
   PASSWORD_IS_INCORRECT: `${constants.EMOJI.ERROR} Password is incorrect`,
   ERROR_ON_THE_SERVER: `${constants.EMOJI.ERROR} Error on the server`,
 
+  // ERROR MESSAGES
+  INSUFFICIENT_ARGS_IN_MESSAGE:
+    `${constants.EMOJI.ERROR} Insufficient arguments in message`,
+  SHOULD_NOT_REQUEST_MORE_THAN_100_ARGS:
+    `${constants.EMOJI.ERROR} Should not request more than 100 arguments`,
+  SHOULD_NOT_PROVIDER_MORE_THAN_100_ARGS:
+    `${constants.EMOJI.ERROR} Should not provide more than 100 arguments`,
+  PASSWORD_NOT_FOUND_IN_ARGS:
+    `${constants.EMOJI.ERROR} Password not found in arguments`,
+  DUPLICATE_KEYS_IN_ARGS: (keys: string[]): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${constants.EMOJI.ERROR} Duplicate keys ${keys} are found in arguments`,
+  DUPLICATE_INDEXES_IN_ARGS: (keys: number[]): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${constants.EMOJI.ERROR} Duplicate indexes ${keys} are found in arguments`,
+  SHOULD_NOT_HAVE_REQUIRED_ARGS_AFTER_OPTIONAL:
+    `${constants.EMOJI.ERROR} Should not have required arguments after optional arguments`,
+  MESSAGE_SHOULD_HAVE_NO_ARGS:
+    `${constants.EMOJI.ERROR} Message should not have any arguments`,
+  INDEX_SHOULD_BE_PRESENT_IN_ARGS: (i: number): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${constants.EMOJI.ERROR} Index ${i} should be present in arguments`,
+  ARG_IS_NOT_PROVIDED: (i: number): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${constants.EMOJI.ERROR} Argument ${i} is not provided`,
+
   // REFRESHING
   STARTED_REFRESH: `${constants.EMOJI.WAITING} Database started refresh`,
   IS_REFRESHED: `${constants.EMOJI.SUCCESS} Database is refreshed`,
@@ -67,11 +93,11 @@ const BOT_MESSAGES = {
 
   // USER RELATED
   USER_LIST(userList: string): string {
-    return `User List:\n${userList}`;
+    return `User List: \n${userList} `;
   },
   NO_USERS,
   USER_NO_SUBMISSIONS(username: string): string {
-    return `${constants.EMOJI.ERROR} User <b>${username}</b> does not have any submissions`;
+    return `${constants.EMOJI.ERROR} User < b > ${username} </b> does not have any submissions`;
   },
 
   // RATING RELATED

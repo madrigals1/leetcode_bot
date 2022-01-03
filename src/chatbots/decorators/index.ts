@@ -7,6 +7,8 @@ import { ArgumentsError, InputError } from '../../utils/errors';
 
 import { ActionContext } from './models';
 
+const { BOT_MESSAGES: BM } = dictionary;
+
 function getPassword(argumentManager: ArgumentManager): string {
   const passwordArguments = ['password', 'username_or_password'];
 
@@ -20,7 +22,7 @@ function getPassword(argumentManager: ArgumentManager): string {
     }
   }
 
-  const reason = 'Password not found in arguments';
+  const reason = BM.PASSWORD_NOT_FOUND_IN_ARGS;
   throw new InputError(reason);
 }
 
@@ -56,7 +58,7 @@ export function action(actionContext: ActionContext): (
 
         // If error is caused by codebase issues, throw it
         if (e instanceof ArgumentsError) {
-          reply(dictionary.BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
+          return reply(dictionary.BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
         }
 
         throw e;
