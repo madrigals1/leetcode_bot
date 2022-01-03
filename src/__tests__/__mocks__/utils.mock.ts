@@ -7,6 +7,8 @@ import { generateString } from '../../utils/helper';
 
 import { users, user1 } from './data.mock';
 
+const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
+
 export async function mockGetLeetcodeDataFromUsername(
   username: string,
 ): Promise<User> {
@@ -24,14 +26,14 @@ export async function mockTableForSubmissions(
 
     return {
       error,
-      reason: dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(error),
+      reason: SM.ERROR_ON_THE_SERVER(error),
     };
   }
 
   if (user.submitStats.acSubmissionNum.length === 0) {
     return {
-      error: dictionary.BOT_MESSAGES.USER_NO_SUBMISSIONS(user.username),
-      reason: dictionary.SERVER_MESSAGES.NO_SUBMISSIONS,
+      error: BM.USER_NO_SUBMISSIONS(user.username),
+      reason: SM.NO_SUBMISSIONS,
     };
   }
 

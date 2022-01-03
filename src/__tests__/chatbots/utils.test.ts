@@ -16,6 +16,8 @@ import Cache from '../../cache';
 const { VIZAPI_LINK } = constants;
 const savedUsers = [...Cache.users];
 
+const { BOT_MESSAGES: BM, SERVER_MESSAGES: SM } = dictionary;
+
 beforeEach(() => {
   // Fix changed values before each test case
   constants.VIZAPI_LINK = VIZAPI_LINK;
@@ -89,8 +91,7 @@ test('chatbots.utils.compareMenu action', async () => {
   // Valid
   const compareResponse = await compareMenu(user1, user2);
 
-  expect(console.log)
-    .toHaveBeenCalledWith(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
+  expect(console.log).toHaveBeenCalledWith(SM.IMAGE_WAS_CREATED);
   expect(isValidHttpUrl(compareResponse.link)).toBe(true);
   expect(compareResponse.error).toBe(undefined);
   expect(compareResponse.reason).toBe(undefined);
@@ -101,16 +102,14 @@ test('chatbots.utils.compareMenu action', async () => {
 
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure.error === undefined).toBe(false);
-  expect(compareResponseFailure.reason)
-    .toBe(dictionary.SERVER_MESSAGES.API_NOT_WORKING);
+  expect(compareResponseFailure.reason).toBe(SM.API_NOT_WORKING);
 });
 
 test('chatbots.utils.tableForSubmissions action', async () => {
   // Valid
   const tableForSubmissionsResponse = await tableForSubmissions(user1);
 
-  expect(console.log)
-    .toHaveBeenCalledWith(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
+  expect(console.log).toHaveBeenCalledWith(SM.IMAGE_WAS_CREATED);
   expect(isValidHttpUrl(tableForSubmissionsResponse.link)).toBe(true);
   expect(tableForSubmissionsResponse.error).toBe(undefined);
   expect(tableForSubmissionsResponse.reason).toBe(undefined);
@@ -122,7 +121,7 @@ test('chatbots.utils.tableForSubmissions action', async () => {
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure1.error).toBe(errorMessage);
   expect(compareResponseFailure1.reason)
-    .toBe(dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(errorMessage));
+    .toBe(SM.ERROR_ON_THE_SERVER(errorMessage));
 
   // Invalid: User has no submissions
   const userWithoutSubmissions = {
@@ -136,13 +135,12 @@ test('chatbots.utils.tableForSubmissions action', async () => {
     await tableForSubmissions(userWithoutSubmissions)
   );
   const dictMessageWithoutSubmissions = (
-    dictionary.BOT_MESSAGES.USER_NO_SUBMISSIONS(userWithoutSubmissions.username)
+    BM.USER_NO_SUBMISSIONS(userWithoutSubmissions.username)
   );
 
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure2.error).toBe(dictMessageWithoutSubmissions);
-  expect(compareResponseFailure2.reason)
-    .toBe(dictionary.SERVER_MESSAGES.NO_SUBMISSIONS);
+  expect(compareResponseFailure2.reason).toBe(SM.NO_SUBMISSIONS);
 
   // Invalid: Incorrect URL
   constants.VIZAPI_LINK = 'incorrect_url';
@@ -150,8 +148,7 @@ test('chatbots.utils.tableForSubmissions action', async () => {
 
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure3.error === undefined).toBe(false);
-  expect(compareResponseFailure3.reason)
-    .toBe(dictionary.SERVER_MESSAGES.API_NOT_WORKING);
+  expect(compareResponseFailure3.reason).toBe(SM.API_NOT_WORKING);
 });
 
 test('chatbots.utils.createButtonsFromUsers action', async () => {

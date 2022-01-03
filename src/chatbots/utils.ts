@@ -14,6 +14,8 @@ import {
 } from './models';
 import { ButtonContainer } from './models/buttons.model';
 
+const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
+
 export function getCompareDataFromUser(user: User): CompareUser {
   return {
     image: user.profile.userAvatar,
@@ -65,12 +67,12 @@ export async function compareMenu(
       right: getCompareDataFromUser(rightUser),
     })
     .then((res) => {
-      log(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
+      log(SM.IMAGE_WAS_CREATED);
       return { link: res.data.link };
     })
     .catch((err) => {
-      error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED(err));
-      return { error: err, reason: dictionary.SERVER_MESSAGES.API_NOT_WORKING };
+      error(SM.IMAGE_WAS_NOT_CREATED(err));
+      return { error: err, reason: SM.API_NOT_WORKING };
     });
 }
 
@@ -79,7 +81,7 @@ export async function tableForSubmissions(user: User): Promise<TableResponse> {
     const errorMessage = 'Username not found';
     return new Promise((resolve) => resolve({
       error: errorMessage,
-      reason: dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(errorMessage),
+      reason: SM.ERROR_ON_THE_SERVER(errorMessage),
     }));
   }
 
@@ -93,19 +95,19 @@ export async function tableForSubmissions(user: User): Promise<TableResponse> {
   return axios
     .post(`${constants.VIZAPI_LINK}/table`, { table: userSubmissionData })
     .then((res) => {
-      log(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
+      log(SM.IMAGE_WAS_CREATED);
       const errorMsg = 'Please, provide non-empty \'table\' in request body';
       if (res.data.failure === errorMsg) {
         return {
-          error: dictionary.BOT_MESSAGES.USER_NO_SUBMISSIONS(user.username),
-          reason: dictionary.SERVER_MESSAGES.NO_SUBMISSIONS,
+          error: BM.USER_NO_SUBMISSIONS(user.username),
+          reason: SM.NO_SUBMISSIONS,
         };
       }
       return { link: res.data.link };
     })
     .catch((err) => {
-      error(dictionary.SERVER_MESSAGES.IMAGE_WAS_NOT_CREATED(err));
-      return { error: err, reason: dictionary.SERVER_MESSAGES.API_NOT_WORKING };
+      error(SM.IMAGE_WAS_NOT_CREATED(err));
+      return { error: err, reason: SM.API_NOT_WORKING };
     });
 }
 

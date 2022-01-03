@@ -13,6 +13,7 @@ import createBot from './bot';
 import { getKeyBasedParsedArguments, reply } from './utils';
 
 const { DISCORD } = constants.PROVIDERS;
+const { SERVER_MESSAGES: SM } = dictionary;
 
 class Discord {
   token: string = DISCORD.TOKEN;
@@ -87,7 +88,7 @@ class Discord {
       }
     });
 
-    log(dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING);
+    log(SM.DISCORD_BOT_IS_RUNNING);
   }
 }
 

@@ -10,6 +10,7 @@ import { User } from '../leetcode/models';
 import { CacheResponse } from './response.model';
 
 const { DATE_FORMAT } = constants.SYSTEM;
+const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 
 class Cache {
   users: User[] = [];
@@ -49,10 +50,10 @@ class Cache {
   async refreshUsers(): Promise<CacheResponse> {
     // If database was already refreshing
     if (this.database.isRefreshing) {
-      log(dictionary.SERVER_MESSAGES.IS_ALREADY_REFRESHING);
+      log(SM.IS_ALREADY_REFRESHING);
       return {
         status: constants.STATUS.ERROR,
-        detail: dictionary.BOT_MESSAGES.IS_ALREADY_REFRESHING,
+        detail: BM.IS_ALREADY_REFRESHING,
       };
     }
 
@@ -61,9 +62,7 @@ class Cache {
     const refreshedStartedAt: string = dayjs().format(DATE_FORMAT);
 
     // Log when refresh started
-    log(dictionary.SERVER_MESSAGES.DATABASE_STARTED_REFRESH(
-      refreshedStartedAt,
-    ));
+    log(SM.DATABASE_STARTED_REFRESH(refreshedStartedAt));
 
     try {
       // Get all users from database
@@ -83,9 +82,9 @@ class Cache {
         // If UserData was returned from Backend, replace User in cache
         if (userData.exists) {
           this.addOrReplaceUserInCache(username, userData);
-          log(dictionary.SERVER_MESSAGES.USERNAME_WAS_REFRESHED(username));
+          log(SM.USERNAME_WAS_REFRESHED(username));
         } else {
-          log(dictionary.SERVER_MESSAGES.USERNAME_WAS_NOT_REFRESHED(username));
+          log(SM.USERNAME_WAS_NOT_REFRESHED(username));
         }
 
         // Wait X seconds until loading next User, X is set in .env
@@ -104,13 +103,11 @@ class Cache {
     const refreshFinishedAt = dayjs().format(DATE_FORMAT);
 
     // Log when refresh started
-    log(dictionary.SERVER_MESSAGES.DATABASE_FINISHED_REFRESH(
-      refreshFinishedAt,
-    ));
+    log(SM.DATABASE_FINISHED_REFRESH(refreshFinishedAt));
 
     return {
       status: constants.STATUS.SUCCESS,
-      detail: dictionary.BOT_MESSAGES.IS_REFRESHED,
+      detail: BM.IS_REFRESHED,
     };
   }
 
@@ -131,9 +128,7 @@ class Cache {
     if (this.userAmount >= this.userLimit) {
       return {
         status: constants.STATUS.ERROR,
-        detail: dictionary.BOT_MESSAGES.USERNAME_NOT_ADDED_USER_LIMIT(
-          username, this.userLimit,
-        ),
+        detail: BM.USERNAME_NOT_ADDED_USER_LIMIT(username, this.userLimit),
       };
     }
 
@@ -152,7 +147,7 @@ class Cache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: dictionary.BOT_MESSAGES.USERNAME_WAS_ADDED(
+          detail: BM.USERNAME_WAS_ADDED(
             username, this.userAmount, this.userLimit,
           ),
         };
@@ -163,15 +158,13 @@ class Cache {
 
       return {
         status: constants.STATUS.ERROR,
-        detail: dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND_ON_LEETCODE(
-          username,
-        ),
+        detail: BM.USERNAME_NOT_FOUND_ON_LEETCODE(username),
       };
     }
 
     return {
       status: constants.STATUS.ERROR,
-      detail: dictionary.BOT_MESSAGES.USERNAME_ALREADY_EXISTS(username),
+      detail: BM.USERNAME_ALREADY_EXISTS(username),
     };
   }
 
@@ -190,13 +183,13 @@ class Cache {
 
       return {
         status: constants.STATUS.SUCCESS,
-        detail: dictionary.BOT_MESSAGES.USERNAME_WAS_DELETED(username),
+        detail: BM.USERNAME_WAS_DELETED(username),
       };
     }
 
     return {
       status: constants.STATUS.ERROR,
-      detail: dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username),
+      detail: BM.USERNAME_NOT_FOUND(username),
     };
   }
 
@@ -210,13 +203,13 @@ class Cache {
 
       return {
         status: constants.STATUS.SUCCESS,
-        detail: dictionary.BOT_MESSAGES.DATABASE_WAS_CLEARED,
+        detail: BM.DATABASE_WAS_CLEARED,
       };
     }
 
     return {
       status: constants.STATUS.ERROR,
-      detail: dictionary.BOT_MESSAGES.DATABASE_WAS_NOT_CLEARED,
+      detail: BM.DATABASE_WAS_NOT_CLEARED,
     };
   }
 

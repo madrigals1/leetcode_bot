@@ -7,6 +7,8 @@ import DatabaseProvider from '../database.proto';
 
 import QUERIES from './queries';
 
+const { SERVER_MESSAGES: SM } = dictionary;
+
 class SQLite extends DatabaseProvider {
   database;
 
@@ -20,7 +22,7 @@ class SQLite extends DatabaseProvider {
       })
         .then((database) => {
           // Log that database is connected
-          log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
+          log(SM.CONNECTION_STATUS.SUCCESSFUL);
 
           // Set database object
           this.database = database;
@@ -32,7 +34,7 @@ class SQLite extends DatabaseProvider {
         })
         .catch((err) => {
           // Log that database connection had errors
-          log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
+          log(SM.CONNECTION_STATUS.ERROR(err));
 
           reject(Error(err));
         });

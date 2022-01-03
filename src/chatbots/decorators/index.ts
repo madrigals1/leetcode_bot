@@ -58,7 +58,7 @@ export function action(actionContext: ActionContext): (
 
         // If error is caused by codebase issues, throw it
         if (e instanceof ArgumentsError) {
-          return reply(dictionary.BOT_MESSAGES.ERROR_ON_THE_SERVER, context);
+          return reply(BM.ERROR_ON_THE_SERVER, context);
         }
 
         throw e;
@@ -84,9 +84,7 @@ export function action(actionContext: ActionContext): (
         }
 
         if (password !== constants.SYSTEM.MASTER_PASSWORD) {
-          return reply(
-            dictionary.BOT_MESSAGES.PASSWORD_IS_INCORRECT, updatedContext,
-          );
+          return reply(BM.PASSWORD_IS_INCORRECT, updatedContext);
         }
 
         // Add password to context

@@ -4,6 +4,8 @@ import constants from '../../../utils/constants';
 import dictionary from '../../../utils/dictionary';
 import DiscordBotInstance from '../../../chatbots/discord';
 
+const { SERVER_MESSAGES: SM } = dictionary;
+
 DiscordBotInstance.token = constants.PROVIDERS.DISCORD.TEST_TOKEN;
 
 beforeAll(async () => {
@@ -21,6 +23,6 @@ test('chatbots.discord.index.run function', async () => {
 
   // eslint-disable-next-line no-console
   expect(console.log).toHaveBeenCalledWith(
-    dictionary.SERVER_MESSAGES.DISCORD_BOT_IS_RUNNING,
+    SM.DISCORD_BOT_IS_RUNNING,
   );
 });

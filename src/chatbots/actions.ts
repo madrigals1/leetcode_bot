@@ -15,6 +15,8 @@ import {
   getCloseButton,
 } from './utils';
 
+const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
+
 export const registeredActions: RegisteredAction[] = [];
 
 export const vizapiActions = {
@@ -30,7 +32,7 @@ export default class Actions {
 
   @action({ name: 'start' })
   static start(context: Context): string {
-    return dictionary.BOT_MESSAGES.WELCOME_TEXT(context.prefix);
+    return BM.WELCOME_TEXT(context.prefix);
   }
 
   @action({
@@ -61,7 +63,7 @@ export default class Actions {
       message += result.detail;
     }
 
-    return dictionary.BOT_MESSAGES.USER_LIST(message);
+    return BM.USER_LIST(message);
   }
 
   @action({ name: 'refresh' })
@@ -70,7 +72,7 @@ export default class Actions {
     Cache.database.isRefreshing = false;
 
     // Log that database started refresh
-    await context.reply(dictionary.BOT_MESSAGES.STARTED_REFRESH, context);
+    await context.reply(BM.STARTED_REFRESH, context);
 
     // Refresh and return result
     const result: CacheResponse = await Cache.refreshUsers();
@@ -109,7 +111,7 @@ export default class Actions {
         buttonPerRow: 3,
       }, getCloseButton()];
 
-      return dictionary.BOT_MESSAGES.USER_LIST_REMOVE;
+      return BM.USER_LIST_REMOVE;
     }
 
     // We know for sure now, this is username
@@ -126,11 +128,11 @@ export default class Actions {
         buttonPerRow: 3,
       }, getCloseButton()];
 
-      return dictionary.BOT_MESSAGES.USER_LIST_REMOVE;
+      return BM.USER_LIST_REMOVE;
     }
 
     await context.reply(
-      dictionary.BOT_MESSAGES.USERNAME_WILL_BE_DELETED(username),
+      BM.USERNAME_WILL_BE_DELETED(username),
       context,
     );
 
@@ -155,7 +157,7 @@ export default class Actions {
   static async clear(context: Context): Promise<string> {
     // Send message, that Database will be cleared
     await context.reply(
-      dictionary.BOT_MESSAGES.DATABASE_WILL_BE_CLEARED,
+      BM.DATABASE_WILL_BE_CLEARED,
       context,
     );
 
@@ -179,7 +181,7 @@ export default class Actions {
   })
   static async stats(context: Context): Promise<string> {
     // Send message with stats
-    return dictionary.BOT_MESSAGES.STATS_TEXT(context.provider, Cache);
+    return BM.STATS_TEXT(context.provider, Cache);
   }
 
   @action({
@@ -201,13 +203,13 @@ export default class Actions {
       // Add button to open Cumulative Rating
       context.options.buttons = [{
         buttons: [{
-          text: dictionary.BOT_MESSAGES.CML_RATING,
+          text: BM.CML_RATING,
           action: '/rating cml',
         }],
         buttonPerRow: 1,
       }];
 
-      return dictionary.BOT_MESSAGES.RATING_TEXT(Cache.allUsers());
+      return BM.RATING_TEXT(Cache.allUsers());
     }
 
     // Cumulative rating:
@@ -224,17 +226,17 @@ export default class Actions {
       // Add button to open Regular Rating
       context.options.buttons = [{
         buttons: [{
-          text: dictionary.BOT_MESSAGES.REGULAR_RATING,
+          text: BM.REGULAR_RATING,
           action: '/rating',
         }],
         buttonPerRow: 1,
       }];
 
-      return dictionary.BOT_MESSAGES.CML_RATING_TEXT(usersWithCmlRating);
+      return BM.CML_RATING_TEXT(usersWithCmlRating);
     }
 
     // If type is not recognized
-    return dictionary.BOT_MESSAGES.INCORRECT_RATING_TYPE;
+    return BM.INCORRECT_RATING_TYPE;
   }
 
   @action({
@@ -258,13 +260,13 @@ export default class Actions {
         buttonPerRow: 3,
       }, getCloseButton()];
 
-      return dictionary.BOT_MESSAGES.USER_LIST_PROFILES;
+      return BM.USER_LIST_PROFILES;
     }
 
     // Get User from username
     const user: User = Cache.loadUser(username);
 
-    if (!user) return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username);
+    if (!user) return BM.USERNAME_NOT_FOUND(username);
 
     const submissionsButtion: Button = {
       text: `${constants.EMOJI.CLIPBOARD} Submissions`,
@@ -286,7 +288,7 @@ export default class Actions {
       buttonPerRow: 3,
     }];
 
-    return dictionary.BOT_MESSAGES.USER_TEXT(user);
+    return BM.USER_TEXT(user);
   }
 
   @action({
@@ -310,10 +312,10 @@ export default class Actions {
       if (user) {
         // Add photo to context
         context.photoUrl = user.profile.userAvatar;
-        return dictionary.BOT_MESSAGES.USER_AVATAR(user.username);
+        return BM.USER_AVATAR(user.username);
       }
 
-      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username);
+      return BM.USERNAME_NOT_FOUND(username);
     }
 
     // If 0 User was sent, add reply markup context for User
@@ -323,7 +325,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return dictionary.BOT_MESSAGES.USER_LIST_AVATARS;
+    return BM.USER_LIST_AVATARS;
   }
 
   @action({
@@ -347,7 +349,7 @@ export default class Actions {
 
       // If User does not exist, return error message
       if (!user) {
-        return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username);
+        return BM.USERNAME_NOT_FOUND(username);
       }
 
       // Create HTML image with Table
@@ -360,16 +362,16 @@ export default class Actions {
         // Add image to context
         context.photoUrl = response.link;
 
-        return dictionary.BOT_MESSAGES.USER_RECENT_SUBMISSIONS(user.username);
+        return BM.USER_RECENT_SUBMISSIONS(user.username);
       }
 
       // If error is because of User not having any submissions
-      if (response.reason === dictionary.SERVER_MESSAGES.NO_SUBMISSIONS) {
+      if (response.reason === SM.NO_SUBMISSIONS) {
         return response.error;
       }
 
       // If image link was not achieved from VizAPI
-      return dictionary.BOT_MESSAGES.ERROR_ON_THE_SERVER;
+      return BM.ERROR_ON_THE_SERVER;
     }
 
     // If 0 User was sent, add reply markup context for User
@@ -379,7 +381,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return dictionary.BOT_MESSAGES.USER_LIST_SUBMISSIONS;
+    return BM.USER_LIST_SUBMISSIONS;
   }
 
   @action({
@@ -414,7 +416,7 @@ export default class Actions {
         buttonPerRow: 3,
       }, getCloseButton()];
 
-      return dictionary.BOT_MESSAGES.SELECT_LEFT_USER;
+      return BM.SELECT_LEFT_USER;
     }
 
     // Getting right User
@@ -424,7 +426,7 @@ export default class Actions {
         buttonPerRow: 3,
       }, getCloseButton()];
 
-      return dictionary.BOT_MESSAGES.SELECT_RIGHT_USER;
+      return BM.SELECT_RIGHT_USER;
     }
 
     // Get Users from args
@@ -432,11 +434,11 @@ export default class Actions {
     const rightUser: User = Cache.loadUser(second);
 
     if (!leftUser) {
-      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(first);
+      return BM.USERNAME_NOT_FOUND(first);
     }
 
     if (!rightUser) {
-      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(second);
+      return BM.USERNAME_NOT_FOUND(second);
     }
 
     const response: TableResponse = (
@@ -447,10 +449,10 @@ export default class Actions {
     if (response.link) {
       // Add image to context
       context.photoUrl = response.link;
-      return dictionary.BOT_MESSAGES.USERS_COMPARE(first, second);
+      return BM.USERS_COMPARE(first, second);
     }
 
     // If image link was not achieved from VizAPI
-    return dictionary.BOT_MESSAGES.ERROR_ON_THE_SERVER;
+    return BM.ERROR_ON_THE_SERVER;
   }
 }

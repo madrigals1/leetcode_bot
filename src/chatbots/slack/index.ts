@@ -10,6 +10,8 @@ import { getPositionalParsedArguments } from '../decorators/utils';
 import { reply } from './utils';
 import createBot from './bot';
 
+const { SERVER_MESSAGES: SM } = dictionary;
+
 class Slack {
   token: string = constants.PROVIDERS.SLACK.TOKEN;
 
@@ -71,7 +73,7 @@ class Slack {
       }
     });
 
-    log(dictionary.SERVER_MESSAGES.SLACK_BOT_IS_RUNNING);
+    log(SM.SLACK_BOT_IS_RUNNING);
   }
 }
 
