@@ -1,6 +1,9 @@
 import { reply } from '../../../chatbots/telegram/utils';
 import MockBotTelegram from '../../__mocks__/chatbots/telegram.mock';
 import { TelegramTestCase } from '../../../chatbots/models';
+import {
+  getPositionalParsedArguments,
+} from '../../../chatbots/decorators/utils';
 
 const bot = new MockBotTelegram();
 
@@ -15,6 +18,7 @@ test('chatbots.telegram.utils.reply function', async () => {
         bot,
         photoUrl: 'random_url',
         reply: () => new Promise(() => 'asd'),
+        argumentParser: getPositionalParsedArguments,
         provider: 'Random',
         prefix: '!',
       },
@@ -34,6 +38,7 @@ test('chatbots.telegram.utils.reply function', async () => {
         bot,
         photoUrl: null,
         reply: () => new Promise(() => 'asd'),
+        argumentParser: getPositionalParsedArguments,
         provider: 'Random',
         prefix: '!',
       },
