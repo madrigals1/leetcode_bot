@@ -61,7 +61,7 @@ function confirmValidArgCount(
   }
 
   if (providedArgCount > 100) {
-    const reason = BM.SHOULD_NOT_PROVIDER_MORE_THAN_100_ARGS;
+    const reason = BM.SHOULD_NOT_PROVIDE_MORE_THAN_100_ARGS;
     throw new InputError(reason);
   }
 }

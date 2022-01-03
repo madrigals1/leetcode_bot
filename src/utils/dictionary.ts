@@ -63,7 +63,7 @@ const BOT_MESSAGES = {
     `${constants.EMOJI.ERROR} Insufficient arguments in message`,
   SHOULD_NOT_REQUEST_MORE_THAN_100_ARGS:
     `${constants.EMOJI.ERROR} Should not request more than 100 arguments`,
-  SHOULD_NOT_PROVIDER_MORE_THAN_100_ARGS:
+  SHOULD_NOT_PROVIDE_MORE_THAN_100_ARGS:
     `${constants.EMOJI.ERROR} Should not provide more than 100 arguments`,
   PASSWORD_NOT_FOUND_IN_ARGS:
     `${constants.EMOJI.ERROR} Password not found in arguments`,
