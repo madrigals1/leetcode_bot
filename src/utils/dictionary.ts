@@ -54,13 +54,11 @@ const SERVER_MESSAGES = {
 const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;
 
 const BOT_MESSAGES = {
-  // MISC
+  // ERROR MESSAGES
   INCORRECT_INPUT: `${constants.EMOJI.ERROR} Incorrect input`,
   INCORRECT_RATING_TYPE: `${constants.EMOJI.ERROR} Incorrect rating type`,
   PASSWORD_IS_INCORRECT: `${constants.EMOJI.ERROR} Password is incorrect`,
   ERROR_ON_THE_SERVER: `${constants.EMOJI.ERROR} Error on the server`,
-
-  // ERROR MESSAGES
   INSUFFICIENT_ARGS_IN_MESSAGE:
     `${constants.EMOJI.ERROR} Insufficient arguments in message`,
   SHOULD_NOT_REQUEST_MORE_THAN_100_ARGS:
@@ -132,6 +130,13 @@ const BOT_MESSAGES = {
   USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars Menu`,
   USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove Menu`,
   USER_LIST_PROFILES: `${constants.EMOJI.PERSON} Profiles`,
+  USER_AVATAR: (username: string): string => `${username}'s avatar`,
+  USER_RECENT_SUBMISSIONS: (username: string): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${username}'s recent submissions`,
+  USERS_COMPARE: (leftUsername: string, rightUsername: string): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `Comparing ${leftUsername} to ${rightUsername}`,
 
   // DATABASE
   DATABASE_WILL_BE_CLEARED: `${constants.EMOJI.WASTEBASKET} Database will be cleared`,

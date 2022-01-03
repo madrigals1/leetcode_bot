@@ -310,7 +310,7 @@ export default class Actions {
       if (user) {
         // Add photo to context
         context.photoUrl = user.profile.userAvatar;
-        return `${user.username}'s avatar`;
+        return dictionary.BOT_MESSAGES.USER_AVATAR(user.username);
       }
 
       return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username);
@@ -360,7 +360,7 @@ export default class Actions {
         // Add image to context
         context.photoUrl = response.link;
 
-        return `${user.username}'s recent submissions`;
+        return dictionary.BOT_MESSAGES.USER_RECENT_SUBMISSIONS(user.username);
       }
 
       // If error is because of User not having any submissions
@@ -400,15 +400,15 @@ export default class Actions {
     ],
   })
   static async compare(context: Context): Promise<string> {
-    const firstUsername = (
+    const first = (
       context.args.get('first_username').value.toLowerCase()
     );
-    const secondUsername = (
+    const second = (
       context.args.get('second_username').value.toLowerCase()
     );
 
     // Getting left User
-    if (firstUsername === '') {
+    if (first === '') {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({ action: 'compare' }),
         buttonPerRow: 3,
@@ -418,9 +418,9 @@ export default class Actions {
     }
 
     // Getting right User
-    if (secondUsername === '') {
+    if (second === '') {
       context.options.buttons = [{
-        buttons: createButtonsFromUsers({ action: `compare ${firstUsername}` }),
+        buttons: createButtonsFromUsers({ action: `compare ${first}` }),
         buttonPerRow: 3,
       }, getCloseButton()];
 
@@ -428,15 +428,15 @@ export default class Actions {
     }
 
     // Get Users from args
-    const leftUser: User = Cache.loadUser(firstUsername);
-    const rightUser: User = Cache.loadUser(secondUsername);
+    const leftUser: User = Cache.loadUser(first);
+    const rightUser: User = Cache.loadUser(second);
 
     if (!leftUser) {
-      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(firstUsername);
+      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(first);
     }
 
     if (!rightUser) {
-      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(secondUsername);
+      return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(second);
     }
 
     const response: TableResponse = (
@@ -447,8 +447,7 @@ export default class Actions {
     if (response.link) {
       // Add image to context
       context.photoUrl = response.link;
-
-      return `Comparing ${leftUser.username} to ${rightUser.username}`;
+      return dictionary.BOT_MESSAGES.USERS_COMPARE(first, second);
     }
 
     // If image link was not achieved from VizAPI
