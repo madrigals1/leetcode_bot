@@ -91,7 +91,7 @@ const BOT_MESSAGES = {
 
   // USER RELATED
   USER_LIST(userList: string): string {
-    return `User List: \n${userList} `;
+    return `User List:\n${userList}`;
   },
   NO_USERS,
   USER_NO_SUBMISSIONS(username: string): string {
