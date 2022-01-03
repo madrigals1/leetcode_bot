@@ -6,6 +6,9 @@ import { Args } from '../../../chatbots/models';
 import { ArgumentsError, InputError } from '../../../utils/errors';
 import { ArgumentTestCase } from '../../__mocks__/models';
 import { mockContext } from '../../__mocks__/utils.mock';
+import dictionary from '../../../utils/dictionary';
+
+const { BOT_MESSAGES: BM } = dictionary;
 
 test('chatbots.decorators.utils.getArgs function', async () => {
   const testCases: Args[] = [
@@ -1386,8 +1389,9 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError(`Duplicate keys ${['tc21_argument1']} are found `
-      + 'in arguments'),
+    error: new ArgumentsError(
+      BM.DUPLICATE_KEYS_IN_ARGS(['tc21_argument1']),
+    ),
   };
 
   // Error: duplicate keys (multiple duplicates)
@@ -1449,7 +1453,10 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError(`Duplicate keys ${['tc22_argument1', 'tc22_argument2', 'tc22_argument3']} are found in arguments`),
+    error: new ArgumentsError(
+      // eslint-disable-next-line max-len
+      BM.DUPLICATE_KEYS_IN_ARGS(['tc22_argument1', 'tc22_argument2', 'tc22_argument3']),
+    ),
   };
 
   // Error: duplicate indexes (single duplicate)
@@ -1475,7 +1482,9 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError(`Duplicate indexes ${[0]} are found in arguments`),
+    error: new ArgumentsError(
+      BM.DUPLICATE_INDEXES_IN_ARGS([0]),
+    ),
   };
 
   // Error: duplicate indexes (multiple duplicates)
@@ -1537,7 +1546,9 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError(`Duplicate indexes ${[0, 1, 2]} are found in arguments`),
+    error: new ArgumentsError(
+      BM.DUPLICATE_INDEXES_IN_ARGS([0, 1, 2]),
+    ),
   };
 
   // Error: Insufficient arguments in message
@@ -1557,7 +1568,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error('Insufficient arguments in message'),
+    error: Error(BM.INSUFFICIENT_ARGS_IN_MESSAGE),
   };
 
   // Error: Should not request more than 100 arguments
@@ -1577,7 +1588,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError('Should not request more than 100 arguments'),
+    error: new ArgumentsError(BM.SHOULD_NOT_REQUEST_MORE_THAN_100_ARGS),
   };
 
   // Error: Should not provide more than 100 arguments
@@ -1597,7 +1608,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: new InputError('Should not provide more than 100 arguments'),
+    error: new InputError(BM.SHOULD_NOT_PROVIDE_MORE_THAN_100_ARGS),
   };
 
   // Error: Should not have required arguments after optional arguments
@@ -1629,8 +1640,9 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError('Should not have required arguments after '
-      + 'optional arguments'),
+    error: new ArgumentsError(
+      BM.SHOULD_NOT_HAVE_REQUIRED_ARGS_AFTER_OPTIONAL,
+    ),
   };
 
   // Error: Message should not have any arguments
@@ -1643,7 +1655,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: new InputError('Message should not have any arguments'),
+    error: new InputError(BM.MESSAGE_SHOULD_HAVE_NO_ARGS),
   };
 
   // Error: Index `i` should be present in arguments
@@ -1669,7 +1681,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError('Index 1 should be present in arguments'),
+    error: new ArgumentsError(BM.INDEX_SHOULD_BE_PRESENT_IN_ARGS(1)),
   };
 
   // Error: Argument `notFoundIndex` is not provided
@@ -1707,7 +1719,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError('Argument 3 is not provided'),
+    error: new ArgumentsError(BM.ARG_IS_NOT_PROVIDED(3)),
   };
 
   // Branches: requestedArgs can be null
@@ -1763,7 +1775,7 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
 
     // Add providedArgs to context
     const context = mockContext();
-    context.text = providedArgs.join(' ');
+    context.text = `/fake_command ${providedArgs.join(' ')}`;
 
     if (error) {
       expect(() => getPositionalParsedArguments(context, requestedArgs))
