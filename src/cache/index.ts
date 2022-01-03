@@ -5,7 +5,7 @@ import Database from '../database';
 import { log, delay } from '../utils/helper';
 import constants from '../utils/constants';
 import dictionary from '../utils/dictionary';
-import { User } from '../leetcode/models';
+import { Subscription, User } from '../leetcode/models';
 
 import { CacheResponse } from './response.model';
 
@@ -13,6 +13,8 @@ const { DATE_FORMAT } = constants.SYSTEM;
 
 class Cache {
   users: User[] = [];
+
+  subscriptions = new Map<string, Subscription>();
 
   database = Database;
 
@@ -43,6 +45,16 @@ class Cache {
 
     // If user was not found in cache, add user
     this.users.push(userData);
+  }
+
+  // Add Subscription
+  addSubscription(subscription: Subscription): void {
+    this.subscriptions.set(subscription.chatId, subscription);
+  }
+
+  // Get all Subscription
+  getAllSubscriptions(): Subscription[] {
+    return Array.from(this.subscriptions.values());
   }
 
   // Refresh Users map
