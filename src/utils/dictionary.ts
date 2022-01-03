@@ -55,6 +55,7 @@ const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;
 
 const BOT_MESSAGES = {
   // MISC
+  INCORRECT_INPUT: `${constants.EMOJI.ERROR} Incorrect input`,
   INCORRECT_RATING_TYPE: `${constants.EMOJI.ERROR} Incorrect rating type`,
   PASSWORD_IS_INCORRECT: `${constants.EMOJI.ERROR} Password is incorrect`,
   ERROR_ON_THE_SERVER: `${constants.EMOJI.ERROR} Error on the server`,
