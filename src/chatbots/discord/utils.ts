@@ -1,5 +1,8 @@
 import {
-  MessageActionRow, MessageButton, MessageOptions, MessageSelectMenu,
+  MessageActionRow,
+  MessageButton,
+  MessageOptions,
+  MessageSelectMenu,
 } from 'discord.js';
 
 import { ArgumentsError, InputError } from '../../utils/errors';
@@ -56,22 +59,33 @@ export function formatMessage(message: string): string {
     .replace(/<code>|<\/code>/g, '`');
 }
 
-export function reply(message: string, context: Context): Promise<string> {
-  // Get channel from context
-  const { discordIReply, options } = context;
-
-  // Format message to Markdown style, requested by Discord
-  const formattedMessage: string = formatMessage(message);
+export async function discordIReply(
+  message: string, context: Context,
+): Promise<void> {
+  const { interaction, photoUrl, options } = context;
 
   // Compose message options for Discord
   const messageOptions: MessageOptions = {
-    content: formattedMessage,
+    content: message,
+    files: photoUrl ? [photoUrl] : undefined,
     components: getButtonComponents(options.buttons),
   };
 
+  // Edit message, if second message is sent
+  if (interaction.replied) {
+    await interaction.editReply(messageOptions);
+  } else {
+    await interaction.reply(messageOptions);
+  }
+}
+
+export function reply(message: string, context: Context): Promise<string> {
+  // Format message to Markdown style, requested by Discord
+  const formattedMessage: string = formatMessage(message);
+
   // Send message back to channel
   return new Promise((resolve) => {
-    discordIReply(messageOptions);
+    discordIReply(formattedMessage, context);
     resolve(formattedMessage);
   });
 }

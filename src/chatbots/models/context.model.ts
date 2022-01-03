@@ -4,8 +4,7 @@ import {
   NewsChannel,
   DMChannel,
   CommandInteractionOption,
-  MessagePayload,
-  InteractionReplyOptions,
+  BaseCommandInteraction,
 } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
 
@@ -43,7 +42,5 @@ export interface Context {
   password?: string;
   // Discord
   discordProvidedArguments?: readonly CommandInteractionOption[],
-  discordIReply?: (
-    message: string | MessagePayload | InteractionReplyOptions,
-  ) => Promise<void>,
+  interaction?: BaseCommandInteraction,
 }

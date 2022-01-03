@@ -71,14 +71,8 @@ class Discord {
           const context: Context = {
             text: '',
             reply,
-            discordIReply: async (message) => {
-              if (!interaction.replied) {
-                await interaction.reply(message);
-              } else {
-                await interaction.editReply(message);
-              }
-            },
             discordProvidedArguments: options.data,
+            interaction,
             argumentParser: getKeyBasedParsedArguments,
             provider: constants.PROVIDERS.DISCORD.NAME,
             prefix: constants.PROVIDERS.DISCORD.PREFIX,
