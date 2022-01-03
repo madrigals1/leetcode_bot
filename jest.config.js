@@ -1,6 +1,6 @@
 const { DISCORD_TEST_ENABLE } = process.env;
 
-const filesToIgnore = ['__mocks__', 'setup.ts'];
+const filesToIgnore = ['__mocks__', 'setup.ts', 'deleted'];
 
 if (DISCORD_TEST_ENABLE) filesToIgnore.push('chatbots.discord.test.ts');
 
