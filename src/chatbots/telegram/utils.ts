@@ -6,7 +6,7 @@ function getReplyMarkupFromButtons(
 ): string {
   const keyboard = [];
 
-  buttonContainers.forEach((buttonContainer) => {
+  buttonContainers?.forEach((buttonContainer) => {
     const { buttons, buttonPerRow } = buttonContainer;
 
     for (let i = 0; i < Math.ceil(buttons.length / buttonPerRow); i++) {

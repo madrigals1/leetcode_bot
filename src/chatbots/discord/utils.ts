@@ -12,7 +12,7 @@ export function getButtonComponents(
 ): MessageActionRow[] {
   const rows: MessageActionRow[] = [];
 
-  buttonContainers.forEach((buttonContainer, index) => {
+  buttonContainers?.forEach((buttonContainer, index) => {
     const { buttons } = buttonContainer;
 
     const components = [];
@@ -82,7 +82,7 @@ export function getKeyBasedParsedArguments(
   const argumentManager = new ArgumentManager();
   const { discordProvidedArguments: providedArguments } = context;
 
-  requestedArgs.forEach((argument: Argument) => {
+  requestedArgs?.forEach((argument: Argument) => {
     // Find argument in provided arguments
     const foundArgument = providedArguments.find(
       (providedArgument) => (providedArgument.name === argument.key),
