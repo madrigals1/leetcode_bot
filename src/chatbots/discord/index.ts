@@ -43,7 +43,8 @@ class Discord {
         });
 
         return command;
-      }).map((command) => command.toJSON());
+      })
+      .map((command) => command.toJSON());
 
     // REST actions handler
     const rest = new REST({ version: '9' }).setToken(this.token);
@@ -71,7 +72,11 @@ class Discord {
             text: '',
             reply,
             discordIReply: async (message) => {
-              await interaction.reply(message);
+              if (!interaction.replied) {
+                await interaction.reply(message);
+              } else {
+                await interaction.editReply(message);
+              }
             },
             discordProvidedArguments: options.data,
             argumentParser: getKeyBasedParsedArguments,
