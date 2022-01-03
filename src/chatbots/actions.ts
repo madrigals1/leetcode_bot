@@ -310,7 +310,7 @@ export default class Actions {
       if (user) {
         // Add photo to context
         context.photoUrl = user.profile.userAvatar;
-        return '';
+        return `${user.username}'s avatar`;
       }
 
       return dictionary.BOT_MESSAGES.USERNAME_NOT_FOUND(username);
@@ -360,7 +360,7 @@ export default class Actions {
         // Add image to context
         context.photoUrl = response.link;
 
-        return '';
+        return `${user.username}'s recent submissions`;
       }
 
       // If error is because of User not having any submissions
@@ -448,7 +448,7 @@ export default class Actions {
       // Add image to context
       context.photoUrl = response.link;
 
-      return '';
+      return `Comparing ${leftUser.username} to ${rightUser.username}`;
     }
 
     // If image link was not achieved from VizAPI
