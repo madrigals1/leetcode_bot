@@ -326,4 +326,29 @@ export default class Actions {
     // If image link was not achieved from VizAPI
     return dictionary.BOT_MESSAGES.ERROR_ON_THE_SERVER;
   }
+
+  @action({ name: 'subscribe', argsCount: [0] })
+  static async subscribe(context: Context): Promise<string> {
+    Cache.addSubscription({
+      chatId: context.chatId.toString(), provider: context.provider,
+    });
+
+    return 'Subscribed';
+  }
+
+  @action({ name: 'subscriptions', argsCount: [0] })
+  static async subscriptions(): Promise<string> {
+    const subscriptions = Cache.getAllSubscriptions();
+
+    let res = 'Subscriptions:\n\n';
+
+    subscriptions.forEach((subscription, i) => {
+      res += `Subscription: ${i + 1}\n`;
+      res += `Provider: ${subscription.provider}\n`;
+      res += `ChatID: ${subscription.chatId}\n`;
+      res += '\n';
+    });
+
+    return res;
+  }
 }
