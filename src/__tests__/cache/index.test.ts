@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as _ from 'lodash';
 
 import Cache from '../../cache';
@@ -8,6 +9,7 @@ import dictionary from '../../utils/dictionary';
 import constants from '../../utils/constants';
 import { CacheResponse } from '../../cache/response.model';
 import { User } from '../../leetcode/models';
+import { delay } from '../../utils/helper';
 
 Cache.database = new MockDatabaseProvider();
 Cache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
@@ -115,7 +117,6 @@ test('cache.index.Cache.refreshUsers method', async () => {
   const result: CacheResponse = await Cache.refreshUsers();
   expect(result.status).toBe(constants.STATUS.ERROR);
   expect(result.detail).toBe(BM.IS_ALREADY_REFRESHING);
-  // eslint-disable-next-line no-console
   expect(console.log).toHaveBeenCalledWith(SM.IS_ALREADY_REFRESHING);
   Cache.database.isRefreshing = false;
 
@@ -123,10 +124,16 @@ test('cache.index.Cache.refreshUsers method', async () => {
   const fakeUsername = 'non_existing_username';
   mockDatabaseData.users = [fakeUsername];
   await Cache.refreshUsers();
-  // eslint-disable-next-line no-console
   expect(console.log).toHaveBeenCalledWith(
     SM.USERNAME_WAS_NOT_REFRESHED(fakeUsername),
   );
+
+  // Check error logging
+  const fakeErrorMessage = 'Fake error';
+  Cache.delay = () => { throw new Error(fakeErrorMessage); };
+  await Cache.refreshUsers();
+  expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
+  Cache.delay = delay;
 });
 
 test('cache.index.Cache.sortUsers method', async () => {
