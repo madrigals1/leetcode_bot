@@ -1,4 +1,10 @@
-import { Client, Interaction } from 'discord.js';
+import {
+  ButtonInteraction,
+  Client,
+  CommandInteraction,
+  Interaction,
+  SelectMenuInteraction,
+} from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
@@ -8,9 +14,11 @@ import dictionary from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { Context } from '../models';
+import { getPositionalParsedArguments } from '../decorators/utils';
 
 import createBot from './bot';
 import { getKeyBasedParsedArguments, reply } from './utils';
+import buttonIndexer from './buttonIndexer';
 
 const { DISCORD } = constants.PROVIDERS;
 const { SERVER_MESSAGES: SM } = dictionary;
@@ -23,6 +31,65 @@ class Discord {
   guildId: string = DISCORD.GUILD_ID;
 
   bot: Client;
+
+  static async handleCommand(interaction: CommandInteraction): Promise<void> {
+    const { commandName, options } = interaction;
+
+    // Find appropriate action by name and execute it
+    for (let i = 0; i < registeredActions.length; i++) {
+      const { name, property } = registeredActions[i];
+      if (name === commandName) {
+        const context: Context = {
+          text: '',
+          reply,
+          discordProvidedArguments: options.data,
+          interaction,
+          argumentParser: getKeyBasedParsedArguments,
+          provider: constants.PROVIDERS.DISCORD.NAME,
+          prefix: constants.PROVIDERS.DISCORD.PREFIX,
+          options: {},
+        };
+
+        Actions[property](context);
+
+        // Stop searching after action is found
+        return;
+      }
+    }
+  }
+
+  static async handleButton(interaction: ButtonInteraction): Promise<void> {
+    const button = buttonIndexer.getButton(interaction.customId);
+    const action = button.action.trim();
+    const commandName = action.split(' ')[0].substring(1);
+
+    // Find appropriate action by name and execute it
+    for (let i = 0; i < registeredActions.length; i++) {
+      const { name, property } = registeredActions[i];
+      if (name === commandName) {
+        const context: Context = {
+          text: action,
+          reply,
+          interaction,
+          argumentParser: getPositionalParsedArguments,
+          provider: constants.PROVIDERS.DISCORD.NAME,
+          prefix: constants.PROVIDERS.DISCORD.PREFIX,
+          options: {},
+        };
+
+        Actions[property](context);
+
+        // Stop searching after action is found
+        return;
+      }
+    }
+  }
+
+  static async handleSelectMenu(
+    interaction: SelectMenuInteraction,
+  ): Promise<void> {
+    log(interaction);
+  }
 
   async run() {
     // Create Bot with token
@@ -61,31 +128,12 @@ class Discord {
 
     // Handle actions
     this.bot.on('interactionCreate', async (interaction: Interaction) => {
-      if (!interaction.isCommand()) return;
-
-      const { commandName, options } = interaction;
-
-      // Find appropriate action by name and execute it
-      for (let i = 0; i < registeredActions.length; i++) {
-        const { name, property } = registeredActions[i];
-        if (name === commandName) {
-          const context: Context = {
-            text: '',
-            reply,
-            discordProvidedArguments: options.data,
-            interaction,
-            argumentParser: getKeyBasedParsedArguments,
-            provider: constants.PROVIDERS.DISCORD.NAME,
-            prefix: constants.PROVIDERS.DISCORD.PREFIX,
-            options: {},
-          };
-
-          Actions[property](context);
-
-          // Stop searching after action is found
-          return;
-        }
+      if (interaction.isCommand()) return Discord.handleCommand(interaction);
+      if (interaction.isButton()) return Discord.handleButton(interaction);
+      if (interaction.isSelectMenu()) {
+        return Discord.handleSelectMenu(interaction);
       }
+      return null;
     });
 
     log(SM.DISCORD_BOT_IS_RUNNING);

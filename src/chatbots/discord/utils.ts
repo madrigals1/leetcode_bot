@@ -10,12 +10,14 @@ import ArgumentManager from '../argumentManager';
 import { Argument, ParsedArgument } from '../decorators/models';
 import { Context, ButtonContainer } from '../models';
 
+import buttonIndexer from './buttonIndexer';
+
 export function getButtonComponents(
   buttonContainers: ButtonContainer[],
 ): MessageActionRow[] {
   const rows: MessageActionRow[] = [];
 
-  buttonContainers?.forEach((buttonContainer, index) => {
+  buttonContainers?.forEach((buttonContainer) => {
     const { buttons } = buttonContainer;
 
     const components = [];
@@ -24,7 +26,7 @@ export function getButtonComponents(
       case 1:
         components.push(
           new MessageButton()
-            .setCustomId(buttons[0].text)
+            .setCustomId(buttonIndexer.addButton(buttons[0]))
             .setLabel(buttons[0].text)
             .setStyle('PRIMARY'),
         );
@@ -32,7 +34,7 @@ export function getButtonComponents(
       default:
         components.push(
           new MessageSelectMenu()
-            .setCustomId(`select_${index}`)
+            .setCustomId(buttonIndexer.addSelect(buttons))
             .setPlaceholder('Username')
             .addOptions(
               buttons.map((button) => ({
