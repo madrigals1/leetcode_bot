@@ -193,6 +193,8 @@ test('chatbots.actions.clear action', async () => {
 });
 
 test('chatbots.actions.stats action', async () => {
+  await mockbot.send('/add random_username random_username_2');
+
   // Test with correct arguments
   await mockbot.send(`/stats ${mockPassword}`);
 
