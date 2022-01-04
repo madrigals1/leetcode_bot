@@ -12,7 +12,7 @@ let mongoDB: MongoDB;
 
 beforeAll(async () => {
   mongoMemoryServer = await MongoMemoryServer
-    .create({ binary: { version: '8.1.0' } });
+    .create({ binary: { version: '4.2.18' } });
 });
 
 beforeEach(() => {
