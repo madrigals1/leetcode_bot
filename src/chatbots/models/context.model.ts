@@ -4,6 +4,7 @@ import {
   NewsChannel,
   DMChannel,
   CommandInteractionOption,
+  MessageComponentInteraction,
   BaseCommandInteraction,
 } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
@@ -42,5 +43,5 @@ export interface Context {
   password?: string;
   // Discord
   discordProvidedArguments?: readonly CommandInteractionOption[],
-  interaction?: BaseCommandInteraction,
+  interaction?: MessageComponentInteraction | BaseCommandInteraction,
 }
