@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import * as dayjs from 'dayjs';
 
 import getLeetcodeDataFromUsername from '../leetcode';
@@ -22,6 +23,8 @@ class Cache {
   getLeetcodeDataFromUsername: CallableFunction = getLeetcodeDataFromUsername;
 
   delayTime: number = constants.SYSTEM.USER_REQUEST_DELAY_MS;
+
+  delay = delay;
 
   // Return all users
   allUsers(): User[] {
@@ -76,7 +79,6 @@ class Cache {
         const { username } = databaseUser;
 
         // Get data from LeetCode related to this User
-        // eslint-disable-next-line no-await-in-loop
         const userData = await this.getLeetcodeDataFromUsername(username);
 
         // If UserData was returned from Backend, replace User in cache
@@ -88,14 +90,13 @@ class Cache {
         }
 
         // Wait X seconds until loading next User, X is set in .env
-        // eslint-disable-next-line no-await-in-loop
-        await delay(this.delayTime);
+        await this.delay(this.delayTime);
       }
 
       // Sort objects after refresh
       this.sortUsers();
     } catch (err) {
-      log(err);
+      log(err.message);
     }
 
     // Set database indicators
