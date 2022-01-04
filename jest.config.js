@@ -9,6 +9,7 @@ module.exports = {
   setupFilesAfterEnv: ['./src/__tests__/setup.ts'],
   modulePathIgnorePatterns: filesToIgnore,
   testEnvironment: 'node',
+  preset: 'ts-jest',
   transform: { '\\.ts$': ['ts-jest'] },
   coverageThreshold: {
     global: {
