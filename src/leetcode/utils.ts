@@ -29,17 +29,17 @@ export function getGraphqlLink(): string {
 }
 
 export function getRecentSubmissions(
-  submissionData: RecentSubmissionList,
+  data: RecentSubmissionList,
 ): SubmissionData[] {
   const now: number = dayjs().unix();
-  return submissionData.recentSubmissionList.map(
+  return data.recentSubmissionList.map(
     (submission: SubmissionDumpNode) => {
       const unixTime = Number(submission.timestamp);
 
       return {
         link: getLeetcodeProblemLink(submission.titleSlug),
         status: constants.SUBMISSION_STATUS_MAP[submission.statusDisplay],
-        language: submissionData.languageList.find((language: LanguageNode) => (
+        language: data.languageList.find((language: LanguageNode) => (
           language.name === submission.lang
         )).verboseName,
         name: submission.title,
