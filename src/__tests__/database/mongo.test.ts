@@ -1,6 +1,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable no-console */
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import { jest } from '@jest/globals';
 
 import dictionary from '../../utils/dictionary';
 import MongoDB from '../../database/mongo';
@@ -11,6 +12,7 @@ let mongoMemoryServer: MongoMemoryServer;
 let mongoDB: MongoDB;
 
 beforeAll(async () => {
+  jest.setTimeout(30000);
   mongoMemoryServer = await MongoMemoryServer
     .create({ binary: { version: '4.2.18' } });
 });
@@ -22,6 +24,7 @@ beforeEach(() => {
 
 afterAll(async () => {
   await mongoMemoryServer.stop();
+  jest.setTimeout(5000);
 });
 
 test('database.mongo.connect method', async () => {
