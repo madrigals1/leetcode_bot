@@ -15,6 +15,9 @@ import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
+import { ComplexInteraction } from '../models/context.model';
+import ArgumentManager from '../argumentManager';
+import { Argument } from '../decorators/models';
 
 import createBot from './bot';
 import { getKeyBasedParsedArguments, reply } from './utils';
@@ -32,35 +35,13 @@ class Discord {
 
   bot: Client;
 
-  static async handleCommand(interaction: CommandInteraction): Promise<void> {
-    const { commandName, options } = interaction;
-
-    // Find appropriate action by name and execute it
-    for (let i = 0; i < registeredActions.length; i++) {
-      const { name, property } = registeredActions[i];
-      if (name === commandName) {
-        const context: Context = {
-          text: '',
-          reply,
-          discordProvidedArguments: options.data,
-          interaction,
-          argumentParser: getKeyBasedParsedArguments,
-          provider: constants.PROVIDERS.DISCORD.NAME,
-          prefix: constants.PROVIDERS.DISCORD.PREFIX,
-          options: {},
-        };
-
-        Actions[property](context);
-
-        // Stop searching after action is found
-        return;
-      }
-    }
-  }
-
-  static async handleButton(interaction: ButtonInteraction): Promise<void> {
-    const button = buttonIndexer.getButton(interaction.customId);
-    const action = button.action.trim();
+  static async executeAction(
+    interaction: ComplexInteraction,
+    action: string,
+    argumentParser: (
+      context: Context, requestedArgs: Argument[],
+    ) => ArgumentManager,
+  ) {
     const commandName = action.split(' ')[0].substring(1);
 
     // Find appropriate action by name and execute it
@@ -71,11 +52,15 @@ class Discord {
           text: action,
           reply,
           interaction,
-          argumentParser: getPositionalParsedArguments,
+          argumentParser,
           provider: constants.PROVIDERS.DISCORD.NAME,
           prefix: constants.PROVIDERS.DISCORD.PREFIX,
           options: {},
         };
+
+        if (interaction instanceof CommandInteraction) {
+          context.discordProvidedArguments = interaction.options.data;
+        }
 
         Actions[property](context);
 
@@ -85,10 +70,35 @@ class Discord {
     }
   }
 
+  static async handleCommand(interaction: CommandInteraction): Promise<void> {
+    this.executeAction(
+      interaction,
+      `/${interaction.commandName}`,
+      getKeyBasedParsedArguments,
+    );
+  }
+
+  static async handleButton(interaction: ButtonInteraction): Promise<void> {
+    const button = buttonIndexer.getButton(interaction.customId);
+    const action = button.action.trim();
+
+    this.executeAction(
+      interaction,
+      action,
+      getPositionalParsedArguments,
+    );
+  }
+
   static async handleSelectMenu(
     interaction: SelectMenuInteraction,
   ): Promise<void> {
-    log(interaction);
+    const action = interaction.values[0].trim();
+
+    this.executeAction(
+      interaction,
+      action,
+      getPositionalParsedArguments,
+    );
   }
 
   async run() {

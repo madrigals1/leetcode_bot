@@ -4,8 +4,9 @@ import {
   NewsChannel,
   DMChannel,
   CommandInteractionOption,
-  MessageComponentInteraction,
-  BaseCommandInteraction,
+  SelectMenuInteraction,
+  ButtonInteraction,
+  CommandInteraction,
 } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
 
@@ -26,6 +27,10 @@ export interface Channel {
   send;
 }
 
+export type ComplexInteraction = ButtonInteraction
+  | CommandInteraction
+  | SelectMenuInteraction;
+
 export interface Context {
   text: string;
   args?: ArgumentManager;
@@ -43,5 +48,5 @@ export interface Context {
   password?: string;
   // Discord
   discordProvidedArguments?: readonly CommandInteractionOption[],
-  interaction?: MessageComponentInteraction | BaseCommandInteraction,
+  interaction?: ComplexInteraction,
 }

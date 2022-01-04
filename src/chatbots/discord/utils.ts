@@ -34,7 +34,7 @@ export function getButtonComponents(
       default:
         components.push(
           new MessageSelectMenu()
-            .setCustomId(buttonIndexer.addSelect(buttons))
+            .setCustomId(buttonIndexer.addSelect())
             .setPlaceholder('Username')
             .addOptions(
               buttons.map((button) => ({

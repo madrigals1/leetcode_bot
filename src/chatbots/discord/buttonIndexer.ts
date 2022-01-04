@@ -5,8 +5,6 @@ class ButtonIndexer {
 
   buttons = new Map<string, Button>();
 
-  select = new Map<string, string[]>();
-
   addButton(button: Button): string {
     const sid = `button_${this.id}`;
     this.buttons.set(sid, button);
@@ -14,20 +12,14 @@ class ButtonIndexer {
     return sid;
   }
 
-  addSelect(buttons: Button[]): string {
-    const indexes = buttons.map((button) => this.addButton(button));
+  addSelect(): string {
     const sid = `select_${this.id}`;
-    this.select.set(sid, indexes);
     this.id += 1;
     return sid;
   }
 
   getButton(sid: string): Button {
     return this.buttons.get(sid);
-  }
-
-  getSelect(sid: string): string[] {
-    return this.select.get(sid);
   }
 }
 
