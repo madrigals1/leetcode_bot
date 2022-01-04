@@ -241,6 +241,17 @@ test('chatbots.actions.rating action', async () => {
   await mockbot.send('/rating asd');
 
   expect(mockbot.lastMessage()).toEqual(BM.INCORRECT_RATING_TYPE);
+
+  // Test with 0 users
+  await Cache.clearUsers();
+
+  // Regular Rating with 0 users
+  await mockbot.send('/rating');
+  expect(mockbot.lastMessage()).toEqual(BM.RATING_TEXT([]));
+
+  // CML Rating with 0 users
+  await mockbot.send('/rating cml');
+  expect(mockbot.lastMessage()).toEqual(BM.CML_RATING_TEXT([]));
 });
 
 test('chatbots.actions.profile action', async () => {
