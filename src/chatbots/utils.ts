@@ -132,5 +132,6 @@ export function getCloseButton(): ButtonContainer {
       action: 'placeholder',
     }],
     buttonPerRow: 1,
+    placeholder: '',
   };
 }

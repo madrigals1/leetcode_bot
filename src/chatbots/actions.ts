@@ -109,6 +109,7 @@ export default class Actions {
           action: 'remove', password: usernameOrPassword,
         }),
         buttonPerRow: 3,
+        placeholder: 'Username',
       }, getCloseButton()];
 
       return BM.USER_LIST_REMOVE;
@@ -126,6 +127,7 @@ export default class Actions {
           action: 'remove', password,
         }),
         buttonPerRow: 3,
+        placeholder: 'Username',
       }, getCloseButton()];
 
       return BM.USER_LIST_REMOVE;
@@ -207,6 +209,7 @@ export default class Actions {
           action: '/rating cml',
         }],
         buttonPerRow: 1,
+        placeholder: 'Username',
       }];
 
       return BM.RATING_TEXT(Cache.allUsers());
@@ -230,6 +233,7 @@ export default class Actions {
           action: '/rating',
         }],
         buttonPerRow: 1,
+        placeholder: 'Username',
       }];
 
       return BM.CML_RATING_TEXT(usersWithCmlRating);
@@ -258,6 +262,7 @@ export default class Actions {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({ action: 'profile' }),
         buttonPerRow: 3,
+        placeholder: 'Username',
       }, getCloseButton()];
 
       return BM.USER_LIST_PROFILES;
@@ -286,6 +291,7 @@ export default class Actions {
     context.options.buttons = [{
       buttons: [submissionsButtion, avatarButton, ratingButton],
       buttonPerRow: 3,
+      placeholder: 'User menu',
     }];
 
     return BM.USER_TEXT(user);
@@ -322,6 +328,7 @@ export default class Actions {
     context.options.buttons = [{
       buttons: createButtonsFromUsers({ action: 'avatar' }),
       buttonPerRow: 3,
+      placeholder: 'Username',
     }, getCloseButton()];
 
     // If 0 User was sent
@@ -378,6 +385,7 @@ export default class Actions {
     context.options.buttons = [{
       buttons: createButtonsFromUsers({ action: 'submissions' }),
       buttonPerRow: 3,
+      placeholder: 'Username',
     }, getCloseButton()];
 
     // If 0 User was sent
@@ -414,6 +422,7 @@ export default class Actions {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({ action: 'compare' }),
         buttonPerRow: 3,
+        placeholder: 'Username',
       }, getCloseButton()];
 
       return BM.SELECT_LEFT_USER;
@@ -424,6 +433,7 @@ export default class Actions {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({ action: `compare ${first}` }),
         buttonPerRow: 3,
+        placeholder: 'Username',
       }, getCloseButton()];
 
       return BM.SELECT_RIGHT_USER;

@@ -18,7 +18,7 @@ export function getButtonComponents(
   const rows: MessageActionRow[] = [];
 
   buttonContainers?.forEach((buttonContainer) => {
-    const { buttons } = buttonContainer;
+    const { buttons, placeholder } = buttonContainer;
 
     const components = [];
 
@@ -35,7 +35,7 @@ export function getButtonComponents(
         components.push(
           new MessageSelectMenu()
             .setCustomId(buttonIndexer.addSelect())
-            .setPlaceholder('Username')
+            .setPlaceholder(placeholder)
             .addOptions(
               buttons.map((button) => ({
                 label: button.text,

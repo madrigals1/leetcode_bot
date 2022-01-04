@@ -11,4 +11,5 @@ export interface ButtonOptions {
 export interface ButtonContainer {
   buttons: Button[],
   buttonPerRow: number,
+  placeholder: string,
 }
