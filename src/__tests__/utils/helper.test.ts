@@ -1,5 +1,5 @@
 import {
-  isTrue, delay, log, error, isPromise,
+  isTrue, delay, log, error, isPromise, isValidHttpUrl,
 } from '../../utils/helper';
 
 test('utils.helper.isTrue function', () => {
@@ -63,4 +63,37 @@ test('utils.helper.isPromise function', () => {
   const promise: Promise<boolean> = new Promise((resolve) => resolve(true));
 
   expect(isPromise(promise)).toBe(true);
+});
+
+test('utils.helper.isValidHttpUrl function', () => {
+  const testCases = [
+    {
+      input: 'http://example.com',
+      output: true,
+    },
+    {
+      input: 'https://example.com',
+      output: true,
+    },
+    {
+      input: 'https://some.other.website',
+      output: true,
+    },
+    {
+      input: 'ftp://example.com',
+      output: false,
+    },
+    {
+      input: 'random_string',
+      output: false,
+    },
+    {
+      input: '',
+      output: false,
+    },
+  ];
+
+  testCases.forEach(({ input, output }) => {
+    expect(isValidHttpUrl(input)).toBe(output);
+  });
 });
