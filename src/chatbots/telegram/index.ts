@@ -8,8 +8,11 @@ import Actions, { registeredActions } from '../actions';
 import constants from '../../utils/constants';
 import dictionary from '../../utils/dictionary';
 import { Options, Context, TelegramMessage } from '../models';
+import { getPositionalParsedArguments } from '../decorators/utils';
 
 import { reply } from './utils';
+
+const { SERVER_MESSAGES: SM } = dictionary;
 
 export default class Telegram {
   token: string = constants.PROVIDERS.TELEGRAM.TOKEN;
@@ -24,10 +27,11 @@ export default class Telegram {
     return {
       text: textCorrect,
       reply,
+      argumentParser: getPositionalParsedArguments,
       provider: constants.PROVIDERS.TELEGRAM.NAME,
       chatId: message.chat.id,
       prefix: constants.PROVIDERS.TELEGRAM.PREFIX,
-      options: { parse_mode: 'HTML' },
+      options: { parseMode: 'HTML' },
       bot: this.bot,
     };
   }
@@ -37,7 +41,7 @@ export default class Telegram {
     this.bot = new TelegramBot(this.token, this.options);
 
     // Log that Telegram BOT is connected
-    log(dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_CONNECTED);
+    log(SM.TELEGRAM_BOT_IS_CONNECTED);
 
     // Add regular actions
     registeredActions.forEach(({ name, property }) => {
@@ -94,6 +98,6 @@ export default class Telegram {
       return null;
     });
 
-    log(dictionary.SERVER_MESSAGES.TELEGRAM_BOT_IS_RUNNING);
+    log(SM.TELEGRAM_BOT_IS_RUNNING);
   }
 }

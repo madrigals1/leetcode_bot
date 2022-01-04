@@ -8,6 +8,7 @@ import DatabaseProvider from '../database.proto';
 import UserModel from './schemas';
 
 const { MONGO } = constants.DATABASE;
+const { SERVER_MESSAGES: SM } = dictionary;
 
 // Main class for MongoDB Database
 class MongoDB extends DatabaseProvider {
@@ -38,10 +39,10 @@ class MongoDB extends DatabaseProvider {
     await mongoose
       .connect(this.mongoUrl)
       .then(() => {
-        log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
+        log(SM.CONNECTION_STATUS.SUCCESSFUL);
       })
       .catch((err) => {
-        error(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
+        error(SM.CONNECTION_STATUS.ERROR(err));
       });
   }
 

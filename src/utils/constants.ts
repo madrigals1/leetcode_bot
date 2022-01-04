@@ -22,6 +22,8 @@ const {
   // Discord
   DISCORD_TOKEN,
   DISCORD_TEST_TOKEN,
+  DISCORD_APP_ID,
+  DISCORD_GUILD_ID,
 
   // ---------------------------------------------------------------------------
   // Database settings
@@ -71,7 +73,6 @@ const EMOJI = {
   CROSS_MARK: '❌',
   SUCCESS: '✅',
   WAITING: '⏳',
-  WARNING: 'ℹ️',
   COOL: '😎',
   WASTEBASKET: '🗑️',
   PERSON: '👤',
@@ -124,7 +125,9 @@ const DISCORD = {
   TOKEN: DISCORD_TOKEN,
   TEST_ENABLE: !!DISCORD_TEST_TOKEN,
   TEST_TOKEN: DISCORD_TEST_TOKEN,
-  PREFIX: '!',
+  APP_ID: DISCORD_APP_ID,
+  GUILD_ID: DISCORD_GUILD_ID,
+  PREFIX: '/',
 };
 
 const SLACK = {
@@ -184,9 +187,9 @@ const CML = {
 const SYSTEM = {
   MASTER_PASSWORD: MASTER_PASSWORD || 'admin',
   LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',
-  USER_AMOUNT_LIMIT: parseInt(USER_AMOUNT_LIMIT, 10) || 30,
+  USER_AMOUNT_LIMIT: Number(USER_AMOUNT_LIMIT) || 30,
   USER_REQUEST_DELAY_MS: USER_REQUEST_DELAY_MS
-    ? parseInt(USER_REQUEST_DELAY_MS, 10)
+    ? Number(USER_REQUEST_DELAY_MS)
     : 4000,
   USERS_REFRESH_DELAY: USERS_REFRESH_DELAY || '*/30 * * * *',
   DATE_FORMAT: 'YYYY-MM-DD hh:mm a',

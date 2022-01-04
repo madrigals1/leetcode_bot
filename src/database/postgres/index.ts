@@ -8,6 +8,7 @@ import DatabaseProvider from '../database.proto';
 import QUERIES from './queries';
 
 const { POSTGRES } = constants.DATABASE;
+const { SERVER_MESSAGES: SM } = dictionary;
 
 class Postgres extends DatabaseProvider {
   client = new pg.Client({
@@ -28,11 +29,11 @@ class Postgres extends DatabaseProvider {
     // Create table for users if not exist
     return this.client.query(query)
       .then(() => {
-        log(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.SUCCESSFUL);
+        log(SM.CONNECTION_STATUS.SUCCESSFUL);
         return true;
       })
       .catch((err) => {
-        error(dictionary.SERVER_MESSAGES.CONNECTION_STATUS.ERROR(err));
+        error(SM.CONNECTION_STATUS.ERROR(err));
         this.client.end();
         return false;
       });

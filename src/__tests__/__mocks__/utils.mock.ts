@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
 
-import {
-  TableResponse, ReplyMarkupOptions, ButtonOptions,
-} from '../../chatbots/models';
+import { TableResponse, ButtonOptions, Context } from '../../chatbots/models';
 import { User } from '../../leetcode/models';
 import dictionary from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
 
 import { users, user1 } from './data.mock';
+
+const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 
 export async function mockGetLeetcodeDataFromUsername(
   username: string,
@@ -26,14 +26,14 @@ export async function mockTableForSubmissions(
 
     return {
       error,
-      reason: dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(error),
+      reason: SM.ERROR_ON_THE_SERVER(error),
     };
   }
 
   if (user.submitStats.acSubmissionNum.length === 0) {
     return {
-      error: dictionary.BOT_MESSAGES.USER_NO_SUBMISSIONS(user.username),
-      reason: dictionary.SERVER_MESSAGES.NO_SUBMISSIONS,
+      error: BM.USER_NO_SUBMISSIONS(user.username),
+      reason: SM.NO_SUBMISSIONS,
     };
   }
 
@@ -55,24 +55,6 @@ export async function mockCompareMenu(
   return new Promise((resolve) => {
     resolve({ link: 'http://random_link_compare' });
   });
-}
-
-export function mockReplyMarkupOptions(
-  buttonCount: number, isClosable: boolean,
-): ReplyMarkupOptions {
-  const buttons = [];
-
-  for (let i = 0; i < buttonCount; i++) {
-    buttons.push({
-      text: `Button ${i + 1}`,
-      action: `Action ${i + 1}`,
-    });
-  }
-
-  return {
-    buttons,
-    isClosable,
-  };
 }
 
 export function mockButtonOptions(
@@ -114,4 +96,14 @@ export function mockUserWithSolved(
   ];
 
   return newUser;
+}
+
+export function mockContext(): Context {
+  return {
+    text: 'random_text',
+    reply: () => new Promise(() => ('asd')),
+    argumentParser: () => undefined,
+    provider: 'mockbot',
+    prefix: '/',
+  };
 }

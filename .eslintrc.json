@@ -29,6 +29,10 @@
             }
         ],
         "no-console": 2,
+        "no-continue": 0,
+        "no-lonely-if": 0,
+        "no-underscore-dangle": 0,
+        "max-classes-per-file": 0,
         "import/order": [
             "error",
             {

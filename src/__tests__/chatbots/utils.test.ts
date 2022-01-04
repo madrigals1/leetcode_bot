@@ -1,14 +1,11 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
 import { user1, user2, users } from '../__mocks__/data.mock';
-import {
-  mockReplyMarkupOptions, mockButtonOptions,
-} from '../__mocks__/utils.mock';
+import { mockButtonOptions } from '../__mocks__/utils.mock';
 import {
   getCompareDataFromUser,
   compareMenu,
   tableForSubmissions,
-  generateReplyMarkup,
   createButtonsFromUsers,
 } from '../../chatbots/utils';
 import dictionary from '../../utils/dictionary';
@@ -18,6 +15,8 @@ import Cache from '../../cache';
 
 const { VIZAPI_LINK } = constants;
 const savedUsers = [...Cache.users];
+
+const { BOT_MESSAGES: BM, SERVER_MESSAGES: SM } = dictionary;
 
 beforeEach(() => {
   // Fix changed values before each test case
@@ -92,8 +91,7 @@ test('chatbots.utils.compareMenu action', async () => {
   // Valid
   const compareResponse = await compareMenu(user1, user2);
 
-  expect(console.log)
-    .toHaveBeenCalledWith(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
+  expect(console.log).toHaveBeenCalledWith(SM.IMAGE_WAS_CREATED);
   expect(isValidHttpUrl(compareResponse.link)).toBe(true);
   expect(compareResponse.error).toBe(undefined);
   expect(compareResponse.reason).toBe(undefined);
@@ -104,16 +102,14 @@ test('chatbots.utils.compareMenu action', async () => {
 
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure.error === undefined).toBe(false);
-  expect(compareResponseFailure.reason)
-    .toBe(dictionary.SERVER_MESSAGES.API_NOT_WORKING);
+  expect(compareResponseFailure.reason).toBe(SM.API_NOT_WORKING);
 });
 
 test('chatbots.utils.tableForSubmissions action', async () => {
   // Valid
   const tableForSubmissionsResponse = await tableForSubmissions(user1);
 
-  expect(console.log)
-    .toHaveBeenCalledWith(dictionary.SERVER_MESSAGES.IMAGE_WAS_CREATED);
+  expect(console.log).toHaveBeenCalledWith(SM.IMAGE_WAS_CREATED);
   expect(isValidHttpUrl(tableForSubmissionsResponse.link)).toBe(true);
   expect(tableForSubmissionsResponse.error).toBe(undefined);
   expect(tableForSubmissionsResponse.reason).toBe(undefined);
@@ -125,7 +121,7 @@ test('chatbots.utils.tableForSubmissions action', async () => {
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure1.error).toBe(errorMessage);
   expect(compareResponseFailure1.reason)
-    .toBe(dictionary.SERVER_MESSAGES.ERROR_ON_THE_SERVER(errorMessage));
+    .toBe(SM.ERROR_ON_THE_SERVER(errorMessage));
 
   // Invalid: User has no submissions
   const userWithoutSubmissions = {
@@ -139,13 +135,12 @@ test('chatbots.utils.tableForSubmissions action', async () => {
     await tableForSubmissions(userWithoutSubmissions)
   );
   const dictMessageWithoutSubmissions = (
-    dictionary.BOT_MESSAGES.USER_NO_SUBMISSIONS(userWithoutSubmissions.username)
+    BM.USER_NO_SUBMISSIONS(userWithoutSubmissions.username)
   );
 
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure2.error).toBe(dictMessageWithoutSubmissions);
-  expect(compareResponseFailure2.reason)
-    .toBe(dictionary.SERVER_MESSAGES.NO_SUBMISSIONS);
+  expect(compareResponseFailure2.reason).toBe(SM.NO_SUBMISSIONS);
 
   // Invalid: Incorrect URL
   constants.VIZAPI_LINK = 'incorrect_url';
@@ -153,61 +148,7 @@ test('chatbots.utils.tableForSubmissions action', async () => {
 
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure3.error === undefined).toBe(false);
-  expect(compareResponseFailure3.reason)
-    .toBe(dictionary.SERVER_MESSAGES.API_NOT_WORKING);
-});
-
-test('chatbots.utils.generateReplyMarkup action', async () => {
-  // Valid: Without close button
-  const mockOptions = mockReplyMarkupOptions(3, false);
-  const replyMarkupResponse = generateReplyMarkup(mockOptions);
-  const parsedResponse = JSON.parse(replyMarkupResponse);
-
-  expect(parsedResponse.inline_keyboard === undefined).toBe(false);
-
-  const firstRow = parsedResponse.inline_keyboard[0];
-
-  expect(firstRow.length).toBe(3);
-
-  for (let i = 0; i < firstRow.length; i++) {
-    const { text, callback_data } = firstRow[i];
-
-    expect(text).toBe(`Button ${i + 1}`);
-    expect(callback_data).toBe(`Action ${i + 1}`);
-  }
-
-  // Valid: With close button
-  const mockOptionsWithClose = mockReplyMarkupOptions(3, true);
-  const replyMarkupResponseClose = generateReplyMarkup(mockOptionsWithClose);
-  const parsedResponseClose = JSON.parse(replyMarkupResponseClose);
-
-  expect(parsedResponseClose.inline_keyboard === undefined).toBe(false);
-
-  const secondRow = parsedResponseClose.inline_keyboard[1];
-
-  expect(secondRow.length).toBe(1);
-
-  expect(secondRow[0].text).toBe(`${constants.EMOJI.CROSS_MARK} Close`);
-  expect(secondRow[0].callback_data).toBe('placeholder');
-
-  // Valid: 8 buttons
-  const mockOptions8buttons = mockReplyMarkupOptions(8, false);
-  const replyMarkupResponse8buttons = generateReplyMarkup(mockOptions8buttons);
-  const parsedResponse8buttons = JSON.parse(replyMarkupResponse8buttons);
-
-  expect(parsedResponse8buttons.inline_keyboard === undefined).toBe(false);
-
-  for (let i = 0; i < 8; i++) {
-    const x = Math.floor(i / 3);
-    const y = i % 3;
-
-    const { text, callback_data } = (
-      parsedResponse8buttons.inline_keyboard[x][y]
-    );
-
-    expect(text).toBe(`Button ${i + 1}`);
-    expect(callback_data).toBe(`Action ${i + 1}`);
-  }
+  expect(compareResponseFailure3.reason).toBe(SM.API_NOT_WORKING);
 });
 
 test('chatbots.utils.createButtonsFromUsers action', async () => {

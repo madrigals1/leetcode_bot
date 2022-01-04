@@ -6,8 +6,10 @@ import {
   getGraphqlLink,
   getLeetcodeUsernameLink,
   getLeetcodeProblemLink,
+  getRecentSubmissions,
 } from '../../leetcode/utils';
 import constants from '../../utils/constants';
+import { RecentSubmissionList } from '../../leetcode/models';
 
 const { CML, SYSTEM } = constants;
 
@@ -135,4 +137,78 @@ test('leetcode.utils.getProblemsSolved action', async () => {
   const calculatedCml3 = calculateCml(easySolved, mediumSolved, hardSolved);
 
   expect(cml3.cumulative).toBe(calculatedCml3);
+});
+
+test('leetcode.utils.getRecentSubmissions action', async () => {
+  const recentSubmissionList: RecentSubmissionList = {
+    languageList: [
+      {
+        id: 10,
+        name: 'python',
+        verboseName: 'Python',
+      },
+      {
+        id: 12,
+        name: 'javascript',
+        verboseName: 'Javascript',
+      },
+      {
+        id: 18,
+        name: 'csharp',
+        verboseName: 'C#',
+      },
+    ],
+    recentSubmissionList: [
+      {
+        lang: 'python',
+        statusDisplay: 'Time Limit Exceeded',
+        timestamp: '46468465651',
+        title: 'Submission Name 1',
+        titleSlug: 'submission-name-1',
+      },
+      {
+        lang: 'javascript',
+        statusDisplay: 'Accepted',
+        timestamp: '46468465652',
+        title: 'Submission Name 2',
+        titleSlug: 'submission-name-2',
+      },
+      {
+        lang: 'csharp',
+        statusDisplay: 'Memory Limit Exceeded',
+        timestamp: '46468465653',
+        title: 'Submission Name 3',
+        titleSlug: 'submission-name-3',
+      },
+    ],
+  };
+
+  const submissionData = getRecentSubmissions(recentSubmissionList);
+  const submissionNode1 = submissionData[0];
+  const submissionNode2 = submissionData[1];
+  const submissionNode3 = submissionData[2];
+
+  // Check Submission 1
+  expect(submissionNode1.link)
+    .toBe(getLeetcodeProblemLink('submission-name-1'));
+  expect(submissionNode1.status)
+    .toBe(constants.SUBMISSION_STATUS_MAP['Time Limit Exceeded']);
+  expect(submissionNode1.language).toBe('Python');
+  expect(submissionNode1.name).toBe('Submission Name 1');
+
+  // Check Submission 2
+  expect(submissionNode2.link)
+    .toBe(getLeetcodeProblemLink('submission-name-2'));
+  expect(submissionNode2.status)
+    .toBe(constants.SUBMISSION_STATUS_MAP.Accepted);
+  expect(submissionNode2.language).toBe('Javascript');
+  expect(submissionNode2.name).toBe('Submission Name 2');
+
+  // Check Submission 3
+  expect(submissionNode3.link)
+    .toBe(getLeetcodeProblemLink('submission-name-3'));
+  expect(submissionNode3.status)
+    .toBe(constants.SUBMISSION_STATUS_MAP['Memory Limit Exceeded']);
+  expect(submissionNode3.language).toBe('C#');
+  expect(submissionNode3.name).toBe('Submission Name 3');
 });

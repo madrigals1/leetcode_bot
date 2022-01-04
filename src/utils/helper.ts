@@ -32,9 +32,7 @@ export function isValidHttpUrl(urlString: string): boolean {
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
 
-export function generateString(
-  length: number, chars: string = null,
-): string {
+export function generateString(length: number, chars: string = null): string {
   let usableChars: string;
 
   if (chars) {

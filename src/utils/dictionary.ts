@@ -54,10 +54,35 @@ const SERVER_MESSAGES = {
 const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;
 
 const BOT_MESSAGES = {
-  // MISC
+  // ERROR MESSAGES
   INCORRECT_INPUT: `${constants.EMOJI.ERROR} Incorrect input`,
+  INCORRECT_RATING_TYPE: `${constants.EMOJI.ERROR} Incorrect rating type`,
   PASSWORD_IS_INCORRECT: `${constants.EMOJI.ERROR} Password is incorrect`,
   ERROR_ON_THE_SERVER: `${constants.EMOJI.ERROR} Error on the server`,
+  INSUFFICIENT_ARGS_IN_MESSAGE:
+    `${constants.EMOJI.ERROR} Insufficient arguments in message`,
+  SHOULD_NOT_REQUEST_MORE_THAN_100_ARGS:
+    `${constants.EMOJI.ERROR} Should not request more than 100 arguments`,
+  SHOULD_NOT_PROVIDE_MORE_THAN_100_ARGS:
+    `${constants.EMOJI.ERROR} Should not provide more than 100 arguments`,
+  PASSWORD_NOT_FOUND_IN_ARGS:
+    `${constants.EMOJI.ERROR} Password not found in arguments`,
+  DUPLICATE_KEYS_IN_ARGS: (keys: string[]): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${constants.EMOJI.ERROR} Duplicate keys ${keys} are found in arguments`,
+  DUPLICATE_INDEXES_IN_ARGS: (keys: number[]): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${constants.EMOJI.ERROR} Duplicate indexes ${keys} are found in arguments`,
+  SHOULD_NOT_HAVE_REQUIRED_ARGS_AFTER_OPTIONAL:
+    `${constants.EMOJI.ERROR} Should not have required arguments after optional arguments`,
+  MESSAGE_SHOULD_HAVE_NO_ARGS:
+    `${constants.EMOJI.ERROR} Message should not have any arguments`,
+  INDEX_SHOULD_BE_PRESENT_IN_ARGS: (i: number): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${constants.EMOJI.ERROR} Index ${i} should be present in arguments`,
+  ARG_IS_NOT_PROVIDED: (i: number): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${constants.EMOJI.ERROR} Argument ${i} is not provided`,
 
   // REFRESHING
   STARTED_REFRESH: `${constants.EMOJI.WAITING} Database started refresh`,
@@ -70,7 +95,7 @@ const BOT_MESSAGES = {
   },
   NO_USERS,
   USER_NO_SUBMISSIONS(username: string): string {
-    return `${constants.EMOJI.ERROR} User <b>${username}</b> does not have any submissions`;
+    return `${constants.EMOJI.ERROR} User < b > ${username} </b> does not have any submissions`;
   },
 
   // RATING RELATED
@@ -78,9 +103,6 @@ const BOT_MESSAGES = {
   REGULAR_RATING: `${constants.EMOJI.CLIPBOARD} Regular Rating`,
 
   // USERNAME RELATED
-  AT_LEAST_1_USERNAME(prefix: string): string {
-    return `${constants.EMOJI.WARNING} Please, enter at least 1 username after <b>${prefix}add</b> command`;
-  },
   USERNAME_NOT_FOUND(username: string): string {
     return `${constants.EMOJI.ERROR} Username <b>${username}</b> was not found in database`;
   },
@@ -108,6 +130,13 @@ const BOT_MESSAGES = {
   USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars Menu`,
   USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove Menu`,
   USER_LIST_PROFILES: `${constants.EMOJI.PERSON} Profiles`,
+  USER_AVATAR: (username: string): string => `${username}'s avatar`,
+  USER_RECENT_SUBMISSIONS: (username: string): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${username}'s recent submissions`,
+  USERS_COMPARE: (leftUsername: string, rightUsername: string): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `Comparing ${leftUsername} to ${rightUsername}`,
 
   // DATABASE
   DATABASE_WILL_BE_CLEARED: `${constants.EMOJI.WASTEBASKET} Database will be cleared`,

@@ -1,6 +1,9 @@
 import { Context } from '../../../chatbots/models';
 import Actions, { registeredActions } from '../../../chatbots/actions';
 import constants from '../../../utils/constants';
+import {
+  getPositionalParsedArguments,
+} from '../../../chatbots/decorators/utils';
 
 export default class Mockbot {
   output: string[] = [];
@@ -40,6 +43,7 @@ export default class Mockbot {
 
             return promise;
           },
+          argumentParser: getPositionalParsedArguments,
           provider: this.name,
           chatId: 123123123,
           prefix: this.prefix,

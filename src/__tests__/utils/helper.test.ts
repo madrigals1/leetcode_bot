@@ -1,5 +1,11 @@
 import {
-  isTrue, delay, log, error, isPromise,
+  isTrue,
+  delay,
+  log,
+  error,
+  isPromise,
+  isValidHttpUrl,
+  generateString,
 } from '../../utils/helper';
 
 test('utils.helper.isTrue function', () => {
@@ -63,4 +69,59 @@ test('utils.helper.isPromise function', () => {
   const promise: Promise<boolean> = new Promise((resolve) => resolve(true));
 
   expect(isPromise(promise)).toBe(true);
+});
+
+test('utils.helper.isValidHttpUrl function', () => {
+  const testCases = [
+    {
+      input: 'http://example.com',
+      output: true,
+    },
+    {
+      input: 'https://example.com',
+      output: true,
+    },
+    {
+      input: 'https://some.other.website',
+      output: true,
+    },
+    {
+      input: 'ftp://example.com',
+      output: false,
+    },
+    {
+      input: 'random_string',
+      output: false,
+    },
+    {
+      input: '',
+      output: false,
+    },
+  ];
+
+  testCases.forEach(({ input, output }) => {
+    expect(isValidHttpUrl(input)).toBe(output);
+  });
+});
+
+test('utils.helper.generateString function', () => {
+  const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const num = '0123456789';
+  const extra = '';
+  const usableCharsDefault = alpha + num + extra;
+
+  // Default charset
+  const genString1 = generateString(10);
+  expect(genString1.length).toBe(10);
+  Array.from(genString1).forEach((char) => {
+    expect(usableCharsDefault).toContain(char);
+  });
+
+  // Different charset
+  const usableCharsLimited = 'ABCD';
+  const genString2 = generateString(15, usableCharsLimited);
+  expect(genString2.length).toBe(15);
+  Array.from(genString2).forEach((char) => {
+    expect(usableCharsLimited).toContain(char);
+  });
 });
