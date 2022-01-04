@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ v16 ]
+        node-version: [ v16.11.0 ]
 
     environment: testing_environment
 
@@ -48,7 +48,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ v16 ]
+        node-version: [ v16.11.0 ]
 
     environment: testing_environment
 
