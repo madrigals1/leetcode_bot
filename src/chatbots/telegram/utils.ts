@@ -37,15 +37,11 @@ export function reply(message: string, context: Context): Promise<string> {
   // Update options with Telegram specific data
 
   const replyMarkupOptions = options.buttons
-    ? {
-      reply_markup: getReplyMarkupFromButtons(options.buttons),
-    }
+    ? { reply_markup: getReplyMarkupFromButtons(options.buttons) }
     : {};
 
   const parseModeOptions = options.parseMode
-    ? {
-      parse_mode: options.parseMode,
-    }
+    ? { parse_mode: options.parseMode }
     : {};
 
   const updatedOptions = {
