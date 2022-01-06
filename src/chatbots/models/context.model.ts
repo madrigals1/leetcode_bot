@@ -47,6 +47,6 @@ export interface Context {
   photoUrl?: string;
   password?: string;
   // Discord
-  discordProvidedArguments?: readonly CommandInteractionOption[],
-  interaction?: ComplexInteraction,
+  discordProvidedArguments?: readonly CommandInteractionOption[];
+  interaction?: ComplexInteraction;
 }

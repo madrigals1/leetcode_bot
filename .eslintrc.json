@@ -56,7 +56,20 @@
                 "tsx": "never"
             }
         ],
-        "import/prefer-default-export": 0
+        "import/prefer-default-export": 0,
+        "@typescript-eslint/member-delimiter-style": [
+            "warn",
+            {
+                "multiline": {
+                    "delimiter": "semi",
+                    "requireLast": true
+                },
+                "singleline": {
+                    "delimiter": "semi",
+                    "requireLast": true
+                }
+            }
+        ]
     },
     "settings": {
         "import/resolver": {

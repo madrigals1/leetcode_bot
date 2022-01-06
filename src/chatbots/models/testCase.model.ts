@@ -10,7 +10,7 @@ export interface TelegramTestCase {
     options: {
       captions?: string;
     };
-  }
+  };
 }
 
 export interface Args {

@@ -21,12 +21,12 @@ export interface ArgumentTestCaseParsedArgument extends IParsedArgument {
 
 export interface ArgumentTestCase {
   input: {
-    providedArgs: string[],
-    requestedArgs: Argument[],
-  }
+    providedArgs: string[];
+    requestedArgs: Argument[];
+  };
   output: {
-    byKey: Record<string, ArgumentTestCaseParsedArgument>,
-    byIndex: Record<number, ArgumentTestCaseParsedArgument>,
-  }
-  error?: Error,
+    byKey: Record<string, ArgumentTestCaseParsedArgument>;
+    byIndex: Record<number, ArgumentTestCaseParsedArgument>;
+  };
+  error?: Error;
 }
