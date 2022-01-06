@@ -39,7 +39,7 @@ class Cache {
   // Replace User with username in the cache
   addOrReplaceUserInCache(username: string, userData: User): void {
     for (let i = 0; i < this.userAmount; i++) {
-      if (this.users[i].username === username) {
+      if (this.users[i].username.toLowerCase() === username.toLowerCase()) {
         this.users[i] = userData;
         return;
       }
@@ -134,7 +134,8 @@ class Cache {
     }
 
     // Add User to Database
-    const user = await this.database.addUser(username);
+    const usernameLower = username.toLowerCase();
+    const user = await this.database.addUser(usernameLower);
 
     if (user) {
       // Load data from LeetCode by Username
@@ -155,7 +156,7 @@ class Cache {
       }
 
       // If user does not exist in LeetCode, remove User
-      await this.database.removeUser(username);
+      await this.database.removeUser(usernameLower);
 
       return {
         status: constants.STATUS.ERROR,
@@ -171,7 +172,8 @@ class Cache {
 
   // Remove User by Username
   async removeUser(username: string): Promise<CacheResponse> {
-    const deleted = await this.database.removeUser(username);
+    const usernameLower = username.toLowerCase();
+    const deleted = await this.database.removeUser(usernameLower);
 
     if (deleted) {
       // Set objects array to tempObjects
@@ -217,7 +219,7 @@ class Cache {
   // Load User by Username
   loadUser(username: string): User {
     return this.users.find((user) => (
-      user.username.toLowerCase() === username
+      user.username.toLowerCase() === username.toLowerCase()
     ));
   }
 }
