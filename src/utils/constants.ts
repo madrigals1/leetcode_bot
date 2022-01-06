@@ -1,5 +1,7 @@
 import * as dotenv from 'dotenv';
 
+import { isTrue } from './helper';
+
 dotenv.config();
 
 const {
@@ -143,20 +145,20 @@ const PROVIDERS = {
 };
 
 const MONGO = {
-  URL: MONGO_DB_URL,
-  NAME: MONGO_DB_NAME,
-  PORT: MONGO_DB_PORT,
-  PASSWORD: MONGO_DB_PASSWORD,
-  USER: MONGO_DB_USER,
-  AUTHENTICATION_ENABLED: MONGO_DB_AUTHENTICATION_ENABLED,
+  URL: MONGO_DB_URL || 'localhost',
+  NAME: MONGO_DB_NAME || 'leetbot_db',
+  AUTHENTICATION_ENABLED: isTrue(MONGO_DB_AUTHENTICATION_ENABLED) || true,
+  USER: MONGO_DB_USER || 'admin',
+  PASSWORD: MONGO_DB_PASSWORD || 'password',
+  PORT: MONGO_DB_PORT || '27017',
 };
 
 const POSTGRES = {
-  URL: POSTGRES_DB_URL,
-  NAME: POSTGRES_DB_NAME,
-  USER: POSTGRES_DB_USER,
-  PASSWORD: POSTGRES_DB_PASSWORD,
-  PORT: POSTGRES_DB_PORT,
+  URL: POSTGRES_DB_URL || 'localhost',
+  NAME: POSTGRES_DB_NAME || 'leetbot_db',
+  USER: POSTGRES_DB_USER || 'admin',
+  PASSWORD: POSTGRES_DB_PASSWORD || 'password',
+  PORT: POSTGRES_DB_PORT || '5432',
 };
 
 const DATABASE = {
