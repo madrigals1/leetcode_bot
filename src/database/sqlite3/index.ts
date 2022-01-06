@@ -42,22 +42,22 @@ class SQLite extends DatabaseProvider {
   }
 
   // Create Users table if not exists
-  createUserTable() {
+  createUserTable(): unknown {
     return this.database.run(QUERIES.CREATE_USERS_TABLE);
   }
 
   // Find all Users
-  async findAllUsers() {
+  async findAllUsers(): Promise<unknown> {
     return this.database.all(QUERIES.FIND_ALL_USERS);
   }
 
   // Load User by `username`
-  async loadUser(username: string) {
+  async loadUser(username: string): Promise<unknown> {
     return this.database.get(QUERIES.LOAD_USER, username);
   }
 
   // Add User to Database
-  async addUser(username: string) {
+  async addUser(username: string): Promise<unknown> {
     // Check if user already exists is in database
     const exists = await this.loadUser(username);
 
@@ -68,7 +68,7 @@ class SQLite extends DatabaseProvider {
   }
 
   // Remove User from Database
-  async removeUser(username: string) {
+  async removeUser(username: string): Promise<unknown> {
     // Check if user exists is in database
     const exists = await this.loadUser(username);
 
@@ -79,7 +79,7 @@ class SQLite extends DatabaseProvider {
   }
 
   // Remove all Users from Database
-  async removeAllUsers() {
+  async removeAllUsers(): Promise<unknown> {
     return this.database.run(QUERIES.REMOVE_ALL_USERS);
   }
 }

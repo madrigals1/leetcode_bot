@@ -47,17 +47,17 @@ class MongoDB extends DatabaseProvider {
   }
 
   // Find all Users
-  async findAllUsers() {
+  async findAllUsers(): Promise<unknown> {
     return this.UserModel.find();
   }
 
   // Load User by `username`
-  async loadUser(username: string) {
+  async loadUser(username: string): Promise<unknown> {
     return this.UserModel.findOne({ username });
   }
 
   // Add User to Database
-  async addUser(username: string) {
+  async addUser(username: string): Promise<unknown> {
     const existingUser = await this.loadUser(username);
 
     // If User does exist, no need to add new

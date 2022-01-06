@@ -20,7 +20,7 @@ class Postgres extends DatabaseProvider {
   });
 
   // Connect database
-  async connect() {
+  async connect(): Promise<boolean> {
     this.client.connect();
 
     // Query for creating users table
@@ -40,7 +40,7 @@ class Postgres extends DatabaseProvider {
   }
 
   // Find all Users
-  async findAllUsers() {
+  async findAllUsers(): Promise<unknown> {
     return this.client.query(QUERIES.GET_ALL_USERS)
       .then((res) => res.rows)
       .catch((err) => {
@@ -51,7 +51,7 @@ class Postgres extends DatabaseProvider {
   }
 
   // Load User by `username`
-  async loadUser(username: string) {
+  async loadUser(username: string): Promise<unknown> {
     return this.client.query(QUERIES.LOAD_USER(username))
       .then((res) => res.rows[0])
       .catch((err) => {
@@ -62,7 +62,7 @@ class Postgres extends DatabaseProvider {
   }
 
   // Add User to Database
-  async addUser(username: string) {
+  async addUser(username: string): Promise<unknown> {
     // Check if user already exists is in database
     const exists = await this.loadUser(username);
 
@@ -79,7 +79,7 @@ class Postgres extends DatabaseProvider {
   }
 
   // Remove User from Database
-  async removeUser(username: string) {
+  async removeUser(username: string): Promise<boolean> {
     // Check if user exists is in database
     const exists = await this.loadUser(username);
 
@@ -96,7 +96,7 @@ class Postgres extends DatabaseProvider {
   }
 
   // Remove all Users from Database
-  async removeAllUsers() {
+  async removeAllUsers(): Promise<boolean> {
     return this.client.query(QUERIES.REMOVE_ALL_USERS)
       .then(() => true)
       .catch((err) => {
