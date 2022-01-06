@@ -147,7 +147,7 @@ npm test
 ```
 
 Testing with checking and creating test coverage. You can check coverage report
-under `/coverage/lcov-report/index.html`
+under `./coverage/lcov-report/index.html`
 
 ```bash
 npm run test:coverage
