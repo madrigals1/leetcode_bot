@@ -11,8 +11,9 @@ const { SERVER_MESSAGES: SM } = dictionary;
 let mongoMemoryServer: MongoMemoryServer;
 let mongoDB: MongoDB;
 
+jest.setTimeout(30000);
+
 beforeAll(async () => {
-  jest.setTimeout(30000);
   mongoMemoryServer = await MongoMemoryServer
     .create({ binary: { version: '4.2.18' } });
 });
