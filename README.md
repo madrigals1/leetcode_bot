@@ -1,11 +1,31 @@
 # Leetcode Bot
 Leetcode Bot is an app, that gets data for **LeetCode Users** and creates **Rating of Users.**
 
-```
-1. madrigals1 506
-2. makhmudgaly2 247
-3. pheonix97al 231
-4. megasaab 132
+```s
+1. reed_w 2018
+2. SysSn13 750
+3. sandeep_padhi 736
+4. alexduanran 672
+5. danny1024 610
+6. dmndcrow 607
+7. madrigals1 607
+8. shadow2000 578
+9. Lesbek 419
+10. makhmudgaly2 389
+11. lalabhai18 368
+12. user9678ch 366
+13. pheonix97al 318
+14. Ajink7 267
+15. vishavjeet2710 255
+16. ubtrnvme 182
+17. megasaab 173
+18. shahriarkabir44 115
+19. yesseyev_mt 113
+20. Lorem 57
+21. poomrokc 49
+22. zhanybekovv 44
+23. meiirzhan_yerzhanov 20
+24. ssskkk16 13
 ```
 
 ![Demo](https://i.imgur.com/tdg7Wwr.png)
@@ -50,20 +70,22 @@ Make sure you have installed these:
 
 1. Make a copy of `.env.example` file named `.env`
 
-    ```shell script
+    ```bash
     cp .env.example .env
     ```
 
 2. To enable specific chatbot, change respective values inside `.env`
 
-    ```dotenv
-    # Change TELEGRAM_TOKEN to your own token you get from https://t.me/botfather
+    ```bash
+    # Get token from https://t.me/botfather
     TELEGRAM_TOKEN=
 
-    # Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
+    # Get values from https://discord.com/developers/applications
     DISCORD_TOKEN=
-    
-    # Change SLACK credentials to your own token you get from https://api.slack.com/apps
+    DISCORD_APP_ID=
+    DISCORD_GUILD_ID=
+
+    # Get values from https://api.slack.com/apps
     SLACK_TOKEN=
     SLACK_SIGNING_SECRET=
     SLACK_APP_TOKEN=
@@ -71,7 +93,7 @@ Make sure you have installed these:
 
 3. Change **MASTER_PASSWORD** value to secure password, that will be used for admin actions
 
-    ```dotenv
+    ```bash
     MASTER_PASSWORD=admin
     ```
 
@@ -80,7 +102,7 @@ Make sure you have installed these:
     - **SQLite3** - no changes needed.
 
     - **MongoDB**
-        ```dotenv
+        ```bash
         MONGO_DB_URL=localhost
         MONGO_DB_NAME=leetbot_db
         MONGO_DB_AUTHENTICATION_ENABLED=True
@@ -90,7 +112,7 @@ Make sure you have installed these:
         ```
 
     - **PostgreSQL**
-        ```
+        ```bash
         POSTGRES_DB_URL=localhost
         POSTGRES_DB_NAME=leetbot_db
         POSTGRES_DB_USER=admin
@@ -100,26 +122,35 @@ Make sure you have installed these:
 
 5. Delay time after loading each User is set to 4s, depends on LeetCode RPM
 
-    ```dotenv
+    ```bash
     USER_REQUEST_DELAY_MS=4000
     ```
 
 6. Install npm packages
 
-    ```
+    ```bash
     npm ci
     ```
 
 ## Running
 
-```
+```bash
 npm start
 ```
 
 ## Testing
 
-```
+Regular testing
+
+```bash
 npm test
+```
+
+Testing with checking and creating test coverage. You can check coverage report
+under `/coverage/lcov-report/index.html`
+
+```bash
+npm run test:coverage
 ```
 
 ## Authors
