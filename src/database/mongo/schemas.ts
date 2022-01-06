@@ -1,5 +1,9 @@
 import * as mongoose from 'mongoose';
 
+export interface IUserModel extends mongoose.Document {
+  username: string;
+}
+
 // MongoDB collection schemas
 const userSchema = new mongoose.Schema({
   username: {
@@ -10,6 +14,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // MongoDB models
-const UserModel = mongoose.model('User', userSchema);
+const UserModel = mongoose.model<IUserModel>('User', userSchema);
 
 export default UserModel;

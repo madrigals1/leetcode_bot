@@ -5,7 +5,7 @@ import dictionary from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
 
-import UserModel from './schemas';
+import UserModel, { IUserModel } from './schemas';
 
 const { MONGO } = constants.DATABASE;
 const { SERVER_MESSAGES: SM } = dictionary;
@@ -47,17 +47,17 @@ class MongoDB extends DatabaseProvider {
   }
 
   // Find all Users
-  async findAllUsers(): Promise<unknown> {
+  async findAllUsers(): Promise<IUserModel[]> {
     return this.UserModel.find();
   }
 
   // Load User by `username`
-  async loadUser(username: string): Promise<unknown> {
+  async loadUser(username: string): Promise<IUserModel> {
     return this.UserModel.findOne({ username });
   }
 
   // Add User to Database
-  async addUser(username: string): Promise<unknown> {
+  async addUser(username: string): Promise<IUserModel> {
     const existingUser = await this.loadUser(username);
 
     // If User does exist, no need to add new
