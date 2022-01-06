@@ -18,20 +18,22 @@ Make sure you have these:
 
 Make a copy of `.env.example` file named `.env`
 
-```shell script
+```bash
 cp .env.example .env
 ```
 
 To enable **Telegram BOT** or **Discord BOT**, change respective values inside `.env`
 
-```dotenv
-# Change TELEGRAM_TOKEN to your own TELEGRAM_TOKEN you get from https://t.me/botfather
+```bash
+# Get token from https://t.me/botfather
 TELEGRAM_TOKEN=
 
-# Change DISCORD_TOKEN to your own token you get from https://discord.com/developers/applications/
+# Get values from https://discord.com/developers/applications
 DISCORD_TOKEN=
+DISCORD_APP_ID=
+DISCORD_GUILD_ID=
 
-# Change SLACK_TOKEN to your own token you get from https://api.slack.com/apps
+# Get values from https://api.slack.com/apps
 SLACK_TOKEN=
 SLACK_SIGNING_SECRET=
 SLACK_APP_TOKEN=
@@ -39,7 +41,7 @@ SLACK_APP_TOKEN=
 
 Change **MASTER_PASSWORD** value to secure password, that will be used for deleting data.
 
-```dotenv
+```bash
 MASTER_PASSWORD=admin
 ```
 
@@ -48,7 +50,7 @@ Change settings for Database
 - **SQLite3** - no changes needed.
 
 - **MongoDB**
-    ```dotenv
+    ```bash
     MONGO_DB_URL=localhost
     MONGO_DB_NAME=leetbot_db
     MONGO_DB_AUTHENTICATION_ENABLED=True
@@ -58,7 +60,7 @@ Change settings for Database
     ```
 
 - **PostgreSQL**
-    ```
+    ```bash
     POSTGRES_DB_URL=localhost
     POSTGRES_DB_NAME=leetbot_db
     POSTGRES_DB_USER=admin
@@ -68,19 +70,19 @@ Change settings for Database
 
 Delay time after loading each User is set to 4s, depends on LeetCode RPM.
 
-```dotenv
+```bash
 USER_REQUEST_DELAY_MS=4000
 ```
 
 Build **Docker Compose**
 
-```shell script
+```bash
 docker-compose up --build -d
 ```
 
 Create database network with name **DATABASE_NETWORK**
 
-```shell script
+```bash
 docker network create database_network
 ```
 
@@ -90,12 +92,12 @@ docker network create database_network
 
 To start Docker container
 
-```shell script
+```bash
 docker-compose up
 ```
 
 To stop Docker container
 
-```shell script
+```bash
 docker-compose down
 ```
