@@ -10,8 +10,11 @@ import ArgumentManager from '../argumentManager';
 import { Argument, ParsedArgument } from '../decorators/models';
 import { Context, ButtonContainer } from '../models';
 import { ButtonContainerType } from '../models/buttons.model';
+import dictionary from '../../utils/dictionary';
 
 import buttonIndexer from './buttonIndexer';
+
+const { BOT_MESSAGES: BM } = dictionary;
 
 export function getButtonComponents(
   buttonContainers: ButtonContainer[],
@@ -118,8 +121,7 @@ export function getKeyBasedParsedArguments(
     if (!foundArgument) {
       // If argument was required, throw an error
       if (argument.isRequired) {
-        const reason = `Required argument ${argument.key} was not provided`;
-        throw new InputError(reason);
+        throw new InputError(BM.REQUIRED_ARG_X_WAS_NOT_PROVIDED(argument.key));
       }
 
       // Add optional argument with empty value
@@ -142,7 +144,9 @@ export function getKeyBasedParsedArguments(
           case 'boolean':
             return isMultiple ? [`${value}`] : `${value}`;
           default:
-            throw new ArgumentsError(`Invalid argument type provided from Discord: ${typeof value}`);
+            throw new ArgumentsError(
+              BM.INVALID_ARG_TYPE_PROVIDED_FROM_DISCORD(value),
+            );
         }
       };
 

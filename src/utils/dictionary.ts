@@ -67,6 +67,12 @@ const BOT_MESSAGES = {
     `${constants.EMOJI.ERROR} Should not provide more than 100 arguments`,
   PASSWORD_NOT_FOUND_IN_ARGS:
     `${constants.EMOJI.ERROR} Password not found in arguments`,
+  REQUIRED_ARG_X_WAS_NOT_PROVIDED: (name: string): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${constants.EMOJI.ERROR} Required argument ${name} was not provided`,
+  INVALID_ARG_TYPE_PROVIDED_FROM_DISCORD: (value: unknown): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `Invalid argument type provided from Discord: ${typeof value}`,
   DUPLICATE_KEYS_IN_ARGS: (keys: string[]): string =>
     // eslint-disable-next-line implicit-arrow-linebreak
     `${constants.EMOJI.ERROR} Duplicate keys ${keys} are found in arguments`,
@@ -228,7 +234,7 @@ ${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
     return `
 <b>PROVIDER RELATED</b>
 <b>Provider:</b> ${providerName}
-<b>Prefix:</b> ${constants.PROVIDERS[provider].prefix}
+<b>Prefix:</b> ${constants.PROVIDERS[provider].PREFIX}
 <b>Discord enabled:</b> ${constants.PROVIDERS.DISCORD.ENABLE}
 <b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
 
