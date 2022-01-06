@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { jest } from '@jest/globals';
+import * as mongoose from 'mongoose';
 
 import dictionary from '../../utils/dictionary';
 import MongoDB from '../../database/mongo';
@@ -16,6 +17,10 @@ jest.setTimeout(30000);
 beforeAll(async () => {
   mongoMemoryServer = await MongoMemoryServer
     .create({ binary: { version: '4.2.18' } });
+});
+
+afterAll(() => {
+  mongoose.connection.close();
 });
 
 beforeEach(() => {
