@@ -5,7 +5,7 @@ import DiscordBotInstance from '../../../chatbots/discord';
 
 const { SERVER_MESSAGES: SM } = dictionary;
 
-jest.setTimeout(100000);
+jest.setTimeout(30000);
 
 afterAll(async () => {
   jest.setTimeout(5000);
