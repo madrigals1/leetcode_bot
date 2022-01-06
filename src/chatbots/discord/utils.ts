@@ -121,7 +121,8 @@ export function getKeyBasedParsedArguments(
     if (!foundArgument) {
       // If argument was required, throw an error
       if (argument.isRequired) {
-        throw new InputError(BM.REQUIRED_ARG_X_WAS_NOT_PROVIDED(argument.key));
+        const reason = BM.REQUIRED_ARG_X_WAS_NOT_PROVIDED(argument.key);
+        throw new InputError(reason);
       }
 
       // Add optional argument with empty value
