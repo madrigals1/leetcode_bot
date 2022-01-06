@@ -12,7 +12,7 @@ import {
   Button,
   ButtonOptions,
 } from './models';
-import { ButtonContainer } from './models/buttons.model';
+import { ButtonContainer, ButtonContainerType } from './models/buttons.model';
 
 const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 
@@ -133,5 +133,6 @@ export function getCloseButton(): ButtonContainer {
     }],
     buttonPerRow: 1,
     placeholder: '',
+    type: ButtonContainerType.CloseButton,
   };
 }

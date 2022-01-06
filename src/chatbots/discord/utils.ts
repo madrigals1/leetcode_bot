@@ -9,6 +9,7 @@ import { ArgumentsError, InputError } from '../../utils/errors';
 import ArgumentManager from '../argumentManager';
 import { Argument, ParsedArgument } from '../decorators/models';
 import { Context, ButtonContainer } from '../models';
+import { ButtonContainerType } from '../models/buttons.model';
 
 import buttonIndexer from './buttonIndexer';
 
@@ -18,12 +19,12 @@ export function getButtonComponents(
   const rows: MessageActionRow[] = [];
 
   buttonContainers?.forEach((buttonContainer) => {
-    const { buttons, placeholder } = buttonContainer;
+    const { buttons, placeholder, type } = buttonContainer;
 
     const components = [];
 
-    switch (buttons.length) {
-      case 1:
+    switch (type) {
+      case ButtonContainerType.SingleButton:
         components.push(
           new MessageButton()
             .setCustomId(buttonIndexer.addButton(buttons[0]))
@@ -31,7 +32,7 @@ export function getButtonComponents(
             .setStyle('PRIMARY'),
         );
         break;
-      default:
+      case ButtonContainerType.MultipleButtons:
         components.push(
           new MessageSelectMenu()
             .setCustomId(buttonIndexer.addSelect())
@@ -45,9 +46,15 @@ export function getButtonComponents(
             ),
         );
         break;
+      case ButtonContainerType.CloseButton:
+        // We don't show Close button in Discord
+        break;
+      default: break;
     }
 
-    rows.push(new MessageActionRow().addComponents(components));
+    if (components.length !== 0) {
+      rows.push(new MessageActionRow().addComponents(components));
+    }
   });
 
   return rows;
@@ -66,11 +73,14 @@ export async function discordIReply(
 ): Promise<void> {
   const { interaction, photoUrl, options } = context;
 
+  // Get Discord components from provided buttons
+  const components = getButtonComponents(options.buttons);
+
   // Compose message options for Discord
   const messageOptions: MessageOptions = {
     content: message,
     files: photoUrl ? [photoUrl] : undefined,
-    components: getButtonComponents(options.buttons),
+    components,
   };
 
   // Edit message, if second message is sent

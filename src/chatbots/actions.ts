@@ -14,6 +14,7 @@ import {
   createButtonsFromUsers,
   getCloseButton,
 } from './utils';
+import { ButtonContainerType } from './models/buttons.model';
 
 const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 
@@ -110,6 +111,7 @@ export default class Actions {
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
+        type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
       return BM.USER_LIST_REMOVE;
@@ -128,6 +130,7 @@ export default class Actions {
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
+        type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
       return BM.USER_LIST_REMOVE;
@@ -210,6 +213,7 @@ export default class Actions {
         }],
         buttonPerRow: 1,
         placeholder: 'Username',
+        type: ButtonContainerType.SingleButton,
       }];
 
       return BM.RATING_TEXT(Cache.allUsers());
@@ -234,6 +238,7 @@ export default class Actions {
         }],
         buttonPerRow: 1,
         placeholder: 'Username',
+        type: ButtonContainerType.SingleButton,
       }];
 
       return BM.CML_RATING_TEXT(usersWithCmlRating);
@@ -263,6 +268,7 @@ export default class Actions {
         buttons: createButtonsFromUsers({ action: 'profile' }),
         buttonPerRow: 3,
         placeholder: 'Username',
+        type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
       return BM.USER_LIST_PROFILES;
@@ -292,6 +298,7 @@ export default class Actions {
       buttons: [submissionsButtion, avatarButton, ratingButton],
       buttonPerRow: 3,
       placeholder: 'User menu',
+      type: ButtonContainerType.MultipleButtons,
     }];
 
     return BM.USER_TEXT(user);
@@ -329,6 +336,7 @@ export default class Actions {
       buttons: createButtonsFromUsers({ action: 'avatar' }),
       buttonPerRow: 3,
       placeholder: 'Username',
+      type: ButtonContainerType.MultipleButtons,
     }, getCloseButton()];
 
     // If 0 User was sent
@@ -386,6 +394,7 @@ export default class Actions {
       buttons: createButtonsFromUsers({ action: 'submissions' }),
       buttonPerRow: 3,
       placeholder: 'Username',
+      type: ButtonContainerType.MultipleButtons,
     }, getCloseButton()];
 
     // If 0 User was sent
@@ -423,6 +432,7 @@ export default class Actions {
         buttons: createButtonsFromUsers({ action: 'compare' }),
         buttonPerRow: 3,
         placeholder: 'Username',
+        type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
       return BM.SELECT_LEFT_USER;
@@ -434,6 +444,7 @@ export default class Actions {
         buttons: createButtonsFromUsers({ action: `compare ${first}` }),
         buttonPerRow: 3,
         placeholder: 'Username',
+        type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
       return BM.SELECT_RIGHT_USER;
