@@ -48,7 +48,7 @@ test('utils.helper.delay function', async () => {
   await delay(500);
   const timeMsAfter: number = new Date().getTime();
 
-  expect(timeMsAfter - timeMsBefore >= 500).toBe(true);
+  expect(timeMsAfter - timeMsBefore).toBeCloseTo(500);
 });
 
 test('utils.helper.log function', () => {
