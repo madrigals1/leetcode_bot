@@ -1,10 +1,6 @@
-/*
-import { Message, MessageOptions } from 'discord.js';
-import { APIMessage } from 'discord-api-types';
-
 import { formatMessage, reply } from '../../../chatbots/discord/utils';
-import MockFuncDiscord from '../../__mocks__/chatbots/discord.mock';
-import { DiscordTestCase, Options } from '../../../chatbots/models';
+import { MockFuncDiscord } from '../../__mocks__/chatbots/discord.mock';
+import { DiscordTestCase } from '../../../chatbots/models';
 
 test('chatbots.discord.utils.formatMessage function', async () => {
   const testCases: string[][] = [
@@ -40,17 +36,7 @@ test('chatbots.discord.utils.reply function', async () => {
         photoUrl: 'random_url',
         reply: () => new Promise(() => 'asd'),
         provider: 'Random',
-        interaction: {
-          replied: false,
-          reply(message: MessageOptions): Promise<void> {
-            mockDiscordInstances[0].formattedMessage = message.content;
-            return new Promise(() => message);
-          },
-          editReply(message: MessageOptions): Promise<void> {
-            mockDiscordInstances[0].formattedMessage = message.content;
-            return new Promise(() => message);
-          },
-        },
+        interaction: null,
         prefix: '!',
       },
       expected: 'Success',
@@ -64,17 +50,7 @@ test('chatbots.discord.utils.reply function', async () => {
         reply: () => new Promise(() => 'asd'),
         argumentParser: () => undefined,
         provider: 'Random',
-        interaction: {
-          replied: false,
-          reply(message: MessageOptions): Promise<void> {
-            mockDiscordInstances[0].formattedMessage = message.content;
-            return new Promise(() => message);
-          },
-          editReply(message: MessageOptions): Promise<void> {
-            mockDiscordInstances[0].formattedMessage = message.content;
-            return new Promise(() => message);
-          },
-        },
+        interaction: null,
         prefix: '!',
       },
       expected: 'Success',
@@ -89,17 +65,7 @@ test('chatbots.discord.utils.reply function', async () => {
         reply: () => new Promise(() => 'asd'),
         argumentParser: () => undefined,
         provider: 'Random',
-        interaction: {
-          replied: false,
-          reply(message: MessageOptions): Promise<void> {
-            mockDiscordInstances[0].formattedMessage = message.content;
-            return new Promise(() => message);
-          },
-          editReply(message: MessageOptions): Promise<void> {
-            mockDiscordInstances[0].formattedMessage = message.content;
-            return new Promise(() => message);
-          },
-        },
+        interaction: null,
         prefix: '!',
       },
       expected: Error('Channel is not provided in context'),
@@ -109,7 +75,7 @@ test('chatbots.discord.utils.reply function', async () => {
   ];
 
   testCases.forEach(({
-    message, context, expected, expectedMessage, expectedOptions,
+    message, context, expected, expectedMessage,
   }, i) => {
     reply(message, context)
       .then((result) => {
@@ -124,4 +90,3 @@ test('chatbots.discord.utils.reply function', async () => {
       });
   });
 });
-*/

@@ -8,22 +8,18 @@ import DiscordBotInstance from '../../../chatbots/discord';
 
 const { SERVER_MESSAGES: SM } = dictionary;
 
-beforeAll(async () => {
-  jest.setTimeout(30000);
-});
+jest.setTimeout(100000);
 
 afterAll(async () => {
   jest.setTimeout(5000);
 });
 
 test('chatbots.discord.bot.createBot function', async () => {
-  if (!constants.PROVIDERS.DISCORD.TEST_ENABLE) return;
-
   expect(typeof createBot).toBe('function');
 
   // Create a test bot with test token
   const bot: DiscordBot.Client = (
-    await createBot(constants.PROVIDERS.DISCORD.TEST_TOKEN)
+    await createBot(constants.PROVIDERS.DISCORD.TOKEN)
   );
 
   expect(bot instanceof DiscordBot.Client).toBe(true);
