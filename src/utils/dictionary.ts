@@ -53,6 +53,12 @@ const SERVER_MESSAGES = {
 };
 
 const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;
+const CML_HEADER = `Cumulative Rating:
+${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${constants.CML.EASY_POINTS} points</b>
+${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${constants.CML.MEDIUM_POINTS} points</b>
+${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
+  
+`;
 
 const BOT_MESSAGES = {
   // ERROR MESSAGES
@@ -101,6 +107,7 @@ const BOT_MESSAGES = {
     return `User List:\n${userList}`;
   },
   NO_USERS,
+  CML_HEADER,
   USER_NO_SUBMISSIONS(username: string): string {
     return `${constants.EMOJI.ERROR} User < b > ${username} </b> does not have any submissions`;
   },
@@ -207,14 +214,7 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
       return NO_USERS;
     }
 
-    const header = `Cumulative Rating:
-${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${constants.CML.EASY_POINTS} points</b>
-${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${constants.CML.MEDIUM_POINTS} points</b>
-${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
-
-`;
-
-    const rating = header + getCmlFromUsers(users);
+    const rating = CML_HEADER + getCmlFromUsers(users);
     return rating;
   },
 

@@ -20,6 +20,22 @@ beforeEach(() => {
   constants.SYSTEM = SYSTEM;
 });
 
+function updateCmlAndUsername(
+  user: User, username: string, cumulative: number,
+) {
+  return {
+    ...user,
+    username,
+    computed: {
+      ...user.computed,
+      problemsSolved: {
+        ...user.computed.problemsSolved,
+        cumulative,
+      },
+    },
+  };
+}
+
 test('leetcode.utils.getLeetcodeUsernameLink action', async () => {
   // Valid: Regular Case
   const leetcodeUrl = SYSTEM.LEETCODE_URL;
@@ -215,28 +231,38 @@ test('leetcode.utils.getRecentSubmissions action', async () => {
 });
 
 test('leetcode.utils.getCmlFromUser action', async () => {
-  function setCmlForUser(user: User, cumulative: number) {
-    return {
-      ...user,
-      computed: {
-        ...user.computed,
-        problemsSolved: {
-          ...user.computed.problemsSolved,
-          cumulative,
-        },
-      },
-    };
-  }
-
   // Check first cml
   const cml1 = 1400;
-  const userWithCml1 = setCmlForUser(user1, cml1);
-  const cmlText1 = getCmlFromUser(userWithCml1);
+  const userUpdated1 = updateCmlAndUsername(user1, user1.username, cml1);
+  const cmlText1 = getCmlFromUser(userUpdated1);
   expect(cmlText1).toBe(`<b>${user1.username}</b> ${cml1}`);
 
   // Check second cml
   const cml2 = 7454265;
-  const userWithCml2 = setCmlForUser(user1, cml2);
-  const cmlText2 = getCmlFromUser(userWithCml2);
+  const userUpdated2 = updateCmlAndUsername(user1, user1.username, cml2);
+  const cmlText2 = getCmlFromUser(userUpdated2);
   expect(cmlText2).toBe(`<b>${user1.username}</b> ${cml2}`);
+});
+
+test('leetcode.utils.getCmlFromUsers action', async () => {
+  /* Create users */
+  const cml1 = 1230;
+  const username1 = 'gus';
+  const userUpdated1 = updateCmlAndUsername(user1, username1, cml1);
+
+  const cml2 = 1300;
+  const username2 = 'sentinel';
+  const userUpdated2 = updateCmlAndUsername(user1, username2, cml2);
+
+  const cml3 = 1250;
+  const username3 = 'malek';
+  const userUpdated3 = updateCmlAndUsername(user1, username3, cml3);
+
+  const cml4 = 0;
+  const username4 = 'nikola';
+  const userUpdated4 = updateCmlAndUsername(user1, username4, cml4);
+
+  const cml5 = 451213;
+  const username5 = 'gogen';
+  const userUpdated5 = updateCmlAndUsername(user1, username5, cml5);
 });
