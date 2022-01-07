@@ -7,9 +7,10 @@ import {
   getLeetcodeUsernameLink,
   getLeetcodeProblemLink,
   getRecentSubmissions,
+  getCmlFromUser,
 } from '../../leetcode/utils';
 import constants from '../../utils/constants';
-import { RecentSubmissionList } from '../../leetcode/models';
+import { RecentSubmissionList, User } from '../../leetcode/models';
 
 const { CML, SYSTEM } = constants;
 
@@ -211,4 +212,31 @@ test('leetcode.utils.getRecentSubmissions action', async () => {
     .toBe(constants.SUBMISSION_STATUS_MAP['Memory Limit Exceeded']);
   expect(submissionNode3.language).toBe('C#');
   expect(submissionNode3.name).toBe('Submission Name 3');
+});
+
+test('leetcode.utils.getCmlFromUser action', async () => {
+  function setCmlForUser(user: User, cumulative: number) {
+    return {
+      ...user,
+      computed: {
+        ...user.computed,
+        problemsSolved: {
+          ...user.computed.problemsSolved,
+          cumulative,
+        },
+      },
+    };
+  }
+
+  // Check first cml
+  const cml1 = 1400;
+  const userWithCml1 = setCmlForUser(user1, cml1);
+  const cmlText1 = getCmlFromUser(userWithCml1);
+  expect(cmlText1).toBe(`<b>${user1.username}</b> ${cml1}`);
+
+  // Check second cml
+  const cml2 = 7454265;
+  const userWithCml2 = setCmlForUser(user1, cml2);
+  const cmlText2 = getCmlFromUser(userWithCml2);
+  expect(cmlText2).toBe(`<b>${user1.username}</b> ${cml2}`);
 });
