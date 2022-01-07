@@ -8,6 +8,7 @@ import {
   getLeetcodeProblemLink,
   getRecentSubmissions,
   getCmlFromUser,
+  getCmlFromUsers,
 } from '../../leetcode/utils';
 import constants from '../../utils/constants';
 import { RecentSubmissionList, User } from '../../leetcode/models';
@@ -265,4 +266,29 @@ test('leetcode.utils.getCmlFromUsers action', async () => {
   const cml5 = 451213;
   const username5 = 'gogen';
   const userUpdated5 = updateCmlAndUsername(user1, username5, cml5);
+
+  const usersUpdated = [
+    userUpdated1, userUpdated2, userUpdated3, userUpdated4, userUpdated5,
+  ];
+
+  const cmlTextWhole = getCmlFromUsers(usersUpdated);
+  const cmlTextArray = cmlTextWhole.split('\n');
+
+  // Check CML index
+  cmlTextArray.forEach((cmlText, index) => {
+    const cmlIndex = cmlText.split(' ')[0];
+    expect(cmlIndex).toBe(`${index + 1}.`);
+  });
+
+  const cmlTextContents = cmlTextArray.map((cmlText) => {
+    const parts = cmlText.split(' ');
+    return [parts[1], Number(parts[2])];
+  });
+
+  // Check each row directly
+  expect(cmlTextContents[0]).toStrictEqual([`<b>${username5}</b>`, cml5]);
+  expect(cmlTextContents[1]).toStrictEqual([`<b>${username2}</b>`, cml2]);
+  expect(cmlTextContents[2]).toStrictEqual([`<b>${username3}</b>`, cml3]);
+  expect(cmlTextContents[3]).toStrictEqual([`<b>${username1}</b>`, cml1]);
+  expect(cmlTextContents[4]).toStrictEqual([`<b>${username4}</b>`, cml4]);
 });
