@@ -220,16 +220,10 @@ export default class Actions {
     }
 
     // Cumulative rating:
-    // - Easy - 1 point
-    // - Medium - 2 points
-    // - Hard - 3 points
+    // - Easy - 0.5 point
+    // - Medium - 1.5 points
+    // - Hard - 5 points
     if (type === 'cml') {
-      const usersWithCmlRating = Cache.allUsers().sort((user1, user2) => {
-        const cml1 = user1.computed.problemsSolved.cumulative;
-        const cml2 = user2.computed.problemsSolved.cumulative;
-        return cml2 - cml1;
-      });
-
       // Add button to open Regular Rating
       context.options.buttons = [{
         buttons: [{
@@ -241,7 +235,7 @@ export default class Actions {
         type: ButtonContainerType.SingleButton,
       }];
 
-      return BM.CML_RATING_TEXT(usersWithCmlRating);
+      return BM.CML_RATING_TEXT(Cache.allUsers());
     }
 
     // If type is not recognized

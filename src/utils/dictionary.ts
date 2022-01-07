@@ -1,5 +1,6 @@
 import { User } from '../leetcode/models';
 import Cache from '../cache';
+import { getCmlFromUsers } from '../leetcode/utils';
 
 import constants from './constants';
 
@@ -52,6 +53,12 @@ const SERVER_MESSAGES = {
 };
 
 const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;
+const CML_HEADER = `Cumulative Rating:
+${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${constants.CML.EASY_POINTS} points</b>
+${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${constants.CML.MEDIUM_POINTS} points</b>
+${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
+  
+`;
 
 const BOT_MESSAGES = {
   // ERROR MESSAGES
@@ -100,6 +107,7 @@ const BOT_MESSAGES = {
     return `User List:\n${userList}`;
   },
   NO_USERS,
+  CML_HEADER,
   USER_NO_SUBMISSIONS(username: string): string {
     return `${constants.EMOJI.ERROR} User < b > ${username} </b> does not have any submissions`;
   },
@@ -206,17 +214,7 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
       return NO_USERS;
     }
 
-    const prefix = `Cumulative Rating:
-${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${constants.CML.EASY_POINTS} points</b>
-${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${constants.CML.MEDIUM_POINTS} points</b>
-${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
-
-`;
-
-    const rating = prefix + users.map(
-      (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.solved}`),
-    ).join('\n');
-
+    const rating = CML_HEADER + getCmlFromUsers(users);
     return rating;
   },
 

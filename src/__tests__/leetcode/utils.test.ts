@@ -7,9 +7,11 @@ import {
   getLeetcodeUsernameLink,
   getLeetcodeProblemLink,
   getRecentSubmissions,
+  getCmlFromUser,
+  getCmlFromUsers,
 } from '../../leetcode/utils';
 import constants from '../../utils/constants';
-import { RecentSubmissionList } from '../../leetcode/models';
+import { RecentSubmissionList, User } from '../../leetcode/models';
 
 const { CML, SYSTEM } = constants;
 
@@ -18,6 +20,22 @@ beforeEach(() => {
   constants.CML = CML;
   constants.SYSTEM = SYSTEM;
 });
+
+function updateCmlAndUsername(
+  user: User, username: string, cumulative: number,
+) {
+  return {
+    ...user,
+    username,
+    computed: {
+      ...user.computed,
+      problemsSolved: {
+        ...user.computed.problemsSolved,
+        cumulative,
+      },
+    },
+  };
+}
 
 test('leetcode.utils.getLeetcodeUsernameLink action', async () => {
   // Valid: Regular Case
@@ -211,4 +229,66 @@ test('leetcode.utils.getRecentSubmissions action', async () => {
     .toBe(constants.SUBMISSION_STATUS_MAP['Memory Limit Exceeded']);
   expect(submissionNode3.language).toBe('C#');
   expect(submissionNode3.name).toBe('Submission Name 3');
+});
+
+test('leetcode.utils.getCmlFromUser action', async () => {
+  // Check first cml
+  const cml1 = 1400;
+  const userUpdated1 = updateCmlAndUsername(user1, user1.username, cml1);
+  const cmlText1 = getCmlFromUser(userUpdated1);
+  expect(cmlText1).toBe(`<b>${user1.username}</b> ${cml1}`);
+
+  // Check second cml
+  const cml2 = 7454265;
+  const userUpdated2 = updateCmlAndUsername(user1, user1.username, cml2);
+  const cmlText2 = getCmlFromUser(userUpdated2);
+  expect(cmlText2).toBe(`<b>${user1.username}</b> ${cml2}`);
+});
+
+test('leetcode.utils.getCmlFromUsers action', async () => {
+  /* Create users */
+  const cml1 = 1230;
+  const username1 = 'gus';
+  const userUpdated1 = updateCmlAndUsername(user1, username1, cml1);
+
+  const cml2 = 1300;
+  const username2 = 'sentinel';
+  const userUpdated2 = updateCmlAndUsername(user1, username2, cml2);
+
+  const cml3 = 1250;
+  const username3 = 'malek';
+  const userUpdated3 = updateCmlAndUsername(user1, username3, cml3);
+
+  const cml4 = 0;
+  const username4 = 'nikola';
+  const userUpdated4 = updateCmlAndUsername(user1, username4, cml4);
+
+  const cml5 = 451213;
+  const username5 = 'gogen';
+  const userUpdated5 = updateCmlAndUsername(user1, username5, cml5);
+
+  const usersUpdated = [
+    userUpdated1, userUpdated2, userUpdated3, userUpdated4, userUpdated5,
+  ];
+
+  const cmlTextWhole = getCmlFromUsers(usersUpdated);
+  const cmlTextArray = cmlTextWhole.split('\n');
+
+  // Check CML index
+  cmlTextArray.forEach((cmlText, index) => {
+    const cmlIndex = cmlText.split(' ')[0];
+    expect(cmlIndex).toBe(`${index + 1}.`);
+  });
+
+  const cmlTextContents = cmlTextArray.map((cmlText) => {
+    const parts = cmlText.split(' ');
+    return [parts[1], Number(parts[2])];
+  });
+
+  // Check each row directly
+  expect(cmlTextContents[0]).toStrictEqual([`<b>${username5}</b>`, cml5]);
+  expect(cmlTextContents[1]).toStrictEqual([`<b>${username2}</b>`, cml2]);
+  expect(cmlTextContents[2]).toStrictEqual([`<b>${username3}</b>`, cml3]);
+  expect(cmlTextContents[3]).toStrictEqual([`<b>${username1}</b>`, cml1]);
+  expect(cmlTextContents[4]).toStrictEqual([`<b>${username4}</b>`, cml4]);
 });
