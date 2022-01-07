@@ -10,6 +10,7 @@ import {
   SubmissionData,
   SubmissionDumpNode,
   SubmissionsCountNode,
+  User,
   UserProblemsSolvedData,
 } from './models';
 
@@ -86,4 +87,20 @@ export function getProblemsSolved(
     all: allSolvedCount,
     cumulative: cumulativeSolvedCount,
   };
+}
+
+export function getCmlFromUser(user: User): string {
+  return `<b>${user.username}</b> ${user.computed.problemsSolved.cumulative}`;
+}
+
+export function getCmlFromUsers(users: User[]): string {
+  const sortedUsers = users.sort((user1, user2) => {
+    const cml1 = user1.computed.problemsSolved.cumulative;
+    const cml2 = user2.computed.problemsSolved.cumulative;
+    return cml2 - cml1;
+  });
+
+  return sortedUsers.map(
+    (user, index) => (`${index + 1}. ${getCmlFromUser(user)}`),
+  ).join('\n');
 }

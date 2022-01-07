@@ -1,5 +1,6 @@
 import { User } from '../leetcode/models';
 import Cache from '../cache';
+import { getCmlFromUsers } from '../leetcode/utils';
 
 import constants from './constants';
 
@@ -206,17 +207,14 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
       return NO_USERS;
     }
 
-    const prefix = `Cumulative Rating:
+    const header = `Cumulative Rating:
 ${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${constants.CML.EASY_POINTS} points</b>
 ${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${constants.CML.MEDIUM_POINTS} points</b>
 ${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
 
 `;
 
-    const rating = prefix + users.map(
-      (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.solved}`),
-    ).join('\n');
-
+    const rating = header + getCmlFromUsers(users);
     return rating;
   },
 
