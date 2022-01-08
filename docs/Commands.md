@@ -130,7 +130,7 @@ Gets amount of problems per each difficulty for User, converts that data into vi
 | Request | Response |
 | --- | --- |
 | `/problems` | ![Problems](https://i.imgur.com/mlQ3fPS.png) |
-| `/problems username` | ![Problems username](https://i.imgur.com/N5418Dv.png) |
+| `/problems username` | ![Problems username](https://i.imgur.com/wymtD0n.png) |
 
 ---
 
