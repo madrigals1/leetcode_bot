@@ -141,6 +141,7 @@ const BOT_MESSAGES = {
     return `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`;
   },
   USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions Menu`,
+  USER_LIST_PROBLEMS: `${constants.EMOJI.CHART} Problems Menu`,
   USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars Menu`,
   USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove Menu`,
   USER_LIST_PROFILES: `${constants.EMOJI.PERSON} Profiles`,
@@ -148,6 +149,9 @@ const BOT_MESSAGES = {
   USER_RECENT_SUBMISSIONS: (username: string): string =>
     // eslint-disable-next-line implicit-arrow-linebreak
     `${username}'s recent submissions`,
+  USER_SOLVED_PROBLEMS_CHART: (username: string): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `${username}'s solved problems chart`,
   USERS_COMPARE: (leftUsername: string, rightUsername: string): string =>
     // eslint-disable-next-line implicit-arrow-linebreak
     `Comparing ${leftUsername} to ${rightUsername}`,
