@@ -118,7 +118,7 @@ export async function solvedProblemsPieChart(
 
   return axios
     .post(`${constants.VIZAPI_LINK}/pie`, {
-      title: 'Problems Solved per Difficulty level',
+      title: `Problems Solved by ${user.username}`,
       width: 500,
       height: 300,
       is3D: true,
