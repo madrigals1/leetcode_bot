@@ -7,7 +7,7 @@ import { User } from '../leetcode/models';
 import Cache from '../cache';
 
 import {
-  TableResponse,
+  VizapiResponse,
   CompareUser,
   Button,
   ButtonOptions,
@@ -60,7 +60,7 @@ export function getCompareDataFromUser(user: User): CompareUser {
 
 export async function compareMenu(
   leftUser: User, rightUser: User,
-): Promise<TableResponse> {
+): Promise<VizapiResponse> {
   return axios
     .post(`${constants.VIZAPI_LINK}/compare`, {
       left: getCompareDataFromUser(leftUser),
@@ -76,7 +76,7 @@ export async function compareMenu(
     });
 }
 
-export async function tableForSubmissions(user: User): Promise<TableResponse> {
+export async function tableForSubmissions(user: User): Promise<VizapiResponse> {
   if (!user) {
     const errorMessage = 'Username not found';
     return new Promise((resolve) => resolve({
@@ -103,6 +103,53 @@ export async function tableForSubmissions(user: User): Promise<TableResponse> {
           reason: SM.NO_SUBMISSIONS,
         };
       }
+      return { link: res.data.link };
+    })
+    .catch((err) => {
+      error(SM.IMAGE_WAS_NOT_CREATED(err));
+      return { error: err, reason: SM.API_NOT_WORKING };
+    });
+}
+
+export async function solvedProblemsPieChart(
+  user: User,
+): Promise<VizapiResponse> {
+  const { easy, medium, hard } = user.computed.problemsSolved;
+
+  return axios
+    .post(`${constants.VIZAPI_LINK}/pie`, {
+      title: 'Problems Solved per Difficulty level',
+      width: 500,
+      height: 300,
+      is3D: true,
+      chartArea: {
+        top: 25,
+        left: 25,
+        width: '100%',
+        height: '100%',
+      },
+      sliceName: 'Difficulty',
+      sliceValue: 'Problem count',
+      sliceData: [
+        {
+          sliceName: 'Easy',
+          sliceValue: easy,
+          sliceColor: '#43A047',
+        },
+        {
+          sliceName: 'Medium',
+          sliceValue: medium,
+          sliceColor: '#FB8C00',
+        },
+        {
+          sliceName: 'Hard',
+          sliceValue: hard,
+          sliceColor: '#E91E63',
+        },
+      ],
+    })
+    .then((res) => {
+      log(SM.IMAGE_WAS_CREATED);
       return { link: res.data.link };
     })
     .catch((err) => {

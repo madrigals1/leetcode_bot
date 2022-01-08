@@ -6,13 +6,14 @@ import { User } from '../leetcode/models';
 
 import { action } from './decorators';
 import {
-  Context, TableResponse, Button, RegisteredAction,
+  Context, Button, RegisteredAction, VizapiResponse,
 } from './models';
 import {
   tableForSubmissions,
   compareMenu,
   createButtonsFromUsers,
   getCloseButton,
+  solvedProblemsPieChart,
 } from './utils';
 import { ButtonContainerType } from './models/buttons.model';
 
@@ -23,6 +24,7 @@ export const registeredActions: RegisteredAction[] = [];
 export const vizapiActions = {
   tableForSubmissions,
   compareMenu,
+  solvedProblemsPieChart,
 };
 
 export default class Actions {
@@ -362,7 +364,7 @@ export default class Actions {
       }
 
       // Create HTML image with Table
-      const response: TableResponse = (
+      const response: VizapiResponse = (
         await vizapiActions.tableForSubmissions(user)
       );
 
@@ -393,6 +395,59 @@ export default class Actions {
 
     // If 0 User was sent
     return BM.USER_LIST_SUBMISSIONS;
+  }
+
+  @action({
+    name: 'problems',
+    args: [
+      {
+        key: 'username',
+        name: 'Username',
+        index: 0,
+        isRequired: false,
+      },
+    ],
+  })
+  static async problems(context: Context): Promise<string> {
+    const username = context.args.get('username').value.toLowerCase();
+
+    // If 1 User was sent
+    if (username !== '') {
+      // Get User from args
+      const user: User = Cache.loadUser(username);
+
+      // If User does not exist, return error message
+      if (!user) {
+        return BM.USERNAME_NOT_FOUND(username);
+      }
+
+      // Create HTML image with Table
+      const response: VizapiResponse = (
+        await vizapiActions.solvedProblemsPieChart(user)
+      );
+
+      // If image was created
+      if (response.link) {
+        // Add image to context
+        context.photoUrl = response.link;
+
+        return BM.USER_SOLVED_PROBLEMS_CHART(user.username);
+      }
+
+      // If image link was not achieved from VizAPI
+      return BM.ERROR_ON_THE_SERVER;
+    }
+
+    // If 0 User was sent, add reply markup context for User
+    context.options.buttons = [{
+      buttons: createButtonsFromUsers({ action: 'problems' }),
+      buttonPerRow: 3,
+      placeholder: 'Username',
+      type: ButtonContainerType.MultipleButtons,
+    }, getCloseButton()];
+
+    // If 0 User was sent
+    return BM.USER_LIST_PROBLEMS;
   }
 
   @action({
@@ -456,7 +511,7 @@ export default class Actions {
       return BM.USERNAME_NOT_FOUND(second);
     }
 
-    const response: TableResponse = (
+    const response: VizapiResponse = (
       await vizapiActions.compareMenu(leftUser, rightUser)
     );
 
