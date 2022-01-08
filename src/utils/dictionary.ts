@@ -176,6 +176,7 @@ const BOT_MESSAGES = {
 <b><i>${prefix}profile</i></b> - Profiles of Users
 <b><i>${prefix}submissions</i></b> - Submissions for Users
 <b><i>${prefix}avatar</i></b> - Avatars for Users
+<b><i>${prefix}problems</i></b> - Pie Chart with solved problems for Users
 
 <b>User related commands:</b>
 <b><i>${prefix}add username1 username2</i></b> ... - adding Users
@@ -183,6 +184,7 @@ const BOT_MESSAGES = {
 <b><i>${prefix}avatar username</i></b> - Avatar for User
 <b><i>${prefix}submissions username</i></b> - Get all recent submissions for User as Table
 <b><i>${prefix}compare username1 username2</i></b> - Compare 2 Users' stats
+<b><i>${prefix}problems username</i></b> - Pie Chart with solved problems for specific User
 
 <b>Admin commands:</b>
 <b><i>${prefix}remove username master_password</i></b> - Remove User
