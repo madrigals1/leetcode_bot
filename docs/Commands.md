@@ -130,7 +130,7 @@ Gets amount of solved problems in different levels of difficulty for given User,
 | Request | Response |
 | --- | --- |
 | `/problems` | ![Problems](https://i.imgur.com/mlQ3fPS.png) |
-| `/problems username` | ![Problems username](https://i.imgur.com/wymtD0n.png) |
+| `/problems username` | ![Problems username](https://i.imgur.com/S2ldQGS.png) |
 
 ---
 
