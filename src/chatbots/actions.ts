@@ -285,13 +285,18 @@ export default class Actions {
       action: `/avatar ${username}`,
     };
 
+    const problemsButton: Button = {
+      text: `${constants.EMOJI.CHART} Problems`,
+      action: `/problems ${username}`,
+    };
+
     const ratingButton: Button = {
       text: `${constants.EMOJI.BACK_ARROW} Back to Profiles`,
       action: '/profile',
     };
 
     context.options.buttons = [{
-      buttons: [submissionsButtion, avatarButton, ratingButton],
+      buttons: [submissionsButtion, avatarButton, problemsButton, ratingButton],
       buttonPerRow: 3,
       placeholder: 'User menu',
       type: ButtonContainerType.MultipleButtons,
