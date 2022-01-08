@@ -35,9 +35,6 @@ Leetcode Bot is an app, that gets data for **LeetCode Users** and creates **Rati
 - **Discord**
 - **Slack**
 
-![Build Status](https://travis-ci.org/madrigals1/leetcode_bot.svg?branch=master)
-![Coverage Status](https://coveralls.io/repos/github/madrigals1/leetcode_bot/badge.svg?branch=master)
-
 You can create your own rating by deploying this project on your machine!!!
 
 [Demo BOT on Telegram](https://t.me/dalbbot)
