@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { TableResponse, ButtonOptions, Context } from '../../chatbots/models';
+import { VizapiResponse, ButtonOptions, Context } from '../../chatbots/models';
 import { User } from '../../leetcode/models';
 import dictionary from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
@@ -20,7 +20,7 @@ export async function mockGetLeetcodeDataFromUsername(
 
 export async function mockTableForSubmissions(
   user: User,
-): Promise<TableResponse> {
+): Promise<VizapiResponse> {
   if (!user.submitStats) {
     const error = 'placeholder';
 
@@ -44,7 +44,7 @@ export async function mockTableForSubmissions(
 
 export async function mockCompareMenu(
   leftUser: User, rightUser: User,
-): Promise<TableResponse> {
+): Promise<VizapiResponse> {
   if (!leftUser.name || !rightUser.name) {
     return {
       error: 'placeholder',
