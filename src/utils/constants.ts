@@ -72,6 +72,7 @@ const EMOJI = {
   WAITING: '⏳',
   COOL: '😎',
   WASTEBASKET: '🗑️',
+  CHART: '📊',
   PERSON: '👤',
   CLIPBOARD: '📋',
   BACK_ARROW: '🔙',
