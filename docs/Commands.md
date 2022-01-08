@@ -48,7 +48,7 @@ Prints data of Users, that inclues:
 | --- | --- |
 | Arguments | [1] `username` - username of User in LeetCode. |
 | Telegram | Yes |
-| Discord | Limited |
+| Discord | Yes |
 | Slack | Limited |
 | Admin | No |
 
@@ -85,7 +85,7 @@ Returns avatar of User from LeetCode as image
 | --- | --- |
 | Arguments | [1] `username` - username of User in LeetCode |
 | Telegram | Yes |
-| Discord | Limited |
+| Discord | Yes |
 | Slack | Limited |
 | Admin | No |
 
@@ -104,7 +104,7 @@ Gets submission data of User, converts that data into visualization using [VizAP
 | --- | --- |
 | Arguments | [1] `username` - username of User in LeetCode |
 | Telegram | Yes |
-| Discord | Limited |
+| Discord | Yes |
 | Slack | Limited |
 | Admin | No |
 
@@ -112,6 +112,25 @@ Gets submission data of User, converts that data into visualization using [VizAP
 | --- | --- |
 | `/submissions` | ![Submissions](https://i.imgur.com/f5RlHRM.png) |
 | `/submissions username` | ![Submissions username](https://i.imgur.com/PWUYubx.png) |
+
+---
+
+### Problems
+
+Gets amount of problems per each difficulty for User, converts that data into visualization using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
+
+| Name | Submissions |
+| --- | --- |
+| Arguments | [1] `username` - username of User in LeetCode |
+| Telegram | Yes |
+| Discord | Yes |
+| Slack | Limited |
+| Admin | No |
+
+| Request | Response |
+| --- | --- |
+| `/problems` | ![Problems](https://i.imgur.com/mlQ3fPS.png) |
+| `/problems username` | ![Problems username](https://i.imgur.com/N5418Dv.png) |
 
 ---
 
