@@ -111,7 +111,7 @@ export async function tableForSubmissions(user: User): Promise<VizapiResponse> {
     });
 }
 
-export async function solvedProblemsPieChart(
+export async function solvedProblemsChart(
   user: User,
 ): Promise<VizapiResponse> {
   const { easy, medium, hard } = user.computed.problemsSolved;

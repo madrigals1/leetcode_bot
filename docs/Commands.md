@@ -98,7 +98,7 @@ Returns avatar of User from LeetCode as image
 
 ### Submissions
 
-Gets submission data of User, converts that data into visualization using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
+Gets submission data of User, converts that data into **Table** visualization using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
 
 | Name | Submissions |
 | --- | --- |
@@ -117,7 +117,7 @@ Gets submission data of User, converts that data into visualization using [VizAP
 
 ### Problems
 
-Gets amount of problems per each difficulty for User, converts that data into visualization using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
+Gets amount of solved problems in different levels of difficulty for given User, converts that data into **Pie Chart** visualization using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
 
 | Name | Submissions |
 | --- | --- |
@@ -136,7 +136,7 @@ Gets amount of problems per each difficulty for User, converts that data into vi
 
 ### Compare
 
-Creates small comparison visualization between 2 users using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
+Creates small **Comparison** visualization between 2 users using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
 
 | Name | Compare |
 | --- | --- |

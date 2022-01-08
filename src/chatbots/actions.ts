@@ -13,7 +13,7 @@ import {
   compareMenu,
   createButtonsFromUsers,
   getCloseButton,
-  solvedProblemsPieChart,
+  solvedProblemsChart,
 } from './utils';
 import { ButtonContainerType } from './models/buttons.model';
 
@@ -24,7 +24,7 @@ export const registeredActions: RegisteredAction[] = [];
 export const vizapiActions = {
   tableForSubmissions,
   compareMenu,
-  solvedProblemsPieChart,
+  solvedProblemsChart,
 };
 
 export default class Actions {
@@ -364,9 +364,7 @@ export default class Actions {
       const user: User = Cache.loadUser(username);
 
       // If User does not exist, return error message
-      if (!user) {
-        return BM.USERNAME_NOT_FOUND(username);
-      }
+      if (!user) return BM.USERNAME_NOT_FOUND(username);
 
       // Create HTML image with Table
       const response: VizapiResponse = (
@@ -422,13 +420,11 @@ export default class Actions {
       const user: User = Cache.loadUser(username);
 
       // If User does not exist, return error message
-      if (!user) {
-        return BM.USERNAME_NOT_FOUND(username);
-      }
+      if (!user) return BM.USERNAME_NOT_FOUND(username);
 
       // Create HTML image with Table
       const response: VizapiResponse = (
-        await vizapiActions.solvedProblemsPieChart(user)
+        await vizapiActions.solvedProblemsChart(user)
       );
 
       // If image was created

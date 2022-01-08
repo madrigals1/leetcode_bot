@@ -140,10 +140,10 @@ const BOT_MESSAGES = {
   USERNAME_NOT_ADDED_USER_LIMIT(username: string, userLimit: number): string {
     return `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`;
   },
-  USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions Menu`,
-  USER_LIST_PROBLEMS: `${constants.EMOJI.CHART} Problems Menu`,
-  USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars Menu`,
-  USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove Menu`,
+  USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions`,
+  USER_LIST_PROBLEMS: `${constants.EMOJI.CHART} Problems`,
+  USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars`,
+  USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove User`,
   USER_LIST_PROFILES: `${constants.EMOJI.PERSON} Profiles`,
   USER_AVATAR: (username: string): string => `${username}'s avatar`,
   USER_RECENT_SUBMISSIONS: (username: string): string =>
@@ -176,7 +176,7 @@ const BOT_MESSAGES = {
 <b><i>${prefix}profile</i></b> - Profiles of Users
 <b><i>${prefix}submissions</i></b> - Submissions for Users
 <b><i>${prefix}avatar</i></b> - Avatars for Users
-<b><i>${prefix}problems</i></b> - Pie Chart with solved problems for Users
+<b><i>${prefix}problems</i></b> - Chart with Solved Problems for Users
 
 <b>User related commands:</b>
 <b><i>${prefix}add username1 username2</i></b> ... - adding Users
@@ -184,7 +184,7 @@ const BOT_MESSAGES = {
 <b><i>${prefix}avatar username</i></b> - Avatar for User
 <b><i>${prefix}submissions username</i></b> - Get all recent submissions for User as Table
 <b><i>${prefix}compare username1 username2</i></b> - Compare 2 Users' stats
-<b><i>${prefix}problems username</i></b> - Pie Chart with solved problems for specific User
+<b><i>${prefix}problems username</i></b> - Chart with Solved Problems for specific User
 
 <b>Admin commands:</b>
 <b><i>${prefix}remove username master_password</i></b> - Remove User
