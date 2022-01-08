@@ -119,9 +119,10 @@ export async function solvedProblemsChart(
   return axios
     .post(`${constants.VIZAPI_LINK}/pie`, {
       title: `Problems Solved by ${user.username}`,
-      width: 500,
-      height: 300,
-      is3D: true,
+      pieHole: 0.4,
+      fontSize: 16,
+      width: 600,
+      height: 400,
       chartArea: {
         top: 25,
         left: 25,
