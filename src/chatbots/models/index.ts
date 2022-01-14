@@ -4,9 +4,6 @@ import {
 
 import { Context, Options } from './context.model';
 import { Button, ButtonOptions, ButtonContainer } from './buttons.model';
-import { Table } from './table.model';
-import { Compare, CompareUser } from './compare.model';
-import { VizapiResponse } from './response.model';
 import { TelegramTestCase, Args, DiscordTestCase } from './testCase.model';
 import {
   TelegramChat, TelegramEntity, TelegramUser, TelegramMessage,
@@ -19,10 +16,6 @@ export {
   ButtonOptions,
   Button,
   ButtonContainer,
-  Table,
-  Compare,
-  CompareUser,
-  VizapiResponse,
   TelegramTestCase,
   Args,
   DiscordTestCase,

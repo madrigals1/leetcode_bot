@@ -9,10 +9,7 @@ import {
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import constants from '../../utils/constants';
 import { vizapiActions } from '../../chatbots/actions';
-import {
-  tableForSubmissions,
-  compareMenu,
-} from '../../chatbots/utils';
+import { tableForSubmissions, compareMenu } from '../../vizapi';
 import { users } from '../__mocks__/data.mock';
 
 const mockbot = new Mockbot();

@@ -3,18 +3,18 @@ import Cache from '../cache';
 import constants from '../utils/constants';
 import { CacheResponse } from '../cache/response.model';
 import { User } from '../leetcode/models';
-
-import { action } from './decorators';
-import {
-  Context, Button, RegisteredAction, VizapiResponse,
-} from './models';
 import {
   tableForSubmissions,
   compareMenu,
-  createButtonsFromUsers,
-  getCloseButton,
   solvedProblemsChart,
-} from './utils';
+} from '../vizapi';
+import { VizapiResponse } from '../vizapi/models';
+
+import { action } from './decorators';
+import {
+  Context, Button, RegisteredAction,
+} from './models';
+import { createButtonsFromUsers, getCloseButton } from './utils';
 import { ButtonContainerType } from './models/buttons.model';
 
 const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;

@@ -1,3 +1,9 @@
+export interface VizapiResponse {
+  link?: string;
+  error?: string;
+  reason?: string;
+}
+
 export interface CompareField {
   name: string;
   value: string | number;
