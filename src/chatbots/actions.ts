@@ -7,6 +7,7 @@ import {
   tableForSubmissions,
   compareMenu,
   solvedProblemsChart,
+  ratingGraph,
 } from '../vizapi';
 import { VizapiResponse } from '../vizapi/models';
 
@@ -25,6 +26,7 @@ export const vizapiActions = {
   tableForSubmissions,
   compareMenu,
   solvedProblemsChart,
+  ratingGraph,
 };
 
 export default class Actions {
@@ -205,18 +207,39 @@ export default class Actions {
   static async rating(context: Context): Promise<string> {
     const type = context.args.get('type').value;
 
+    // Prepare buttons
+    const cmlButton = {
+      buttons: [{
+        text: BM.CML_RATING,
+        action: '/rating cml',
+      }],
+      buttonPerRow: 1,
+      placeholder: 'Username',
+      type: ButtonContainerType.SingleButton,
+    };
+    const graphButton = {
+      buttons: [{
+        text: BM.GRAPH_RATING,
+        action: '/rating graph',
+      }],
+      buttonPerRow: 1,
+      placeholder: 'Username',
+      type: ButtonContainerType.SingleButton,
+    };
+    const regularButton = {
+      buttons: [{
+        text: BM.REGULAR_RATING,
+        action: '/rating',
+      }],
+      buttonPerRow: 1,
+      placeholder: 'Username',
+      type: ButtonContainerType.SingleButton,
+    };
+
     // Regular rating with "Problem Solved" count
     if (type === '') {
-      // Add button to open Cumulative Rating
-      context.options.buttons = [{
-        buttons: [{
-          text: BM.CML_RATING,
-          action: '/rating cml',
-        }],
-        buttonPerRow: 1,
-        placeholder: 'Username',
-        type: ButtonContainerType.SingleButton,
-      }];
+      // Add buttons
+      context.options.buttons = [cmlButton, graphButton];
 
       return BM.RATING_TEXT(Cache.allUsers());
     }
@@ -226,18 +249,32 @@ export default class Actions {
     // - Medium - 1.5 points
     // - Hard - 5 points
     if (type === 'cml') {
-      // Add button to open Regular Rating
-      context.options.buttons = [{
-        buttons: [{
-          text: BM.REGULAR_RATING,
-          action: '/rating',
-        }],
-        buttonPerRow: 1,
-        placeholder: 'Username',
-        type: ButtonContainerType.SingleButton,
-      }];
+      // Add buttons
+      context.options.buttons = [regularButton, graphButton];
 
       return BM.CML_RATING_TEXT(Cache.allUsers());
+    }
+
+    // Rating with graph
+    if (type === 'graph') {
+      // Create HTML image with Graph
+      const response: VizapiResponse = (
+        await vizapiActions.ratingGraph(Cache.allUsers())
+      );
+
+      // If image was created
+      if (response.link) {
+        // Add image to context
+        context.photoUrl = response.link;
+
+        // Add buttons
+        context.options.buttons = [regularButton, cmlButton];
+
+        return BM.GRAPH_RATING;
+      }
+
+      // If image link was not achieved from VizAPI
+      return BM.ERROR_ON_THE_SERVER;
     }
 
     // If type is not recognized

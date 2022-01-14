@@ -104,9 +104,7 @@ export async function tableForSubmissions(user: User): Promise<VizapiResponse> {
     });
 }
 
-export async function solvedProblemsChart(
-  user: User,
-): Promise<VizapiResponse> {
+export async function solvedProblemsChart(user: User): Promise<VizapiResponse> {
   const { easy, medium, hard } = user.computed.problemsSolved;
 
   return axios
@@ -141,6 +139,73 @@ export async function solvedProblemsChart(
           sliceColor: '#E91E63',
         },
       ],
+    })
+    .then((res) => {
+      log(SM.IMAGE_WAS_CREATED);
+      return { link: res.data.link };
+    })
+    .catch((err) => {
+      error(SM.IMAGE_WAS_NOT_CREATED(err));
+      return { error: err, reason: SM.API_NOT_WORKING };
+    });
+}
+
+export async function ratingGraph(users: User[]): Promise<VizapiResponse> {
+  const usersUpdated = users
+    .sort((user1: User, user2: User) => {
+      const user1solved = user1.solved ?? -Infinity;
+      const user2solved = user2.solved ?? -Infinity;
+      return user2solved - user1solved;
+    })
+    .map((user) => {
+      const { easy, medium, hard } = user.computed.problemsSolved;
+      return [user.username, easy, medium, hard, user.solved];
+    });
+
+  // Calculate height
+  const paddingHeight = 100;
+  const chartHeight = users.length * 50;
+  const fullHeight = paddingHeight + chartHeight;
+
+  // Calculate width
+  const paddingWidth = 100;
+  const chartWidth = 500;
+  const fullWidth = chartWidth + paddingWidth;
+
+  return axios
+    .post(`${constants.VIZAPI_LINK}/bar`, {
+      data: [
+        [
+          'Difficulty',
+          'Easy',
+          'Medium',
+          'Hard',
+          {
+            role: 'annotation',
+          },
+        ],
+        ...usersUpdated,
+      ],
+      options: {
+        titlePosition: 'none',
+        width: fullWidth,
+        height: fullHeight,
+        legend: {
+          position: 'top',
+          maxLines: 3,
+        },
+        chartArea: {
+          left: 175,
+          height: chartHeight,
+          width: chartWidth,
+        },
+        annotations: { alwaysOutside: true },
+        bar: {
+          groupWidth: '50%',
+        },
+        isStacked: true,
+        colors: ['#43A047', '#FB8C00', '#E91E63', 'black'],
+      },
     })
     .then((res) => {
       log(SM.IMAGE_WAS_CREATED);

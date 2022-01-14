@@ -115,6 +115,7 @@ const BOT_MESSAGES = {
   // RATING RELATED
   CML_RATING: `${constants.EMOJI.ABACUS} Cumulative Rating`,
   REGULAR_RATING: `${constants.EMOJI.CLIPBOARD} Regular Rating`,
+  GRAPH_RATING: `${constants.EMOJI.CHART} Graph Rating`,
 
   // USERNAME RELATED
   USERNAME_NOT_FOUND(username: string): string {
