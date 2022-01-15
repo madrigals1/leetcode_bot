@@ -172,6 +172,7 @@ const BOT_MESSAGES = {
 
 <b>Main commands:</b>
 <b><i>${prefix}start</i></b> - Starting Page
+<b><i>${prefix}help</i></b> - FAQ
 <b><i>${prefix}rating</i></b> - Overall rating of Users
 <b><i>${prefix}refresh</i></b> - Manual refresh of Database
 <b><i>${prefix}profile</i></b> - Profiles of Users
@@ -207,6 +208,8 @@ ${constants.EMOJI.RED_CIRCLE} Hard - <b>${hard}</b>
 ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all} / ${user.all}</b>
 ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
   },
+  HELP_TEXT: 'Contact @madrigals1 in Telegram or madrigals1#9652 in Discord ',
+
   RATING_TEXT(users: User[]): string {
     if (!users || users.length === 0) {
       return NO_USERS;

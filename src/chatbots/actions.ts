@@ -40,6 +40,11 @@ export default class Actions {
     return BM.WELCOME_TEXT(context.prefix);
   }
 
+  @action({ name: 'help' })
+  static help(): string {
+    return BM.HELP_TEXT;
+  }
+
   @action({
     name: 'add',
     args: [
