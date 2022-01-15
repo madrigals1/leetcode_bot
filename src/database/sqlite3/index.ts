@@ -3,6 +3,7 @@ import { open } from 'sqlite';
 
 import { log } from '../../utils/helper';
 import dictionary from '../../utils/dictionary';
+import constants from '../../utils/constants';
 import DatabaseProvider from '../database.proto';
 
 import QUERIES from './queries';
@@ -15,9 +16,11 @@ class SQLite extends DatabaseProvider {
   // Connect to Database
   async connect(): Promise<boolean> {
     return new Promise((resolve, reject) => {
+      const sqlite3filename = constants.DATABASE.SQLITE3.FILENAME;
+
       // Create database connection
       open({
-        filename: 'src/database/sqlite3/leetbot.db',
+        filename: `src/database/sqlite3/${sqlite3filename}`,
         driver: sqlite3.Database,
       })
         .then((database) => {

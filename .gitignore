@@ -3,8 +3,11 @@
 
 # Node
 node_modules
-.env
 dist
+
+# Environment variables
+.env*
+!.env.example
 
 # VSCode
 .vscode
@@ -13,7 +16,7 @@ dist
 mongo-volume
 
 # Sqlite database name
-leetbot.db
+leetbot*.db
 
 # Test coverage
 coverage

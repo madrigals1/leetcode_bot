@@ -1,13 +1,30 @@
 version: '3'
 
 services:
-  backend:
-    container_name: ${CONTAINER_NAME}
+  red:
+    container_name: leetcode_bot_red
     restart: always
     build:
       context: .
       dockerfile: ./deployment/Dockerfile
-    image: ${CONTAINER_NAME}
+    env_file:
+      - .env
+    image: leetcode_bot
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm start
+    networks:
+      - database_network
+
+  prod:
+    depends_on:
+      - red
+    container_name: leetcode_bot_prod
+    restart: always
+    image: leetcode_bot
+    env_file:
+      - .env.prod
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

@@ -29,6 +29,9 @@ const {
   // Database provider (sqlite3, mongo or postgres)
   DB_PROVIDER,
 
+  // SQLite3
+  SQLITE3_FILENAME,
+
   // MongoDB
   MONGO_DB_URL,
   MONGO_DB_NAME,
@@ -145,6 +148,10 @@ const PROVIDERS = {
   MOCKBOT,
 };
 
+const SQLITE3 = {
+  FILENAME: SQLITE3_FILENAME,
+};
+
 const MONGO = {
   URL: MONGO_DB_URL || 'localhost',
   NAME: MONGO_DB_NAME || 'leetbot_db',
@@ -163,6 +170,7 @@ const POSTGRES = {
 };
 
 const DATABASE = {
+  SQLITE3,
   MONGO,
   POSTGRES,
   PROVIDER: DB_PROVIDER || 'sqlite3',
