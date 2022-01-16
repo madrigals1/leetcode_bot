@@ -30,6 +30,8 @@
     "node-schedule": "^2.0.0",
     "node-telegram-bot-api": "^0.54.0",
     "pg": "^8.7.1",
+    "prom-client": "^14.0.1",
+    "restana": "^4.9.2",
     "rimraf": "^3.0.2",
     "sqlite": "^4.0.23",
     "sqlite3": "^4.2.0",

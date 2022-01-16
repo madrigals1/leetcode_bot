@@ -4,7 +4,9 @@ import { registeredActions } from '../actions';
 import constants from '../../utils/constants';
 import ArgumentManager from '../argumentManager';
 import { ArgumentsError, InputError } from '../../utils/errors';
+import { histogram } from '../../prometheus';
 
+import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
 
 const { BOT_MESSAGES: BM } = dictionary;
@@ -43,7 +45,12 @@ export function action(actionContext: ActionContext): (
 
     // eslint-disable-next-line no-param-reassign
     descriptor.value = async (context: Context) => {
-      const { reply, argumentParser } = context;
+      // Create action handler and start logging action
+      const replyHandler = new ReplyHandler(
+        histogram.startTimer(), name, context,
+      );
+
+      const { argumentParser } = context;
 
       // Make it mutable, so that we can apply try-catch on it
       let argumentManager: ArgumentManager;
@@ -53,12 +60,12 @@ export function action(actionContext: ActionContext): (
       } catch (e) {
         // If error is caused by incorrect input, return error cause to User
         if (e instanceof InputError) {
-          return reply(e.message, context);
+          return replyHandler.handleError(e.message);
         }
 
         // If error is caused by codebase issues, throw it
         if (e instanceof ArgumentsError) {
-          return reply(BM.ERROR_ON_THE_SERVER, context);
+          return replyHandler.handleError(BM.ERROR_ON_THE_SERVER);
         }
 
         throw e;
@@ -77,14 +84,14 @@ export function action(actionContext: ActionContext): (
         } catch (e) {
           // If error is caused by incorrect input, return error cause to User
           if (e instanceof InputError) {
-            return reply(e.message, context);
+            return replyHandler.handleError(e.message);
           }
 
           throw e;
         }
 
         if (password !== constants.SYSTEM.MASTER_PASSWORD) {
-          return reply(BM.PASSWORD_IS_INCORRECT, updatedContext);
+          return replyHandler.handleError(BM.PASSWORD_IS_INCORRECT);
         }
 
         // Add password to context
@@ -92,7 +99,7 @@ export function action(actionContext: ActionContext): (
       }
 
       const message = await originalMethod(updatedContext);
-      return reply(message, updatedContext);
+      return replyHandler.reply(message, updatedContext);
     };
 
     // Register action

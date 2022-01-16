@@ -9,6 +9,7 @@ import {
   CommandInteraction,
 } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
+import { LabelValues } from 'prom-client';
 
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';

@@ -1,3 +1,4 @@
+import { startRest } from './rest';
 import Telegram from './chatbots/telegram';
 import Discord from './chatbots/discord';
 import Slack from './chatbots/slack';
@@ -28,3 +29,5 @@ Database.connect().then(async () => {
       refreshUsersCron();
     });
 });
+
+startRest();

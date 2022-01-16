@@ -22,6 +22,9 @@ const {
   DISCORD_APP_ID,
   DISCORD_GUILD_ID,
 
+  // REST
+  PORT,
+
   // ---------------------------------------------------------------------------
   // Database settings
   // ---------------------------------------------------------------------------
@@ -196,6 +199,7 @@ const SYSTEM = {
 export default {
   PROVIDERS,
   DATABASE,
+  PORT,
   CML,
   SYSTEM,
   VIZAPI_LINK,
