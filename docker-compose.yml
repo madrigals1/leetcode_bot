@@ -10,6 +10,8 @@ services:
     env_file:
       - .env
     image: leetcode_bot
+    ports:
+      - "8182:${PORT}"
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -25,6 +27,8 @@ services:
     image: leetcode_bot
     env_file:
       - .env.prod
+    ports:
+      - "8183:${PORT}"
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
