@@ -6,7 +6,7 @@ import ArgumentManager from '../argumentManager';
 import { ArgumentsError, InputError } from '../../utils/errors';
 import { histogram } from '../../prometheus';
 
-import { ActionHandler } from './actionHandler';
+import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
 
 const { BOT_MESSAGES: BM } = dictionary;
@@ -46,7 +46,7 @@ export function action(actionContext: ActionContext): (
     // eslint-disable-next-line no-param-reassign
     descriptor.value = async (context: Context) => {
       // Create action handler and start logging action
-      const actionHandler = new ActionHandler(
+      const replyHandler = new ReplyHandler(
         histogram.startTimer(), name, context,
       );
 
@@ -60,12 +60,12 @@ export function action(actionContext: ActionContext): (
       } catch (e) {
         // If error is caused by incorrect input, return error cause to User
         if (e instanceof InputError) {
-          return actionHandler.handleError(e.message);
+          return replyHandler.handleError(e.message);
         }
 
         // If error is caused by codebase issues, throw it
         if (e instanceof ArgumentsError) {
-          return actionHandler.handleError(BM.ERROR_ON_THE_SERVER);
+          return replyHandler.handleError(BM.ERROR_ON_THE_SERVER);
         }
 
         throw e;
@@ -84,14 +84,14 @@ export function action(actionContext: ActionContext): (
         } catch (e) {
           // If error is caused by incorrect input, return error cause to User
           if (e instanceof InputError) {
-            return actionHandler.handleError(e.message);
+            return replyHandler.handleError(e.message);
           }
 
           throw e;
         }
 
         if (password !== constants.SYSTEM.MASTER_PASSWORD) {
-          return actionHandler.handleError(BM.PASSWORD_IS_INCORRECT);
+          return replyHandler.handleError(BM.PASSWORD_IS_INCORRECT);
         }
 
         // Add password to context
@@ -99,7 +99,7 @@ export function action(actionContext: ActionContext): (
       }
 
       const message = await originalMethod(updatedContext);
-      return actionHandler.reply(message, updatedContext);
+      return replyHandler.reply(message, updatedContext);
     };
 
     // Register action

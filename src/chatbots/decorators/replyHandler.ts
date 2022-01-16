@@ -2,7 +2,7 @@ import { LabelValues } from 'prom-client';
 
 import { Context } from '../models';
 
-export class ActionHandler {
+export class ReplyHandler {
   endLogging: (labels?: LabelValues<string>) => number;
 
   actionName: string;
