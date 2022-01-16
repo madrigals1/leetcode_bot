@@ -9,6 +9,7 @@ import {
   CommandInteraction,
 } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
+import { LabelValues } from 'prom-client';
 
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
@@ -41,6 +42,7 @@ export interface Context {
   ) => ArgumentManager;
   provider: string;
   prefix: string;
+  action?: string;
   chatId?: number;
   options?: Options;
   bot?: Client | TelegramBot;
@@ -49,4 +51,5 @@ export interface Context {
   // Discord
   discordProvidedArguments?: readonly CommandInteractionOption[];
   interaction?: ComplexInteraction;
+  endLogging?: (labels?: LabelValues<string>) => number;
 }
