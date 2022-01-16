@@ -42,7 +42,6 @@ export interface Context {
   ) => ArgumentManager;
   provider: string;
   prefix: string;
-  action?: string;
   chatId?: number;
   options?: Options;
   bot?: Client | TelegramBot;
@@ -51,5 +50,4 @@ export interface Context {
   // Discord
   discordProvidedArguments?: readonly CommandInteractionOption[];
   interaction?: ComplexInteraction;
-  endLogging?: (labels?: LabelValues<string>) => number;
 }
