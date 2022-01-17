@@ -8,25 +8,9 @@ import { histogram } from '../../prometheus';
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
+import { getPassword } from './utils';
 
 const { BOT_MESSAGES: BM } = dictionary;
-
-function getPassword(argumentManager: ArgumentManager): string {
-  const passwordArguments = ['password', 'username_or_password'];
-
-  for (let i = 0; i < passwordArguments.length; i++) {
-    const passwordArgument = passwordArguments[i];
-
-    const parsedArgument = argumentManager.get(passwordArgument);
-
-    if (parsedArgument && parsedArgument.value !== '') {
-      return parsedArgument.value;
-    }
-  }
-
-  const reason = BM.PASSWORD_NOT_FOUND_IN_ARGS;
-  throw new InputError(reason);
-}
 
 // eslint-disable-next-line import/prefer-default-export
 export function action(actionContext: ActionContext): (
