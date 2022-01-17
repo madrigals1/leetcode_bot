@@ -28,7 +28,6 @@ function getReplyMarkupFromButtons(
   return JSON.stringify({ inline_keyboard: keyboard });
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function reply(message: string, context: Context): Promise<string> {
   const {
     chatId, options, bot, photoUrl,

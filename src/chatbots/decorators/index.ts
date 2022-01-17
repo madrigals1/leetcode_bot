@@ -12,7 +12,6 @@ import { getPassword } from './utils';
 
 const { BOT_MESSAGES: BM } = dictionary;
 
-// eslint-disable-next-line import/prefer-default-export
 export function action(actionContext: ActionContext): (
   target: unknown,
   propertyKey: string,
