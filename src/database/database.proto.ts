@@ -4,6 +4,8 @@
 class DatabaseProvider {
   isRefreshing = false;
 
+  providerName = 'prototype';
+
   async connect(): Promise<any> {
     throw new Error('Not Implemented');
   }
