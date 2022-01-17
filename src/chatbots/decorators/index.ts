@@ -4,7 +4,7 @@ import { registeredActions } from '../actions';
 import constants from '../../utils/constants';
 import ArgumentManager from '../argumentManager';
 import { ArgumentsError, InputError } from '../../utils/errors';
-import { histogram } from '../../prometheus';
+import { actionLogger } from '../../prometheus';
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
@@ -30,7 +30,7 @@ export function action(actionContext: ActionContext): (
     descriptor.value = async (context: Context) => {
       // Create action handler and start logging action
       const replyHandler = new ReplyHandler(
-        histogram.startTimer(), name, context,
+        actionLogger.startTimer(), name, context,
       );
 
       const { argumentParser } = context;

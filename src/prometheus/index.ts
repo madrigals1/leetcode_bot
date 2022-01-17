@@ -1,6 +1,6 @@
 import * as client from 'prom-client';
 
-const histogram = new client.Histogram({
+const actionLogger = new client.Histogram({
   name: 'leetcode_bot:action_time',
   help: 'Duration of each action in ms',
   labelNames: ['action', 'error', 'provider'],
@@ -8,5 +8,5 @@ const histogram = new client.Histogram({
 });
 
 export {
-  histogram,
+  actionLogger,
 };
