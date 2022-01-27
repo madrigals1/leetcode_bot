@@ -7,8 +7,6 @@ services:
     build:
       context: .
       dockerfile: ./deployment/Dockerfile
-    env_file:
-      - .env
     image: leetcode_bot
     ports:
       - "${PORT}:${PORT}"
