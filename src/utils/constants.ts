@@ -202,7 +202,7 @@ export default {
   PORT,
   CML,
   SYSTEM,
-  VIZAPI_LINK,
+  VIZAPI_LINK: VIZAPI_LINK || 'https://vizapi.adigame.dev',
   SUBMISSION_STATUS_MAP,
   EMOJI,
   STATUS,
