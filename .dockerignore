@@ -1,4 +1,23 @@
+# Node related
 node_modules
 npm-debug.log
+
+# Git related
 .git
+.github
+
+# Documentation and Coverage
 coverage
+docs
+README.md
+
+# IDE Related
+.vscode
+.idea
+
+# Environment
+.env
+.env.example
+
+# Database related
+**/leetbot*.db
