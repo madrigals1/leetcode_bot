@@ -1,22 +1,18 @@
-# Pycharm
+# IDE
 .idea
+.vscode
 
 # Node
 node_modules
 dist
 
 # Environment variables
-.env*
-!.env.example
+.env
 
-# VSCode
-.vscode
-
-# Docker related
+# Database
+database/*/*
+!database/*/*.keep
 mongo-volume
 
-# Sqlite database name
-leetbot*.db
-
-# Test coverage
+# Test Coverage
 coverage

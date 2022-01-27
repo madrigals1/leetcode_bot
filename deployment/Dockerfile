@@ -4,5 +4,3 @@ WORKDIR /usr/src/app
 
 COPY . .
 RUN npm install --production
-
-EXPOSE 8000

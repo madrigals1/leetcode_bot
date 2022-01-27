@@ -73,6 +73,11 @@ test('vizapi.utils.getCompareDataFromUser action', async () => {
   expect(compareData.image).toBe(user1.profile.userAvatar);
 });
 
+test('vizapi.utils.* confirm URL', async () => {
+  expect(constants.VIZAPI_LINK).not.toBe('');
+  expect(constants.VIZAPI_LINK).toBe('https://vizapi.adigame.dev');
+});
+
 test('vizapi.utils.compareMenu action', async () => {
   // Valid
   const compareResponse = await compareMenu(user1, user2);
