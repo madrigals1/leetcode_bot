@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  red:
-    container_name: leetcode_bot_red
+  leetcode_bot:
+    container_name: leetcode_bot
     restart: always
     build:
       context: .
@@ -11,24 +11,7 @@ services:
       - .env
     image: leetcode_bot
     ports:
-      - "${RED_OUT_PORT}:${PORT}"
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    command: npm start
-    networks:
-      - database_network
-
-  prod:
-    depends_on:
-      - red
-    container_name: leetcode_bot_prod
-    restart: always
-    image: leetcode_bot
-    env_file:
-      - .env.prod
-    ports:
-      - "${PROD_OUT_PORT}:${PORT}"
+      - "${PORT}:${PORT}"
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
