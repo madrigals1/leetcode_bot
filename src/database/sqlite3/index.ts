@@ -20,7 +20,7 @@ class SQLite extends DatabaseProvider {
 
       // Create database connection
       open({
-        filename: `src/database/sqlite3/${sqlite3filename}`,
+        filename: `database/sqlite3/${sqlite3filename}`,
         driver: sqlite3.Database,
       })
         .then((database) => {
