@@ -19,11 +19,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: create .env file and add secrets
-      run: >
-        touch .env
-        && echo VIZAPI_LINK=${{ secrets.VIZAPI_LINK }} >> .env
-
     - name: Build original image
       run: docker build -t leetcode_bot --file deployment/Dockerfile .
 
