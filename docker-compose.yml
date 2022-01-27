@@ -2,7 +2,7 @@ version: '3'
 
 services:
   leetcode_bot:
-    container_name: leetcode_bot
+    container_name: ${CONTAINER_NAME}
     restart: always
     build:
       context: .
