@@ -1,7 +1,7 @@
 import dictionary from '../utils/dictionary';
 import Cache from '../cache';
 import constants from '../utils/constants';
-import { CacheResponse } from '../cache/response.model';
+import { CacheResponse } from '../cache/models/response.model';
 import { User } from '../leetcode/models';
 import {
   tableForSubmissions,

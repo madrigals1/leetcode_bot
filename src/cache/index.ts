@@ -8,7 +8,7 @@ import constants from '../utils/constants';
 import dictionary from '../utils/dictionary';
 import { User } from '../leetcode/models';
 
-import { CacheResponse } from './response.model';
+import { CacheResponse } from './models/response.model';
 
 const { DATE_FORMAT } = constants.SYSTEM;
 const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
