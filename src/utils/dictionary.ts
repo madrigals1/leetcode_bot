@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { User } from '../leetcode/models';
 import Cache from '../cache';
 import { getCmlFromUsers } from '../leetcode/utils';
@@ -101,6 +103,10 @@ const BOT_MESSAGES = {
   STARTED_REFRESH: `${constants.EMOJI.WAITING} Database started refresh`,
   IS_REFRESHED: `${constants.EMOJI.SUCCESS} Database is refreshed`,
   IS_ALREADY_REFRESHING: `${constants.EMOJI.ERROR} Database is already refreshing`,
+  LAST_REFRESHED_AT(time: dayjs.Dayjs): string {
+    const stime = time.format(constants.SYSTEM.DATE_FORMAT);
+    return `${constants.EMOJI.ERROR} Database is last refreshed at ${stime}`;
+  },
 
   // USER RELATED
   USER_LIST(userList: string): string {
@@ -229,7 +235,8 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
   },
 
   STATS_TEXT(providerName: string, cache: typeof Cache): string {
-    const { userLimit, users } = cache;
+    const { userLimit, allUsers } = cache;
+    const users = allUsers();
 
     // Get prefix for provider
     const provider = Object.keys(constants.PROVIDERS)
