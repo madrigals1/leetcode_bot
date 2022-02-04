@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-await-in-loop */
+import dayjs from 'dayjs';
+
 import { User } from '../leetcode/models';
 import getLeetcodeDataFromUsername from '../leetcode';
 import Database from '../database';
@@ -7,7 +9,10 @@ import { log, delay } from '../utils/helper';
 import dictionary from '../utils/dictionary';
 import constants from '../utils/constants';
 
-const { SERVER_MESSAGES: SM } = dictionary;
+import { CacheResponse } from './models/response.model';
+
+const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
+const { DATE_FORMAT } = constants.SYSTEM;
 
 export class UserCache {
   static users: Map<string, User> = new Map<string, User>();
@@ -19,6 +24,8 @@ export class UserCache {
   static delayTime = constants.SYSTEM.USER_REQUEST_DELAY_MS;
 
   static delay = delay;
+
+  static lastRefreshedAt: dayjs.Dayjs;
 
   /**
    * Get the number of users in the database.
@@ -102,29 +109,59 @@ export class UserCache {
    *
    * Can also be used to pre-load all Users from Database.
    */
-  static async refresh(): Promise<void> {
-    // Load all Users from Database
-    const users = await this.database.findAllUsers();
+  static async refresh(): Promise<CacheResponse> {
+    const now = dayjs();
+    const { lastRefreshedAt } = this;
 
-    // Refresh users with newest data from LeetCode
-    for (let i = 0; i < users.length; i++) {
-      // Get username from Cache User
-      const { username } = users[i];
-
-      // Get data from LeetCode related to this User
-      // eslint-disable-next-line no-await-in-loop
-      const userData = await this.getLeetcodeDataFromUsername(username);
-
-      // If User Data was returned from LeetCode, replace User in Cache
-      if (userData.exists) {
-        this.addOrReplaceUser(username, userData);
-        log(SM.USERNAME_WAS_REFRESHED(username));
-      } else {
-        log(SM.USERNAME_WAS_NOT_REFRESHED(username));
-      }
-
-      // Wait X seconds until loading next User, X is set in .env
-      await this.delay(this.delayTime);
+    // If database was refreshed less than 15 minutes ago
+    if (lastRefreshedAt && now.diff(lastRefreshedAt, 'minutes') < 15) {
+      log(SM.CACHE_ALREADY_REFRESHED);
+      return {
+        status: constants.STATUS.ERROR,
+        detail: BM.CACHE_ALREADY_REFRESHED,
+      };
     }
+
+    // Set database refresh time
+    this.lastRefreshedAt = now;
+
+    // Log when refresh started
+    log(SM.DATABASE_STARTED_REFRESH(now.format(DATE_FORMAT)));
+
+    try {
+      // Load all Users from Database
+      const users = await this.database.findAllUsers();
+
+      // Refresh users with newest data from LeetCode
+      for (let i = 0; i < users.length; i++) {
+        // Get username from Cache User
+        const { username } = users[i];
+
+        // Get data from LeetCode related to this User
+        // eslint-disable-next-line no-await-in-loop
+        const userData = await this.getLeetcodeDataFromUsername(username);
+
+        // If User Data was returned from LeetCode, replace User in Cache
+        if (userData.exists) {
+          this.addOrReplaceUser(username, userData);
+          log(SM.USERNAME_WAS_REFRESHED(username));
+        } else {
+          log(SM.USERNAME_WAS_NOT_REFRESHED(username));
+        }
+
+        // Wait X seconds until loading next User, X is set in .env
+        await this.delay(this.delayTime);
+      }
+    } catch (err) {
+      log(err.message);
+    }
+
+    // Log when refresh ended
+    log(SM.DATABASE_FINISHED_REFRESH(dayjs().format(DATE_FORMAT)));
+
+    return {
+      status: constants.STATUS.SUCCESS,
+      detail: BM.CACHE_IS_REFRESHED,
+    };
   }
 }
