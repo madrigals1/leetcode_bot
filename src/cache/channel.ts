@@ -6,7 +6,7 @@ import { log } from '../utils/helper';
 
 import { ChannelData } from './models/channel.model';
 
-export class Channel {
+export class ChannelCache {
   users: User[] = [];
 
   database = Database;
