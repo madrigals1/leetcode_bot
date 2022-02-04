@@ -79,6 +79,37 @@ class DatabaseProvider {
   async deleteChannel(channelId: number): Promise<any> {
     throw new Error('Not Implemented');
   }
+
+  /**
+   * It adds a user to a `Channel`.
+   * @param {number} channelId - The id of the `Channel` to add the `User` to.
+   * @param {string} username - The username of the `User` you want to add to
+   * the `Channel`.
+   */
+  async addUserToChannel(channelId: string, username: string): Promise<any> {
+    throw new Error('Not Implemented');
+  }
+
+  /**
+   * It removes a user from a `Channel`.
+   * @param {number} channelId - The id of the `Channel` to remove the `User`
+   * from.
+   * @param {string} username - The username of the `User` to remove from the
+   * `Channel`.
+   */
+  async removeUserFromChannel(
+    channelId: string, username: string,
+  ): Promise<any> {
+    throw new Error('Not Implemented');
+  }
+
+  /**
+   * Clear a `Channel` from all `Users`
+   * @param {number} channelId - The id of the `Channel` to clear.
+   */
+  async clearChannel(channelId: string): Promise<any> {
+    throw new Error('Not Implemented');
+  }
 }
 
 export default DatabaseProvider;
