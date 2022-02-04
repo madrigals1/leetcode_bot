@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
+import dayjs from 'dayjs';
+
 /* eslint-disable class-methods-use-this */
 class DatabaseProvider {
   isRefreshing = false;
+
+  lastRefreshedAt: dayjs.Dayjs;
 
   providerName = 'prototype';
 
