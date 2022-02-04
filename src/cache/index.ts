@@ -56,10 +56,10 @@ class Cache {
 
     // If database was refreshed less than 15 minutes ago
     if (now.diff(lastRefreshedAt, 'minutes') < 15) {
-      log(SM.IS_ALREADY_REFRESHING);
+      log(SM.CACHE_ALREADY_REFRESHED);
       return {
         status: constants.STATUS.ERROR,
-        detail: BM.IS_ALREADY_REFRESHING,
+        detail: BM.CACHE_ALREADY_REFRESHED,
       };
     }
 

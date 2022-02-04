@@ -17,13 +17,13 @@ const SERVER_MESSAGES = {
   DATABASE_FINISHED_REFRESH(time: string): string {
     return `Database is refreshed at ${time}`;
   },
-  IS_ALREADY_REFRESHING: 'Database is already refreshing',
   USERNAME_WAS_REFRESHED(username: string): string {
     return `${username} was refreshed`;
   },
   USERNAME_WAS_NOT_REFRESHED(username: string): string {
     return `${username} was not refreshed`;
   },
+  CACHE_ALREADY_REFRESHED: 'Cache was refreshed less than 15 minutes ago',
 
   // CONNECTION TO DB
   CONNECTION_STATUS: {
@@ -100,7 +100,7 @@ const BOT_MESSAGES = {
   // REFRESHING
   STARTED_REFRESH: `${constants.EMOJI.WAITING} Database started refresh`,
   IS_REFRESHED: `${constants.EMOJI.SUCCESS} Database is refreshed`,
-  IS_ALREADY_REFRESHING: `${constants.EMOJI.ERROR} Database is already refreshing`,
+  CACHE_ALREADY_REFRESHED: `${constants.EMOJI.ERROR} Cache was refreshed less than 15 minutes ago`,
 
   // USER RELATED
   USER_LIST(userList: string): string {

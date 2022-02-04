@@ -116,8 +116,8 @@ test('cache.index.Cache.refreshUsers method', async () => {
   Cache.database.isRefreshing = true;
   const result: CacheResponse = await Cache.refreshUsers();
   expect(result.status).toBe(constants.STATUS.ERROR);
-  expect(result.detail).toBe(BM.IS_ALREADY_REFRESHING);
-  expect(console.log).toHaveBeenCalledWith(SM.IS_ALREADY_REFRESHING);
+  expect(result.detail).toBe(BM.CACHE_ALREADY_REFRESHED);
+  expect(console.log).toHaveBeenCalledWith(SM.CACHE_ALREADY_REFRESHED);
   Cache.database.isRefreshing = false;
 
   // Check case, where User is deleted from LeetCode
