@@ -26,6 +26,8 @@ class Cache {
 
   delay = delay;
 
+  lastRefreshedAt: dayjs.Dayjs;
+
   // Return all users
   allUsers(): User[] {
     return this.users;
@@ -52,7 +54,7 @@ class Cache {
   // Refresh Users map
   async refreshUsers(): Promise<CacheResponse> {
     const now = dayjs();
-    const { lastRefreshedAt } = this.database;
+    const { lastRefreshedAt } = this;
 
     // If database was refreshed less than 15 minutes ago
     if (lastRefreshedAt && now.diff(lastRefreshedAt, 'minutes') < 15) {
@@ -64,7 +66,7 @@ class Cache {
     }
 
     // Set database refresh time
-    this.database.lastRefreshedAt = now;
+    this.lastRefreshedAt = now;
 
     // Log when refresh started
     log(SM.DATABASE_STARTED_REFRESH(now.format(DATE_FORMAT)));

@@ -114,12 +114,12 @@ test('cache.index.Cache.refreshUsers method', async () => {
   usersClone.forEach((user: User) => users.push(user));
 
   // Check already refreshed case
-  Cache.database.lastRefreshedAt = dayjs();
+  Cache.lastRefreshedAt = dayjs();
   const result: CacheResponse = await Cache.refreshUsers();
   expect(result.status).toBe(constants.STATUS.ERROR);
   expect(result.detail).toBe(BM.CACHE_ALREADY_REFRESHED);
   expect(console.log).toHaveBeenCalledWith(SM.CACHE_ALREADY_REFRESHED);
-  Cache.database.lastRefreshedAt = undefined;
+  Cache.lastRefreshedAt = undefined;
 
   // Check case, where User is deleted from LeetCode
   const fakeUsername = 'non_existing_username';
@@ -128,7 +128,7 @@ test('cache.index.Cache.refreshUsers method', async () => {
   expect(console.log).toHaveBeenCalledWith(
     SM.USERNAME_WAS_NOT_REFRESHED(fakeUsername),
   );
-  Cache.database.lastRefreshedAt = undefined;
+  Cache.lastRefreshedAt = undefined;
 
   // Check error logging
   const fakeErrorMessage = 'Fake error';
