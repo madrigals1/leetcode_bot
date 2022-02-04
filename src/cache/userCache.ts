@@ -40,12 +40,12 @@ export class UserCache {
    * @param {string} username - The username of the user you want to add.
    * @returns A boolean value.
    */
-  static addUser(username: string): Promise<boolean> {
+  static addUser(username: string): Promise<User> {
     // First get LeetCode User from username
     return this.getLeetcodeDataFromUsername(username)
       .then((user: User) => {
         // If User does NOT exist in LeetCode, return false
-        if (!user.exists) return false;
+        if (!user.exists) return null;
 
         // Add username to Database
         this.database.addUser(username);
@@ -53,11 +53,11 @@ export class UserCache {
         // Add User to Cache
         this.users.set(username, user);
 
-        return true;
+        return user;
       })
       .catch((err) => {
         log(err);
-        return false;
+        return null;
       });
   }
 
