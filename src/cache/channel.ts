@@ -98,7 +98,7 @@ export class ChannelCache {
   /**
    * Clear the Channel from all Users
    */
-  clear(): void {
-    this.database.clearChannel(this.channelData.id);
+  clear(): Promise<boolean> {
+    return this.database.clearChannel(this.channelData.id);
   }
 }
