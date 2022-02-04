@@ -4,22 +4,21 @@ import { User } from '../leetcode/models';
 import Database from '../database';
 import { log } from '../utils/helper';
 
+import { IChannel } from './models/channel.model';
+
 export class Channel {
   users: User[] = [];
 
   database = Database;
 
-  channelId: string;
-
-  userLimit: number;
+  channelData: IChannel;
 
   /**
    * Create a new instance of the Channel class
    * @param {string} channelId - The channel ID of the Channel.
    */
-  constructor(channelId: string, userLimit: number) {
-    this.channelId = channelId;
-    this.userLimit = userLimit;
+  constructor(channel: IChannel) {
+    this.channelData = channel;
   }
 
   /**
@@ -37,7 +36,7 @@ export class Channel {
   async addUser(user: User): Promise<boolean> {
     // Add User to Channel in Database
     return this.database
-      .addUserToChannel(this.channelId, user.username)
+      .addUserToChannel(this.channelData.id, user.username)
       .then((addedToDB) => {
         if (addedToDB) {
           // Add User to Cache
@@ -62,7 +61,7 @@ export class Channel {
   async removeUser(username: string): Promise<boolean> {
     // Remove User from Channel in Database
     return this.database
-      .removeUserFromChannel(this.channelId, username)
+      .removeUserFromChannel(this.channelData.id, username)
       .then((deletedFromDB) => {
         // Remove User from Cache
         if (deletedFromDB) _.remove(this.users, { username });
@@ -100,6 +99,6 @@ export class Channel {
    * Clear the Channel from all Users
    */
   clear(): void {
-    this.database.clearChannel(this.channelId);
+    this.database.clearChannel(this.channelData.id);
   }
 }
