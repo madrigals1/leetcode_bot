@@ -55,7 +55,7 @@ class Cache {
     const { lastRefreshedAt } = this.database;
 
     // If database was refreshed less than 15 minutes ago
-    if (now.diff(lastRefreshedAt, 'minutes') < 15) {
+    if (lastRefreshedAt && now.diff(lastRefreshedAt, 'minutes') < 15) {
       log(SM.CACHE_ALREADY_REFRESHED);
       return {
         status: constants.STATUS.ERROR,
