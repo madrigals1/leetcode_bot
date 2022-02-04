@@ -109,8 +109,8 @@ test('chatbots.actions.refresh action', async () => {
 
   const messages = mockbot.messages();
 
-  expect(messages[0]).toBe(BM.STARTED_REFRESH);
-  expect(messages[1]).toBe(BM.IS_REFRESHED);
+  expect(messages[0]).toBe(BM.CACHE_STARTED_REFRESH);
+  expect(messages[1]).toBe(BM.CACHE_IS_REFRESHED);
 
   // Test with incorrect arguments
   await mockbot.send('/refresh excess_arg');

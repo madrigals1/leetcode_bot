@@ -107,7 +107,7 @@ class Cache {
 
     return {
       status: constants.STATUS.SUCCESS,
-      detail: BM.IS_REFRESHED,
+      detail: BM.CACHE_IS_REFRESHED,
     };
   }
 
