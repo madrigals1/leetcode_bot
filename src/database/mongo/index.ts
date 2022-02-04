@@ -29,9 +29,6 @@ class MongoDB extends DatabaseProvider {
   // URL for Connection to MongoDB, that contains authentication
   mongoUrl = `mongodb://${this.credentials}${this.databaseUrl}${this.authSource}`;
 
-  // Indicator to see, if Database is already refreshing
-  isRefreshing = false;
-
   UserModel = UserModel;
 
   // Connect to Database

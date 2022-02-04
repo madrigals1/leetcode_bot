@@ -7,8 +7,6 @@ import DatabaseProvider from '../../database/database.proto';
 import { mockDatabaseData } from './data.mock';
 
 class MockDatabaseProvider extends DatabaseProvider {
-  isRefreshing = false;
-
   // Connect to Database
   async connect(): Promise<boolean> {
     return new Promise((resolve) => resolve(mockDatabaseData.fakeResult));

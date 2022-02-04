@@ -17,13 +17,13 @@ const SERVER_MESSAGES = {
   DATABASE_FINISHED_REFRESH(time: string): string {
     return `Database is refreshed at ${time}`;
   },
-  IS_ALREADY_REFRESHING: 'Database is already refreshing',
   USERNAME_WAS_REFRESHED(username: string): string {
     return `${username} was refreshed`;
   },
   USERNAME_WAS_NOT_REFRESHED(username: string): string {
     return `${username} was not refreshed`;
   },
+  CACHE_ALREADY_REFRESHED: 'Cache was refreshed less than 15 minutes ago',
 
   // CONNECTION TO DB
   CONNECTION_STATUS: {
@@ -98,9 +98,9 @@ const BOT_MESSAGES = {
     `${constants.EMOJI.ERROR} Argument ${i} is not provided`,
 
   // REFRESHING
-  STARTED_REFRESH: `${constants.EMOJI.WAITING} Database started refresh`,
-  IS_REFRESHED: `${constants.EMOJI.SUCCESS} Database is refreshed`,
-  IS_ALREADY_REFRESHING: `${constants.EMOJI.ERROR} Database is already refreshing`,
+  CACHE_STARTED_REFRESH: `${constants.EMOJI.WAITING} Cache refresh was requested...`,
+  CACHE_IS_REFRESHED: `${constants.EMOJI.SUCCESS} Cache is refreshed`,
+  CACHE_ALREADY_REFRESHED: `${constants.EMOJI.ERROR} Cache was refreshed less than 15 minutes ago`,
 
   // USER RELATED
   USER_LIST(userList: string): string {
@@ -174,7 +174,7 @@ const BOT_MESSAGES = {
 <b><i>${prefix}start</i></b> - Starting Page
 <b><i>${prefix}help</i></b> - FAQ
 <b><i>${prefix}rating</i></b> - Overall rating of Users
-<b><i>${prefix}refresh</i></b> - Manual refresh of Database
+<b><i>${prefix}refresh</i></b> - Manual refresh of User Cache
 <b><i>${prefix}profile</i></b> - Profiles of Users
 <b><i>${prefix}submissions</i></b> - Submissions for Users
 <b><i>${prefix}avatar</i></b> - Avatars for Users

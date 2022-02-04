@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import * as _ from 'lodash';
+import * as dayjs from 'dayjs';
 
 import Cache from '../../cache';
 import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
@@ -112,13 +113,13 @@ test('cache.index.Cache.refreshUsers method', async () => {
   users.length = 0;
   usersClone.forEach((user: User) => users.push(user));
 
-  // Check refreshing case
-  Cache.database.isRefreshing = true;
+  // Check already refreshed case
+  Cache.lastRefreshedAt = dayjs();
   const result: CacheResponse = await Cache.refreshUsers();
   expect(result.status).toBe(constants.STATUS.ERROR);
-  expect(result.detail).toBe(BM.IS_ALREADY_REFRESHING);
-  expect(console.log).toHaveBeenCalledWith(SM.IS_ALREADY_REFRESHING);
-  Cache.database.isRefreshing = false;
+  expect(result.detail).toBe(BM.CACHE_ALREADY_REFRESHED);
+  expect(console.log).toHaveBeenCalledWith(SM.CACHE_ALREADY_REFRESHED);
+  Cache.lastRefreshedAt = undefined;
 
   // Check case, where User is deleted from LeetCode
   const fakeUsername = 'non_existing_username';
@@ -127,6 +128,7 @@ test('cache.index.Cache.refreshUsers method', async () => {
   expect(console.log).toHaveBeenCalledWith(
     SM.USERNAME_WAS_NOT_REFRESHED(fakeUsername),
   );
+  Cache.lastRefreshedAt = undefined;
 
   // Check error logging
   const fakeErrorMessage = 'Fake error';

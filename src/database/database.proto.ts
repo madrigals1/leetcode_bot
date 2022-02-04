@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
 /* eslint-disable class-methods-use-this */
 class DatabaseProvider {
-  isRefreshing = false;
-
   providerName = 'prototype';
 
   async connect(): Promise<any> {

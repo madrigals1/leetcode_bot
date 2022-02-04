@@ -78,11 +78,8 @@ export default class Actions {
 
   @action({ name: 'refresh' })
   static async refresh(context: Context): Promise<string> {
-    // Force refreshing start
-    Cache.database.isRefreshing = false;
-
     // Log that database started refresh
-    await context.reply(BM.STARTED_REFRESH, context);
+    await context.reply(BM.CACHE_STARTED_REFRESH, context);
 
     // Refresh and return result
     const result: CacheResponse = await Cache.refreshUsers();

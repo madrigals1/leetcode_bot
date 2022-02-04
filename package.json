@@ -1,6 +1,6 @@
 {
   "name": "leetcode_bot",
-  "version": "1.3.2",
+  "version": "2.0.0",
   "description": "LeetCode BOT for checking rating of users",
   "scripts": {
     "build": "rimraf dist && tsc",

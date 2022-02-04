@@ -158,7 +158,7 @@ Creates small **Comparison** visualization between 2 users using [VizAPI](https:
 
 ### Refresh
 
-Manual refresh of database. By default, database is refreshed once in 15 minutes.
+Manual refresh of User Cache. By default, User Cache is refreshed once in 15 minutes.
 
 | Name | Refresh |
 | --- | --- |
