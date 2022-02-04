@@ -73,6 +73,13 @@ class DatabaseProvider {
   }
 
   /**
+   * It returns Channel list as an array of strings.
+   */
+  async getAllChannels(): Promise<IChannel[]> {
+    throw new Error('Not Implemented');
+  }
+
+  /**
    * Delete `Channel` using channelId
    * @param {number} channelId - number - The ID of the channel to delete.
    */
@@ -86,7 +93,7 @@ class DatabaseProvider {
    * @param {string} username - The username of the `User` you want to add to
    * the `Channel`.
    */
-  async addUserToChannel(channelId: string, username: string): Promise<any> {
+  async addUserToChannel(channelId: number, username: string): Promise<any> {
     throw new Error('Not Implemented');
   }
 
@@ -98,7 +105,7 @@ class DatabaseProvider {
    * `Channel`.
    */
   async removeUserFromChannel(
-    channelId: string, username: string,
+    channelId: number, username: string,
   ): Promise<any> {
     throw new Error('Not Implemented');
   }
@@ -107,7 +114,7 @@ class DatabaseProvider {
    * Clear a `Channel` from all `Users`
    * @param {number} channelId - The id of the `Channel` to clear.
    */
-  async clearChannel(channelId: string): Promise<any> {
+  async clearChannel(channelId: number): Promise<any> {
     throw new Error('Not Implemented');
   }
 }
