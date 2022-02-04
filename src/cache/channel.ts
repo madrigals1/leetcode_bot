@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 
 import { User } from '../leetcode/models';
 import Database from '../database';
+import { log } from '../utils/helper';
 
 export class Channel {
   users: User[] = [];
@@ -33,27 +34,44 @@ export class Channel {
    * Add a User to the Channel
    * @param {User} user - User
    */
-  addUser(user: User): void {
+  async addUser(user: User): Promise<boolean> {
     // Add User to Channel in Database
-    this.database.addUserToChannel(this.channelId, user.username);
+    return this.database
+      .addUserToChannel(this.channelId, user.username)
+      .then((addedToDB) => {
+        if (addedToDB) {
+          // Add User to Cache
+          this.users.push(user);
 
-    // Add User to Cache
-    this.users.push(user);
+          // Sort Users after adding new one
+          this.sortUsers();
+        }
 
-    // Sort Users after adding new one
-    this.sortUsers();
+        return addedToDB;
+      })
+      .catch((err) => {
+        log(err);
+        return false;
+      });
   }
 
   /**
    * Remove a user from the Channel
    * @param {string} username - The username of the User to remove.
    */
-  removeUser(username: string): void {
+  async removeUser(username: string): Promise<boolean> {
     // Remove User from Channel in Database
-    this.database.removeUserFromChannel(this.channelId, username);
-
-    // Remove User from Cache
-    _.remove(this.users, { username });
+    return this.database
+      .removeUserFromChannel(this.channelId, username)
+      .then((deletedFromDB) => {
+        // Remove User from Cache
+        if (deletedFromDB) _.remove(this.users, { username });
+        return deletedFromDB;
+      })
+      .catch((err) => {
+        log(err);
+        return false;
+      });
   }
 
   /**
