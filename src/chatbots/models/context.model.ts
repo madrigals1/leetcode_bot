@@ -11,6 +11,7 @@ import {
 import TelegramBot from 'node-telegram-bot-api';
 
 import { ChatbotProvider } from '..';
+import { ChannelCache } from '../../cache/channel';
 import { ChannelKey } from '../../cache/models/channel.model';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
@@ -49,6 +50,7 @@ export interface Context {
   photoUrl?: string;
   password?: string;
   channelKey?: ChannelKey;
+  channelCache?: ChannelCache;
   // Discord
   discordProvidedArguments?: readonly CommandInteractionOption[];
   interaction?: ComplexInteraction;
