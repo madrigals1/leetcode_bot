@@ -122,7 +122,7 @@ class DatabaseProvider {
    * Clear a `Channel` from all `Users`
    * @param {number} channelId - The id of the `Channel` to clear.
    */
-  async clearChannel(channelId: number): Promise<any> {
+  async clearChannel(channelId: number): Promise<boolean> {
     throw new Error('Not Implemented');
   }
 }
