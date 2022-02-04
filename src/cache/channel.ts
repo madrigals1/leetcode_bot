@@ -4,20 +4,20 @@ import { User } from '../leetcode/models';
 import Database from '../database';
 import { log } from '../utils/helper';
 
-import { IChannel } from './models/channel.model';
+import { ChannelData } from './models/channel.model';
 
 export class Channel {
   users: User[] = [];
 
   database = Database;
 
-  channelData: IChannel;
+  channelData: ChannelData;
 
   /**
    * Create a new instance of the Channel class
    * @param {string} channelId - The channel ID of the Channel.
    */
-  constructor(channel: IChannel) {
+  constructor(channel: ChannelData) {
     this.channelData = channel;
   }
 

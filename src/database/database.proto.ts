@@ -5,7 +5,7 @@
 
 import dayjs from 'dayjs';
 
-import { IChannel } from '../cache/models/channel.model';
+import { ChannelData } from '../cache/models/channel.model';
 
 /**
  * The DatabaseProvider class is a class that provides an interface to the
@@ -66,16 +66,16 @@ class DatabaseProvider {
 
   /**
    * Create `Channel` using given channelData
-   * @param {IChannel} channelData - IChannel
+   * @param {ChannelData} channelData - IChannel
    */
-  async addChannel(channelData: IChannel): Promise<any> {
+  async addChannel(channelData: ChannelData): Promise<any> {
     throw new Error('Not Implemented');
   }
 
   /**
    * It returns Channel list as an array of strings.
    */
-  async getAllChannels(): Promise<IChannel[]> {
+  async getAllChannels(): Promise<ChannelData[]> {
     throw new Error('Not Implemented');
   }
 
