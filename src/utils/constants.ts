@@ -1,5 +1,7 @@
 import * as dotenv from 'dotenv';
 
+import { ChatbotProvider } from '../chatbots';
+
 import { isTrue } from './helper';
 
 dotenv.config();
@@ -115,14 +117,14 @@ const CHAT_STATUS = {
 };
 
 const TELEGRAM = {
-  NAME: 'telegram',
+  ID: ChatbotProvider.Telegram,
   ENABLE: !!TELEGRAM_TOKEN,
   TOKEN: TELEGRAM_TOKEN,
   PREFIX: '/',
 };
 
 const DISCORD = {
-  NAME: 'discord',
+  ID: ChatbotProvider.Discord,
   ENABLE: !!DISCORD_TOKEN,
   TOKEN: DISCORD_TOKEN,
   APP_ID: DISCORD_APP_ID,
@@ -131,7 +133,7 @@ const DISCORD = {
 };
 
 const SLACK = {
-  NAME: 'slack',
+  ID: ChatbotProvider.Slack,
   ENABLE: !!SLACK_TOKEN,
   TOKEN: SLACK_TOKEN,
   SIGNING_SECRET: SLACK_SIGNING_SECRET,
@@ -140,7 +142,7 @@ const SLACK = {
 };
 
 const MOCKBOT = {
-  NAME: 'mockbot',
+  ID: ChatbotProvider.Mockbot,
   PREFIX: '/',
 };
 

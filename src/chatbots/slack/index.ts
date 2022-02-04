@@ -21,6 +21,8 @@ class Slack {
 
   bot: App;
 
+  id = constants.PROVIDERS.SLACK.ID;
+
   async run() {
     // Create Bot with Slack credentials
     this.bot = await createBot(this.token, this.signingSecret, this.appToken);
@@ -38,7 +40,7 @@ class Slack {
           channel: {
             send: say,
           },
-          provider: constants.PROVIDERS.SLACK.NAME,
+          provider: this.id,
           prefix: constants.PROVIDERS.SLACK.PREFIX,
           options: {},
         };

@@ -21,6 +21,8 @@ export default class Telegram {
 
   bot: TelegramBot;
 
+  id = constants.PROVIDERS.TELEGRAM.ID;
+
   getContext(message: TelegramMessage, text: string = null): Context {
     const textCorrect = text || message.text;
 
@@ -28,7 +30,7 @@ export default class Telegram {
       text: textCorrect,
       reply,
       argumentParser: getPositionalParsedArguments,
-      provider: constants.PROVIDERS.TELEGRAM.NAME,
+      provider: this.id,
       chatId: message.chat.id,
       prefix: constants.PROVIDERS.TELEGRAM.PREFIX,
       options: { parseMode: 'HTML' },

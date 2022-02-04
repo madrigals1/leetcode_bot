@@ -10,7 +10,7 @@ export default class Mockbot {
 
   context: Context;
 
-  name = constants.PROVIDERS.MOCKBOT.NAME;
+  id = constants.PROVIDERS.MOCKBOT.ID;
 
   prefix = constants.PROVIDERS.MOCKBOT.PREFIX;
 
@@ -44,7 +44,7 @@ export default class Mockbot {
             return promise;
           },
           argumentParser: getPositionalParsedArguments,
-          provider: this.name,
+          provider: this.id,
           chatId: 123123123,
           prefix: this.prefix,
           options: {},

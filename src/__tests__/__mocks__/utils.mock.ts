@@ -5,6 +5,7 @@ import { VizapiResponse } from '../../vizapi/models';
 import { User } from '../../leetcode/models';
 import dictionary from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
+import { ChatbotProvider } from '../../chatbots';
 
 import { users, user1 } from './data.mock';
 
@@ -104,7 +105,7 @@ export function mockContext(): Context {
     text: 'random_text',
     reply: () => new Promise(() => ('asd')),
     argumentParser: () => undefined,
-    provider: 'mockbot',
+    provider: ChatbotProvider.Mockbot,
     prefix: '/',
   };
 }

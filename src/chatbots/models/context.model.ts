@@ -9,8 +9,8 @@ import {
   CommandInteraction,
 } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
-import { LabelValues } from 'prom-client';
 
+import { ChatbotProvider } from '..';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
 
@@ -40,7 +40,7 @@ export interface Context {
   argumentParser: (
     context: Context, requestedArgs: Argument[],
   ) => ArgumentManager;
-  provider: string;
+  provider: ChatbotProvider;
   prefix: string;
   chatId?: number;
   options?: Options;

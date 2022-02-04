@@ -35,6 +35,8 @@ class Discord {
 
   bot: Client;
 
+  id = constants.PROVIDERS.DISCORD.ID;
+
   static async executeAction(
     interaction: ComplexInteraction,
     action: string,
@@ -53,7 +55,7 @@ class Discord {
           reply,
           interaction,
           argumentParser,
-          provider: constants.PROVIDERS.DISCORD.NAME,
+          provider: this.id,
           prefix: constants.PROVIDERS.DISCORD.PREFIX,
           options: {},
         };
