@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 
-import getLeetcodeDataFromUsername from '../leetcode';
 import { User } from '../leetcode/models';
 import Database from '../database';
 
@@ -9,16 +8,17 @@ export class Channel {
 
   database = Database;
 
-  getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
-
   channelId: string;
+
+  userLimit: number;
 
   /**
    * Create a new instance of the Channel class
    * @param {string} channelId - The channel ID of the Channel.
    */
-  constructor(channelId: string) {
+  constructor(channelId: string, userLimit: number) {
     this.channelId = channelId;
+    this.userLimit = userLimit;
   }
 
   /**
