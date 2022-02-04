@@ -5,8 +5,6 @@ import dayjs from 'dayjs';
 
 /* eslint-disable class-methods-use-this */
 class DatabaseProvider {
-  isRefreshing = false;
-
   lastRefreshedAt: dayjs.Dayjs;
 
   providerName = 'prototype';
