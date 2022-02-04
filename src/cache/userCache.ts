@@ -36,15 +36,16 @@ export class UserCache {
   }
 
   /**
-   * If the user exists in LeetCode, add the user to the database and the cache
-   * @param {string} username - The username of the user you want to add.
-   * @returns A boolean value.
+   * If the user exists in LeetCode, add the User to the Database and Cache
+   * @param {string} username - The username of the User you want to add to the
+   * Database.
+   * @returns A Promise with User.
    */
   static addUser(username: string): Promise<User> {
     // First get LeetCode User from username
     return this.getLeetcodeDataFromUsername(username)
       .then((user: User) => {
-        // If User does NOT exist in LeetCode, return false
+        // If User does NOT exist in LeetCode, return null
         if (!user.exists) return null;
 
         // Add username to Database
