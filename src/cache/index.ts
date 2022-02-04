@@ -51,8 +51,11 @@ class Cache {
 
   // Refresh Users map
   async refreshUsers(): Promise<CacheResponse> {
-    // If database was already refreshing
-    if (this.database.isRefreshing) {
+    const now = dayjs();
+    const { lastRefreshedAt } = this.database;
+
+    // If database was refreshed less than 15 minutes ago
+    if (now.diff(lastRefreshedAt, 'minutes') < 15) {
       log(SM.IS_ALREADY_REFRESHING);
       return {
         status: constants.STATUS.ERROR,
@@ -60,13 +63,13 @@ class Cache {
       };
     }
 
-    // Set database as refreshing and get refresh time
-    this.database.isRefreshing = true;
-    const refreshedStartedAt: string = dayjs().format(DATE_FORMAT);
+    // Set database refresh time
+    this.database.lastRefreshedAt = now;
 
     // Log when refresh started
-    log(SM.DATABASE_STARTED_REFRESH(refreshedStartedAt));
+    log(SM.DATABASE_STARTED_REFRESH(now.format(DATE_FORMAT)));
 
+    // Actual refresh
     try {
       // Get all users from database
       const databaseUsers = await this.database.findAllUsers();
@@ -99,12 +102,8 @@ class Cache {
       log(err.message);
     }
 
-    // Set database indicators
-    this.database.isRefreshing = false;
-    const refreshFinishedAt = dayjs().format(DATE_FORMAT);
-
-    // Log when refresh started
-    log(SM.DATABASE_FINISHED_REFRESH(refreshFinishedAt));
+    // Log when refresh ended
+    log(SM.DATABASE_FINISHED_REFRESH(dayjs().format(DATE_FORMAT)));
 
     return {
       status: constants.STATUS.SUCCESS,
