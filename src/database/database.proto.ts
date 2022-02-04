@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
 /* eslint-disable class-methods-use-this */
 
 import dayjs from 'dayjs';
@@ -12,8 +13,6 @@ import { IChannel } from '../cache/models/channel.model';
  * database.
  */
 class DatabaseProvider {
-  isRefreshing = false;
-
   providerName = 'prototype';
 
   lastRefreshTime: dayjs.Dayjs;
