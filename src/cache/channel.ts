@@ -1,54 +1,73 @@
+import * as _ from 'lodash';
+
 import getLeetcodeDataFromUsername from '../leetcode';
 import { User } from '../leetcode/models';
-import dictionary from '../utils/dictionary';
-import { log } from '../utils/helper';
-
-type callbackType = (username: string) => Promise<User>;
-
-const { SERVER_MESSAGES: SM } = dictionary;
+import Database from '../database';
 
 export class Channel {
   users: User[] = [];
 
-  getLeetcodeDataFromUsername: callbackType = getLeetcodeDataFromUsername;
+  database = Database;
 
-  // Get amount of users
+  getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
+
+  channelId: string;
+
+  /**
+   * Create a new instance of the Channel class
+   * @param {string} channelId - The channel ID of the Channel.
+   */
+  constructor(channelId: string) {
+    this.channelId = channelId;
+  }
+
+  /**
+   * Get the number of users in the Channel.
+   * @returns The number of users in the Channel.
+   */
   get userAmount(): number {
     return this.users.length;
   }
 
-  // Replace User
-  addOrReplaceUser(username: string, user: User): void {
-    // Replace User if username was found
-    for (let i = 0; i < this.userAmount; i++) {
-      if (this.users[i].username.toLowerCase() === username.toLowerCase()) {
-        this.users[i] = user;
-        return;
-      }
-    }
+  /**
+   * Add a User to the Channel
+   * @param {User} user - User
+   */
+  addUser(user: User): void {
+    // Add User to Channel in Database
+    this.database.addUserToChannel(this.channelId, user.username);
 
-    // If user was not found in cache, add user
+    // Add User to Cache
     this.users.push(user);
-  }
 
-  refresh(): void {
-    this.users.forEach(async (user) => {
-      // Load LeetCode data from username
-      const leetcodeUser = await getLeetcodeDataFromUsername(user.username);
-
-      if (leetcodeUser.exists) {
-        this.addOrReplaceUser(user.username, leetcodeUser);
-        log(SM.USERNAME_WAS_REFRESHED(user.username));
-      } else {
-        log(SM.USERNAME_WAS_NOT_REFRESHED(user.username));
-      }
-    });
-
-    // We should sort Users after every refresh
+    // Sort Users after adding new one
     this.sortUsers();
   }
 
-  // Sort all Users by amount of solved questions on LeetCode
+  /**
+   * Remove a user from the Channel
+   * @param {string} username - The username of the User to remove.
+   */
+  removeUser(username: string): void {
+    // Remove User from Channel in Database
+    this.database.removeUserFromChannel(this.channelId, username);
+
+    // Remove User from Cache
+    _.remove(this.users, { username });
+  }
+
+  /**
+   * Return the User with the given username
+   * @param {string} username - string
+   * @returns The User object that matches the username.
+   */
+  getUser(username: string): User {
+    return this.users.find((user) => user.username === username);
+  }
+
+  /**
+   * Sort the Users by the number of solved problems
+   */
   sortUsers(): void {
     this.users.sort(
       (user1, user2) => {
@@ -59,23 +78,10 @@ export class Channel {
     );
   }
 
-  // Remove all Users from Database
-  async clearUsers() {
-    const deleted = await this.database.removeAllUsers();
-
-    if (deleted) {
-      // Remove all Users from cache
-      this.users = [];
-
-      return {
-        status: constants.STATUS.SUCCESS,
-        detail: BM.DATABASE_WAS_CLEARED,
-      };
-    }
-
-    return {
-      status: constants.STATUS.ERROR,
-      detail: BM.DATABASE_WAS_NOT_CLEARED,
-    };
+  /**
+   * Clear the Channel from all Users
+   */
+  clear(): void {
+    this.database.clearChannel(this.channelId);
   }
 }
