@@ -118,6 +118,7 @@ const CHAT_STATUS = {
 
 const TELEGRAM = {
   ID: ChatbotProvider.Telegram,
+  NAME: 'Telegram',
   ENABLE: !!TELEGRAM_TOKEN,
   TOKEN: TELEGRAM_TOKEN,
   PREFIX: '/',
@@ -125,6 +126,7 @@ const TELEGRAM = {
 
 const DISCORD = {
   ID: ChatbotProvider.Discord,
+  NAME: 'Discord',
   ENABLE: !!DISCORD_TOKEN,
   TOKEN: DISCORD_TOKEN,
   APP_ID: DISCORD_APP_ID,
@@ -134,6 +136,7 @@ const DISCORD = {
 
 const SLACK = {
   ID: ChatbotProvider.Slack,
+  NAME: 'Slack',
   ENABLE: !!SLACK_TOKEN,
   TOKEN: SLACK_TOKEN,
   SIGNING_SECRET: SLACK_SIGNING_SECRET,
@@ -143,6 +146,7 @@ const SLACK = {
 
 const MOCKBOT = {
   ID: ChatbotProvider.Mockbot,
+  NAME: 'Mockbot',
   PREFIX: '/',
 };
 
