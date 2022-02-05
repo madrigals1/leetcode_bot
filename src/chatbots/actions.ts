@@ -116,7 +116,9 @@ export default class Actions {
       // Add Buttons with User List
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
-          action: 'remove', password: usernameOrPassword,
+          action: 'remove',
+          users: context.channelCache.users,
+          password: usernameOrPassword,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -135,7 +137,9 @@ export default class Actions {
       // Add Buttons with User List
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
-          action: 'remove', password,
+          action: 'remove',
+          users: context.channelCache.users,
+          password,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -306,7 +310,10 @@ export default class Actions {
     if (username === '') {
       // Add user buttons
       context.options.buttons = [{
-        buttons: createButtonsFromUsers({ action: 'profile' }),
+        buttons: createButtonsFromUsers({
+          action: 'profile',
+          users: context.channelCache.users,
+        }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
@@ -379,7 +386,10 @@ export default class Actions {
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
-      buttons: createButtonsFromUsers({ action: 'avatar' }),
+      buttons: createButtonsFromUsers({
+        action: 'avatar',
+        users: context.channelCache.users,
+      }),
       buttonPerRow: 3,
       placeholder: 'Username',
       type: ButtonContainerType.MultipleButtons,
@@ -435,7 +445,10 @@ export default class Actions {
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
-      buttons: createButtonsFromUsers({ action: 'submissions' }),
+      buttons: createButtonsFromUsers({
+        action: 'submissions',
+        users: context.channelCache.users,
+      }),
       buttonPerRow: 3,
       placeholder: 'Username',
       type: ButtonContainerType.MultipleButtons,
@@ -486,7 +499,10 @@ export default class Actions {
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
-      buttons: createButtonsFromUsers({ action: 'problems' }),
+      buttons: createButtonsFromUsers({
+        action: 'problems',
+        users: context.channelCache.users,
+      }),
       buttonPerRow: 3,
       placeholder: 'Username',
       type: ButtonContainerType.MultipleButtons,
@@ -524,7 +540,10 @@ export default class Actions {
     // Getting left User
     if (first === '') {
       context.options.buttons = [{
-        buttons: createButtonsFromUsers({ action: 'compare' }),
+        buttons: createButtonsFromUsers({
+          action: 'compare',
+          users: context.channelCache.users,
+        }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
@@ -536,7 +555,10 @@ export default class Actions {
     // Getting right User
     if (second === '') {
       context.options.buttons = [{
-        buttons: createButtonsFromUsers({ action: `compare ${first}` }),
+        buttons: createButtonsFromUsers({
+          action: `compare ${first}`,
+          users: context.channelCache.users,
+        }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
