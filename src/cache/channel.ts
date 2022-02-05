@@ -110,9 +110,11 @@ export class ChannelCache {
    * @param {string} username - The username of the User to remove.
    */
   async removeUser(username: string): Promise<CacheResponse> {
+    const usernameLower = username.toLowerCase();
+
     // Remove User from Channel in Database
     return this.database
-      .removeUserFromChannel(this.channelData.id, username)
+      .removeUserFromChannel(this.channelData.id, usernameLower)
       .then((deletedFromDB) => {
         if (!deletedFromDB) {
           return {
