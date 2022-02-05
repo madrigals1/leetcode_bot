@@ -11,6 +11,7 @@ import constants from '../../utils/constants';
 import { vizapiActions } from '../../chatbots/actions';
 import { tableForSubmissions, compareMenu } from '../../vizapi';
 import { users } from '../__mocks__/data.mock';
+import { UserCache } from '../../cache/userCache';
 
 const mockbot = new Mockbot();
 Cache.database = new MockDatabaseProvider();
@@ -24,7 +25,7 @@ const { BOT_MESSAGES: BM } = dictionary;
 
 beforeEach(() => {
   mockbot.clear();
-  Cache.clearUsers();
+  UserCache.clear();
   Cache.userLimit = constants.SYSTEM.USER_AMOUNT_LIMIT;
   vizapiActions.tableForSubmissions = tableForSubmissions;
   vizapiActions.compareMenu = compareMenu;
@@ -60,13 +61,13 @@ test('chatbots.actions.add action', async () => {
   await mockbot.send('/add random_username random_username_2');
 
   const message1 = BM.USERNAME_WAS_ADDED(
-    'random_username', Cache.userAmount - 1, Cache.userLimit,
+    'random_username', UserCache.userAmount - 1, Cache.userLimit,
   );
   const message2 = BM.USERNAME_WAS_ADDED(
-    'random_username_2', Cache.userAmount, Cache.userLimit,
+    'random_username_2', UserCache.userAmount, Cache.userLimit,
   );
 
-  expect(Cache.users.length).toBe(2);
+  expect(UserCache.getAllUsers().length).toBe(2);
 
   expect(mockbot.lastMessage()).toEqual(`User List:\n${message1}${message2}`);
 
@@ -83,7 +84,7 @@ test('chatbots.actions.add action', async () => {
   expect(mockbot.lastMessage()).toEqual(`User List:\n${message3}${message4}`);
 
   // Test error cases (user limit)
-  await Cache.clearUsers();
+  await UserCache.clear();
   Cache.userLimit = 0;
 
   await mockbot.send('/add random_username random_username_2');
@@ -163,11 +164,11 @@ test('chatbots.actions.clear action', async () => {
   // Test with correct arguments
   await mockbot.send('/add random_username random_username_2');
 
-  expect(Cache.users.length).toBe(2);
+  expect(UserCache.getAllUsers().length).toBe(2);
 
   await mockbot.send(`/clear ${mockPassword}`);
 
-  expect(Cache.users.length).toBe(0);
+  expect(UserCache.getAllUsers().length).toBe(0);
 
   const messages = mockbot.messages(2);
 
@@ -195,7 +196,8 @@ test('chatbots.actions.stats action', async () => {
   // Test with correct arguments
   await mockbot.send(`/stats ${mockPassword}`);
 
-  expect(mockbot.lastMessage()).toEqual(BM.STATS_TEXT(mockbot.name, Cache));
+  expect(mockbot.lastMessage())
+    .toEqual(BM.STATS_TEXT(constants.PROVIDERS.MOCKBOT.ID, Cache));
 
   // Test with incorrect arguments (incorrect password)
   await mockbot.send('/stats incorrect_password');
@@ -215,18 +217,19 @@ test('chatbots.actions.stats action', async () => {
 test('chatbots.actions.rating action', async () => {
   // Confirm that 2 users exist in Database
   await mockbot.send('/add random_username random_username_2');
-  expect(Cache.users.length).toBe(2);
+  expect(UserCache.getAllUsers().length).toBe(2);
 
   // Test regular rating with correct arguments
   await mockbot.send('/rating');
 
-  expect(mockbot.lastMessage()).toEqual(BM.RATING_TEXT(Cache.allUsers()));
+  expect(mockbot.lastMessage())
+    .toEqual(BM.RATING_TEXT(UserCache.getAllUsers()));
 
   // Test cumulative rating with correct arguments
   await mockbot.send('/rating cml');
 
   // Predefined data
-  const cmlRating = Cache.allUsers().sort((user1, user2) => {
+  const cmlRating = UserCache.getAllUsers().sort((user1, user2) => {
     const cml1 = user1.computed.problemsSolved.cumulative;
     const cml2 = user2.computed.problemsSolved.cumulative;
     return cml2 - cml1;
@@ -242,7 +245,7 @@ test('chatbots.actions.rating action', async () => {
   expect(mockbot.lastMessage()).toEqual(BM.INCORRECT_RATING_TYPE);
 
   // Test with 0 users
-  await Cache.clearUsers();
+  await UserCache.clear();
 
   // Regular Rating with 0 users
   await mockbot.send('/rating');
@@ -265,7 +268,7 @@ test('chatbots.actions.profile action', async () => {
 
   await mockbot.send('/profile random_username');
 
-  const user = Cache.loadUser('random_username');
+  const user = UserCache.getUser('random_username');
 
   expect(mockbot.lastMessage()).toEqual(BM.USER_TEXT(user));
   /* TODO: Test buttons */
@@ -294,7 +297,7 @@ test('chatbots.actions.avatar action', async () => {
   await mockbot.send(`/add ${username}`);
   await mockbot.send(`/avatar ${username}`);
 
-  const user = Cache.loadUser(username);
+  const user = UserCache.getUser(username);
   const context = mockbot.getContext();
 
   expect(context.photoUrl).toEqual(user.profile.userAvatar);
@@ -338,7 +341,7 @@ test('chatbots.actions.submissions action', async () => {
   expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found'));
 
   // Test with incorrect arguments (User has no submissions)
-  const newUser = _.cloneDeep(Cache.users[0]);
+  const newUser = _.cloneDeep(UserCache.getAllUsers()[0]);
   newUser.username = 'clone_username';
   newUser.submitStats.acSubmissionNum = [];
   users.push(newUser);
@@ -352,7 +355,7 @@ test('chatbots.actions.submissions action', async () => {
   users.pop();
 
   // Test with incorrect arguments (Error on the server)
-  const newUser2 = _.cloneDeep(Cache.users[0]);
+  const newUser2 = _.cloneDeep(UserCache.getAllUsers()[0]);
   newUser2.username = 'clone_username_2';
   newUser2.submitStats = null;
   users.push(newUser2);
@@ -411,7 +414,7 @@ test('chatbots.actions.compare action', async () => {
   const thirdUsername = 'clone_username';
 
   // Test with incorrect arguments (Error on the server)
-  const newUser = _.cloneDeep(Cache.users[0]);
+  const newUser = _.cloneDeep(UserCache.getAllUsers()[0]);
   newUser.username = thirdUsername;
   newUser.name = null;
   users.push(newUser);
