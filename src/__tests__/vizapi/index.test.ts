@@ -6,9 +6,9 @@ import {
   compareMenu,
   tableForSubmissions,
 } from '../../vizapi';
-import dictionary from '../../utils/dictionary';
+import { dictionary } from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
-import constants from '../../utils/constants';
+import { constants } from '../../utils/constants';
 
 const { VIZAPI_LINK } = constants;
 const { BOT_MESSAGES: BM, SERVER_MESSAGES: SM } = dictionary;

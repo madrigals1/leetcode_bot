@@ -1,4 +1,4 @@
-import constants from '../utils/constants';
+import { constants } from '../utils/constants';
 import { User } from '../leetcode/models';
 import Cache from '../cache';
 

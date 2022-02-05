@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
 
 import Mockbot from '../__mocks__/chatbots/mockbot';
-import dictionary from '../../utils/dictionary';
+import { dictionary } from '../../utils/dictionary';
 import Cache from '../../cache';
 import {
   mockGetLeetcodeDataFromUsername, mockTableForSubmissions, mockCompareMenu,
 } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
-import constants from '../../utils/constants';
+import { constants } from '../../utils/constants';
 import { vizapiActions } from '../../chatbots/actions';
 import { tableForSubmissions, compareMenu } from '../../vizapi';
 import { users } from '../__mocks__/data.mock';

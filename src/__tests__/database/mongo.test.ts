@@ -4,7 +4,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { jest } from '@jest/globals';
 import * as mongoose from 'mongoose';
 
-import dictionary from '../../utils/dictionary';
+import { dictionary } from '../../utils/dictionary';
 import MongoDB from '../../database/mongo';
 
 const { SERVER_MESSAGES: SM } = dictionary;

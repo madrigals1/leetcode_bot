@@ -5,8 +5,8 @@ import * as TelegramBot from 'node-telegram-bot-api';
 
 import { log } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
-import constants from '../../utils/constants';
-import dictionary from '../../utils/dictionary';
+import { constants } from '../../utils/constants';
+import { dictionary } from '../../utils/dictionary';
 import { Options, Context, TelegramMessage } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
 

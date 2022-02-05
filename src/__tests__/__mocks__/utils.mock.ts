@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { ButtonOptions, Context } from '../../chatbots/models';
 import { VizapiResponse } from '../../vizapi/models';
 import { User } from '../../leetcode/models';
-import dictionary from '../../utils/dictionary';
+import { dictionary } from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
 import { ChatbotProvider } from '../../chatbots';
 

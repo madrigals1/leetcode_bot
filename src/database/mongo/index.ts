@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
-import constants from '../../utils/constants';
-import dictionary from '../../utils/dictionary';
+import { constants } from '../../utils/constants';
+import { dictionary } from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
 

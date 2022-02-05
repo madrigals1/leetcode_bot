@@ -10,7 +10,7 @@ import ArgumentManager from '../argumentManager';
 import { Argument, ParsedArgument } from '../decorators/models';
 import { Context, ButtonContainer } from '../models';
 import { ButtonContainerType } from '../models/buttons.model';
-import dictionary from '../../utils/dictionary';
+import { dictionary } from '../../utils/dictionary';
 
 import buttonIndexer from './buttonIndexer';
 

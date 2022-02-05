@@ -5,7 +5,7 @@ import * as dayjs from 'dayjs';
 import getLeetcodeDataFromUsername from '../leetcode';
 import Database from '../database';
 import { delay } from '../utils/helper';
-import constants from '../utils/constants';
+import { constants } from '../utils/constants';
 
 import { ChannelCache } from './channel';
 import { UserCache } from './userCache';

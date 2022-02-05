@@ -1,4 +1,4 @@
-import dictionary from '../../utils/dictionary';
+import { dictionary } from '../../utils/dictionary';
 
 const { SERVER_MESSAGES: SM } = dictionary;
 

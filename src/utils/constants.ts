@@ -202,7 +202,7 @@ const SYSTEM = {
   DATE_FORMAT: 'YYYY-MM-DD hh:mm a',
 };
 
-export default {
+export const constants = {
   PROVIDERS,
   DATABASE,
   PORT,

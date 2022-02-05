@@ -1,7 +1,7 @@
 import {
   getLeetcodeProblemLink, getLeetcodeUsernameLink,
 } from '../../leetcode/utils';
-import constants from '../../utils/constants';
+import { constants } from '../../utils/constants';
 import { User } from '../../leetcode/models';
 
 import { MockDatabaseInterface } from './models/mockData.model';

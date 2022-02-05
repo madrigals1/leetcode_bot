@@ -1,8 +1,8 @@
 import { App } from '@slack/bolt';
 
 import Actions, { registeredActions } from '../actions';
-import constants from '../../utils/constants';
-import dictionary from '../../utils/dictionary';
+import { constants } from '../../utils/constants';
+import { dictionary } from '../../utils/dictionary';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';

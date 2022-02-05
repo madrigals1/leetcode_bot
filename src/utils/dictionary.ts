@@ -4,7 +4,7 @@ import { getCmlFromUsers } from '../leetcode/utils';
 import { UserCache } from '../cache/userCache';
 import { ChatbotProvider } from '../chatbots';
 
-import constants from './constants';
+import { constants } from './constants';
 
 const SERVER_MESSAGES = {
   // ERROR
@@ -270,7 +270,7 @@ ${userNameList}
   CHANNEL_WAS_NOT_CLEARED: `${constants.EMOJI.ERROR} Channel was not cleared`,
 };
 
-export default {
+export const dictionary = {
   BOT_MESSAGES,
   SERVER_MESSAGES,
 };

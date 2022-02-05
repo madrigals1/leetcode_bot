@@ -9,8 +9,8 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 
-import constants from '../../utils/constants';
-import dictionary from '../../utils/dictionary';
+import { constants } from '../../utils/constants';
+import { dictionary } from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { Context } from '../models';

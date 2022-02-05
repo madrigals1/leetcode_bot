@@ -1,8 +1,8 @@
 import pg from 'pg';
 
 import { error, log } from '../../utils/helper';
-import constants from '../../utils/constants';
-import dictionary from '../../utils/dictionary';
+import { constants } from '../../utils/constants';
+import { dictionary } from '../../utils/dictionary';
 import DatabaseProvider from '../database.proto';
 
 import QUERIES from './queries';

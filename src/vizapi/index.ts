@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-import constants from '../utils/constants';
+import { constants } from '../utils/constants';
 import { log, error } from '../utils/helper';
-import dictionary from '../utils/dictionary';
+import { dictionary } from '../utils/dictionary';
 import { User } from '../leetcode/models';
 
 import { VizapiResponse, CompareUser } from './models';

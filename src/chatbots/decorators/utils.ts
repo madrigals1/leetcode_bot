@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import ArgumentManager from '../argumentManager';
 import { Context } from '../models';
 import { ArgumentsError, InputError } from '../../utils/errors';
-import dictionary from '../../utils/dictionary';
+import { dictionary } from '../../utils/dictionary';
 import Cache from '../../cache';
 import { ChannelKey } from '../../cache/models/channel.model';
 import { ChannelCache } from '../../cache/channel';

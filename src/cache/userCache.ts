@@ -6,8 +6,8 @@ import { User } from '../leetcode/models';
 import getLeetcodeDataFromUsername from '../leetcode';
 import Database from '../database';
 import { log, delay } from '../utils/helper';
-import dictionary from '../utils/dictionary';
-import constants from '../utils/constants';
+import { dictionary } from '../utils/dictionary';
+import { constants } from '../utils/constants';
 
 import { CacheResponse } from './models/response.model';
 

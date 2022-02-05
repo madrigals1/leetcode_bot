@@ -1,7 +1,7 @@
-import dictionary from '../../utils/dictionary';
+import { dictionary } from '../../utils/dictionary';
 import { Context } from '../models';
 import { registeredActions } from '../actions';
-import constants from '../../utils/constants';
+import { constants } from '../../utils/constants';
 import ArgumentManager from '../argumentManager';
 import { ArgumentsError, InputError } from '../../utils/errors';
 import { actionLogger } from '../../prometheus';

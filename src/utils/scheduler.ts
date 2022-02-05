@@ -2,7 +2,7 @@ import * as schedule from 'node-schedule';
 
 import Cache from '../cache';
 
-import constants from './constants';
+import { constants } from './constants';
 
 export function refreshUsersCron(): void {
   schedule.scheduleJob(

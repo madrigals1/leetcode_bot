@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 
-import dictionary from '../../../utils/dictionary';
+import { dictionary } from '../../../utils/dictionary';
 import DiscordBotInstance from '../../../chatbots/discord';
 
 const { SERVER_MESSAGES: SM } = dictionary;

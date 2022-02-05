@@ -6,7 +6,7 @@ import { Args } from '../../../chatbots/models';
 import { ArgumentsError, InputError } from '../../../utils/errors';
 import { ArgumentTestCase } from '../../__mocks__/models';
 import { mockContext } from '../../__mocks__/utils.mock';
-import dictionary from '../../../utils/dictionary';
+import { dictionary } from '../../../utils/dictionary';
 
 const { BOT_MESSAGES: BM } = dictionary;
 
