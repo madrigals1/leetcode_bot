@@ -165,4 +165,11 @@ export class UserCache {
       detail: BM.CACHE_IS_REFRESHED,
     };
   }
+
+  /**
+   * Clear the users list
+   */
+  static clear(): void {
+    this.users.clear();
+  }
 }
