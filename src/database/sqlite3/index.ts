@@ -29,7 +29,7 @@ class SQLite extends DatabaseProvider {
           this.database = database;
 
           // Create database table
-          this.createUserTable();
+          this.createTables();
 
           resolve(true);
         })
@@ -42,9 +42,16 @@ class SQLite extends DatabaseProvider {
     });
   }
 
-  // Create Users table if not exists
-  createUserTable(): unknown {
-    return this.database.run(QUERIES.CREATE_USERS_TABLE);
+  // Create Tables
+  private createTables(): void {
+    // Create Users Table
+    this.database.run(QUERIES.CREATE_USERS_TABLE);
+
+    // Create Channels Table
+    this.database.run(QUERIES.CREATE_CHANNELS_TABLE);
+
+    // Create Channel Users Table
+    this.database.run(QUERIES.CREATE_CHANNEL_USERS_TABLE);
   }
 
   // Find all Users
