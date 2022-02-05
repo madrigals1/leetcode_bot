@@ -6,7 +6,7 @@ import refreshUsersCron from './utils/scheduler';
 import Database from './database';
 import Cache from './cache';
 import constants from './utils/constants';
-import { delay } from './utils/helper';
+import { delay, log } from './utils/helper';
 
 // Connecting to Database
 Database.connect().then(async () => {
@@ -14,7 +14,7 @@ Database.connect().then(async () => {
   await delay(1000);
 
   // Refreshing the users
-  Cache.refreshUsers()
+  Cache.preload()
     .then(() => {
       // Run Telegram BOT
       if (constants.PROVIDERS.TELEGRAM.ENABLE) new Telegram().run();
@@ -27,6 +27,9 @@ Database.connect().then(async () => {
 
       // Starting the scheduler for Cache refresher
       refreshUsersCron();
+    })
+    .catch((err) => {
+      log(err);
     });
 });
 
