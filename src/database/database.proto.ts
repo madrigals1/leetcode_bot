@@ -88,6 +88,15 @@ class DatabaseProvider {
   }
 
   /**
+   * It returns a list of users for a given Channel.
+   * @param {ChannelKey} channelKey - The key of the Channel you want to get the
+   * users for.
+   */
+  async getUsersForChannel(channelKey: ChannelKey): Promise<string[]> {
+    throw new Error('Not Implemented');
+  }
+
+  /**
    * Delete `Channel` using channelId
    * @param {number} channelId - number - The ID of the channel to delete.
    */
