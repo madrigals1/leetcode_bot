@@ -8,7 +8,7 @@ import { actionLogger } from '../../prometheus';
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
-import { getPassword } from './utils';
+import { getPassword, getOrCreateChannel } from './utils';
 
 const { BOT_MESSAGES: BM } = dictionary;
 
@@ -32,6 +32,12 @@ export function action(actionContext: ActionContext): (
       const replyHandler = new ReplyHandler(
         actionLogger.startTimer(), name, context,
       );
+
+      // Get Channel Cache
+      const channelCache = await getOrCreateChannel(context.channelKey);
+
+      // Add Channel Cache and Key to Context
+      context.channelCache = channelCache;
 
       const { argumentParser } = context;
 
