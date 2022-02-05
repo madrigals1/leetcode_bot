@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import dictionary from '../utils/dictionary';
 import Cache from '../cache';
 import constants from '../utils/constants';
@@ -10,6 +11,7 @@ import {
   ratingGraph,
 } from '../vizapi';
 import { VizapiResponse } from '../vizapi/models';
+import { UserCache } from '../cache/userCache';
 
 import { action } from './decorators';
 import {
@@ -67,8 +69,9 @@ export default class Actions {
     // Add all Users 1 by 1 and log into message
     for (let i = 0; i < usernames.length; i++) {
       // Get results of adding
-      // eslint-disable-next-line no-await-in-loop
-      const result: CacheResponse = await Cache.addUser(usernames[i]);
+      const result: CacheResponse = (
+        await context.channelCache.addUser(usernames[i])
+      );
 
       message += result.detail;
     }
@@ -82,7 +85,7 @@ export default class Actions {
     await context.reply(BM.CACHE_STARTED_REFRESH, context);
 
     // Refresh and return result
-    const result: CacheResponse = await Cache.refreshUsers();
+    const result: CacheResponse = await UserCache.refresh();
     return result.detail;
   }
 
@@ -148,7 +151,9 @@ export default class Actions {
     );
 
     // Remove User
-    const result: CacheResponse = await Cache.removeUser(username);
+    const result: CacheResponse = (
+      await context.channelCache.removeUser(username)
+    );
 
     return result.detail;
   }
@@ -173,7 +178,7 @@ export default class Actions {
     );
 
     // Remove all Users and send the result (success or failure)
-    const result: CacheResponse = await Cache.clearUsers();
+    const result: CacheResponse = await context.channelCache.clear();
 
     return result.detail;
   }
@@ -208,6 +213,7 @@ export default class Actions {
   })
   static async rating(context: Context): Promise<string> {
     const type = context.args.get('type').value;
+    const { users } = context.channelCache;
 
     // Prepare buttons
     const cmlButton = {
@@ -243,7 +249,7 @@ export default class Actions {
       // Add buttons
       context.options.buttons = [cmlButton, graphButton];
 
-      return BM.RATING_TEXT(Cache.allUsers());
+      return BM.RATING_TEXT(users);
     }
 
     // Cumulative rating:
@@ -254,14 +260,14 @@ export default class Actions {
       // Add buttons
       context.options.buttons = [regularButton, graphButton];
 
-      return BM.CML_RATING_TEXT(Cache.allUsers());
+      return BM.CML_RATING_TEXT(users);
     }
 
     // Rating with graph
     if (type === 'graph') {
       // Create HTML image with Graph
       const response: VizapiResponse = (
-        await vizapiActions.ratingGraph(Cache.allUsers())
+        await vizapiActions.ratingGraph(users)
       );
 
       // If image was created
@@ -310,7 +316,7 @@ export default class Actions {
     }
 
     // Get User from username
-    const user: User = Cache.loadUser(username);
+    const user: User = context.channelCache.loadUser(username);
 
     if (!user) return BM.USERNAME_NOT_FOUND(username);
 
@@ -360,7 +366,7 @@ export default class Actions {
 
     // If 1 User was sent
     if (username !== '') {
-      const user: User = Cache.loadUser(username);
+      const user: User = context.channelCache.loadUser(username);
 
       if (user) {
         // Add photo to context
@@ -400,7 +406,7 @@ export default class Actions {
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user: User = Cache.loadUser(username);
+      const user: User = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
       if (!user) return BM.USERNAME_NOT_FOUND(username);
@@ -456,7 +462,7 @@ export default class Actions {
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user: User = Cache.loadUser(username);
+      const user: User = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
       if (!user) return BM.USERNAME_NOT_FOUND(username);
@@ -540,8 +546,8 @@ export default class Actions {
     }
 
     // Get Users from args
-    const leftUser: User = Cache.loadUser(first);
-    const rightUser: User = Cache.loadUser(second);
+    const leftUser: User = context.channelCache.loadUser(first);
+    const rightUser: User = context.channelCache.loadUser(second);
 
     if (!leftUser) {
       return BM.USERNAME_NOT_FOUND(first);
