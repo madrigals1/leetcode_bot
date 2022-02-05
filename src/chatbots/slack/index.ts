@@ -40,6 +40,10 @@ class Slack {
           channel: {
             send: say,
           },
+          channelKey: {
+            chatId: command.channel_id,
+            provider: this.id,
+          },
           provider: this.id,
           prefix: constants.PROVIDERS.SLACK.PREFIX,
           options: {},
