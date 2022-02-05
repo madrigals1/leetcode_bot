@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { dictionary } from '../utils/dictionary';
+import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import Cache from '../cache';
 import { constants } from '../utils/constants';
 import { CacheResponse } from '../cache/models/response.model';
@@ -19,8 +19,6 @@ import {
 } from './models';
 import { createButtonsFromUsers, getCloseButton } from './utils';
 import { ButtonContainerType } from './models/buttons.model';
-
-const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 
 export const registeredActions: RegisteredAction[] = [];
 

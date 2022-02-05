@@ -6,12 +6,11 @@ import { User } from '../leetcode/models';
 import getLeetcodeDataFromUsername from '../leetcode';
 import Database from '../database';
 import { log, delay } from '../utils/helper';
-import { dictionary } from '../utils/dictionary';
+import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { constants } from '../utils/constants';
 
 import { CacheResponse } from './models/response.model';
 
-const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 const { DATE_FORMAT } = constants.SYSTEM;
 
 export class UserCache {

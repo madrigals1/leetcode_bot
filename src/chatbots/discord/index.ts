@@ -10,7 +10,7 @@ import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 
 import { constants } from '../../utils/constants';
-import { dictionary } from '../../utils/dictionary';
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { Context } from '../models';
@@ -24,7 +24,6 @@ import { getKeyBasedParsedArguments, reply } from './utils';
 import buttonIndexer from './buttonIndexer';
 
 const { DISCORD } = constants.PROVIDERS;
-const { SERVER_MESSAGES: SM } = dictionary;
 
 class Discord {
   token: string = DISCORD.TOKEN;

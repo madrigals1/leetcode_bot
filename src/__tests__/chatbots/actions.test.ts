@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
 import Mockbot from '../__mocks__/chatbots/mockbot';
-import { dictionary } from '../../utils/dictionary';
+import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import Cache from '../../cache';
 import {
   mockGetLeetcodeDataFromUsername, mockTableForSubmissions, mockCompareMenu,
@@ -20,8 +20,6 @@ Cache.delayTime = 0;
 
 const mockPassword = 'random_password';
 constants.SYSTEM.MASTER_PASSWORD = mockPassword;
-
-const { BOT_MESSAGES: BM } = dictionary;
 
 beforeEach(() => {
   mockbot.clear();

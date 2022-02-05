@@ -5,13 +5,11 @@ import { User } from '../leetcode/models';
 import Database from '../database';
 import { log } from '../utils/helper';
 import { constants } from '../utils/constants';
-import { dictionary } from '../utils/dictionary';
+import { BOT_MESSAGES as BM } from '../utils/dictionary';
 
 import { ChannelData } from './models/channel.model';
 import { CacheResponse } from './models/response.model';
 import { UserCache } from './userCache';
-
-const { BOT_MESSAGES: BM } = dictionary;
 
 export class ChannelCache {
   users: User[] = [];

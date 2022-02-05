@@ -3,13 +3,13 @@ import * as _ from 'lodash';
 import { ButtonOptions, Context } from '../../chatbots/models';
 import { VizapiResponse } from '../../vizapi/models';
 import { User } from '../../leetcode/models';
-import { dictionary } from '../../utils/dictionary';
+import {
+  SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
+} from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
 import { ChatbotProvider } from '../../chatbots';
 
 import { users, user1 } from './data.mock';
-
-const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 
 export async function mockGetLeetcodeDataFromUsername(
   username: string,
@@ -62,7 +62,7 @@ export async function mockCompareMenu(
 export function mockButtonOptions(
   action: string, password?: string,
 ): ButtonOptions {
-  return { action, password };
+  return { action, password, users: [] };
 }
 
 export function mockUserWithSolved(

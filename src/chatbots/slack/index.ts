@@ -2,15 +2,13 @@ import { App } from '@slack/bolt';
 
 import Actions, { registeredActions } from '../actions';
 import { constants } from '../../utils/constants';
-import { dictionary } from '../../utils/dictionary';
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
 
 import { reply } from './utils';
 import createBot from './bot';
-
-const { SERVER_MESSAGES: SM } = dictionary;
 
 class Slack {
   token: string = constants.PROVIDERS.SLACK.TOKEN;

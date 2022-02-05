@@ -2,13 +2,11 @@ import * as sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
 import { log } from '../../utils/helper';
-import { dictionary } from '../../utils/dictionary';
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { constants } from '../../utils/constants';
 import DatabaseProvider from '../database.proto';
 
 import QUERIES from './queries';
-
-const { SERVER_MESSAGES: SM } = dictionary;
 
 class SQLite extends DatabaseProvider {
   database;

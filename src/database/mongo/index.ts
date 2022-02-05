@@ -1,14 +1,13 @@
 import * as mongoose from 'mongoose';
 
 import { constants } from '../../utils/constants';
-import { dictionary } from '../../utils/dictionary';
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
 
 import UserModel, { IUserModel } from './schemas';
 
 const { MONGO } = constants.DATABASE;
-const { SERVER_MESSAGES: SM } = dictionary;
 
 // Main class for MongoDB Database
 class MongoDB extends DatabaseProvider {

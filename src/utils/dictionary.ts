@@ -6,7 +6,7 @@ import { ChatbotProvider } from '../chatbots';
 
 import { constants } from './constants';
 
-const SERVER_MESSAGES = {
+export const SERVER_MESSAGES = {
   // ERROR
   ERROR_ON_THE_SERVER(error: Error | string): string {
     return `Error on the server: ${error}`;
@@ -62,7 +62,7 @@ ${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
   
 `;
 
-const BOT_MESSAGES = {
+export const BOT_MESSAGES = {
   // ERROR MESSAGES
   INCORRECT_INPUT: `${constants.EMOJI.ERROR} Incorrect input`,
   INCORRECT_RATING_TYPE: `${constants.EMOJI.ERROR} Incorrect rating type`,
@@ -268,9 +268,4 @@ ${userNameList}
   // Channel Related
   CHANNEL_WAS_CLEARED: `${constants.EMOJI.SUCCESS} Channel was cleared`,
   CHANNEL_WAS_NOT_CLEARED: `${constants.EMOJI.ERROR} Channel was not cleared`,
-};
-
-export const dictionary = {
-  BOT_MESSAGES,
-  SERVER_MESSAGES,
 };

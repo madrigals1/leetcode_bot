@@ -1,9 +1,7 @@
 import { App } from '@slack/bolt';
 
 import { log } from '../../utils/helper';
-import { dictionary } from '../../utils/dictionary';
-
-const { SERVER_MESSAGES: SM } = dictionary;
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 
 const createBot = async (
   token: string, signingSecret: string, appToken: string,

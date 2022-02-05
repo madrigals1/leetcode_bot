@@ -1,4 +1,4 @@
-import { dictionary } from '../../utils/dictionary';
+import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import { Context } from '../models';
 import { registeredActions } from '../actions';
 import { constants } from '../../utils/constants';
@@ -9,8 +9,6 @@ import { actionLogger } from '../../prometheus';
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
 import { getPassword, getOrCreateChannel } from './utils';
-
-const { BOT_MESSAGES: BM } = dictionary;
 
 export function action(actionContext: ActionContext): (
   target: unknown,

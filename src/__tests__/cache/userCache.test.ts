@@ -6,7 +6,9 @@ import Cache from '../../cache';
 import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import { users, mockDatabaseData } from '../__mocks__/data.mock';
-import { dictionary } from '../../utils/dictionary';
+import {
+  SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
+} from '../../utils/dictionary';
 import { constants } from '../../utils/constants';
 import { CacheResponse } from '../../cache/models/response.model';
 import { User } from '../../leetcode/models';
@@ -16,8 +18,6 @@ import { UserCache } from '../../cache/userCache';
 Cache.database = new MockDatabaseProvider();
 Cache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 Cache.delayTime = 0;
-
-const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 
 beforeEach(async () => {
   await UserCache.clear();

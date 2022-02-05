@@ -3,14 +3,12 @@ import * as _ from 'lodash';
 import ArgumentManager from '../argumentManager';
 import { Context } from '../models';
 import { ArgumentsError, InputError } from '../../utils/errors';
-import { dictionary } from '../../utils/dictionary';
+import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import Cache from '../../cache';
 import { ChannelKey } from '../../cache/models/channel.model';
 import { ChannelCache } from '../../cache/channel';
 
 import { Argument, ParsedArgument } from './models';
-
-const { BOT_MESSAGES: BM } = dictionary;
 
 export function getArgs(message: string): string[] {
   // Get all args from message

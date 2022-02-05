@@ -2,13 +2,12 @@ import pg from 'pg';
 
 import { error, log } from '../../utils/helper';
 import { constants } from '../../utils/constants';
-import { dictionary } from '../../utils/dictionary';
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import DatabaseProvider from '../database.proto';
 
 import QUERIES from './queries';
 
 const { POSTGRES } = constants.DATABASE;
-const { SERVER_MESSAGES: SM } = dictionary;
 
 class Postgres extends DatabaseProvider {
   client = new pg.Client({
