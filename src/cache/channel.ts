@@ -28,6 +28,18 @@ export class ChannelCache {
     this.channelData = channel;
   }
 
+  async preload(): Promise<void> {
+    return this.database.getUsersForChannel(this.channelData.key)
+      .then((usernameList) => {
+        usernameList.forEach((username) => {
+          this.users.push(UserCache.getUser(username));
+        });
+      })
+      .catch((err) => {
+        log(err);
+      });
+  }
+
   /**
    * Get the number of users in the Channel.
    * @returns The number of users in the Channel.
