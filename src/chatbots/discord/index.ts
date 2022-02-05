@@ -35,8 +35,6 @@ class Discord {
 
   bot: Client;
 
-  id = constants.PROVIDERS.DISCORD.ID;
-
   static async executeAction(
     interaction: ComplexInteraction,
     action: string,
@@ -45,6 +43,7 @@ class Discord {
     ) => ArgumentManager,
   ) {
     const commandName = action.split(' ')[0].substring(1);
+    const id = constants.PROVIDERS.DISCORD.ID;
 
     // Find appropriate action by name and execute it
     for (let i = 0; i < registeredActions.length; i++) {
@@ -55,8 +54,12 @@ class Discord {
           reply,
           interaction,
           argumentParser,
-          provider: this.id,
+          provider: id,
           prefix: constants.PROVIDERS.DISCORD.PREFIX,
+          channelKey: {
+            chatId: interaction.channelId,
+            provider: id,
+          },
           options: {},
         };
 
