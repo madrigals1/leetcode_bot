@@ -2,6 +2,7 @@ import { User } from '../leetcode/models';
 import Cache from '../cache';
 import { getCmlFromUsers } from '../leetcode/utils';
 import { UserCache } from '../cache/userCache';
+import { ChatbotProvider } from '../chatbots';
 
 import constants from './constants';
 
@@ -232,13 +233,13 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
     return rating;
   },
 
-  STATS_TEXT(providerName: string, cache: typeof Cache): string {
+  STATS_TEXT(providerId: ChatbotProvider, cache: typeof Cache): string {
     const { userLimit } = cache;
     const users = UserCache.getAllUsers();
 
     // Get prefix for provider
     const provider = Object.keys(constants.PROVIDERS)
-      .find((key) => constants.PROVIDERS[key].NAME === providerName);
+      .find((key) => constants.PROVIDERS[key].ID === providerId);
 
     const userNameList = users.map(
       (user) => (`<b>- ${user.username}</b>`),
@@ -246,7 +247,7 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 
     return `
 <b>PROVIDER RELATED</b>
-<b>Provider:</b> ${providerName}
+<b>Provider:</b> ${constants.PROVIDERS[provider].NAME}
 <b>Prefix:</b> ${constants.PROVIDERS[provider].PREFIX}
 <b>Discord enabled:</b> ${constants.PROVIDERS.DISCORD.ENABLE}
 <b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
