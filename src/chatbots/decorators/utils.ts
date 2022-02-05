@@ -4,6 +4,9 @@ import ArgumentManager from '../argumentManager';
 import { Context } from '../models';
 import { ArgumentsError, InputError } from '../../utils/errors';
 import dictionary from '../../utils/dictionary';
+import Cache from '../../cache';
+import { ChannelKey } from '../../cache/models/channel.model';
+import { ChannelCache } from '../../cache/channel';
 
 import { Argument, ParsedArgument } from './models';
 
@@ -260,4 +263,16 @@ export function getPassword(argumentManager: ArgumentManager): string {
 
   const reason = BM.PASSWORD_NOT_FOUND_IN_ARGS;
   throw new InputError(reason);
+}
+
+export async function getOrCreateChannel(
+  channelKey: ChannelKey,
+): Promise<ChannelCache> {
+  const existingChannelCache = Cache.getChannel(channelKey);
+
+  if (existingChannelCache) return existingChannelCache;
+
+  const newChannelCache = await Cache.registerChannel(channelKey);
+
+  return newChannelCache;
 }
