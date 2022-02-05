@@ -1,6 +1,7 @@
 import { User } from '../leetcode/models';
 import Cache from '../cache';
 import { getCmlFromUsers } from '../leetcode/utils';
+import { UserCache } from '../cache/userCache';
 
 import constants from './constants';
 
@@ -138,6 +139,9 @@ const BOT_MESSAGES = {
   USERNAME_WAS_DELETED(username: string): string {
     return `${constants.EMOJI.SUCCESS} User <b>${username}</b> was deleted`;
   },
+  USERNAME_WAS_NOT_DELETED(username: string): string {
+    return `${constants.EMOJI.ERROR} User <b>${username}</b> was not deleted`;
+  },
   USERNAME_NOT_ADDED_USER_LIMIT(username: string, userLimit: number): string {
     return `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`;
   },
@@ -229,8 +233,8 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
   },
 
   STATS_TEXT(providerName: string, cache: typeof Cache): string {
-    const { userLimit, allUsers } = cache;
-    const users = allUsers();
+    const { userLimit } = cache;
+    const users = UserCache.getAllUsers();
 
     // Get prefix for provider
     const provider = Object.keys(constants.PROVIDERS)
@@ -259,6 +263,10 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 ${userNameList}
     `;
   },
+
+  // Channel Related
+  CHANNEL_WAS_CLEARED: `${constants.EMOJI.SUCCESS} Channel was cleared`,
+  CHANNEL_WAS_NOT_CLEARED: `${constants.EMOJI.ERROR} Channel was not cleared`,
 };
 
 export default {
