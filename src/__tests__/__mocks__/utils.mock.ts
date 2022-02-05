@@ -60,9 +60,9 @@ export async function mockCompareMenu(
 }
 
 export function mockButtonOptions(
-  action: string, password?: string,
+  action: string, _users: User[], password?: string,
 ): ButtonOptions {
-  return { action, password, users: [] };
+  return { action, password, users: _users };
 }
 
 export function mockUserWithSolved(
