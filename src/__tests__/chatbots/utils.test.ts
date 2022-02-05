@@ -1,15 +1,13 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
-import { user1, user2, users } from '../__mocks__/data.mock';
+import { user1, user2 } from '../__mocks__/data.mock';
 import { mockButtonOptions } from '../__mocks__/utils.mock';
 import { createButtonsFromUsers } from '../../chatbots/utils';
-import Cache from '../../cache';
-
-const savedUsers = [...Cache.users];
+import { UserCache } from '../../cache/userCache';
 
 beforeEach(() => {
   // Fix changed values before each test case
-  Cache.users = [...savedUsers];
+  UserCache.users = new Map();
 });
 
 afterEach(() => {
@@ -27,7 +25,8 @@ afterAll(async () => {
 test('chatbots.utils.createButtonsFromUsers action', async () => {
   // Valid: 2 users
   const action1 = 'action1';
-  Cache.users = users;
+  UserCache.users.set(user1.username, user1);
+  UserCache.users.set(user2.username, user2);
   const mockOptions1 = mockButtonOptions(action1);
   const buttonsResponse1 = createButtonsFromUsers(mockOptions1);
 
@@ -44,7 +43,8 @@ test('chatbots.utils.createButtonsFromUsers action', async () => {
 
   // Valid: 3 users
   const action2 = 'action2';
-  Cache.users = [...users, { ...user1, username: 'other_username' }];
+  const otherUsername = 'other_username';
+  UserCache.users.set(otherUsername, { ...user1, username: otherUsername });
   const mockOptions2 = mockButtonOptions(action2);
   const buttonsResponse2 = createButtonsFromUsers(mockOptions2);
 
@@ -53,7 +53,7 @@ test('chatbots.utils.createButtonsFromUsers action', async () => {
   // Valid: Add password
   const action3 = 'action3';
   const password3 = 'password3';
-  Cache.users = [...users];
+  UserCache.users.delete(otherUsername);
   const mockOptions3 = mockButtonOptions(action3, password3);
   const buttonsResponse3 = createButtonsFromUsers(mockOptions3);
 
@@ -64,7 +64,7 @@ test('chatbots.utils.createButtonsFromUsers action', async () => {
   expect(user2response2.action).toBe(`/${action3} ${user2.username} ${password3}`);
 
   // Valid: No users
-  Cache.users = [];
+  UserCache.clear();
   const mockOptions4 = mockButtonOptions('');
   const buttonsResponse4 = createButtonsFromUsers(mockOptions4);
 
