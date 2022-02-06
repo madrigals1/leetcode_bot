@@ -5,11 +5,15 @@ import _ from 'lodash';
 
 import { User } from '../../leetcode/models';
 import DatabaseProvider from '../../database/database.proto';
-import { ChannelData, ChannelKey } from '../../cache/models/channel.model';
+import {
+  ChannelData, ChannelKey, ChannelUser,
+} from '../../cache/models/channel.model';
 
 import { mockDatabaseData } from './data.mock';
 
 class MockDatabaseProvider extends DatabaseProvider {
+  channelId = 1;
+
   // Connect to Database
   async connect(): Promise<boolean> {
     return new Promise((resolve) => resolve(mockDatabaseData.fakeResult));
@@ -58,7 +62,8 @@ class MockDatabaseProvider extends DatabaseProvider {
   }
 
   async addChannel(channelData: ChannelData): Promise<ChannelData> {
-    mockDatabaseData.channels.push(channelData);
+    mockDatabaseData.channels.push({ ...channelData, id: this.channelId });
+    this.channelId += 1;
     return channelData;
   }
 
@@ -84,10 +89,26 @@ class MockDatabaseProvider extends DatabaseProvider {
     return mockDatabaseData.fakeResult;
   }
 
+  private existsChannelUser(channelUser: ChannelUser): boolean {
+    return !!mockDatabaseData.channelUsers
+      // eslint-disable-next-line arrow-body-style
+      .find((existingChannelUser) => {
+        return existingChannelUser.channelId === channelUser.channelId
+          && existingChannelUser.username === channelUser.username;
+      });
+  }
+
   async addUserToChannel(
     channelKey: ChannelKey, username: string,
   ): Promise<boolean> {
     const channel = await this.getChannel(channelKey);
+    const channelUser = { channelId: channel.id, username };
+
+    // If User already exists, return false
+    if (this.existsChannelUser(channelUser)) {
+      return false;
+    }
+
     mockDatabaseData.channelUsers.push({ channelId: channel.id, username });
     return mockDatabaseData.fakeResult;
   }
