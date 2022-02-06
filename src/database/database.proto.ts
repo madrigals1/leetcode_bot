@@ -97,41 +97,42 @@ class DatabaseProvider {
   }
 
   /**
-   * Delete `Channel` using channelId
-   * @param {number} channelId - number - The ID of the channel to delete.
+   * It deletes a channel.
+   * @param {ChannelKey} channelKey - The key of the channel to delete.
    */
-  async deleteChannel(channelId: number): Promise<any> {
+  async deleteChannel(channelKey: ChannelKey): Promise<any> {
     throw new Error('Not Implemented');
   }
 
   /**
-   * It adds a user to a `Channel`.
-   * @param {number} channelId - The id of the `Channel` to add the `User` to.
-   * @param {string} username - The username of the `User` you want to add to
-   * the `Channel`.
+   * It adds a user to a channel.
+   * @param {ChannelKey} channelKey - The key of the channel to add the user to.
+   * @param {string} username - The username of the user to add to the channel.
    */
-  async addUserToChannel(channelId: number, username: string): Promise<any> {
-    throw new Error('Not Implemented');
-  }
-
-  /**
-   * It removes a user from a `Channel`.
-   * @param {number} channelId - The id of the `Channel` to remove the `User`
-   * from.
-   * @param {string} username - The username of the `User` to remove from the
-   * `Channel`.
-   */
-  async removeUserFromChannel(
-    channelId: number, username: string,
+  async addUserToChannel(
+    channelKey: ChannelKey, username: string,
   ): Promise<any> {
     throw new Error('Not Implemented');
   }
 
   /**
-   * Clear a `Channel` from all `Users`
-   * @param {number} channelId - The id of the `Channel` to clear.
+   * Remove a user from a channel
+   * @param {ChannelKey} channelKey - The key of the channel to remove the user
+   * from.
+   * @param {string} username - The username of the user to remove from the
+   * channel.
    */
-  async clearChannel(channelId: number): Promise<boolean> {
+  async removeUserFromChannel(
+    channelKey: ChannelKey, username: string,
+  ): Promise<any> {
+    throw new Error('Not Implemented');
+  }
+
+  /**
+   * Clear a channel
+   * @param {ChannelKey} channelKey - The key of the channel to clear.
+   */
+  async clearChannel(channelKey: ChannelKey): Promise<boolean> {
     throw new Error('Not Implemented');
   }
 }
