@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-await-in-loop */
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 
 import { User } from '../leetcode/models';
 import getLeetcodeDataFromUsername from '../leetcode';
