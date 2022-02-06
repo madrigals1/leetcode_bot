@@ -25,7 +25,7 @@ beforeEach(async () => {
 
 test('cache.UserCache.getAllUsers method', () => {
   // Expect default Cache.users to be array
-  expect(Array.isArray(UserCache.users)).toBe(true);
+  expect(UserCache.users instanceof Map).toBe(true);
   expect(Array.isArray(UserCache.getAllUsers())).toBe(true);
 });
 
