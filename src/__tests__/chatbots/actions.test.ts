@@ -14,9 +14,11 @@ import { users } from '../__mocks__/data.mock';
 import { UserCache } from '../../cache/userCache';
 
 const mockbot = new Mockbot();
-Cache.database = new MockDatabaseProvider();
-Cache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
-Cache.delayTime = 0;
+const mockDatabaseProvider = new MockDatabaseProvider();
+Cache.database = mockDatabaseProvider;
+UserCache.database = mockDatabaseProvider;
+UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
+UserCache.delayTime = 0;
 
 const mockPassword = 'random_password';
 constants.SYSTEM.MASTER_PASSWORD = mockPassword;
@@ -24,7 +26,6 @@ constants.SYSTEM.MASTER_PASSWORD = mockPassword;
 beforeEach(() => {
   mockbot.clear();
   UserCache.clear();
-  Cache.userLimit = constants.SYSTEM.USER_AMOUNT_LIMIT;
   vizapiActions.tableForSubmissions = tableForSubmissions;
   vizapiActions.compareMenu = compareMenu;
 });
@@ -59,10 +60,10 @@ test('chatbots.actions.add action', async () => {
   await mockbot.send('/add random_username random_username_2');
 
   const message1 = BM.USERNAME_WAS_ADDED(
-    'random_username', UserCache.userAmount - 1, Cache.userLimit,
+    'random_username', UserCache.userAmount - 1, 30,
   );
   const message2 = BM.USERNAME_WAS_ADDED(
-    'random_username_2', UserCache.userAmount, Cache.userLimit,
+    'random_username_2', UserCache.userAmount, 30,
   );
 
   expect(UserCache.getAllUsers().length).toBe(2);
@@ -83,16 +84,11 @@ test('chatbots.actions.add action', async () => {
 
   // Test error cases (user limit)
   await UserCache.clear();
-  Cache.userLimit = 0;
 
   await mockbot.send('/add random_username random_username_2');
 
-  const message5 = BM.USERNAME_NOT_ADDED_USER_LIMIT(
-    'random_username', Cache.userLimit,
-  );
-  const message6 = BM.USERNAME_NOT_ADDED_USER_LIMIT(
-    'random_username_2', Cache.userLimit,
-  );
+  const message5 = BM.USERNAME_NOT_ADDED_USER_LIMIT('random_username', 30);
+  const message6 = BM.USERNAME_NOT_ADDED_USER_LIMIT('random_username_2', 30);
 
   expect(mockbot.lastMessage()).toEqual(`User List:\n${message5}${message6}`);
 
