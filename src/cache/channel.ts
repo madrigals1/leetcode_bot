@@ -80,7 +80,7 @@ export class ChannelCache {
 
     // Add User to Channel in Database
     return this.database
-      .addUserToChannel(this.channelData.id, username)
+      .addUserToChannel(this.channelData.key, username)
       .then((addedToDB) => {
         if (!addedToDB) {
           return {
@@ -124,7 +124,7 @@ export class ChannelCache {
 
     // Remove User from Channel in Database
     return this.database
-      .removeUserFromChannel(this.channelData.id, usernameLower)
+      .removeUserFromChannel(this.channelData.key, usernameLower)
       .then((deletedFromDB) => {
         if (!deletedFromDB) {
           return {
@@ -178,7 +178,7 @@ export class ChannelCache {
    * Clear the Channel from all Users
    */
   clear(): Promise<CacheResponse> {
-    return this.database.clearChannel(this.channelData.id)
+    return this.database.clearChannel(this.channelData.key)
       .then((cleared) => {
         if (!cleared) {
           return {
