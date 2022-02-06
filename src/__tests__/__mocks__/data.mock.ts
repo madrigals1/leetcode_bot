@@ -210,6 +210,8 @@ export const users: User[] = [user1, user2];
 
 export const mockDatabaseData: MockDatabaseInterface = {
   users: [],
+  channels: [],
+  channelUsers: [],
   mockUser1() { return this.users[0]; },
   savedUsers() {
     return this.users.map((user: User) => (
