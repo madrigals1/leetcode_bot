@@ -10,3 +10,8 @@ export interface ChannelData {
   key: ChannelKey;
   userLimit: number;
 }
+
+export interface ChannelUser {
+  channelId: number;
+  username: string;
+}
