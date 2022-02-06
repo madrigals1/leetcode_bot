@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import Database from '../database';
+import { constants } from '../utils/constants';
 
 import { ChannelCache } from './channel';
 import { UserCache } from './userCache';
@@ -17,8 +18,11 @@ class Cache {
    * @returns A ChannelCache object.
    */
   public async registerChannel(channelKey: ChannelKey): Promise<ChannelCache> {
-    // Get Channel Data from Database
-    const channelData = await this.database.getChannel(channelKey);
+    // Create Channel Data in Database
+    const channelData = await this.database.addChannel({
+      key: channelKey,
+      userLimit: constants.SYSTEM.USER_AMOUNT_LIMIT,
+    });
 
     // Create Channel Cache from Channel Data
     const channelCache = new ChannelCache(channelData);

@@ -4,6 +4,7 @@ import { constants } from '../../../utils/constants';
 import {
   getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
+import { ChatbotProvider } from '../../../chatbots';
 
 export default class Mockbot {
   output: string[] = [];
@@ -47,6 +48,10 @@ export default class Mockbot {
           provider: this.id,
           chatId: 123123123,
           prefix: this.prefix,
+          channelKey: {
+            chatId: 'unique_chat_id',
+            provider: ChatbotProvider.Mockbot,
+          },
           options: {},
         };
 

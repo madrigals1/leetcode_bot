@@ -57,9 +57,9 @@ class MockDatabaseProvider extends DatabaseProvider {
     return mockDatabaseData.fakeResult;
   }
 
-  async addChannel(channelData: ChannelData): Promise<boolean> {
+  async addChannel(channelData: ChannelData): Promise<ChannelData> {
     mockDatabaseData.channels.push(channelData);
-    return mockDatabaseData.fakeResult;
+    return channelData;
   }
 
   async getAllChannels(): Promise<ChannelData[]> {
