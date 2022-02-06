@@ -6,7 +6,7 @@ export interface ChannelKey {
 }
 
 export interface ChannelData {
-  id: number;
+  id?: number;
   key: ChannelKey;
   userLimit: number;
 }
