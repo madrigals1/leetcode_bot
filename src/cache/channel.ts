@@ -2,7 +2,6 @@
 import * as _ from 'lodash';
 
 import { User } from '../leetcode/models';
-import Database from '../database';
 import { log } from '../utils/helper';
 import { constants } from '../utils/constants';
 import { BOT_MESSAGES as BM } from '../utils/dictionary';
@@ -11,10 +10,10 @@ import { ChannelData } from './models/channel.model';
 import { CacheResponse } from './models/response.model';
 import { UserCache } from './userCache';
 
+import Cache from './index';
+
 export class ChannelCache {
   users: User[] = [];
-
-  database = Database;
 
   channelData: ChannelData;
 
@@ -27,7 +26,7 @@ export class ChannelCache {
   }
 
   async preload(): Promise<void> {
-    return this.database.getUsersForChannel(this.channelData.key)
+    return Cache.database.getUsersForChannel(this.channelData.key)
       .then((usernameList) => {
         usernameList.forEach((username) => {
           this.users.push(UserCache.getUser(username));
@@ -79,7 +78,7 @@ export class ChannelCache {
     }
 
     // Add User to Channel in Database
-    return this.database
+    return Cache.database
       .addUserToChannel(this.channelData.key, username)
       .then((addedToDB) => {
         if (!addedToDB) {
@@ -123,7 +122,7 @@ export class ChannelCache {
     const usernameLower = username.toLowerCase();
 
     // Remove User from Channel in Database
-    return this.database
+    return Cache.database
       .removeUserFromChannel(this.channelData.key, usernameLower)
       .then((deletedFromDB) => {
         if (!deletedFromDB) {
@@ -178,7 +177,7 @@ export class ChannelCache {
    * Clear the Channel from all Users
    */
   clear(): Promise<CacheResponse> {
-    return this.database.clearChannel(this.channelData.key)
+    return Cache.database.clearChannel(this.channelData.key)
       .then((cleared) => {
         if (!cleared) {
           return {

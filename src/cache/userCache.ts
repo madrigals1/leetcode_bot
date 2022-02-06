@@ -1,22 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-await-in-loop */
 import * as dayjs from 'dayjs';
 
 import { User } from '../leetcode/models';
 import getLeetcodeDataFromUsername from '../leetcode';
-import Database from '../database';
 import { log, delay } from '../utils/helper';
 import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { constants } from '../utils/constants';
 
 import { CacheResponse } from './models/response.model';
 
+import Cache from './index';
+
 const { DATE_FORMAT } = constants.SYSTEM;
 
 export class UserCache {
   static users: Map<string, User> = new Map<string, User>();
-
-  static database = Database;
 
   static getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
 
@@ -48,7 +46,7 @@ export class UserCache {
         if (!user.exists) return null;
 
         // Add username to Database
-        this.database.addUser(username);
+        Cache.database.addUser(username);
 
         // Add User to Cache
         this.users.set(username, user);
@@ -133,7 +131,7 @@ export class UserCache {
 
     try {
       // Load all Users from Database
-      const users = await this.database.findAllUsers();
+      const users = await Cache.database.findAllUsers();
 
       // Refresh users with newest data from LeetCode
       for (let i = 0; i < users.length; i++) {
