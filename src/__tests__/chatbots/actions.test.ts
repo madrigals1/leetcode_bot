@@ -191,7 +191,7 @@ test('chatbots.actions.stats action', async () => {
   await mockbot.send(`/stats ${mockPassword}`);
 
   expect(mockbot.lastMessage())
-    .toEqual(BM.STATS_TEXT(constants.PROVIDERS.MOCKBOT.ID, Cache));
+    .toEqual(BM.STATS_TEXT(constants.PROVIDERS.MOCKBOT.ID));
 
   // Test with incorrect arguments (incorrect password)
   await mockbot.send('/stats incorrect_password');

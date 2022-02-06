@@ -1,6 +1,5 @@
 /* eslint-disable no-await-in-loop */
 import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
-import Cache from '../cache';
 import { constants } from '../utils/constants';
 import { CacheResponse } from '../cache/models/response.model';
 import { User } from '../leetcode/models';
@@ -199,7 +198,7 @@ export default class Actions {
   })
   static async stats(context: Context): Promise<string> {
     // Send message with stats
-    return BM.STATS_TEXT(context.provider, Cache);
+    return BM.STATS_TEXT(context.provider);
   }
 
   @action({

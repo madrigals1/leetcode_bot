@@ -1,5 +1,4 @@
 import { User } from '../leetcode/models';
-import Cache from '../cache';
 import { getCmlFromUsers } from '../leetcode/utils';
 import { UserCache } from '../cache/userCache';
 import { ChatbotProvider } from '../chatbots';
@@ -233,8 +232,7 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
     return rating;
   },
 
-  STATS_TEXT(providerId: ChatbotProvider, cache: typeof Cache): string {
-    const { userLimit } = cache;
+  STATS_TEXT(providerId: ChatbotProvider): string {
     const users = UserCache.getAllUsers();
 
     // Get prefix for provider
@@ -255,7 +253,6 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 <b>DATABASE RELATED</b>
 <b>Database:</b> ${constants.DATABASE.PROVIDER}
 <b>User Count:</b> ${users.length}
-<b>User amount limit:</b> ${userLimit}
 
 <b>SYSTEM RELATED</b>
 <b>Delay between calls:</b> ${constants.SYSTEM.USER_REQUEST_DELAY_MS}
