@@ -95,8 +95,8 @@ test('cache.UserCache.refresh method', async () => {
   users[0].name = 'New Name 1';
   users[1].name = 'New Name 2';
   await UserCache.refresh();
-  expect(UserCache.users[0].name).toBe('New Name 1');
-  expect(UserCache.users[1].name).toBe('New Name 2');
+  expect(UserCache.getUser('random_username').name).toBe('New Name 1');
+  expect(UserCache.getUser('random_username_2').name).toBe('New Name 2');
 
   // Clear array and bring back original array
   users.length = 0;
