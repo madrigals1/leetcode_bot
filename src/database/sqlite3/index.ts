@@ -5,6 +5,7 @@ import { log } from '../../utils/helper';
 import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { constants } from '../../utils/constants';
 import DatabaseProvider from '../database.proto';
+import { ChannelData, ChannelKey } from '../../cache/models/channel.model';
 
 import QUERIES from './queries';
 
@@ -89,6 +90,97 @@ class SQLite extends DatabaseProvider {
   // Remove all Users from Database
   async removeAllUsers(): Promise<unknown> {
     return this.database.run(QUERIES.REMOVE_ALL_USERS);
+  }
+
+  async addChannel(channelData: ChannelData): Promise<ChannelData> {
+    const { chatId, provider } = channelData.key;
+    const { userLimit } = channelData;
+
+    const result = await this.database.get(
+      QUERIES.CREATE_CHANNEL, chatId, provider, userLimit,
+    );
+
+    return {
+      ...channelData,
+      id: result.id,
+    };
+  }
+
+  async getAllChannels(): Promise<ChannelData[]> {
+    const result = await this.database.all(QUERIES.GET_ALL_CHANNELS);
+
+    return result.map((channel) => ({
+      id: channel.id,
+      key: {
+        chatId: channel.chat_id,
+        provider: channel.provider,
+      },
+      userLimit: channel.user_limit,
+    }));
+  }
+
+  async getChannel(channelKey: ChannelKey): Promise<ChannelData> {
+    const { chatId, provider } = channelKey;
+
+    const result = (
+      await this.database.get(QUERIES.GET_CHANNEL, chatId, provider)
+    );
+
+    return {
+      id: result.id,
+      key: channelKey,
+      userLimit: result.user_limit,
+    };
+  }
+
+  async getUsersForChannel(channelKey: ChannelKey): Promise<string[]> {
+    const { chatId, provider } = channelKey;
+
+    const result = (
+      await this.database.get(QUERIES.GET_USERS_FOR_CHANNEL, chatId, provider)
+    );
+
+    return result.map((row) => row.username);
+  }
+
+  async deleteChannel(channelKey: ChannelKey): Promise<boolean> {
+    const { chatId, provider } = channelKey;
+
+    await this.database.run(QUERIES.DELETE_CHANNEL, chatId, provider);
+
+    return true;
+  }
+
+  async addUserToChannel(
+    channelKey: ChannelKey, username: string,
+  ): Promise<boolean> {
+    const { chatId, provider } = channelKey;
+
+    await this.database.run(
+      QUERIES.ADD_USER_TO_CHANNEL, username, chatId, provider,
+    );
+
+    return true;
+  }
+
+  async removeUserFromChannel(
+    channelKey: ChannelKey, username: string,
+  ): Promise<boolean> {
+    const { chatId, provider } = channelKey;
+
+    await this.database.run(
+      QUERIES.REMOVE_USER_FROM_CHANNEL, username, chatId, provider,
+    );
+
+    return true;
+  }
+
+  async clearChannel(channelKey: ChannelKey): Promise<boolean> {
+    const { chatId, provider } = channelKey;
+
+    await this.database.run(QUERIES.CLEAR_CHANNEL, chatId, provider);
+
+    return true;
   }
 }
 
