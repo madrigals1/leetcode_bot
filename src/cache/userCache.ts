@@ -86,10 +86,13 @@ export class UserCache {
    * @returns Nothing.
    */
   static addOrReplaceUser(username: string, user: User): void {
+    // Get all Users
+    const users = this.getAllUsers();
+
     // Replace User in Cache, if username was found
-    for (let i = 0; i < this.userAmount; i++) {
-      if (this.users[i].username.toLowerCase() === username.toLowerCase()) {
-        this.users[i] = user;
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].username.toLowerCase() === username.toLowerCase()) {
+        this.users.set(users[i].username, user);
         return;
       }
     }
