@@ -13,8 +13,9 @@ import { CacheResponse } from '../../cache/models/response.model';
 import { User } from '../../leetcode/models';
 import { delay } from '../../utils/helper';
 import { UserCache } from '../../cache/userCache';
+import Cache from '../../cache';
 
-UserCache.database = new MockDatabaseProvider();
+Cache.database = new MockDatabaseProvider();
 UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 UserCache.delayTime = 0;
 
