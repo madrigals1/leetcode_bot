@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
+import _ from 'lodash';
+
 import { User } from '../../leetcode/models';
 import DatabaseProvider from '../../database/database.proto';
+import { ChannelData, ChannelKey } from '../../cache/models/channel.model';
 
 import { mockDatabaseData } from './data.mock';
 
@@ -12,8 +15,7 @@ class MockDatabaseProvider extends DatabaseProvider {
     return new Promise((resolve) => resolve(mockDatabaseData.fakeResult));
   }
 
-  // Create Users table if not exists
-  createUserTable(): boolean {
+  createTables(): boolean {
     return mockDatabaseData.fakeResult;
   }
 
@@ -52,6 +54,61 @@ class MockDatabaseProvider extends DatabaseProvider {
   // Remove all Users from Database
   async removeAllUsers(): Promise<boolean> {
     mockDatabaseData.users = [];
+    return mockDatabaseData.fakeResult;
+  }
+
+  async addChannel(channelData: ChannelData): Promise<boolean> {
+    mockDatabaseData.channels.push(channelData);
+    return mockDatabaseData.fakeResult;
+  }
+
+  async getAllChannels(): Promise<ChannelData[]> {
+    return mockDatabaseData.channels;
+  }
+
+  async getChannel(channelKey: ChannelKey): Promise<ChannelData> {
+    return mockDatabaseData.channels
+      .find((channel) => channel.key === channelKey);
+  }
+
+  async getUsersForChannel(channelKey: ChannelKey): Promise<string[]> {
+    const channel = await this.getChannel(channelKey);
+
+    return mockDatabaseData.channelUsers
+      .filter((channelUser) => channelUser.channelId === channel.id)
+      .map((channelUser) => channelUser.username);
+  }
+
+  async deleteChannel(channelKey: ChannelKey): Promise<boolean> {
+    _.remove(mockDatabaseData.channels, { key: channelKey });
+    return mockDatabaseData.fakeResult;
+  }
+
+  async addUserToChannel(
+    channelKey: ChannelKey, username: string,
+  ): Promise<boolean> {
+    const channel = await this.getChannel(channelKey);
+    mockDatabaseData.channelUsers.push({ channelId: channel.id, username });
+    return mockDatabaseData.fakeResult;
+  }
+
+  async removeUserFromChannel(
+    channelKey: ChannelKey, username: string,
+  ): Promise<boolean> {
+    const channel = await this.getChannel(channelKey);
+    _.remove(
+      mockDatabaseData.channelUsers,
+      { channelId: channel.id, username },
+    );
+    return mockDatabaseData.fakeResult;
+  }
+
+  async clearChannel(channelKey: ChannelKey): Promise<boolean> {
+    const channel = await this.getChannel(channelKey);
+    _.remove(
+      mockDatabaseData.channelUsers,
+      { channelId: channel.id },
+    );
     return mockDatabaseData.fakeResult;
   }
 }
