@@ -7,7 +7,7 @@ import { UserCache } from './userCache';
 import { ChannelKey } from './models/channel.model';
 
 class Cache {
-  channels: Map<ChannelKey, ChannelCache> = new Map<ChannelKey, ChannelCache>();
+  channels: Map<string, ChannelCache> = new Map<string, ChannelCache>();
 
   database = Database;
 
@@ -28,7 +28,7 @@ class Cache {
     const channelCache = new ChannelCache(channelData);
 
     // Add Channel Cache to map
-    this.channels.set(channelKey, channelCache);
+    this.channels.set(JSON.stringify(channelKey), channelCache);
 
     return channelCache;
   }
@@ -47,7 +47,7 @@ class Cache {
     for (let i = 0; i < channelDataList.length; i++) {
       const channelData = channelDataList[i];
       const channelCache = new ChannelCache(channelData);
-      this.channels.set(channelData.key, channelCache);
+      this.channels.set(JSON.stringify(channelData.key), channelCache);
       await channelCache.preload();
     }
   }
@@ -58,7 +58,7 @@ class Cache {
    * @returns The channel cache.
    */
   getChannel(channelKey: ChannelKey): ChannelCache {
-    return this.channels.get(channelKey);
+    return this.channels.get(JSON.stringify(channelKey));
   }
 }
 
