@@ -2,7 +2,6 @@
 import * as _ from 'lodash';
 import * as dayjs from 'dayjs';
 
-import Cache from '../../cache';
 import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import { users, mockDatabaseData } from '../__mocks__/data.mock';
@@ -15,9 +14,9 @@ import { User } from '../../leetcode/models';
 import { delay } from '../../utils/helper';
 import { UserCache } from '../../cache/userCache';
 
-Cache.database = new MockDatabaseProvider();
-Cache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
-Cache.delayTime = 0;
+UserCache.database = new MockDatabaseProvider();
+UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
+UserCache.delayTime = 0;
 
 beforeEach(async () => {
   await UserCache.clear();
@@ -118,14 +117,14 @@ test('cache.UserCache.refresh method', async () => {
   expect(console.log).toHaveBeenCalledWith(
     SM.USERNAME_WAS_NOT_REFRESHED(fakeUsername),
   );
-  Cache.lastRefreshedAt = undefined;
+  UserCache.lastRefreshedAt = undefined;
 
   // Check error logging
   const fakeErrorMessage = 'Fake error';
-  Cache.delay = () => { throw new Error(fakeErrorMessage); };
+  UserCache.delay = () => { throw new Error(fakeErrorMessage); };
   await UserCache.refresh();
   expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
-  Cache.delay = delay;
+  UserCache.delay = delay;
 });
 
 // test('cache.UserCache.sortUsers method', async () => {
