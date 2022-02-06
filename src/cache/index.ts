@@ -1,11 +1,5 @@
-/* eslint-disable class-methods-use-this */
 /* eslint-disable no-await-in-loop */
-import * as dayjs from 'dayjs';
-
-import getLeetcodeDataFromUsername from '../leetcode';
 import Database from '../database';
-import { delay } from '../utils/helper';
-import { constants } from '../utils/constants';
 
 import { ChannelCache } from './channel';
 import { UserCache } from './userCache';
@@ -15,16 +9,6 @@ class Cache {
   channels: Map<ChannelKey, ChannelCache> = new Map<ChannelKey, ChannelCache>();
 
   database = Database;
-
-  userLimit: number = constants.SYSTEM.USER_AMOUNT_LIMIT;
-
-  getLeetcodeDataFromUsername: CallableFunction = getLeetcodeDataFromUsername;
-
-  delayTime: number = constants.SYSTEM.USER_REQUEST_DELAY_MS;
-
-  delay = delay;
-
-  lastRefreshedAt: dayjs.Dayjs;
 
   /**
    * Get the channel data from the database, create a channel cache from the
