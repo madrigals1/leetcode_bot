@@ -66,7 +66,8 @@ class Cache {
    * @param {ChannelKey} channelKey - The key of the channel to clear.
    */
   clearChannel(channelKey: ChannelKey): void {
-    this.channels.get(JSON.stringify(channelKey)).clear();
+    const existingChannel = this.channels.get(JSON.stringify(channelKey));
+    if (existingChannel) existingChannel.clear();
   }
 }
 
