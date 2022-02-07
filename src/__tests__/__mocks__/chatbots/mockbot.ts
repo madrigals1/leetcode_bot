@@ -15,6 +15,11 @@ export default class Mockbot {
 
   prefix = constants.PROVIDERS.MOCKBOT.PREFIX;
 
+  channelKey = {
+    chatId: 'unique_chat_id',
+    provider: ChatbotProvider.Mockbot,
+  }
+
   async send(message: string): Promise<void> {
     // If message is not command, ignore it
     if (!message.startsWith(this.prefix)) return;
@@ -48,10 +53,7 @@ export default class Mockbot {
           provider: this.id,
           chatId: 123123123,
           prefix: this.prefix,
-          channelKey: {
-            chatId: 'unique_chat_id',
-            provider: ChatbotProvider.Mockbot,
-          },
+          channelKey: this.channelKey,
           options: {},
         };
 
