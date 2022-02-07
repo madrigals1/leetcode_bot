@@ -68,15 +68,6 @@ class Cache {
   clearChannel(channelKey: ChannelKey): void {
     this.channels.get(JSON.stringify(channelKey)).clear();
   }
-
-  /**
-   * Clear all channels
-   */
-  clearAllChannels(): void {
-    [...Object.keys(this.channels)].forEach((channelKeyStr) => {
-      this.clearChannel(JSON.parse(channelKeyStr));
-    });
-  }
 }
 
 export default new Cache();
