@@ -65,9 +65,9 @@ class Cache {
    * Clear the contents of a channel
    * @param {ChannelKey} channelKey - The key of the channel to clear.
    */
-  clearChannel(channelKey: ChannelKey): void {
+  async clearChannel(channelKey: ChannelKey): Promise<void> {
     const existingChannel = this.channels.get(JSON.stringify(channelKey));
-    if (existingChannel) existingChannel.clear();
+    if (existingChannel) await existingChannel.clear();
   }
 }
 

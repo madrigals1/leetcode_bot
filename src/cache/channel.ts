@@ -185,7 +185,7 @@ export class ChannelCache {
   /**
    * Clear the Channel from all Users
    */
-  clear(): Promise<CacheResponse> {
+  async clear(): Promise<CacheResponse> {
     return Cache.database.clearChannel(this.channelData.key)
       .then((cleared) => {
         if (!cleared) {
@@ -194,6 +194,9 @@ export class ChannelCache {
             detail: BM.CHANNEL_WAS_NOT_CLEARED,
           };
         }
+
+        // Clear Users Cache
+        this.users.length = 0;
 
         return {
           status: constants.STATUS.SUCCESS,

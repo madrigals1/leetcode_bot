@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import { User } from '../../leetcode/models';
 import DatabaseProvider from '../../database/database.proto';
