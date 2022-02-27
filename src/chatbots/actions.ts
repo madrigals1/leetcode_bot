@@ -146,10 +146,11 @@ export default class Actions {
       return BM.USER_LIST_REMOVE;
     }
 
-    await context.reply(
-      BM.USERNAME_WILL_BE_DELETED(username),
-      context,
-    );
+    // Check if User exists
+    const user: User = context.channelCache.loadUser(username);
+    if (!user) return BM.USERNAME_NOT_FOUND(username);
+
+    await context.reply(BM.USERNAME_WILL_BE_DELETED(username), context);
 
     // Remove User
     const result: CacheResponse = (

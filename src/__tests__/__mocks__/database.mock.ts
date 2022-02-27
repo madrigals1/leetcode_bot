@@ -117,6 +117,12 @@ class MockDatabaseProvider extends DatabaseProvider {
     channelKey: ChannelKey, username: string,
   ): Promise<boolean> {
     const channel = await this.getChannel(channelKey);
+
+    // If not found User, return false
+    if (!mockDatabaseData.channelUsers.find((user) => user.username)) {
+      return false;
+    }
+
     _.remove(
       mockDatabaseData.channelUsers,
       { channelId: channel.id, username },
