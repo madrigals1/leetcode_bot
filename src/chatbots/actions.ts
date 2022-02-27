@@ -174,10 +174,7 @@ export default class Actions {
   })
   static async clear(context: Context): Promise<string> {
     // Send message, that Database will be cleared
-    await context.reply(
-      BM.DATABASE_WILL_BE_CLEARED,
-      context,
-    );
+    await context.reply(BM.CHANNEL_WILL_BE_CLEARED, context);
 
     // Remove all Users and send the result (success or failure)
     const result: CacheResponse = await context.channelCache.clear();

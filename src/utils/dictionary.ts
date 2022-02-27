@@ -263,6 +263,7 @@ ${userNameList}
   },
 
   // Channel Related
+  CHANNEL_WILL_BE_CLEARED: `${constants.EMOJI.WASTEBASKET} Channel will be cleared`,
   CHANNEL_WAS_CLEARED: `${constants.EMOJI.SUCCESS} Channel was cleared`,
   CHANNEL_WAS_NOT_CLEARED: `${constants.EMOJI.ERROR} Channel was not cleared`,
 };
