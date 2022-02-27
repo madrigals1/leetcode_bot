@@ -4,7 +4,10 @@ import Mockbot from '../__mocks__/chatbots/mockbot';
 import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import Cache from '../../cache';
 import {
-  mockGetLeetcodeDataFromUsername, mockTableForSubmissions, mockCompareMenu,
+  mockGetLeetcodeDataFromUsername,
+  mockTableForSubmissions,
+  mockCompareMenu,
+  mockProblemsChart,
 } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import { constants } from '../../utils/constants';
@@ -37,37 +40,37 @@ afterEach(async () => {
 });
 
 describe('chatbots.actions.ping action', () => {
-  test('Correct arguments', async () => {
-    // Send ping message
+  test('Correct case', async () => {
     await mockbot.send('/ping');
-
-    // Receive pong message
     expect(mockbot.lastMessage()).toEqual('pong');
   });
 
-  test('Incorrect arguments', async () => {
-    // Send ping message with excess arg
+  test('Incorrect case - Too many args', async () => {
     await mockbot.send('/ping excess_arg');
-
-    // Receive error message
     expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
   });
 });
 
 describe('chatbots.actions.start action', () => {
-  test('Correct arguments', async () => {
-    // Send start message
+  test('Correct case', async () => {
     await mockbot.send('/start');
-
-    // Receive welcome text
     expect(mockbot.lastMessage()).toEqual(BM.WELCOME_TEXT(mockbot.prefix));
   });
 
-  test('Incorrect arguments', async () => {
-    // Send start message with excess arg
+  test('Incorrect case - Too many args', async () => {
     await mockbot.send('/start excess_arg');
+    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+  });
+});
 
-    // Receive error message
+describe('chatbots.actions.help action', () => {
+  test('Correct case', async () => {
+    await mockbot.send('/help');
+    expect(mockbot.lastMessage()).toEqual(BM.HELP_TEXT);
+  });
+
+  test('Incorrect case - Too many args', async () => {
+    await mockbot.send('/help excess_arg');
     expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
   });
 });
@@ -78,7 +81,7 @@ describe('chatbots.actions.add action', () => {
     await mockbot.send('/add random_username random_username_2');
 
     // Cache should have 2 users
-    expect(UserCache.getAllUsers().length).toBe(2);
+    expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(2);
 
     // Both usernames should be added
     const msg1 = BM.USERNAME_WAS_ADDED('random_username', 1, 30);
@@ -163,20 +166,14 @@ describe('chatbots.actions.add action', () => {
 
 describe('chatbots.actions.refresh action', () => {
   test('Correct case', async () => {
-    // Refresh
     await mockbot.send('/refresh');
-
-    // Get messages from Mockbot
     const messages = mockbot.messages();
-
     expect(messages[0]).toBe(BM.CACHE_STARTED_REFRESH);
     expect(messages[1]).toBe(BM.CACHE_IS_REFRESHED);
   });
 
   test('Incorrect case - Invalid arguments', async () => {
-    // Refresh with incorrect arguments
     await mockbot.send('/refresh excess_arg');
-
     expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
   });
 });
@@ -184,7 +181,6 @@ describe('chatbots.actions.refresh action', () => {
 describe('chatbots.actions.remove action', () => {
   test('Correct case - Without username', async () => {
     await mockbot.send(`/remove ${mockPassword}`);
-
     expect(mockbot.lastMessage()).toBe(BM.USER_LIST_REMOVE);
   });
 
@@ -202,30 +198,24 @@ describe('chatbots.actions.remove action', () => {
 
   test('Incorrect case - Username does not exist', async () => {
     await mockbot.send(`/remove not_existing_username ${mockPassword}`);
-
     expect(mockbot.lastMessage())
       .toBe(BM.USERNAME_NOT_FOUND('not_existing_username'));
   });
 
   test('Incorrect case - Incorrect password', async () => {
     await mockbot.send('/remove blablabla incorrect_password');
-
     expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
-
     await mockbot.send('/remove incorrect_password');
-
     expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
   });
 
   test('Incorrect case - Not enough args', async () => {
     await mockbot.send('/remove');
-
     expect(mockbot.lastMessage()).toEqual(BM.PASSWORD_NOT_FOUND_IN_ARGS);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/remove 123 123 123');
-
     expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
   });
 });
@@ -248,19 +238,16 @@ describe('chatbots.actions.clear action', () => {
 
   test('Incorrect case - Incorrect password', async () => {
     await mockbot.send('/clear incorrect_password');
-
     expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
   });
 
   test('Incorrect case - Not enough args', async () => {
     await mockbot.send('/clear');
-
     expect(mockbot.lastMessage()).toEqual(BM.INSUFFICIENT_ARGS_IN_MESSAGE);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/clear asd asd');
-
     expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
   });
 });
@@ -458,6 +445,46 @@ describe('chatbots.actions.submissions action', () => {
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/submissions asd asd');
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  });
+});
+
+describe('chatbots.actions.problems action', () => {
+  test('Correct case - All users', async () => {
+    await mockbot.send('/problems');
+    expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_PROBLEMS);
+  });
+
+  test('Correct case - Single user', async () => {
+    const username = 'random_username';
+    await mockbot.send(`/add ${username}`);
+    await mockbot.send(`/problems ${username}`);
+    expect(mockbot.lastMessage())
+      .toEqual(BM.USER_SOLVED_PROBLEMS_CHART(username));
+  });
+
+  test('Incorrect case - Username not found', async () => {
+    const username = 'not_found_username';
+    await mockbot.send(`/problems ${username}`);
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(username));
+  });
+
+  test('Incorrect case - Error on the server', async () => {
+    vizapiActions.solvedProblemsChart = mockProblemsChart;
+    const user = _.clone(users[0]);
+    const username = 'new_username';
+    user.username = username;
+    user.name = undefined;
+    users.push(user);
+
+    await mockbot.send(`/add ${username}`);
+    await mockbot.send(`/problems ${username}`);
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    users.pop();
+  });
+
+  test('Incorrect case - Too many args', async () => {
+    await mockbot.send('/problems asd asd asd');
     expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
   });
 });
