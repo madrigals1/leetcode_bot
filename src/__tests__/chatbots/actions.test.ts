@@ -16,412 +16,512 @@ import { UserCache } from '../../cache/userCache';
 const mockbot = new Mockbot();
 const mockDatabaseProvider = new MockDatabaseProvider();
 Cache.database = mockDatabaseProvider;
-UserCache.database = mockDatabaseProvider;
 UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 UserCache.delayTime = 0;
 
 const mockPassword = 'random_password';
 constants.SYSTEM.MASTER_PASSWORD = mockPassword;
 
-beforeEach(() => {
+beforeEach(async () => {
   mockbot.clear();
   UserCache.clear();
+  Cache.clearChannel(mockbot.channelKey);
   vizapiActions.tableForSubmissions = tableForSubmissions;
   vizapiActions.compareMenu = compareMenu;
 });
 
-test('chatbots.actions.ping action', async () => {
-  // Test with correct arguments
-  await mockbot.send('/ping');
-
-  expect(mockbot.lastMessage()).toEqual('pong');
-
-  // Test with incorrect arguments
-  await mockbot.send('/ping excess_arg');
-
-  expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+afterEach(async () => {
+  mockbot.clear();
+  UserCache.clear();
+  Cache.clearChannel(mockbot.channelKey);
 });
 
-test('chatbots.actions.start action', async () => {
-  // Test with correct arguments
-  await mockbot.send('/start');
+describe('chatbots.actions.ping action', () => {
+  test('Correct arguments', async () => {
+    // Send ping message
+    await mockbot.send('/ping');
 
-  expect(mockbot.lastMessage())
-    .toEqual(BM.WELCOME_TEXT(mockbot.prefix));
-
-  // Test with incorrect arguments
-  await mockbot.send('/start excess_arg');
-
-  expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
-});
-
-test('chatbots.actions.add action', async () => {
-  // Test correct case of addition
-  await mockbot.send('/add random_username random_username_2');
-
-  const message1 = BM.USERNAME_WAS_ADDED(
-    'random_username', UserCache.userAmount - 1, 30,
-  );
-  const message2 = BM.USERNAME_WAS_ADDED(
-    'random_username_2', UserCache.userAmount, 30,
-  );
-
-  expect(UserCache.getAllUsers().length).toBe(2);
-
-  expect(mockbot.lastMessage()).toEqual(`User List:\n${message1}${message2}`);
-
-  // Test error cases (existing username, invalid username)
-  await mockbot.send('/add random_username incorrect_username');
-
-  const message3 = BM.USERNAME_ALREADY_EXISTS(
-    'random_username',
-  );
-  const message4 = BM.USERNAME_NOT_FOUND_ON_LEETCODE(
-    'incorrect_username',
-  );
-
-  expect(mockbot.lastMessage()).toEqual(`User List:\n${message3}${message4}`);
-
-  // Test error cases (user limit)
-  await UserCache.clear();
-
-  await mockbot.send('/add random_username random_username_2');
-
-  const message5 = BM.USERNAME_NOT_ADDED_USER_LIMIT('random_username', 30);
-  const message6 = BM.USERNAME_NOT_ADDED_USER_LIMIT('random_username_2', 30);
-
-  expect(mockbot.lastMessage()).toEqual(`User List:\n${message5}${message6}`);
-
-  // Test error cases (incorrect arguments)
-  await mockbot.send('/add');
-
-  expect(mockbot.lastMessage()).toEqual(BM.INSUFFICIENT_ARGS_IN_MESSAGE);
-});
-
-test('chatbots.actions.refresh action', async () => {
-  // Test with correct arguments
-  await mockbot.send('/refresh');
-
-  const messages = mockbot.messages();
-
-  expect(messages[0]).toBe(BM.CACHE_STARTED_REFRESH);
-  expect(messages[1]).toBe(BM.CACHE_IS_REFRESHED);
-
-  // Test with incorrect arguments
-  await mockbot.send('/refresh excess_arg');
-
-  expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
-});
-
-test('chatbots.actions.remove action', async () => {
-  // Test with correct arguments (Without username)
-  await mockbot.send(`/remove ${mockPassword}`);
-
-  expect(mockbot.lastMessage()).toBe(BM.USER_LIST_REMOVE);
-  /* TODO: Check buttons */
-
-  // Test with correct arguments (With username)
-  await mockbot.send('/add random_username');
-
-  await mockbot.send(`/remove random_username ${mockPassword}`);
-  const messages = mockbot.messages(2);
-
-  expect(messages[0]).toBe(BM.USERNAME_WILL_BE_DELETED('random_username'));
-  expect(messages[1]).toBe(BM.USERNAME_WAS_DELETED('random_username'));
-
-  // Test with incorrect arguments (Username doesn't exist)
-  await mockbot.send(`/remove not_existing_username ${mockPassword}`);
-
-  expect(mockbot.lastMessage())
-    .toBe(BM.USERNAME_NOT_FOUND('not_existing_username'));
-
-  // Test with incorrect arguments (Incorrect password)
-  await mockbot.send('/remove blablabla incorrect_password');
-
-  expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
-
-  await mockbot.send('/remove incorrect_password');
-
-  expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
-
-  // Test with incorrect arguments (Arguments count)
-  await mockbot.send('/remove');
-
-  expect(mockbot.lastMessage()).toEqual(BM.PASSWORD_NOT_FOUND_IN_ARGS);
-
-  await mockbot.send('/remove 123 123 123');
-
-  expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
-});
-
-test('chatbots.actions.clear action', async () => {
-  // Test with correct arguments
-  await mockbot.send('/add random_username random_username_2');
-
-  expect(UserCache.getAllUsers().length).toBe(2);
-
-  await mockbot.send(`/clear ${mockPassword}`);
-
-  expect(UserCache.getAllUsers().length).toBe(0);
-
-  const messages = mockbot.messages(2);
-
-  expect(messages[0]).toEqual(BM.DATABASE_WILL_BE_CLEARED);
-  expect(messages[1]).toEqual(BM.DATABASE_WAS_CLEARED);
-
-  // Test with incorrect arguments (incorrect password)
-  await mockbot.send('/clear incorrect_password');
-
-  expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
-
-  // Test with incorrect arguments (argument count)
-  await mockbot.send('/clear');
-
-  expect(mockbot.lastMessage()).toEqual(BM.INSUFFICIENT_ARGS_IN_MESSAGE);
-
-  await mockbot.send('/clear asd asd');
-
-  expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
-});
-
-test('chatbots.actions.stats action', async () => {
-  await mockbot.send('/add random_username random_username_2');
-
-  // Test with correct arguments
-  await mockbot.send(`/stats ${mockPassword}`);
-
-  expect(mockbot.lastMessage())
-    .toEqual(BM.STATS_TEXT(constants.PROVIDERS.MOCKBOT.ID));
-
-  // Test with incorrect arguments (incorrect password)
-  await mockbot.send('/stats incorrect_password');
-
-  expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
-
-  // Test with incorrect arguments (argument count)
-  await mockbot.send('/stats');
-
-  expect(mockbot.lastMessage()).toEqual(BM.INSUFFICIENT_ARGS_IN_MESSAGE);
-
-  await mockbot.send('/stats asd asd');
-
-  expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
-});
-
-test('chatbots.actions.rating action', async () => {
-  // Confirm that 2 users exist in Database
-  await mockbot.send('/add random_username random_username_2');
-  expect(UserCache.getAllUsers().length).toBe(2);
-
-  // Test regular rating with correct arguments
-  await mockbot.send('/rating');
-
-  expect(mockbot.lastMessage())
-    .toEqual(BM.RATING_TEXT(UserCache.getAllUsers()));
-
-  // Test cumulative rating with correct arguments
-  await mockbot.send('/rating cml');
-
-  // Predefined data
-  const cmlRating = UserCache.getAllUsers().sort((user1, user2) => {
-    const cml1 = user1.computed.problemsSolved.cumulative;
-    const cml2 = user2.computed.problemsSolved.cumulative;
-    return cml2 - cml1;
+    // Receive pong message
+    expect(mockbot.lastMessage()).toEqual('pong');
   });
 
-  expect(mockbot.lastMessage()).toEqual(BM.CML_RATING_TEXT(cmlRating));
+  test('Incorrect arguments', async () => {
+    // Send ping message with excess arg
+    await mockbot.send('/ping excess_arg');
 
+    // Receive error message
+    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+  });
+});
+
+describe('chatbots.actions.start action', () => {
+  test('Correct arguments', async () => {
+    // Send start message
+    await mockbot.send('/start');
+
+    // Receive welcome text
+    expect(mockbot.lastMessage()).toEqual(BM.WELCOME_TEXT(mockbot.prefix));
+  });
+
+  test('Incorrect arguments', async () => {
+    // Send start message with excess arg
+    await mockbot.send('/start excess_arg');
+
+    // Receive error message
+    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+  });
+});
+
+describe('chatbots.actions.add action', () => {
+  test('Correct case', async () => {
+    // Add 2 users
+    await mockbot.send('/add random_username random_username_2');
+
+    // Cache should have 2 users
+    expect(UserCache.getAllUsers().length).toBe(2);
+
+    // Both usernames should be added
+    const msg1 = BM.USERNAME_WAS_ADDED('random_username', 1, 30);
+    const msg2 = BM.USERNAME_WAS_ADDED('random_username_2', 2, 30);
+    expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}${msg2}`);
+  });
+
+  test('Incorrect case - Existing username', async () => {
+    // Clear channel
+    await Cache.clearChannel(mockbot.channelKey);
+
+    // Correct username
+    const username = 'random_username';
+
+    // Add username
+    await mockbot.send(`/add ${username}`);
+
+    // Username should be added
+    const msg1 = BM.USERNAME_WAS_ADDED(username, 1, 30);
+    expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}`);
+
+    // Add same username again
+    await mockbot.send(`/add ${username}`);
+
+    // Username should already exist
+    const msg2 = BM.USERNAME_ALREADY_EXISTS(username);
+    expect(mockbot.lastMessage()).toEqual(`User List:\n${msg2}`);
+  });
+
+  test('Incorrect case - User not found in Leetcode', async () => {
+    // Add incorrect username
+    await mockbot.send('/add incorrect_username');
+
+    // Generate message
+    const message = BM.USERNAME_NOT_FOUND_ON_LEETCODE('incorrect_username');
+
+    // Should receive correct message
+    expect(mockbot.lastMessage()).toEqual(`User List:\n${message}`);
+  });
+
+  test('Incorrect case - User limit is reached', async () => {
+    // Clear channel
+    await Cache.clearChannel(mockbot.channelKey);
+
+    // Save original users from Mock LeetCode
+    const originalUsers = _.clone(users);
+
+    // Add 30 users to Mock LeetCode
+    let add30message = '/add';
+    for (let i = 0; i < 30; i++) {
+      const fakeUser = { ...users[0], username: `fake_user_${i + 1}` };
+      users.push(fakeUser);
+      add30message += ` ${fakeUser.username}`;
+    }
+
+    // Add same 30 users to Channel
+    await mockbot.send(add30message);
+
+    // Add 2 extra users after reaching User limit
+    await mockbot.send('/add random_username random_username_2');
+
+    // Generate 2 messages
+    const msg1 = BM.USERNAME_NOT_ADDED_USER_LIMIT('random_username', 30);
+    const msg2 = BM.USERNAME_NOT_ADDED_USER_LIMIT('random_username_2', 30);
+
+    // Should receive correct message
+    expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}${msg2}`);
+
+    // Bring back original Mock LeetCode
+    users.length = 0;
+    originalUsers.forEach((user) => { users.push(user); });
+  });
+
+  test('Incorrect case - Incorrect arguments', async () => {
+    // Send message with excess arg
+    await mockbot.send('/add');
+
+    // Receive correct message
+    expect(mockbot.lastMessage()).toEqual(BM.INSUFFICIENT_ARGS_IN_MESSAGE);
+  });
+});
+
+describe('chatbots.actions.refresh action', () => {
+  test('Correct case', async () => {
+    // Refresh
+    await mockbot.send('/refresh');
+
+    // Get messages from Mockbot
+    const messages = mockbot.messages();
+
+    expect(messages[0]).toBe(BM.CACHE_STARTED_REFRESH);
+    expect(messages[1]).toBe(BM.CACHE_IS_REFRESHED);
+  });
+
+  test('Incorrect case - Invalid arguments', async () => {
+    // Refresh with incorrect arguments
+    await mockbot.send('/refresh excess_arg');
+
+    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+  });
+});
+
+describe('chatbots.actions.remove action', () => {
+  test('Correct case - Without username', async () => {
+    await mockbot.send(`/remove ${mockPassword}`);
+
+    expect(mockbot.lastMessage()).toBe(BM.USER_LIST_REMOVE);
+  });
+
+  // TODO: Check buttons
+
+  test('Correct case - With username', async () => {
+    await mockbot.send('/add random_username');
+
+    await mockbot.send(`/remove random_username ${mockPassword}`);
+    const messages = mockbot.messages(2);
+
+    expect(messages[0]).toBe(BM.USERNAME_WILL_BE_DELETED('random_username'));
+    expect(messages[1]).toBe(BM.USERNAME_WAS_DELETED('random_username'));
+  });
+
+  test('Incorrect case - Username does not exist', async () => {
+    await mockbot.send(`/remove not_existing_username ${mockPassword}`);
+
+    expect(mockbot.lastMessage())
+      .toBe(BM.USERNAME_NOT_FOUND('not_existing_username'));
+  });
+
+  test('Incorrect case - Incorrect password', async () => {
+    await mockbot.send('/remove blablabla incorrect_password');
+
+    expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
+
+    await mockbot.send('/remove incorrect_password');
+
+    expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
+  });
+
+  test('Incorrect case - Not enough args', async () => {
+    await mockbot.send('/remove');
+
+    expect(mockbot.lastMessage()).toEqual(BM.PASSWORD_NOT_FOUND_IN_ARGS);
+  });
+
+  test('Incorrect case - Too many args', async () => {
+    await mockbot.send('/remove 123 123 123');
+
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  });
+});
+
+describe('chatbots.actions.clear action', () => {
+  test('Correct case', async () => {
+    await mockbot.send('/add random_username random_username_2');
+
+    expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(2);
+
+    await mockbot.send(`/clear ${mockPassword}`);
+
+    const messages = mockbot.messages(2);
+
+    expect(messages[0]).toEqual(BM.CHANNEL_WILL_BE_CLEARED);
+    expect(messages[1]).toEqual(BM.CHANNEL_WAS_CLEARED);
+
+    expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(0);
+  });
+
+  test('Incorrect case - Incorrect password', async () => {
+    await mockbot.send('/clear incorrect_password');
+
+    expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
+  });
+
+  test('Incorrect case - Not enough args', async () => {
+    await mockbot.send('/clear');
+
+    expect(mockbot.lastMessage()).toEqual(BM.INSUFFICIENT_ARGS_IN_MESSAGE);
+  });
+
+  test('Incorrect case - Too many args', async () => {
+    await mockbot.send('/clear asd asd');
+
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  });
+});
+
+describe('chatbots.actions.stats action', () => {
+  test('Correct case', async () => {
+    // Add 2 Users
+    await mockbot.send('/add random_username random_username_2');
+
+    await mockbot.send(`/stats ${mockPassword}`);
+    expect(mockbot.lastMessage())
+      .toEqual(BM.STATS_TEXT(constants.PROVIDERS.MOCKBOT.ID));
+  });
+
+  test('Incorrect case - Incorrect password', async () => {
+    await mockbot.send('/stats incorrect_password');
+    expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
+  });
+
+  test('Incorrect case - Not enough args', async () => {
+    await mockbot.send('/stats');
+    expect(mockbot.lastMessage()).toEqual(BM.INSUFFICIENT_ARGS_IN_MESSAGE);
+  });
+
+  test('Incorrect case - Too many args', async () => {
+    await mockbot.send('/stats asd asd');
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  });
+});
+
+describe('chatbots.actions.rating action', () => {
+  test('Correct case - Regular rating', async () => {
+    // Confirm that 2 users exist in Database
+    await mockbot.send('/add random_username random_username_2');
+    expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(2);
+
+    // Test regular rating with correct arguments
+    await mockbot.send('/rating');
+
+    expect(mockbot.lastMessage())
+      .toEqual(BM.RATING_TEXT(Cache.getChannel(mockbot.channelKey).users));
+  });
+
+  test('Correct case - Cumulative rating', async () => {
+    await mockbot.send('/rating cml');
+
+    // Predefined data
+    const cmlRating = UserCache.getAllUsers().sort((user1, user2) => {
+      const cml1 = user1.computed.problemsSolved.cumulative;
+      const cml2 = user2.computed.problemsSolved.cumulative;
+      return cml2 - cml1;
+    });
+
+    expect(mockbot.lastMessage()).toEqual(BM.CML_RATING_TEXT(cmlRating));
+  });
+
+  // TODO: Test graph rating
   // TODO: Test with 10 users
 
-  // Test with incorrect arguments (argument count)
-  await mockbot.send('/rating asd');
+  test('Incorrect case - Incorrect rating type', async () => {
+    await mockbot.send('/rating asd');
+    expect(mockbot.lastMessage()).toEqual(BM.INCORRECT_RATING_TYPE);
+  });
 
-  expect(mockbot.lastMessage()).toEqual(BM.INCORRECT_RATING_TYPE);
+  test('Incorrect case - No users', async () => {
+    await UserCache.clear();
 
-  // Test with 0 users
-  await UserCache.clear();
+    // Regular Rating with 0 users
+    await mockbot.send('/rating');
+    expect(mockbot.lastMessage()).toEqual(BM.RATING_TEXT([]));
 
-  // Regular Rating with 0 users
-  await mockbot.send('/rating');
-  expect(mockbot.lastMessage()).toEqual(BM.RATING_TEXT([]));
-
-  // CML Rating with 0 users
-  await mockbot.send('/rating cml');
-  expect(mockbot.lastMessage()).toEqual(BM.CML_RATING_TEXT([]));
+    // CML Rating with 0 users
+    await mockbot.send('/rating cml');
+    expect(mockbot.lastMessage()).toEqual(BM.CML_RATING_TEXT([]));
+  });
 });
 
-test('chatbots.actions.profile action', async () => {
-  // Test with correct arguments (all users)
-  await mockbot.send('/profile');
+describe('chatbots.actions.profile action', () => {
+  test('Correct case - All users', async () => {
+    await mockbot.send('/profile');
+    expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_PROFILES);
+  });
 
-  expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_PROFILES);
   /* TODO: Test buttons */
 
-  // Test with correct arguments (single user)
-  await mockbot.send('/add random_username');
+  test('Correct case - Single user', async () => {
+    await mockbot.send('/add random_username');
+    await mockbot.send('/profile random_username');
+    const user = UserCache.getUser('random_username');
+    expect(mockbot.lastMessage()).toEqual(BM.USER_TEXT(user));
+  });
 
-  await mockbot.send('/profile random_username');
+  test('Incorrect case - Username not found', async () => {
+    await mockbot.send('/profile not_found');
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found'));
+  });
 
-  const user = UserCache.getUser('random_username');
-
-  expect(mockbot.lastMessage()).toEqual(BM.USER_TEXT(user));
-  /* TODO: Test buttons */
-
-  // Test with incorrect arguments (Username not found)
-  await mockbot.send('/profile not_found');
-
-  expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found'));
-
-  // Test with incorrect arguments (argument count)
-  await mockbot.send('/profile asd asd');
-
-  expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  test('Incorrect case - Too many args', async () => {
+    await mockbot.send('/profile asd asd');
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  });
 });
 
-test('chatbots.actions.avatar action', async () => {
-  // Test with correct arguments (all users)
-  await mockbot.send('/avatar');
+describe('chatbots.actions.avatar action', () => {
+  test('Correct case - All users', async () => {
+    await mockbot.send('/avatar');
+    expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_AVATARS);
+  });
 
-  expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_AVATARS);
   /* TODO: Test buttons */
 
-  const username = 'random_username';
+  test('Correct case - Single user', async () => {
+    const username = 'random_username';
 
-  // Test with correct arguments (single user)
-  await mockbot.send(`/add ${username}`);
-  await mockbot.send(`/avatar ${username}`);
+    await mockbot.send(`/add ${username}`);
+    await mockbot.send(`/avatar ${username}`);
 
-  const user = UserCache.getUser(username);
-  const context = mockbot.getContext();
+    const user = UserCache.getUser(username);
+    const context = mockbot.getContext();
 
-  expect(context.photoUrl).toEqual(user.profile.userAvatar);
-  expect(mockbot.lastMessage()).toEqual(BM.USER_AVATAR(username));
+    expect(context.photoUrl).toEqual(user.profile.userAvatar);
+    expect(mockbot.lastMessage()).toEqual(BM.USER_AVATAR(username));
+  });
 
-  // Test with incorrect arguments (Username not found)
-  await mockbot.send('/avatar not_found');
+  test('Incorrect case - Username not found', async () => {
+    await mockbot.send('/avatar not_found');
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found'));
+  });
 
-  expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found'));
-
-  // Test with incorrect arguments (argument count)
-  await mockbot.send('/avatar asd asd');
-
-  expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  test('Incorrect case - Too many args', async () => {
+    await mockbot.send('/avatar asd asd');
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  });
 });
 
-test('chatbots.actions.submissions action', async () => {
-  // Test with correct arguments (all users)
-  await mockbot.send('/submissions');
+describe('chatbots.actions.submissions action', () => {
+  test('Correct case - All users', async () => {
+    await mockbot.send('/submissions');
+    expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_SUBMISSIONS);
+  });
 
-  expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_SUBMISSIONS);
   /* TODO: Test buttons */
 
-  const username = 'random_username';
+  test('Correct case - Single user', async () => {
+    const username = 'random_username';
 
-  // Test with correct arguments (single user)
-  await mockbot.send(`/add ${username}`);
+    vizapiActions.tableForSubmissions = mockTableForSubmissions;
 
-  vizapiActions.tableForSubmissions = mockTableForSubmissions;
+    await mockbot.send(`/add ${username}`);
+    await mockbot.send(`/submissions ${username}`);
 
-  await mockbot.send(`/submissions ${username}`);
+    const context = mockbot.getContext();
 
-  const context = mockbot.getContext();
+    expect(context.photoUrl).toEqual('http://random_link');
+    expect(mockbot.lastMessage())
+      .toEqual(BM.USER_RECENT_SUBMISSIONS(username));
+  });
 
-  expect(context.photoUrl).toEqual('http://random_link');
-  expect(mockbot.lastMessage()).toEqual(BM.USER_RECENT_SUBMISSIONS(username));
+  test('Incorrect case - Username not found', async () => {
+    await mockbot.send('/submissions not_found');
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found'));
+  });
 
-  // Test with incorrect arguments (Username not found)
-  await mockbot.send('/submissions not_found');
+  test('Incorrect case - User has no submissions', async () => {
+    const username = 'clone_username';
+    const newUser = _.cloneDeep(users[0]);
+    newUser.username = username;
+    newUser.submitStats.acSubmissionNum = [];
+    users.push(newUser);
 
-  expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found'));
+    vizapiActions.tableForSubmissions = mockTableForSubmissions;
 
-  // Test with incorrect arguments (User has no submissions)
-  const newUser = _.cloneDeep(UserCache.getAllUsers()[0]);
-  newUser.username = 'clone_username';
-  newUser.submitStats.acSubmissionNum = [];
-  users.push(newUser);
-  await mockbot.send('/add clone_username');
+    await mockbot.send(`/add ${username}`);
+    await mockbot.send(`/submissions ${username}`);
 
-  await mockbot.send('/submissions clone_username');
+    expect(mockbot.lastMessage()).toEqual(BM.USER_NO_SUBMISSIONS(username));
+    users.pop();
+  });
 
-  expect(mockbot.lastMessage())
-    .toEqual(BM.USER_NO_SUBMISSIONS('clone_username'));
+  test('Incorrect case - Error on the server', async () => {
+    const username = 'clone_username_2';
+    const newUser2 = _.cloneDeep(users[0]);
+    newUser2.username = username;
+    newUser2.submitStats = null;
+    users.push(newUser2);
 
-  users.pop();
+    vizapiActions.tableForSubmissions = mockTableForSubmissions;
 
-  // Test with incorrect arguments (Error on the server)
-  const newUser2 = _.cloneDeep(UserCache.getAllUsers()[0]);
-  newUser2.username = 'clone_username_2';
-  newUser2.submitStats = null;
-  users.push(newUser2);
-  await mockbot.send('/add clone_username_2');
+    await mockbot.send(`/add ${username}`);
+    await mockbot.send(`/submissions ${username}`);
 
-  await mockbot.send('/submissions clone_username_2');
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    users.pop();
+  });
 
-  expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
-
-  users.pop();
-
-  // Test with incorrect arguments (argument count)
-  await mockbot.send('/submissions asd asd');
-
-  expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  test('Incorrect case - Too many args', async () => {
+    await mockbot.send('/submissions asd asd');
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  });
 });
 
-test('chatbots.actions.compare action', async () => {
-  // Test with correct arguments (without users)
-  await mockbot.send('/compare');
+describe('chatbots.actions.compare action', () => {
+  test('Correct case - Select left user', async () => {
+    await mockbot.send('/compare');
+    expect(mockbot.lastMessage()).toEqual(BM.SELECT_LEFT_USER);
+  });
 
-  expect(mockbot.lastMessage()).toEqual(BM.SELECT_LEFT_USER);
   /* TODO: Test buttons */
 
   const firstUsername = 'random_username';
   const secondUsername = 'random_username_2';
 
-  // Test with correct arguments (single user)
-  await mockbot.send(`/compare ${firstUsername}`);
+  test('Correct case - Select right user', async () => {
+    await mockbot.send(`/compare ${firstUsername}`);
+    expect(mockbot.lastMessage()).toEqual(BM.SELECT_RIGHT_USER);
+  });
 
-  expect(mockbot.lastMessage()).toEqual(BM.SELECT_RIGHT_USER);
-  /* TODO: Test buttons */
+  test('Correct case - Both users picked', async () => {
+    vizapiActions.compareMenu = mockCompareMenu;
 
-  vizapiActions.compareMenu = mockCompareMenu;
+    await mockbot.send(`/add ${firstUsername} ${secondUsername}`);
+    await mockbot.send(`/compare ${firstUsername} ${secondUsername}`);
 
-  // Test with correct arguments (both users)
-  await mockbot.send(`/add ${firstUsername} ${secondUsername}`);
-  await mockbot.send(`/compare ${firstUsername} ${secondUsername}`);
+    const context = mockbot.getContext();
 
-  const context = mockbot.getContext();
+    expect(context.photoUrl).toEqual('http://random_link_compare');
+    const expectedMessage = BM.USERS_COMPARE(firstUsername, secondUsername);
+    expect(mockbot.lastMessage()).toEqual(expectedMessage);
+  });
 
-  expect(context.photoUrl).toEqual('http://random_link_compare');
-  const expectedMessage = BM.USERS_COMPARE(firstUsername, secondUsername);
-  expect(mockbot.lastMessage()).toEqual(expectedMessage);
+  test('Incorrect case - Right user not found', async () => {
+    await mockbot.send(`/add ${firstUsername}`);
+    await mockbot.send(`/compare ${firstUsername} not_found_1`);
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found_1'));
+  });
 
-  // Test with incorrect arguments (Right User not found)
-  await mockbot.send(`/compare ${firstUsername} not_found_1`);
+  test('Incorrect case - Left user not found', async () => {
+    await mockbot.send(`/add ${firstUsername}`);
+    await mockbot.send(`/compare not_found_2 ${firstUsername}`);
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found_2'));
+  });
 
-  expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found_1'));
+  test('Incorrect case - Error on the server', async () => {
+    vizapiActions.compareMenu = mockCompareMenu;
 
-  // Test with incorrect arguments (Left User not found)
-  await mockbot.send(`/compare not_found_2 ${firstUsername}`);
+    const thirdUsername = 'clone_username';
 
-  expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found_2'));
+    const newUser = _.cloneDeep(users[0]);
+    newUser.username = thirdUsername;
+    newUser.name = null;
+    users.push(newUser);
 
-  const thirdUsername = 'clone_username';
+    await mockbot.send(`/add ${firstUsername} ${thirdUsername}`);
+    await mockbot.send(`/compare ${firstUsername} ${thirdUsername}`);
 
-  // Test with incorrect arguments (Error on the server)
-  const newUser = _.cloneDeep(UserCache.getAllUsers()[0]);
-  newUser.username = thirdUsername;
-  newUser.name = null;
-  users.push(newUser);
-  await mockbot.send(`/add ${thirdUsername}`);
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    users.pop();
+  });
 
-  await mockbot.send(`/compare ${firstUsername} ${thirdUsername}`);
-
-  expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
-
-  users.pop();
-
-  // Test with incorrect arguments (argument count)
-  await mockbot.send('/compare asd asd asd');
-
-  expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  test('Incorrect case - Too many args', async () => {
+    await mockbot.send('/compare asd asd asd');
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  });
 });
