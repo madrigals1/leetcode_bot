@@ -59,6 +59,21 @@ export async function mockCompareMenu(
   });
 }
 
+export async function mockProblemsChart(
+  leftUser: User,
+): Promise<VizapiResponse> {
+  if (!leftUser.name) {
+    return {
+      error: 'placeholder',
+      reason: 'placeholder',
+    };
+  }
+
+  return new Promise((resolve) => {
+    resolve({ link: 'http://random_link_compare' });
+  });
+}
+
 export function mockButtonOptions(
   action: string, _users: User[], password?: string,
 ): ButtonOptions {
