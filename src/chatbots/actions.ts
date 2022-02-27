@@ -525,12 +525,8 @@ export default class Actions {
     ],
   })
   static async compare(context: Context): Promise<string> {
-    const first = (
-      context.args.get('first_username').value.toLowerCase()
-    );
-    const second = (
-      context.args.get('second_username').value.toLowerCase()
-    );
+    const first = context.args.get('first_username').value.toLowerCase();
+    const second = context.args.get('second_username').value.toLowerCase();
 
     // Getting left User
     if (first === '') {
