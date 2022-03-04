@@ -40,7 +40,7 @@ export default {
     SELECT username
     FROM channel_users
     WHERE channel_id = (
-    SELECT id
+      SELECT id
       FROM channels
       WHERE chat_id = ? AND provider = ?
     );
