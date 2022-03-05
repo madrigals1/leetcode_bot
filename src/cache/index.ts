@@ -28,9 +28,22 @@ class Cache {
     const channelCache = new ChannelCache(channelData);
 
     // Add Channel Cache to map
-    this.channels.set(JSON.stringify(channelKey), channelCache);
+    this.setChannel(channelKey, channelCache);
 
     return channelCache;
+  }
+
+  /**
+   * Set a channel in the cache
+   * @param {ChannelKey} channelKey - The key of the channel that you want to
+   * set.
+   * @param {ChannelCache} channelCache - The channel cache that you want to
+   * set.
+   */
+  public setChannel(
+    channelKey: ChannelKey, channelCache: ChannelCache,
+  ): void {
+    this.channels.set(JSON.stringify(channelKey), channelCache);
   }
 
   /**
@@ -44,12 +57,11 @@ class Cache {
     // Get all Channel IDs from Database
     const channelDataList = await this.database.getAllChannels();
 
-    for (let i = 0; i < channelDataList.length; i++) {
-      const channelData = channelDataList[i];
+    await Promise.all(channelDataList.map((channelData) => {
       const channelCache = new ChannelCache(channelData);
-      this.channels.set(JSON.stringify(channelData.key), channelCache);
-      await channelCache.preload();
-    }
+      this.setChannel(channelData.key, channelCache);
+      return channelCache.preload();
+    }));
   }
 
   /**
