@@ -10,7 +10,7 @@ export default {
     CREATE TABLE IF NOT EXISTS channels (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       chat_id TEXT NOT NULL,
-      provider TEXT NOT NULL,
+      provider INTEGER NOT NULL,
       user_limit INTEGER NOT NULL
     );
   `,
