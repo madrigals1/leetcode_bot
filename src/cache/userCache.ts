@@ -13,6 +13,10 @@ import Cache from './index';
 
 const { DATE_FORMAT } = constants.SYSTEM;
 
+/**
+ * The UserCache class is used to cache Users that are saved in Database for
+ * quick access.
+ * */
 export class UserCache {
   static users: Map<string, User> = new Map<string, User>();
 
@@ -24,7 +28,7 @@ export class UserCache {
 
   static delay: (msTime: number) => Promise<void> = delay;
 
-  static lastRefreshedAt: dayjs.Dayjs;
+  static lastRefreshedAt: dayjs.Dayjs = null;
 
   /**
    * Get the number of users in the database.
@@ -97,16 +101,17 @@ export class UserCache {
 
   /**
    * Return an array of all the users in the users map
-   * @returns An array of all the users in the users map.
+   * @returns An array of User objects.
    */
   static getAllUsers(): User[] {
     return [...this.users.values()];
   }
 
   /**
-   * If the username is already in the cache, replace the user object.
-   * Otherwise, add the user object to the cache
-   * @param {string} username - string
+   * If the username is already in the cache, replace the user in the cache
+   * with the new user. If the username is not in the cache, add the user
+   * to the cache
+   * @param {string} username - The username of the user.
    * @param {User} user - User
    * @returns Nothing.
    */
@@ -127,15 +132,9 @@ export class UserCache {
   }
 
   /**
-   * It iterates over all Users in the Database and tries to get the
-   * newest data from LeetCode for each User.
-   *
-   * - If the User exists on LeetCode, the User is updated
-   * in the Cache.
-   * - If the User does NOT exist on LeetCode, the User is removed
-   * from the Cache.
-   *
-   * Can also be used to pre-load all Users from Database.
+   * Load all Users from Database, refresh them with newest data from LeetCode,
+   * and replace them in Cache
+   * @returns A Promise<UserCacheResponse>
    */
   static async refresh(): Promise<UserCacheResponse> {
     const now = dayjs();
@@ -194,7 +193,7 @@ export class UserCache {
   }
 
   /**
-   * Clear the users list
+   * Clear the cache from Users and remove them from Database
    */
   static async clear(): Promise<void> {
     await Cache.database.removeAllUsers();
