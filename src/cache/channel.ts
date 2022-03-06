@@ -15,16 +15,21 @@ import Cache from './index';
 export class ChannelCache {
   users: User[] = [];
 
-  channelData: ChannelData;
+  channelData: ChannelData = null;
 
   /**
-   * Create a new instance of the Channel class
-   * @param {string} channelId - The channel ID of the Channel.
+   * It takes a channel object as a parameter and assigns it to the channelData
+   * property
+   * @param {ChannelData} channel - The channel data object.
    */
   constructor(channel: ChannelData) {
     this.channelData = channel;
   }
 
+  /**
+   * It gets all the users for the channel and adds them to the users array.
+   * @returns A promise with void.
+   */
   async preload(): Promise<void> {
     return Cache.database.getUsersForChannel(this.channelData.key)
       .then((usernameList) => {
@@ -32,24 +37,22 @@ export class ChannelCache {
           this.users.push(UserCache.getUser(username));
         });
       })
-      .catch((err) => {
-        log(err);
-      });
+      .catch((err) => { log(err); });
   }
 
   /**
-   * Get the number of users in the Channel.
-   * @returns The number of users in the Channel.
+   * Get the number of users in the system.
+   * @returns The number of users in the array.
    */
   get userAmount(): number {
     return this.users.length;
   }
 
   /**
-   * If the User is already in the Cache, return it. If not, add it to the Cache
-   * and return it
-   * @param {string} username - The username of the User to get or add.
-   * @returns A User object.
+   * If the user is already in the cache, return it. If not, add it to the
+   * cache and return it
+   * @param {string} username - The username of the user to get or add.
+   * @returns The promise with User object.
    */
   private async getOrAddUser(username: string): Promise<User> {
     // Get User from UserCache
@@ -63,9 +66,11 @@ export class ChannelCache {
   }
 
   /**
-   * Add a User to the Channel
-   * @param {string} username - The username of the User that you want to add to
-   * the Channel.
+   * Add a user to the channel
+   * @param {string} username - The username of the user that is being added
+   * to the channel.
+   * @returns The return value is a Promise. The Promise is resolved with a
+   * CacheResponse object.
    */
   async addUser(username: string): Promise<CacheResponse> {
     const addedUser = await this.getOrAddUser(username);
@@ -120,8 +125,10 @@ export class ChannelCache {
   }
 
   /**
-   * Remove a user from the Channel
-   * @param {string} username - The username of the User to remove.
+   * Remove a user from the channel
+   * @param {string} username - The username of the user to be removed.
+   * @returns The return value is a Promise. The Promise is resolved with a
+   * CacheResponse object.
    */
   async removeUser(username: string): Promise<CacheResponse> {
     const usernameLower = username.toLowerCase();
@@ -157,16 +164,16 @@ export class ChannelCache {
   }
 
   /**
-   * Return the User with the given username
+   * Given a username, return the user object.
    * @param {string} username - string
-   * @returns The User object that matches the username.
+   * @returns The user object that matches the username.
    */
   loadUser(username: string): User {
     return this.users.find((user) => user.username === username);
   }
 
   /**
-   * Sort the Users by the number of solved problems
+   * Sort the users by the number of solved problems
    */
   private sortUsers(): void {
     this.users.sort(
@@ -179,7 +186,8 @@ export class ChannelCache {
   }
 
   /**
-   * Clear the Channel from all Users
+   * It clears the channel's cache
+   * @returns A promise with CacheResponse
    */
   async clear(): Promise<CacheResponse> {
     return Cache.database.clearChannel(this.channelData.key)
