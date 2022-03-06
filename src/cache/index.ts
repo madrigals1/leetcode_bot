@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import Database from '../database';
+import DatabaseProvider from '../database/database.proto';
 import { constants } from '../utils/constants';
 
 import { ChannelCache } from './channel';
@@ -9,7 +10,7 @@ import { ChannelKey } from './models/channel.model';
 class Cache {
   channels: Map<string, ChannelCache> = new Map<string, ChannelCache>();
 
-  database = Database;
+  database: DatabaseProvider = Database;
 
   /**
    * Get the channel data from the database, create a channel cache from the
