@@ -10,7 +10,7 @@ test('database.proto class', async () => {
   await expect(database.findAllUsers())
     .rejects
     .toThrowError(new Error(errorMessage));
-  await expect(database.loadUser('asd'))
+  await expect(database.userExists('asd'))
     .rejects
     .toThrowError(new Error(errorMessage));
   await expect(database.addUser('asd'))

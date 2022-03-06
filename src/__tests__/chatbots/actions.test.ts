@@ -84,8 +84,8 @@ describe('chatbots.actions.add action', () => {
     expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(2);
 
     // Both usernames should be added
-    const msg1 = BM.USERNAME_WAS_ADDED('random_username', 1, 30);
-    const msg2 = BM.USERNAME_WAS_ADDED('random_username_2', 2, 30);
+    const msg1 = BM.USERNAME_WAS_ADDED('random_username');
+    const msg2 = BM.USERNAME_WAS_ADDED('random_username_2');
     expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}${msg2}`);
   });
 
@@ -100,7 +100,7 @@ describe('chatbots.actions.add action', () => {
     await mockbot.send(`/add ${username}`);
 
     // Username should be added
-    const msg1 = BM.USERNAME_WAS_ADDED(username, 1, 30);
+    const msg1 = BM.USERNAME_WAS_ADDED(username);
     expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}`);
 
     // Add same username again
