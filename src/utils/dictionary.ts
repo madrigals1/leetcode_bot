@@ -128,10 +128,8 @@ export const BOT_MESSAGES = {
   USERNAME_ALREADY_EXISTS(username: string): string {
     return `${constants.EMOJI.ERROR} User <b>${username}</b> already exists in database\n`;
   },
-  USERNAME_WAS_ADDED(
-    username: string, userAmount: number, userLimit: number,
-  ): string {
-    return `${constants.EMOJI.SUCCESS} <b>${username}</b> was added <b>${userAmount}/${userLimit}</b>\n`;
+  USERNAME_WAS_ADDED(username: string): string {
+    return `${constants.EMOJI.SUCCESS} <b>${username}</b> was added\n`;
   },
   USERNAME_WILL_BE_DELETED(username: string): string {
     return `${constants.EMOJI.WAITING} User <b>${username}</b> will be deleted`;
@@ -144,6 +142,9 @@ export const BOT_MESSAGES = {
   },
   USERNAME_NOT_ADDED_USER_LIMIT(username: string, userLimit: number): string {
     return `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`;
+  },
+  USERNAME_ADDING_ERROR(username: string): string {
+    return `${constants.EMOJI.ERROR} <b>${username}</b> was not added due to internal error`;
   },
   USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions`,
   USER_LIST_PROBLEMS: `${constants.EMOJI.CHART} Problems`,

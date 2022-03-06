@@ -59,7 +59,7 @@ export class ChannelCache {
     if (user) return user;
 
     // If User was not found in Cache, add it
-    return UserCache.addUser(username);
+    return UserCache.addUser(username).then((res) => res.user);
   }
 
   /**
@@ -105,11 +105,7 @@ export class ChannelCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: BM.USERNAME_WAS_ADDED(
-            username,
-            this.userAmount,
-            this.channelData.userLimit,
-          ),
+          detail: BM.USERNAME_WAS_ADDED(username),
         };
       })
       .catch((err) => {
