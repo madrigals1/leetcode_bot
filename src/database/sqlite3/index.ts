@@ -69,21 +69,22 @@ class SQLite extends DatabaseProvider {
   }
 
   // Load User by `username`
-  async loadUser(username: string): Promise<unknown> {
+  async userExists(username: string): Promise<boolean> {
     return this.database
       .get(QUERIES.LOAD_USER, username)
+      .then((res) => !!res)
       .catch((err) => log(err));
   }
 
   // Add User to Database
   async addUser(username: string): Promise<unknown> {
     // Check if user already exists is in database
-    const exists = await this
-      .loadUser(username)
+    const userExists = await this
+      .userExists(username)
       .catch((err) => log(err));
 
     // If user already exists, do not add User to Database
-    if (exists) return false;
+    if (userExists) return false;
 
     return this.database
       .run(QUERIES.ADD_USER, username)
@@ -93,12 +94,12 @@ class SQLite extends DatabaseProvider {
   // Remove User from Database
   async removeUser(username: string): Promise<unknown> {
     // Check if user exists is in database
-    const exists = await this
-      .loadUser(username)
+    const userExists = await this
+      .userExists(username)
       .catch((err) => log(err));
 
     // If user does not exist, return false
-    if (!exists) return false;
+    if (!userExists) return false;
 
     return this.database
       .run(QUERIES.REMOVE_USER, username)

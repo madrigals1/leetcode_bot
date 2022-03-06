@@ -37,7 +37,7 @@ class DatabaseProvider {
    * The function signature is:
    * @param {string} username - The username of the user to load.
    */
-  async loadUser(username: string): Promise<any> {
+  async userExists(username: string): Promise<boolean> {
     throw new Error('Not Implemented');
   }
 

@@ -48,16 +48,16 @@ class MongoDB extends DatabaseProvider {
   }
 
   // Load User by `username`
-  async loadUser(username: string): Promise<IUserModel> {
-    return this.UserModel.findOne({ username });
+  async userExists(username: string): Promise<boolean> {
+    return this.UserModel.findOne({ username }).then((res) => !!res);
   }
 
   // Add User to Database
   async addUser(username: string): Promise<IUserModel> {
-    const existingUser = await this.loadUser(username);
+    const userExists = await this.userExists(username);
 
     // If User does exist, no need to add new
-    if (existingUser) return null;
+    if (userExists) return null;
 
     // Create new User and save
     const newUser = new this.UserModel({ username });
@@ -67,10 +67,10 @@ class MongoDB extends DatabaseProvider {
   }
 
   async removeUser(username: string): Promise<boolean> {
-    const user = await this.loadUser(username);
+    const userExists = await this.userExists(username);
 
     // If User does exist, no delete him, otherwise
-    if (!user) return false;
+    if (!userExists) return false;
 
     // If User exists, delete him
     await this.UserModel.deleteOne({ username });

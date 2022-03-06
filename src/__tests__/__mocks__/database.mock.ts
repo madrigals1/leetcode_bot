@@ -31,8 +31,8 @@ class MockDatabaseProvider extends DatabaseProvider {
   }
 
   // Load User by `username`
-  async loadUser(username: string): Promise<boolean> {
-    return mockDatabaseData.fakeResult;
+  async userExists(username: string): Promise<boolean> {
+    return mockDatabaseData.users.includes(username);
   }
 
   // Add User to Database

@@ -50,9 +50,9 @@ class Postgres extends DatabaseProvider {
   }
 
   // Load User by `username`
-  async loadUser(username: string): Promise<unknown> {
+  async userExists(username: string): Promise<boolean> {
     return this.client.query(QUERIES.LOAD_USER(username))
-      .then((res) => res.rows[0])
+      .then((res) => res.rows.length !== 0)
       .catch((err) => {
         error(err);
         this.client.end();
@@ -63,10 +63,10 @@ class Postgres extends DatabaseProvider {
   // Add User to Database
   async addUser(username: string): Promise<unknown> {
     // Check if user already exists is in database
-    const exists = await this.loadUser(username);
+    const userExists = await this.userExists(username);
 
     // If user already exists, do not add User to Database
-    if (exists) return false;
+    if (userExists) return false;
 
     return this.client.query(QUERIES.ADD_USER(username))
       .then(() => true)
@@ -80,10 +80,10 @@ class Postgres extends DatabaseProvider {
   // Remove User from Database
   async removeUser(username: string): Promise<boolean> {
     // Check if user exists is in database
-    const exists = await this.loadUser(username);
+    const userExists = await this.userExists(username);
 
     // If user does not exist, return false
-    if (!exists) return false;
+    if (!userExists) return false;
 
     return this.client.query(QUERIES.REMOVE_USER(username))
       .then(() => true)
