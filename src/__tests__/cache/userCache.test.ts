@@ -1,48 +1,49 @@
-/* eslint-disable no-console */
 import * as _ from 'lodash';
 import * as dayjs from 'dayjs';
 
 import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
-import { users, mockDatabaseData } from '../__mocks__/data.mock';
+import { users, user2, user1 } from '../__mocks__/data.mock';
 import {
   SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
 } from '../../utils/dictionary';
 import { constants } from '../../utils/constants';
-import { CacheResponse } from '../../cache/models/response.model';
 import { User } from '../../leetcode/models';
 import { delay } from '../../utils/helper';
 import { UserCache } from '../../cache/userCache';
 import Cache from '../../cache';
 
+// Use mock functionality
 Cache.database = new MockDatabaseProvider();
 UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 UserCache.delayTime = 0;
 
-beforeEach(async () => {
-  await UserCache.clear();
-});
+// Prepare values
+const realUsername = user1.username;
+const realUsername2 = user2.username;
+const fakeUsername = 'fake_username';
 
-test('cache.UserCache.getAllUsers method', () => {
-  // Expect default Cache.users to be array
-  expect(UserCache.users instanceof Map).toBe(true);
-  expect(Array.isArray(UserCache.getAllUsers())).toBe(true);
-});
+// Create setup and teardown functions
+function _startup() {
+  UserCache.clear();
+}
 
-test('cache.UserCache.userAmount property', async () => {
+function _shutdown() {
+  UserCache.clear();
+}
+
+beforeEach(_startup);
+afterEach(_shutdown);
+
+test('cache.UserCache - userAmount property', async () => {
   // User amount is 0 by default
   expect(UserCache.userAmount).toBe(0);
 
-  // Add 1st User
-  const realUsername = 'random_username';
-  const addedUser: User = await UserCache.addUser(realUsername);
-  expect(addedUser).toBeTruthy();
-  expect(UserCache.userAmount).toBe(1);
+  // Add 2 Users
+  await UserCache.addUser(realUsername);
+  await UserCache.addUser(realUsername2);
 
-  // Add 2nd User
-  const realUsername2 = 'random_username_2';
-  const addedUser2: User = await UserCache.addUser(realUsername2);
-  expect(addedUser2).toBeTruthy();
+  // Should have correct user amount
   expect(UserCache.userAmount).toBe(2);
 
   // Clear Users
@@ -50,82 +51,245 @@ test('cache.UserCache.userAmount property', async () => {
   expect(UserCache.userAmount).toBe(0);
 });
 
-test('cache.UserCache.addOrReplaceUser method', async () => {
-  // Add User
-  await UserCache.addUser('random_username');
+describe('cache.UserCache - addUser method', () => {
+  beforeEach(_startup);
 
-  // Check if User Data is correct
-  const firstUserData: User = UserCache.getAllUsers()[0];
-  expect(firstUserData.name).toBe('Random User Name');
-  expect(firstUserData.solved).toBe(124);
-  expect(firstUserData.all).toBe(1700);
-  expect(firstUserData.profile.userAvatar)
-    .toBe('https://example.com/random_link');
-  expect(firstUserData.computed.submissions.length).toBe(2);
+  test('Correct case - Add 1 User', async () => {
+    // Add one User
+    const result = await UserCache.addUser(realUsername);
+    expect(result.status).toBe(constants.STATUS.SUCCESS);
+    expect(result.detail).toBe(BM.USERNAME_WAS_ADDED(realUsername));
+    expect(result).not.toBeNull();
 
-  // Replace 1st User with 2nd User and compare data
-  const secondUserDataBefore: User = (
-    await mockGetLeetcodeDataFromUsername('random_username_2')
-  );
-  UserCache.addOrReplaceUser('random_username', secondUserDataBefore);
-  const secondUserData: User = UserCache.getAllUsers()[0];
-  expect(JSON.stringify(secondUserDataBefore))
-    .toBe(JSON.stringify(secondUserData));
-  expect(UserCache.userAmount).toBe(1);
+    // Check User data
+    const firstUserData = UserCache.getAllUsers()[0];
+    const firstUserDataDirect = (
+      await mockGetLeetcodeDataFromUsername(realUsername)
+    );
+    expect(_.isEqual(firstUserData, firstUserDataDirect)).toBe(true);
+  });
 
-  // Replace non-existing User with 1st User (Add)
-  const firstUserReaddedBefore: User = (
-    await mockGetLeetcodeDataFromUsername('random_username')
-  );
-  UserCache.addOrReplaceUser('unexisting_username', firstUserReaddedBefore);
-  const firstUserReaddedAfter: User = UserCache.getAllUsers()[1];
-  expect(JSON.stringify(firstUserReaddedBefore))
-    .toBe(JSON.stringify(firstUserReaddedAfter));
-  expect(UserCache.userAmount).toBe(2);
+  test('Correct case - Add 2 Users', async () => {
+    // Add first User
+    const firstResult = await UserCache.addUser(realUsername);
+    expect(firstResult.status).toBe(constants.STATUS.SUCCESS);
+    expect(firstResult.detail).toBe(BM.USERNAME_WAS_ADDED(realUsername));
+    expect(firstResult.user).not.toBeNull();
+
+    // Add second User
+    const secondResult = await UserCache.addUser(realUsername2);
+    expect(secondResult).not.toBeNull();
+    expect(secondResult.status).toBe(constants.STATUS.SUCCESS);
+    expect(secondResult.detail).toBe(BM.USERNAME_WAS_ADDED(realUsername2));
+    expect(secondResult.user).not.toBeNull();
+
+    // Check first User data
+    const firstUserDataDirect = (
+      await mockGetLeetcodeDataFromUsername(realUsername)
+    );
+    expect(_.isEqual(firstResult.user, firstUserDataDirect)).toBe(true);
+
+    // Check second User data
+    const secondUserDataDirect = (
+      await mockGetLeetcodeDataFromUsername(realUsername2)
+    );
+    expect(_.isEqual(secondResult.user, secondUserDataDirect)).toBe(true);
+  });
+
+  test('Incorrect case - Username does not exist in LeetCode', async () => {
+    const result = await UserCache.addUser(fakeUsername);
+
+    expect(result.status).toBe(constants.STATUS.ERROR);
+    expect(result.detail).toBe(BM.USERNAME_NOT_FOUND_ON_LEETCODE(fakeUsername));
+    expect(result.user).toBeNull();
+  });
+
+  test('Incorrect case - Username already exists in Database', async () => {
+    // Add User 1st time
+    await UserCache.addUser(realUsername);
+
+    // Add User 2nd time
+    const result = await UserCache.addUser(realUsername);
+
+    expect(result.status).toBe(constants.STATUS.ERROR);
+    expect(result.detail).toBe(BM.USERNAME_ALREADY_EXISTS(realUsername));
+    expect(result.user).toBe(null);
+  });
+
+  test('Incorrect case - Error when getting User from LeetCode', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const actionWithError = (username: string): Promise<User> => new Promise(
+      (resolve, reject) => reject(new Error('fake error message')),
+    );
+    UserCache.getLeetcodeDataFromUsername = actionWithError;
+
+    // Try adding User
+    const result = await UserCache.addUser(fakeUsername);
+
+    expect(result.status).toBe(constants.STATUS.ERROR);
+    expect(result.detail)
+      .toBe(BM.USERNAME_ADDING_ERROR(fakeUsername));
+    expect(result.user).toBe(null);
+    UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
+  });
 });
 
-test('cache.UserCache.refresh method', async () => {
-  // Save original array
-  const usersClone: User[] = _.cloneDeep(users);
+describe('cache.userCache - getUser method', () => {
+  beforeEach(_startup);
 
-  // Adding in this order, because they will be sorted by solved count
-  await UserCache.addUser('random_username');
-  await UserCache.addUser('random_username_2');
+  test('Correct case - User exists', async () => {
+    // Add user first
+    await UserCache.addUser(realUsername);
 
-  // Change values in LeetCode Mock, refresh and check
-  users[0].name = 'New Name 1';
-  users[1].name = 'New Name 2';
-  await UserCache.refresh();
-  expect(UserCache.getUser('random_username').name).toBe('New Name 1');
-  expect(UserCache.getUser('random_username_2').name).toBe('New Name 2');
+    // Get User
+    const user = UserCache.getUser(realUsername);
 
-  // Clear array and bring back original array
-  users.length = 0;
-  usersClone.forEach((user: User) => users.push(user));
+    // Check User
+    expect(user).not.toBeUndefined();
+    expect(_.isEqual(user, user1)).toBe(true);
+  });
 
-  // Check already refreshed case
-  UserCache.lastRefreshedAt = dayjs();
-  const result: CacheResponse = await UserCache.refresh();
-  expect(result.status).toBe(constants.STATUS.ERROR);
-  expect(result.detail).toBe(BM.CACHE_ALREADY_REFRESHED);
-  expect(console.log).toHaveBeenCalledWith(SM.CACHE_ALREADY_REFRESHED);
-  UserCache.lastRefreshedAt = undefined;
+  test('Incorrect case - User does not exist', async () => {
+    // Get User
+    const user = UserCache.getUser(fakeUsername);
 
-  // Check case, where User is deleted from LeetCode
-  const fakeUsername = 'non_existing_username';
-  mockDatabaseData.users = [fakeUsername];
-  await UserCache.refresh();
-  expect(console.log).toHaveBeenCalledWith(
-    SM.USERNAME_WAS_NOT_REFRESHED(fakeUsername),
-  );
-  UserCache.lastRefreshedAt = undefined;
+    // Check User
+    expect(user).toBeUndefined();
+  });
+});
 
-  // Check error logging
-  const fakeErrorMessage = 'Fake error';
-  UserCache.delay = () => { throw new Error(fakeErrorMessage); };
-  await UserCache.refresh();
-  expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
-  UserCache.delay = delay;
+describe('cache.userCache - getAllUsers method', () => {
+  beforeEach(_startup);
+
+  test('Correct case - 1 User exists', async () => {
+    // Add User first
+    await UserCache.addUser(realUsername);
+
+    // Get Users from Cache
+    const gotUsers = UserCache.getAllUsers();
+
+    expect(gotUsers).toHaveLength(1);
+    expect(_.isEqual(gotUsers[0], user1)).toBe(true);
+  });
+
+  test('Correct case - 2 Users exist', async () => {
+    // Add User first
+    await UserCache.addUser(realUsername);
+    await UserCache.addUser(realUsername2);
+
+    // Get Users from Cache
+    const gotUsers = UserCache.getAllUsers();
+
+    expect(gotUsers).toHaveLength(2);
+    expect(_.isEqual(gotUsers[0], user1)).toBe(true);
+    expect(_.isEqual(gotUsers[1], user2)).toBe(true);
+  });
+
+  test('Correct case - 0 Users exist', async () => {
+    // Get Users from Cache
+    const gotUsers = UserCache.getAllUsers();
+
+    expect(gotUsers).toHaveLength(0);
+  });
+
+  test('Neutral case - Should have correct types', async () => {
+    // Expect default Cache.users to be array
+    expect(UserCache.users instanceof Map).toBe(true);
+    expect(Array.isArray(UserCache.getAllUsers())).toBe(true);
+  });
+});
+
+describe('cache.UserCache - addOrReplaceUser method', () => {
+  beforeEach(_startup);
+
+  test('Correct case - Replace existing User', async () => {
+    // Add User
+    await UserCache.addUser(realUsername);
+    expect(UserCache.userAmount).toBe(1);
+
+    // Replace 1st User with 2nd User and compare data
+    UserCache.addOrReplaceUser(realUsername, user2);
+
+    // Get User with updated data
+    const updatedUserData = UserCache.getAllUsers()[0];
+    expect(_.isEqual(updatedUserData, user2)).toBe(true);
+
+    // Amount of User should not be changed
+    expect(UserCache.userAmount).toBe(1);
+  });
+
+  test('Neutral case - Replace not existing User', async () => {
+    // By default there should be no Users
+    expect(UserCache.userAmount).toBe(0);
+
+    // Replace non-existing User with 1st User (Add)
+    UserCache.addOrReplaceUser('unexisting_username', user1);
+
+    // Check added User
+    const addedUser = UserCache.getAllUsers()[0];
+    expect(_.isEqual(addedUser, user1)).toBe(true);
+
+    // User amount should be changed
+    expect(UserCache.userAmount).toBe(1);
+  });
+});
+
+describe('cache.UserCache - refresh method', () => {
+  beforeEach(_startup);
+
+  test('Correct case - Data on LeetCode is updated', async () => {
+    UserCache.lastRefreshedAt = null;
+
+    // Save original array
+    const usersClone = _.cloneDeep(users);
+
+    // Adding in this order, because they will be sorted by solved count
+    await UserCache.addUser('random_username');
+    await UserCache.addUser('random_username_2');
+
+    // Change values in LeetCode Mock, refresh and check
+    users[0].name = 'New Name 1';
+    users[1].name = 'New Name 2';
+    await UserCache.refresh();
+    expect(UserCache.getUser('random_username').name).toBe('New Name 1');
+    expect(UserCache.getUser('random_username_2').name).toBe('New Name 2');
+
+    // Clear array and bring back original array
+    users.length = 0;
+    usersClone.forEach((user: User) => users.push(user));
+  });
+
+  test('Incorrect case - Cache is already refreshing', async () => {
+    UserCache.lastRefreshedAt = dayjs();
+
+    // Refresh Cache
+    const result = await UserCache.refresh();
+
+    // Should throw error
+    expect(result.status).toBe(constants.STATUS.ERROR);
+    expect(result.detail).toBe(BM.CACHE_ALREADY_REFRESHED);
+    // eslint-disable-next-line no-console
+    expect(console.log).toHaveBeenCalledWith(SM.CACHE_ALREADY_REFRESHED);
+
+    UserCache.lastRefreshedAt = undefined;
+  });
+
+  test('Incorrect case - Internal error', async () => {
+    // Add 1 user to be able to delay
+    await UserCache.addUser(realUsername);
+
+    // Check error logging
+    const fakeErrorMessage = 'Fake error';
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    UserCache.delay = (msTime: number) => new Promise((resolve, reject) => {
+      reject(new Error(fakeErrorMessage));
+    });
+
+    await UserCache.refresh();
+    // eslint-disable-next-line no-console
+    expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
+    UserCache.delay = delay;
+  });
 });
 
 // test('cache.UserCache.sortUsers method', async () => {
@@ -211,56 +375,6 @@ test('cache.UserCache.refresh method', async () => {
 //   expect(_.isEqual(Cache.users, sortedUsersModified)).toBe(true);
 // });
 
-test('cache.UserCache.addUser method', async () => {
-  // Add 1st User
-  const realUsername = 'random_username';
-  const addedUser: User = await UserCache.addUser(realUsername);
-  expect(addedUser).toBeTruthy();
-  const firstUserData: User = UserCache.getAllUsers()[0];
-  expect(firstUserData.name).toBe('Random User Name');
-  expect(firstUserData.solved).toBe(124);
-  expect(firstUserData.all).toBe(1700);
-  expect(firstUserData.profile.userAvatar)
-    .toBe('https://example.com/random_link');
-  expect(firstUserData.computed.submissions.length).toBe(2);
-  const firstUserDataDirect: User = (
-    await mockGetLeetcodeDataFromUsername('random_username')
-  );
-  expect(_.isEqual(firstUserData, firstUserDataDirect)).toBe(true);
-
-  // // Test User Limit
-  // const userLimit = 1;
-  // Cache.userLimit = userLimit;
-  // const secondUsername = 'random_username_2';
-  // const resultFailUserLimit: CacheResponse = (
-  //   await Cache.addUser(secondUsername)
-  // );
-  // expect(resultFailUserLimit.status).toBe(constants.STATUS.ERROR);
-  // expect(resultFailUserLimit.detail).toBe(
-  //   BM.USERNAME_NOT_ADDED_USER_LIMIT(secondUsername, userLimit),
-  // );
-  // Cache.userLimit = 30;
-
-  // // Test Remove User if not exist in LeetCode
-  // const fakeUsername = 'not_existing_username';
-  // const resultFailNotExists: CacheResponse = (
-  //   await Cache.addUser(fakeUsername)
-  // );
-  // expect(resultFailNotExists.status).toBe(constants.STATUS.ERROR);
-  // expect(resultFailNotExists.detail).toBe(
-  //   BM.USERNAME_NOT_FOUND_ON_LEETCODE(fakeUsername),
-  // );
-
-  // // Test Username already exists
-  // const resultFailAlreadyExists: CacheResponse = (
-  //   await Cache.addUser(realUsername)
-  // );
-  // expect(resultFailAlreadyExists.status).toBe(constants.STATUS.ERROR);
-  // expect(resultFailAlreadyExists.detail).toBe(
-  //   BM.USERNAME_ALREADY_EXISTS(realUsername),
-  // );
-});
-
 // test('cache.UserCache.removeUser method', async () => {
 //   // Add 2 Users
 //   await UserCache.addUser('random_username');
@@ -285,39 +399,15 @@ test('cache.UserCache.addUser method', async () => {
 //   expect(resultFail.detail).toBe(BM.USERNAME_NOT_FOUND(fakeUsername));
 // });
 
-test('cache.UserCache.clear method', async () => {
+test('cache.UserCache - clear method', async () => {
+  _startup();
+
   // Add 2 Users
-  await UserCache.addUser('random_username');
-  await UserCache.addUser('random_username_2');
+  await UserCache.addUser(realUsername);
+  await UserCache.addUser(realUsername2);
   expect(UserCache.userAmount).toBe(2);
 
   // Clear Users
   await UserCache.clear();
   expect(UserCache.userAmount).toBe(0);
-
-  // // Check case, where clearing Users fails
-  // mockDatabaseData.fakeResult = false;
-  // const resultFail: CacheResponse = await Cache.clearUsers();
-  // expect(resultFail.status).toBe(constants.STATUS.ERROR);
-  // expect(resultFail.detail).toBe(BM.DATABASE_WAS_NOT_CLEARED);
-});
-
-test('cache.UserCache.getUser method', async () => {
-  // Add 2 Users
-  await UserCache.addUser('random_username');
-  await UserCache.addUser('random_username_2');
-
-  // Check if loadUser returns correct data
-  const userData: User = (
-    await mockGetLeetcodeDataFromUsername('random_username')
-  );
-  const cachedUserData: User = UserCache.getUser('random_username');
-  expect(_.isEqual(userData, cachedUserData)).toBe(true);
-
-  // Shouldn't be able to remove unexisting User
-  expect(UserCache.getUser('not_existing_user')).toBeFalsy();
-
-  // Shouldn't be able to remove already removed User
-  // await UserCache.removeUser('random_username');
-  // expect(_.isEmpty(Cache.loadUser('random_username'))).toBe(true);
 });
