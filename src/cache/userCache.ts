@@ -7,7 +7,7 @@ import { log, delay } from '../utils/helper';
 import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { constants } from '../utils/constants';
 
-import { CacheResponse } from './models/response.model';
+import { UserCacheResponse } from './models/response.model';
 
 import Cache from './index';
 
@@ -16,11 +16,13 @@ const { DATE_FORMAT } = constants.SYSTEM;
 export class UserCache {
   static users: Map<string, User> = new Map<string, User>();
 
-  static getLeetcodeDataFromUsername = getLeetcodeDataFromUsername;
+  static getLeetcodeDataFromUsername: (username: string) => Promise<User> = (
+    getLeetcodeDataFromUsername
+  )
 
-  static delayTime = constants.SYSTEM.USER_REQUEST_DELAY_MS;
+  static delayTime: number = constants.SYSTEM.USER_REQUEST_DELAY_MS;
 
-  static delay = delay;
+  static delay: (msTime: number) => Promise<void> = delay;
 
   static lastRefreshedAt: dayjs.Dayjs;
 
@@ -33,17 +35,34 @@ export class UserCache {
   }
 
   /**
-   * If the user exists in LeetCode, add the User to the Database and Cache
-   * @param {string} username - The username of the User you want to add to the
-   * Database.
-   * @returns A Promise with User.
+   * If the user exists in the database, return an error.
+   * Otherwise, get the user from LeetCode and add it to the database.
+   * @param {string} username - string
+   * @returns A Promise<UserCacheResponse>
    */
-  static addUser(username: string): Promise<User> {
+  static async addUser(username: string): Promise<UserCacheResponse> {
+    const userExists = await Cache.database.userExists(username);
+
+    // Check if User already exists in Database
+    if (userExists) {
+      return {
+        status: constants.STATUS.ERROR,
+        detail: BM.USERNAME_ALREADY_EXISTS(username),
+        user: null,
+      };
+    }
+
     // First get LeetCode User from username
     return this.getLeetcodeDataFromUsername(username)
       .then((user: User) => {
         // If User does NOT exist in LeetCode, return null
-        if (!user.exists) return null;
+        if (!user.exists) {
+          return {
+            status: constants.STATUS.ERROR,
+            detail: BM.USERNAME_NOT_FOUND_ON_LEETCODE(username),
+            user: null,
+          };
+        }
 
         // Add username to Database
         Cache.database.addUser(username);
@@ -51,11 +70,19 @@ export class UserCache {
         // Add User to Cache
         this.users.set(username, user);
 
-        return user;
+        return {
+          status: constants.STATUS.SUCCESS,
+          detail: BM.USERNAME_WAS_ADDED(username),
+          user,
+        };
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         log(err);
-        return null;
+        return {
+          status: constants.STATUS.ERROR,
+          detail: BM.USERNAME_ADDING_ERROR(username),
+          user: null,
+        };
       });
   }
 
@@ -110,7 +137,7 @@ export class UserCache {
    *
    * Can also be used to pre-load all Users from Database.
    */
-  static async refresh(): Promise<CacheResponse> {
+  static async refresh(): Promise<UserCacheResponse> {
     const now = dayjs();
     const { lastRefreshedAt } = this;
 
@@ -169,7 +196,8 @@ export class UserCache {
   /**
    * Clear the users list
    */
-  static clear(): void {
+  static async clear(): Promise<void> {
+    await Cache.database.removeAllUsers();
     this.users.clear();
   }
 }
