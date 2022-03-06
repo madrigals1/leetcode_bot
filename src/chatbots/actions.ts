@@ -82,7 +82,7 @@ export default class Actions {
     await context.reply(BM.CACHE_STARTED_REFRESH, context);
 
     // Refresh and return result
-    const result: CacheResponse = await UserCache.refresh();
+    const result = await UserCache.refresh();
     return result.detail;
   }
 
