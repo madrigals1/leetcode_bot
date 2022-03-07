@@ -72,7 +72,7 @@ export class UserCache {
         Cache.database.addUser(username);
 
         // Add User to Cache
-        this.users.set(username, user);
+        this.users.set(username.toLowerCase(), user);
 
         return {
           status: constants.STATUS.SUCCESS,
