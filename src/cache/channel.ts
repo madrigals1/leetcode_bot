@@ -7,7 +7,7 @@ import { constants } from '../utils/constants';
 import { BOT_MESSAGES as BM } from '../utils/dictionary';
 
 import { ChannelData } from './models/channel.model';
-import { CacheResponse } from './models/response.model';
+import { CacheResponse, UserCacheResponse } from './models/response.model';
 import { UserCache } from './userCache';
 
 import Cache from './index';
@@ -34,7 +34,8 @@ export class ChannelCache {
     return Cache.database.getUsersForChannel(this.channelData.key)
       .then((usernameList) => {
         usernameList.forEach((username) => {
-          this.users.push(UserCache.getUser(username));
+          const user = UserCache.getUser(username);
+          if (user !== undefined) this.users.push(user);
         });
       })
       .catch((err) => { log(err); });
@@ -54,15 +55,21 @@ export class ChannelCache {
    * @param {string} username - The username of the user to get or add.
    * @returns The promise with User object.
    */
-  private async getOrAddUser(username: string): Promise<User> {
+  private async getOrAddUser(username: string): Promise<UserCacheResponse> {
     // Get User from UserCache
     const user = UserCache.getUser(username);
 
     // If User is found in Cache, return it
-    if (user) return user;
+    if (user) {
+      return {
+        user,
+        status: constants.STATUS.SUCCESS,
+        detail: '',
+      };
+    }
 
     // If User was not found in Cache, add it
-    return UserCache.addUser(username).then((res) => res.user);
+    return UserCache.addUser(username);
   }
 
   /**
@@ -73,12 +80,12 @@ export class ChannelCache {
    * CacheResponse object.
    */
   async addUser(username: string): Promise<CacheResponse> {
-    const addedUser = await this.getOrAddUser(username);
+    const addOrGetUserResponse = await this.getOrAddUser(username);
 
-    if (!addedUser) {
+    if (addOrGetUserResponse.status === constants.STATUS.ERROR) {
       return {
         status: constants.STATUS.ERROR,
-        detail: BM.USERNAME_NOT_FOUND_ON_LEETCODE(username),
+        detail: addOrGetUserResponse.detail,
       };
     }
 
@@ -103,7 +110,7 @@ export class ChannelCache {
         }
 
         // Add User to Cache
-        this.users.push(addedUser);
+        this.users.push(addOrGetUserResponse.user);
 
         // Sort Users after adding new one
         this.sortUsers();
@@ -140,12 +147,12 @@ export class ChannelCache {
         if (!deletedFromDB) {
           return {
             status: constants.STATUS.ERROR,
-            detail: BM.USERNAME_WAS_NOT_DELETED(username),
+            detail: BM.USERNAME_DOES_NOT_EXIST_IN_CHANNEL(username),
           };
         }
 
         // Remove User from Cache
-        _.remove(this.users, { username });
+        _.remove(this.users, { username: usernameLower });
 
         return {
           status: constants.STATUS.SUCCESS,
