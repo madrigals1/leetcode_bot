@@ -146,6 +146,9 @@ export const BOT_MESSAGES = {
   USERNAME_ADDING_ERROR(username: string): string {
     return `${constants.EMOJI.ERROR} <b>${username}</b> was not added due to internal error`;
   },
+  USERNAME_DOES_NOT_EXIST_IN_CHANNEL(username: string): string {
+    return `${constants.EMOJI.ERROR} <b>${username}</b> does not exist`;
+  },
   USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions`,
   USER_LIST_PROBLEMS: `${constants.EMOJI.CHART} Problems`,
   USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars`,
