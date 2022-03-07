@@ -101,6 +101,9 @@ class MockDatabaseProvider extends DatabaseProvider {
   async addUserToChannel(
     channelKey: ChannelKey, username: string,
   ): Promise<boolean> {
+    // Add User
+    await this.addUser(username);
+
     const channel = await this.getChannel(channelKey);
     const channelUser = { channelId: channel.id, username };
 
