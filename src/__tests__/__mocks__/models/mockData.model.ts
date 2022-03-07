@@ -8,7 +8,6 @@ export interface MockDatabaseInterface {
   channelUsers: ChannelUser[];
   mockUser1: () => User;
   savedUsers: () => User[];
-  fakeResult: boolean;
 }
 
 export interface OtherModel {

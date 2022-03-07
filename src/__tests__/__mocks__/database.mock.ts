@@ -16,11 +16,11 @@ class MockDatabaseProvider extends DatabaseProvider {
 
   // Connect to Database
   async connect(): Promise<boolean> {
-    return new Promise((resolve) => resolve(mockDatabaseData.fakeResult));
+    return new Promise((resolve) => resolve(true));
   }
 
   createTables(): boolean {
-    return mockDatabaseData.fakeResult;
+    return true;
   }
 
   // Find all Users
@@ -58,7 +58,7 @@ class MockDatabaseProvider extends DatabaseProvider {
   // Remove all Users from Database
   async removeAllUsers(): Promise<boolean> {
     mockDatabaseData.users = [];
-    return mockDatabaseData.fakeResult;
+    return true;
   }
 
   async addChannel(channelData: ChannelData): Promise<ChannelData> {
@@ -86,7 +86,7 @@ class MockDatabaseProvider extends DatabaseProvider {
 
   async deleteChannel(channelKey: ChannelKey): Promise<boolean> {
     _.remove(mockDatabaseData.channels, { key: channelKey });
-    return mockDatabaseData.fakeResult;
+    return true;
   }
 
   private existsChannelUser(channelUser: ChannelUser): boolean {
@@ -113,16 +113,18 @@ class MockDatabaseProvider extends DatabaseProvider {
     }
 
     mockDatabaseData.channelUsers.push({ channelId: channel.id, username });
-    return mockDatabaseData.fakeResult;
+    return true;
   }
 
   async removeUserFromChannel(
     channelKey: ChannelKey, username: string,
   ): Promise<boolean> {
     const channel = await this.getChannel(channelKey);
+    const existsChannelUser = mockDatabaseData.channelUsers
+      .find((cu) => cu.username === username && cu.channelId === channel.id);
 
     // If not found User, return false
-    if (!mockDatabaseData.channelUsers.find((user) => user.username)) {
+    if (!existsChannelUser) {
       return false;
     }
 
@@ -130,7 +132,7 @@ class MockDatabaseProvider extends DatabaseProvider {
       mockDatabaseData.channelUsers,
       { channelId: channel.id, username },
     );
-    return mockDatabaseData.fakeResult;
+    return true;
   }
 
   async clearChannel(channelKey: ChannelKey): Promise<boolean> {
@@ -139,7 +141,7 @@ class MockDatabaseProvider extends DatabaseProvider {
       mockDatabaseData.channelUsers,
       { channelId: channel.id },
     );
-    return mockDatabaseData.fakeResult;
+    return true;
   }
 }
 

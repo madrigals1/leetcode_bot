@@ -218,5 +218,4 @@ export const mockDatabaseData: MockDatabaseInterface = {
       { ...this.mockUser1(), username: user.username }
     ));
   },
-  fakeResult: true,
 };
