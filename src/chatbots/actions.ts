@@ -1,21 +1,16 @@
 /* eslint-disable no-await-in-loop */
 import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { constants } from '../utils/constants';
-import { CacheResponse } from '../cache/models/response.model';
-import { User } from '../leetcode/models';
 import {
   tableForSubmissions,
   compareMenu,
   solvedProblemsChart,
   ratingGraph,
 } from '../vizapi';
-import { VizapiResponse } from '../vizapi/models';
 import { UserCache } from '../cache/userCache';
 
 import { action } from './decorators';
-import {
-  Context, Button, RegisteredAction,
-} from './models';
+import { Context, Button, RegisteredAction } from './models';
 import { createButtonsFromUsers, getCloseButton } from './utils';
 import { ButtonContainerType } from './models/buttons.model';
 
@@ -66,9 +61,7 @@ export default class Actions {
     // Add all Users 1 by 1 and log into message
     for (let i = 0; i < usernames.length; i++) {
       // Get results of adding
-      const result: CacheResponse = (
-        await context.channelCache.addUser(usernames[i])
-      );
+      const result = await context.channelCache.addUser(usernames[i]);
 
       message += result.detail;
     }
@@ -147,15 +140,13 @@ export default class Actions {
     }
 
     // Check if User exists
-    const user: User = context.channelCache.loadUser(username);
+    const user = context.channelCache.loadUser(username);
     if (!user) return BM.USERNAME_NOT_FOUND(username);
 
     await context.reply(BM.USERNAME_WILL_BE_DELETED(username), context);
 
     // Remove User
-    const result: CacheResponse = (
-      await context.channelCache.removeUser(username)
-    );
+    const result = await context.channelCache.removeUser(username);
 
     return result.detail;
   }
@@ -177,7 +168,7 @@ export default class Actions {
     await context.reply(BM.CHANNEL_WILL_BE_CLEARED, context);
 
     // Remove all Users and send the result (success or failure)
-    const result: CacheResponse = await context.channelCache.clear();
+    const result = await context.channelCache.clear();
 
     return result.detail;
   }
@@ -265,9 +256,7 @@ export default class Actions {
     // Rating with graph
     if (type === 'graph') {
       // Create HTML image with Graph
-      const response: VizapiResponse = (
-        await vizapiActions.ratingGraph(users)
-      );
+      const response = await vizapiActions.ratingGraph(users);
 
       // If image was created
       if (response.link) {
@@ -318,7 +307,7 @@ export default class Actions {
     }
 
     // Get User from username
-    const user: User = context.channelCache.loadUser(username);
+    const user = context.channelCache.loadUser(username);
 
     if (!user) return BM.USERNAME_NOT_FOUND(username);
 
@@ -368,7 +357,7 @@ export default class Actions {
 
     // If 1 User was sent
     if (username !== '') {
-      const user: User = context.channelCache.loadUser(username);
+      const user = context.channelCache.loadUser(username);
 
       if (user) {
         // Add photo to context
@@ -411,15 +400,13 @@ export default class Actions {
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user: User = context.channelCache.loadUser(username);
+      const user = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
       if (!user) return BM.USERNAME_NOT_FOUND(username);
 
       // Create HTML image with Table
-      const response: VizapiResponse = (
-        await vizapiActions.tableForSubmissions(user)
-      );
+      const response = await vizapiActions.tableForSubmissions(user);
 
       // If image was created
       if (response.link) {
@@ -430,9 +417,7 @@ export default class Actions {
       }
 
       // If error is because of User not having any submissions
-      if (response.reason === SM.NO_SUBMISSIONS) {
-        return response.error;
-      }
+      if (response.reason === SM.NO_SUBMISSIONS) return response.error;
 
       // If image link was not achieved from VizAPI
       return BM.ERROR_ON_THE_SERVER;
@@ -470,15 +455,13 @@ export default class Actions {
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user: User = context.channelCache.loadUser(username);
+      const user = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
       if (!user) return BM.USERNAME_NOT_FOUND(username);
 
       // Create HTML image with Table
-      const response: VizapiResponse = (
-        await vizapiActions.solvedProblemsChart(user)
-      );
+      const response = await vizapiActions.solvedProblemsChart(user);
 
       // If image was created
       if (response.link) {
@@ -559,8 +542,8 @@ export default class Actions {
     }
 
     // Get Users from args
-    const leftUser: User = context.channelCache.loadUser(first);
-    const rightUser: User = context.channelCache.loadUser(second);
+    const leftUser = context.channelCache.loadUser(first);
+    const rightUser = context.channelCache.loadUser(second);
 
     if (!leftUser) {
       return BM.USERNAME_NOT_FOUND(first);
@@ -570,9 +553,7 @@ export default class Actions {
       return BM.USERNAME_NOT_FOUND(second);
     }
 
-    const response: VizapiResponse = (
-      await vizapiActions.compareMenu(leftUser, rightUser)
-    );
+    const response = await vizapiActions.compareMenu(leftUser, rightUser);
 
     // If image was created
     if (response.link) {
