@@ -8,13 +8,15 @@ import {
   mockTableForSubmissions,
   mockCompareMenu,
   mockProblemsChart,
+  mockRatingGraph,
 } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import { constants } from '../../utils/constants';
 import { vizapiActions } from '../../chatbots/actions';
-import { tableForSubmissions, compareMenu } from '../../vizapi';
+import { tableForSubmissions, compareMenu, ratingGraph } from '../../vizapi';
 import { users } from '../__mocks__/data.mock';
 import { UserCache } from '../../cache/userCache';
+import { User } from '../../leetcode/models';
 
 const mockbot = new Mockbot();
 const mockDatabaseProvider = new MockDatabaseProvider();
@@ -31,6 +33,7 @@ beforeEach(async () => {
   Cache.clearChannel(mockbot.channelKey);
   vizapiActions.tableForSubmissions = tableForSubmissions;
   vizapiActions.compareMenu = compareMenu;
+  vizapiActions.ratingGraph = ratingGraph;
 });
 
 afterEach(async () => {
@@ -304,7 +307,22 @@ describe('chatbots.actions - rating action', () => {
     expect(mockbot.lastMessage()).toEqual(BM.CML_RATING_TEXT(cmlRating));
   });
 
-  // TODO: Test graph rating
+  test('Correct case - Graph rating', async () => {
+    vizapiActions.ratingGraph = mockRatingGraph;
+
+    await mockbot.send('/rating graph');
+    expect(mockbot.lastMessage()).toEqual(BM.GRAPH_RATING);
+    // TODO: Test buttons
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    vizapiActions.ratingGraph = (u: User[]) => new Promise((resolve) => {
+      resolve({ link: null });
+    });
+
+    await mockbot.send('/rating graph');
+    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  });
+
   // TODO: Test with 10 users
 
   test('Incorrect case - Incorrect rating type', async () => {
@@ -313,6 +331,7 @@ describe('chatbots.actions - rating action', () => {
   });
 
   test('Incorrect case - No users', async () => {
+    vizapiActions.ratingGraph = mockRatingGraph;
     await UserCache.clear();
 
     // Regular Rating with 0 users
@@ -322,6 +341,12 @@ describe('chatbots.actions - rating action', () => {
     // CML Rating with 0 users
     await mockbot.send('/rating cml');
     expect(mockbot.lastMessage()).toEqual(BM.CML_RATING_TEXT([]));
+
+    // CML Rating with 0 users
+    await mockbot.send('/rating graph');
+    expect(mockbot.lastMessage()).toEqual(BM.GRAPH_RATING);
+
+    vizapiActions.ratingGraph = ratingGraph;
   });
 });
 
