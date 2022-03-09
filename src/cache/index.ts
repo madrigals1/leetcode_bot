@@ -47,7 +47,7 @@ class Cache {
    * It refreshes the user cache and gets all the channel data from the
    * database.
    */
-  async preload() {
+  async preload(): Promise<void> {
     // Refresh Users from Database
     await UserCache.refresh();
 
@@ -77,6 +77,14 @@ class Cache {
   async clearChannel(channelKey: ChannelKey): Promise<void> {
     const existingChannel = this.channels.get(JSON.stringify(channelKey));
     if (existingChannel) await existingChannel.clear();
+  }
+
+  /**
+   * Remove all channels from the channel list
+   */
+  async removeAllChannels(): Promise<void> {
+    await this.database.deleteAllChannels();
+    this.channels.clear();
   }
 }
 
