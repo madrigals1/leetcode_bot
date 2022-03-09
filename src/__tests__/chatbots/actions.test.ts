@@ -39,7 +39,7 @@ afterEach(async () => {
   Cache.clearChannel(mockbot.channelKey);
 });
 
-describe('chatbots.actions.ping action', () => {
+describe('chatbots.actions - ping action', () => {
   test('Correct case', async () => {
     await mockbot.send('/ping');
     expect(mockbot.lastMessage()).toEqual('pong');
@@ -51,7 +51,7 @@ describe('chatbots.actions.ping action', () => {
   });
 });
 
-describe('chatbots.actions.start action', () => {
+describe('chatbots.actions - start action', () => {
   test('Correct case', async () => {
     await mockbot.send('/start');
     expect(mockbot.lastMessage()).toEqual(BM.WELCOME_TEXT(mockbot.prefix));
@@ -63,7 +63,7 @@ describe('chatbots.actions.start action', () => {
   });
 });
 
-describe('chatbots.actions.help action', () => {
+describe('chatbots.actions - help action', () => {
   test('Correct case', async () => {
     await mockbot.send('/help');
     expect(mockbot.lastMessage()).toEqual(BM.HELP_TEXT);
@@ -75,7 +75,7 @@ describe('chatbots.actions.help action', () => {
   });
 });
 
-describe('chatbots.actions.add action', () => {
+describe('chatbots.actions - add action', () => {
   test('Correct case', async () => {
     // Add 2 users
     await mockbot.send('/add random_username random_username_2');
@@ -164,7 +164,7 @@ describe('chatbots.actions.add action', () => {
   });
 });
 
-describe('chatbots.actions.refresh action', () => {
+describe('chatbots.actions - refresh action', () => {
   test('Correct case', async () => {
     await mockbot.send('/refresh');
     const messages = mockbot.messages();
@@ -178,7 +178,7 @@ describe('chatbots.actions.refresh action', () => {
   });
 });
 
-describe('chatbots.actions.remove action', () => {
+describe('chatbots.actions - remove action', () => {
   test('Correct case - Without username', async () => {
     await mockbot.send(`/remove ${mockPassword}`);
     expect(mockbot.lastMessage()).toBe(BM.USER_LIST_REMOVE);
@@ -220,7 +220,7 @@ describe('chatbots.actions.remove action', () => {
   });
 });
 
-describe('chatbots.actions.clear action', () => {
+describe('chatbots.actions - clear action', () => {
   test('Correct case', async () => {
     await mockbot.send('/add random_username random_username_2');
 
@@ -252,7 +252,7 @@ describe('chatbots.actions.clear action', () => {
   });
 });
 
-describe('chatbots.actions.stats action', () => {
+describe('chatbots.actions - stats action', () => {
   test('Correct case', async () => {
     // Add 2 Users
     await mockbot.send('/add random_username random_username_2');
@@ -278,7 +278,7 @@ describe('chatbots.actions.stats action', () => {
   });
 });
 
-describe('chatbots.actions.rating action', () => {
+describe('chatbots.actions - rating action', () => {
   test('Correct case - Regular rating', async () => {
     // Confirm that 2 users exist in Database
     await mockbot.send('/add random_username random_username_2');
@@ -325,7 +325,7 @@ describe('chatbots.actions.rating action', () => {
   });
 });
 
-describe('chatbots.actions.profile action', () => {
+describe('chatbots.actions - profile action', () => {
   test('Correct case - All users', async () => {
     await mockbot.send('/profile');
     expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_PROFILES);
@@ -351,7 +351,7 @@ describe('chatbots.actions.profile action', () => {
   });
 });
 
-describe('chatbots.actions.avatar action', () => {
+describe('chatbots.actions - avatar action', () => {
   test('Correct case - All users', async () => {
     await mockbot.send('/avatar');
     expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_AVATARS);
@@ -383,7 +383,7 @@ describe('chatbots.actions.avatar action', () => {
   });
 });
 
-describe('chatbots.actions.submissions action', () => {
+describe('chatbots.actions - submissions action', () => {
   test('Correct case - All users', async () => {
     await mockbot.send('/submissions');
     expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_SUBMISSIONS);
@@ -449,7 +449,7 @@ describe('chatbots.actions.submissions action', () => {
   });
 });
 
-describe('chatbots.actions.problems action', () => {
+describe('chatbots.actions - problems action', () => {
   test('Correct case - All users', async () => {
     await mockbot.send('/problems');
     expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_PROBLEMS);
@@ -489,7 +489,7 @@ describe('chatbots.actions.problems action', () => {
   });
 });
 
-describe('chatbots.actions.compare action', () => {
+describe('chatbots.actions - compare action', () => {
   test('Correct case - Select left user', async () => {
     await mockbot.send('/compare');
     expect(mockbot.lastMessage()).toEqual(BM.SELECT_LEFT_USER);
