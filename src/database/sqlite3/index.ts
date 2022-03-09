@@ -174,6 +174,14 @@ class SQLite extends DatabaseProvider {
     return true;
   }
 
+  async deleteAllChannels(): Promise<boolean> {
+    await this.database
+      .run(QUERIES.DELETE_ALL_CHANNELS)
+      .catch((err) => log(err));
+
+    return true;
+  }
+
   async addUserToChannel(
     channelKey: ChannelKey, username: string,
   ): Promise<boolean> {

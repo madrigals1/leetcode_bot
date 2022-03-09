@@ -89,6 +89,11 @@ class MockDatabaseProvider extends DatabaseProvider {
     return true;
   }
 
+  async deleteAllChannels(): Promise<boolean> {
+    mockDatabaseData.channels.length = 0;
+    return true;
+  }
+
   private existsChannelUser(channelUser: ChannelUser): boolean {
     return !!mockDatabaseData.channelUsers
       // eslint-disable-next-line arrow-body-style

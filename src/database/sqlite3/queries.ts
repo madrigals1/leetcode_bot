@@ -46,6 +46,7 @@ export default {
     );
   `,
   DELETE_CHANNEL: 'DELETE FROM channels WHERE chat_id = ? AND provider = ?;',
+  DELETE_ALL_CHANNELS: 'DELETE FROM channels',
   ADD_USER_TO_CHANNEL: `
     INSERT INTO channel_users (username, channel_id)
     VALUES (?, (SELECT id FROM channels WHERE chat_id = ? AND provider = ?));

@@ -105,6 +105,13 @@ class DatabaseProvider {
   }
 
   /**
+   * It deletes all channels.
+   */
+  async deleteAllChannels(): Promise<any> {
+    throw new Error('Not Implemented');
+  }
+
+  /**
    * It adds a user to a channel.
    * @param {ChannelKey} channelKey - The key of the channel to add the user to.
    * @param {string} username - The username of the user to add to the channel.
