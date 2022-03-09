@@ -48,6 +48,9 @@ test('database.proto class', async () => {
   await expect(database.deleteChannel(fakeChannelData.key))
     .rejects
     .toThrowError(new Error(errorMessage));
+  await expect(database.deleteAllChannels())
+    .rejects
+    .toThrowError(new Error(errorMessage));
   await expect(database.addUserToChannel(fakeChannelData.key, fakeUsername))
     .rejects
     .toThrowError(new Error(errorMessage));
