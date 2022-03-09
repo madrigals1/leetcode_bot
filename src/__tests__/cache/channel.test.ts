@@ -1,15 +1,13 @@
 /* eslint-disable no-console */
-import { ChannelCache } from '../../cache/channel';
-import { ChannelData, ChannelKey } from '../../cache/models';
-import { ChatbotProvider } from '../../chatbots';
 import Cache from '../../cache';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import { UserCache } from '../../cache/userCache';
 import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
-import { capitalizeFirstLetter, generateString } from '../../utils/helper';
+import { capitalizeFirstLetter } from '../../utils/helper';
 import { user2, user1 } from '../__mocks__/data.mock';
 import { constants } from '../../utils/constants';
 import { BOT_MESSAGES as BM } from '../../utils/dictionary';
+import { generateChannelCache } from '../__mocks__/generators';
 
 // Change mock values
 Cache.database = new MockDatabaseProvider();
@@ -22,24 +20,6 @@ const realUsername2 = user2.username;
 
 async function _startup() {
   UserCache.clear();
-}
-
-async function generateChannelCache() {
-  // Generate values
-  const channelKey: ChannelKey = {
-    chatId: generateString(10),
-    provider: ChatbotProvider.Discord,
-  };
-  const channelData: ChannelData = {
-    id: Math.floor(Math.random() * 10000),
-    key: channelKey,
-    userLimit: Math.floor(Math.random() * 10000),
-  };
-
-  // Create Channel in Database
-  await Cache.database.addChannel(channelData);
-
-  return new ChannelCache(channelData);
 }
 
 test('cache.channel - constructor method', async () => {
