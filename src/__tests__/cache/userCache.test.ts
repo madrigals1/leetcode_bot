@@ -12,6 +12,7 @@ import { User } from '../../leetcode/models';
 import { delay } from '../../utils/helper';
 import { UserCache } from '../../cache/userCache';
 import Cache from '../../cache';
+import { randomString } from '../__mocks__/randomUtils.test';
 
 // Use mock functionality
 Cache.database = new MockDatabaseProvider();
@@ -270,6 +271,29 @@ describe('cache.UserCache - refresh method', () => {
     expect(result.detail).toBe(BM.CACHE_ALREADY_REFRESHED);
     // eslint-disable-next-line no-console
     expect(console.log).toHaveBeenCalledWith(SM.CACHE_ALREADY_REFRESHED);
+
+    UserCache.lastRefreshedAt = undefined;
+  });
+
+  test('Incorrect case - User is deleted from LeetCode', async () => {
+    // Add fake User
+    const fakeUsernameX = randomString();
+    const fakeUser = { ...user1, username: fakeUsernameX };
+    users.push(fakeUser);
+
+    await UserCache.addUser(fakeUsernameX);
+
+    // "Delete" User from LeetCode
+    fakeUser.exists = false;
+
+    // Refresh Cache
+    await UserCache.refresh();
+
+    // eslint-disable-next-line no-console
+    expect(console.log)
+      .toHaveBeenCalledWith(SM.USERNAME_WAS_NOT_REFRESHED(fakeUsernameX));
+
+    _.remove(users, { username: fakeUsernameX });
 
     UserCache.lastRefreshedAt = undefined;
   });
