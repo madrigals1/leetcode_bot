@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import * as dayjs from 'dayjs';
+import _ from 'lodash';
 
 import { User } from '../leetcode/models';
 import getLeetcodeDataFromUsername from '../leetcode';
@@ -7,7 +8,7 @@ import { log, delay } from '../utils/helper';
 import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { constants } from '../utils/constants';
 
-import { UserCacheResponse } from './models/response.model';
+import { CacheResponse, UserCacheResponse } from './models/response.model';
 
 import Cache from './index';
 
@@ -190,6 +191,40 @@ export class UserCache {
       status: constants.STATUS.SUCCESS,
       detail: BM.CACHE_IS_REFRESHED,
     };
+  }
+
+  /**
+   * Remove a user from the database and the cache.
+   * @param {string} username - The username of the user to be deleted.
+   * @returns A Promise<UserCacheResponse>
+   */
+  static async removeUser(username: string): Promise<CacheResponse> {
+    return Cache.database
+      .removeUser(username)
+      .then((isDeleted) => {
+        // Remove from Cache
+        this.users.delete(username.toLowerCase());
+
+        if (!isDeleted) {
+          return {
+            status: constants.STATUS.ERROR,
+            detail: BM.USERNAME_NOT_FOUND(username),
+          };
+        }
+
+        return {
+          status: constants.STATUS.SUCCESS,
+          detail: BM.USERNAME_WAS_DELETED(username),
+        };
+      })
+      .catch((err) => {
+        log(err);
+
+        return {
+          status: constants.STATUS.ERROR,
+          detail: BM.ERROR_ON_THE_SERVER,
+        };
+      });
   }
 
   /**
