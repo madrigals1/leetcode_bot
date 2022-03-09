@@ -13,6 +13,14 @@ class Cache {
   database: DatabaseProvider = Database;
 
   /**
+   * Get the number of channels in the channel list.
+   * @returns The number of channels in the channel list.
+   */
+  get channelAmount(): number {
+    return this.channels.size;
+  }
+
+  /**
    * Get the channel data from the database, create a channel cache from the
    * channel data, and add the channel cache to the map.
    * @param {ChannelKey} channelKey - The key of the channel to register.
