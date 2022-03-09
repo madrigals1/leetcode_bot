@@ -1,6 +1,5 @@
 /* eslint-disable no-await-in-loop */
 import * as dayjs from 'dayjs';
-import _ from 'lodash';
 
 import { User } from '../leetcode/models';
 import getLeetcodeDataFromUsername from '../leetcode';
