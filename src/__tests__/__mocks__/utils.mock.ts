@@ -74,6 +74,13 @@ export async function mockProblemsChart(
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function mockRatingGraph(u: User[]): Promise<VizapiResponse> {
+  return new Promise((resolve) => {
+    resolve({ link: 'some_random_link' });
+  });
+}
+
 export function mockButtonOptions(
   action: string, _users: User[], password?: string,
 ): ButtonOptions {
