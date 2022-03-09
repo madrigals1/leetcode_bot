@@ -206,7 +206,11 @@ describe('cache.channel - addUser method', () => {
       reject(fakeErrorMessage);
     });
 
-    await channelCache.addUser(realUsername1);
+    const result = await channelCache.addUser(realUsername1);
+
+    // Check result
+    expect(result.status).toBe(constants.STATUS.ERROR);
+    expect(result.detail).toBe(BM.ERROR_ON_THE_SERVER);
 
     // Check error being logged
     expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
@@ -273,7 +277,11 @@ describe('cache.channel - removeUser method', () => {
       new Promise((resolve, reject) => reject(fakeErrorMessage))
     );
 
-    await channelCache.removeUser(realUsername1);
+    const result = await channelCache.removeUser(realUsername1);
+
+    // Check result
+    expect(result.status).toBe(constants.STATUS.ERROR);
+    expect(result.detail).toBe(BM.ERROR_ON_THE_SERVER);
 
     // Check error being logged
     expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
