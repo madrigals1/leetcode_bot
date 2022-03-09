@@ -244,15 +244,15 @@ describe('cache.UserCache - refresh method', () => {
     const usersClone = _.cloneDeep(users);
 
     // Adding in this order, because they will be sorted by solved count
-    await UserCache.addUser('random_username');
-    await UserCache.addUser('random_username_2');
+    await UserCache.addUser(realUsername);
+    await UserCache.addUser(realUsername2);
 
     // Change values in LeetCode Mock, refresh and check
     users[0].name = 'New Name 1';
     users[1].name = 'New Name 2';
     await UserCache.refresh();
-    expect(UserCache.getUser('random_username').name).toBe('New Name 1');
-    expect(UserCache.getUser('random_username_2').name).toBe('New Name 2');
+    expect(UserCache.getUser(realUsername).name).toBe('New Name 1');
+    expect(UserCache.getUser(realUsername2).name).toBe('New Name 2');
 
     // Clear array and bring back original array
     users.length = 0;
@@ -275,7 +275,7 @@ describe('cache.UserCache - refresh method', () => {
   });
 
   test('Incorrect case - Internal error', async () => {
-    // Add 1 user to be able to delay
+    // Add 1 user
     await UserCache.addUser(realUsername);
 
     // Check error logging
@@ -375,29 +375,87 @@ describe('cache.UserCache - refresh method', () => {
 //   expect(_.isEqual(Cache.users, sortedUsersModified)).toBe(true);
 // });
 
-// test('cache.UserCache.removeUser method', async () => {
-//   // Add 2 Users
-//   await UserCache.addUser('random_username');
-//   await UserCache.addUser('random_username_2');
-//   expect(UserCache.userAmount).toBe(2);
+describe('cache.UserCache.removeUser method', () => {
+  beforeEach(_startup);
 
-//   // Remove existing User
-//   const realUsername = 'random_username';
-//   const result: CacheResponse = await UserCache.removeUser(realUsername);
-//   expect(Cache.userAmount).toBe(1);
-//   expect(result.status).toBe(constants.STATUS.SUCCESS);
-//   expect(result.detail).toBe(BM.USERNAME_WAS_DELETED(realUsername));
+  test('Correct case - Remove single User', async () => {
+    // Add 2 Users
+    await UserCache.addUser(realUsername);
+    expect(UserCache.userAmount).toBe(1);
 
-//   // Check remaining User
-//   const userLeft: User = Cache.users[0];
-//   expect(userLeft.name).toBe('Random User Name 2');
+    // Remove existing User
+    const result = await UserCache.removeUser(realUsername);
+    expect(result.status).toBe(constants.STATUS.SUCCESS);
+    expect(result.detail).toBe(BM.USERNAME_WAS_DELETED(realUsername));
+    expect(UserCache.userAmount).toBe(0);
+  });
 
-//   // Remove unexisting User
-//   const fakeUsername = 'not_existing_user';
-//   const resultFail: CacheResponse = await Cache.removeUser(fakeUsername);
-//   expect(resultFail.status).toBe(constants.STATUS.ERROR);
-//   expect(resultFail.detail).toBe(BM.USERNAME_NOT_FOUND(fakeUsername));
-// });
+  test('Correct case - Remove 2 Users', async () => {
+    // Add 2 Users
+    await UserCache.addUser(realUsername);
+    await UserCache.addUser(realUsername2);
+    expect(UserCache.userAmount).toBe(2);
+
+    // Should be able to get both Users
+    expect(UserCache.users.get(realUsername)).not.toBeUndefined();
+    expect(UserCache.users.get(realUsername2)).not.toBeUndefined();
+
+    // Remove first User
+    const result1 = await UserCache.removeUser(realUsername);
+    expect(result1.status).toBe(constants.STATUS.SUCCESS);
+    expect(result1.detail).toBe(BM.USERNAME_WAS_DELETED(realUsername));
+    expect(UserCache.userAmount).toBe(1);
+
+    // Should only be able to get Existing User
+    expect(UserCache.users.get(realUsername)).toBeUndefined();
+    expect(UserCache.users.get(realUsername2)).not.toBeUndefined();
+
+    // Remove first User
+    const result2 = await UserCache.removeUser(realUsername2);
+    expect(result2.status).toBe(constants.STATUS.SUCCESS);
+    expect(result2.detail).toBe(BM.USERNAME_WAS_DELETED(realUsername2));
+    expect(UserCache.userAmount).toBe(0);
+
+    // Should not be able to get any Users
+    expect(UserCache.users.get(realUsername)).toBeUndefined();
+    expect(UserCache.users.get(realUsername2)).toBeUndefined();
+  });
+
+  test('Incorrect case - Try to delete user, that does not exist', async () => {
+    // Add 1 User
+    await UserCache.addUser(realUsername);
+    expect(UserCache.userAmount).toBe(1);
+
+    // Remove unexisting User
+    const result = await UserCache.removeUser(fakeUsername);
+    expect(result.status).toBe(constants.STATUS.ERROR);
+    expect(result.detail).toBe(BM.USERNAME_NOT_FOUND(fakeUsername));
+    expect(UserCache.userAmount).toBe(1);
+  });
+
+  test('Incorrect case - Error when removing User from Database', async () => {
+    const { removeUser } = Cache.database;
+    const fakeErrorMessage = 'fake error messsage';
+
+    // Change method to incorrect one
+    Cache.database.removeUser = () => (
+      new Promise((resolve, reject) => reject(fakeErrorMessage))
+    );
+
+    const result = await UserCache.removeUser(realUsername);
+
+    // Check result
+    expect(result.status).toBe(constants.STATUS.ERROR);
+    expect(result.detail).toBe(BM.ERROR_ON_THE_SERVER);
+
+    // Check error being logged
+    // eslint-disable-next-line no-console
+    expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
+
+    // Return original method back
+    Cache.database.removeUser = removeUser;
+  });
+});
 
 test('cache.UserCache - clear method', async () => {
   _startup();
