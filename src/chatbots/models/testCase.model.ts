@@ -1,6 +1,7 @@
 import { Context, Options } from '.';
 
 export interface TelegramTestCase {
+  name: string;
   message: string;
   context: Context;
   expected: {
