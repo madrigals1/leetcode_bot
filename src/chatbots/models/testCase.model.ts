@@ -13,11 +13,6 @@ export interface TelegramTestCase {
   };
 }
 
-export interface Args {
-  message: string;
-  expectedArgs: string[];
-}
-
 export interface DiscordTestCase {
   message: string;
   context: Context;

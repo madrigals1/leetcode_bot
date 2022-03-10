@@ -4,7 +4,7 @@ import {
 
 import { Context, Options } from './context.model';
 import { Button, ButtonOptions, ButtonContainer } from './buttons.model';
-import { TelegramTestCase, Args, DiscordTestCase } from './testCase.model';
+import { TelegramTestCase, DiscordTestCase } from './testCase.model';
 import {
   TelegramChat, TelegramEntity, TelegramUser, TelegramMessage,
 } from './ntba.model';
@@ -17,7 +17,6 @@ export {
   Button,
   ButtonContainer,
   TelegramTestCase,
-  Args,
   DiscordTestCase,
   SlackMessage,
   SlackBlock,
