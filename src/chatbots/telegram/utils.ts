@@ -33,21 +33,12 @@ export function reply(message: string, context: Context): Promise<string> {
     chatId, options, bot, photoUrl,
   } = context;
 
-  // Update options with Telegram specific data
-
   const replyMarkupOptions = options.buttons
     ? { reply_markup: getReplyMarkupFromButtons(options.buttons) }
     : {};
 
-  const parseModeOptions = options.parseMode
-    ? { parse_mode: options.parseMode }
-    : {};
-
-  const updatedOptions = {
-    ...options,
-    ...replyMarkupOptions,
-    ...parseModeOptions,
-  };
+  // Update options with Telegram specific data
+  const updatedOptions = { ...options, ...replyMarkupOptions };
 
   if (photoUrl) {
     return bot.sendPhoto(chatId, photoUrl, { captions: message });
