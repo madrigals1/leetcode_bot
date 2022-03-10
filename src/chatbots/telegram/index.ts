@@ -31,7 +31,7 @@ export default class Telegram {
       provider: this.id,
       chatId: message.chat.id,
       prefix: constants.PROVIDERS.TELEGRAM.PREFIX,
-      options: { parseMode: 'HTML' },
+      options: { parse_mode: 'HTML' },
       channelKey: {
         chatId: message.chat.id.toString(),
         provider: this.id,

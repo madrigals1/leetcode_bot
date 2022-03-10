@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
   Client,
   TextChannel,
@@ -20,10 +21,11 @@ import { ButtonContainer } from './buttons.model';
 
 export interface Options {
   polling?: boolean;
-  parseMode?: string;
   buttons?: ButtonContainer[];
   files?: string[];
   baseApiUrl?: string;
+  reply_markup?: string;
+  parse_mode?: string;
 }
 
 export interface Channel {
