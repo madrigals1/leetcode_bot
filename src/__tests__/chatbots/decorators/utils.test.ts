@@ -4,7 +4,7 @@ import {
 } from '../../../chatbots/decorators/utils';
 import { ArgumentsError, InputError } from '../../../utils/errors';
 import { ArgumentTestCase } from '../../__mocks__/models';
-import { mockContext } from '../../__mocks__/utils.mock';
+import { generateMockContext } from '../../__mocks__/utils.mock';
 import { BOT_MESSAGES as BM } from '../../../utils/dictionary';
 
 describe('chatbots.decorators.utils - getArgs function', () => {
@@ -27,9 +27,9 @@ describe('chatbots.decorators.utils - getArgs function', () => {
   });
 });
 
-test('chatbots.decorators.utils.getParsedArguments function', async () => {
-  // Requested empty args, provided empty args
+describe('chatbots.decorators.utils - getParsedArguments function', () => {
   const test1: ArgumentTestCase = {
+    name: 'Requested empty args, provided empty args',
     input: {
       providedArgs: [],
       requestedArgs: undefined,
@@ -41,8 +41,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 optional arg, provided 1 arg
   const test2: ArgumentTestCase = {
+    name: 'Requested 1 optional arg, provided 1 arg',
     input: {
       providedArgs: ['tc2_value'],
       requestedArgs: [
@@ -75,8 +75,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 required arg, provided 1 arg
   const test3: ArgumentTestCase = {
+    name: 'Requested 1 required arg, provided 1 arg',
     input: {
       providedArgs: ['tc3_value'],
       requestedArgs: [
@@ -109,8 +109,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 optional arg, provided empty args
   const test4: ArgumentTestCase = {
+    name: 'Requested 1 optional arg, provided empty args',
     input: {
       providedArgs: [],
       requestedArgs: [
@@ -143,8 +143,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 required multi arg, provided 1 multi arg (3 elems)
   const test5: ArgumentTestCase = {
+    name: 'Requested 1 required multi arg, provided 1 multi arg (3 elems)',
     input: {
       providedArgs: ['tc5_value1', 'tc5_value2', 'tc5_value3'],
       requestedArgs: [
@@ -178,8 +178,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 optional multi arg, provided 1 multi arg (3 elems)
   const test6: ArgumentTestCase = {
+    name: 'Requested 1 optional multi arg, provided 1 multi arg (3 elems)',
     input: {
       providedArgs: ['tc6_value1', 'tc6_value2', 'tc6_value3'],
       requestedArgs: [
@@ -213,8 +213,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 optional multi arg, provided empty args
   const test7: ArgumentTestCase = {
+    name: 'Requested 1 optional multi arg, provided empty args',
     input: {
       providedArgs: [],
       requestedArgs: [
@@ -248,8 +248,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 required multi arg, provided 1 multi arg (1 elems)
   const test8: ArgumentTestCase = {
+    name: 'Requested 1 required multi arg, provided 1 multi arg (1 elems)',
     input: {
       providedArgs: ['tc8_value1'],
       requestedArgs: [
@@ -283,8 +283,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 required multi arg, provided 1 multi arg (8 elems)
   const test9: ArgumentTestCase = {
+    name: 'Requested 1 required multi arg, provided 1 multi arg (8 elems)',
     input: {
       providedArgs: [
         'tc9_value1',
@@ -345,8 +345,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 2 required arg, provided 2 arg
   const test10: ArgumentTestCase = {
+    name: 'Requested 2 required arg, provided 2 arg',
     input: {
       providedArgs: ['tc10_value1', 'tc10_value2'],
       requestedArgs: [
@@ -397,8 +397,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 2 optional arg, provided 2 arg
   const test11: ArgumentTestCase = {
+    name: 'Requested 2 optional arg, provided 2 arg',
     input: {
       providedArgs: ['tc11_value1', 'tc11_value2'],
       requestedArgs: [
@@ -449,8 +449,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 required, 1 optional, provided 2 arg
   const test12: ArgumentTestCase = {
+    name: 'Requested 1 required, 1 optional, provided 2 arg',
     input: {
       providedArgs: ['tc12_value1', 'tc12_value2'],
       requestedArgs: [
@@ -501,8 +501,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 5 required arg, provided 5 arg
   const test13: ArgumentTestCase = {
+    name: 'Requested 5 required arg, provided 5 arg',
     input: {
       providedArgs: [
         'tc13_value1',
@@ -613,8 +613,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 3 required arg, 2 optional org, provided 5 arg
   const test14: ArgumentTestCase = {
+    name: 'Requested 3 required arg, 2 optional org, provided 5 arg',
     input: {
       providedArgs: [
         'tc14_value1',
@@ -725,8 +725,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 3 required arg, 2 optional org, provided 4 arg
   const test15: ArgumentTestCase = {
+    name: 'Requested 3 required arg, 2 optional org, provided 4 arg',
     input: {
       providedArgs: [
         'tc15_value1',
@@ -836,8 +836,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 3 required arg, 2 optional org, provided 4 arg
   const test16: ArgumentTestCase = {
+    name: 'Requested 3 required arg, 2 optional org, provided 4 arg',
     input: {
       providedArgs: [
         'tc16_value1',
@@ -946,9 +946,9 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 required multi arg, 1 required org, provided 1 multi arg
-  // (3 elems), 1 arg
   const test17: ArgumentTestCase = {
+    name: 'Requested 1 required multi arg, 1 required org, provided 1 multi arg'
+      + ' (3 elems), 1 arg',
     input: {
       providedArgs: [
         'tc17_value1',
@@ -1006,9 +1006,9 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested 1 required arg, 1 required multi  org, provided 1 arg
-  // 1 multi arg (3 elems)
   const test18: ArgumentTestCase = {
+    name: 'Requested 1 required arg, 1 required multi  org, provided 1 arg '
+      + '1 multi arg (3 elems)',
     input: {
       providedArgs: [
         'tc18_value1',
@@ -1066,15 +1066,15 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested:
-  // - 1 required arg
-  // - 1 required multi arg (3 elems)
-  // - 1 required arg
-  // - 1 optional multi arg (3 elems)
-  // - 1 optional arg
-  // - 1 optional mutli arg (3 elems)
-  // Provided: 12 args
   const test19: ArgumentTestCase = {
+    name: `Requested:
+    - 1 required arg
+    - 1 required multi arg (3 elems)
+    - 1 required arg
+    - 1 optional multi arg (3 elems)
+    - 1 optional arg
+    - 1 optional mutli arg (3 elems)
+    Provided: 12 args`,
     input: {
       providedArgs: [
         'tc19_value1',
@@ -1216,15 +1216,15 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Requested:
-  // - 1 required arg
-  // - 1 required multi arg (3 elems)
-  // - 1 required arg
-  // - 1 optional multi arg (3 elems)
-  // - 1 optional arg
-  // - 1 optional mutli arg (3 elems)
-  // Provided: 7 args
   const test20: ArgumentTestCase = {
+    name: `Requested:
+    - 1 required arg
+    - 1 required multi arg (3 elems)
+    - 1 required arg
+    - 1 optional multi arg (3 elems)
+    - 1 optional arg
+    - 1 optional mutli arg (3 elems)
+    Provided: 7 args`,
     input: {
       providedArgs: [
         'tc20_value1',
@@ -1361,8 +1361,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: undefined,
   };
 
-  // Error: duplicate keys (single duplicate)
   const test21: ArgumentTestCase = {
+    name: 'Error: duplicate keys (single duplicate)',
     input: {
       providedArgs: [],
       requestedArgs: [
@@ -1389,8 +1389,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     ),
   };
 
-  // Error: duplicate keys (multiple duplicates)
   const test22: ArgumentTestCase = {
+    name: 'Error: duplicate keys (multiple duplicates)',
     input: {
       providedArgs: [],
       requestedArgs: [
@@ -1454,8 +1454,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     ),
   };
 
-  // Error: duplicate indexes (single duplicate)
   const test23: ArgumentTestCase = {
+    name: 'Error: duplicate indexes (single duplicate)',
     input: {
       providedArgs: [],
       requestedArgs: [
@@ -1482,8 +1482,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     ),
   };
 
-  // Error: duplicate indexes (multiple duplicates)
   const test24: ArgumentTestCase = {
+    name: 'Error: duplicate indexes (multiple duplicates)',
     input: {
       providedArgs: [],
       requestedArgs: [
@@ -1546,8 +1546,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     ),
   };
 
-  // Error: Insufficient arguments in message
   const test25: ArgumentTestCase = {
+    name: 'Error: Insufficient arguments in message',
     input: {
       providedArgs: [],
       requestedArgs: [
@@ -1566,8 +1566,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: Error(BM.INSUFFICIENT_ARGS_IN_MESSAGE),
   };
 
-  // Error: Should not request more than 100 arguments
   const test26: ArgumentTestCase = {
+    name: 'Error: Should not request more than 100 arguments',
     input: {
       providedArgs: Array.from(Array(101).keys()).map((num) => `${num}`),
       requestedArgs: [
@@ -1586,8 +1586,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: new ArgumentsError(BM.SHOULD_NOT_REQUEST_MORE_THAN_100_ARGS),
   };
 
-  // Error: Should not provide more than 100 arguments
   const test27: ArgumentTestCase = {
+    name: 'Error: Should not provide more than 100 arguments',
     input: {
       providedArgs: Array.from(Array(150).keys()).map((num) => `${num}`),
       requestedArgs: [
@@ -1606,8 +1606,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: new InputError(BM.SHOULD_NOT_PROVIDE_MORE_THAN_100_ARGS),
   };
 
-  // Error: Should not have required arguments after optional arguments
   const test28: ArgumentTestCase = {
+    name: 'Error: Should not have required arguments after optional arguments',
     input: {
       providedArgs: ['tc28_value', 'tc28_value', 'tc28_value'],
       requestedArgs: [
@@ -1640,8 +1640,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     ),
   };
 
-  // Error: Message should not have any arguments
   const test29: ArgumentTestCase = {
+    name: 'Error: Message should not have any arguments',
     input: {
       providedArgs: ['tc29_value', 'tc29_value', 'tc29_value'],
       requestedArgs: [],
@@ -1653,8 +1653,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: new InputError(BM.MESSAGE_SHOULD_HAVE_NO_ARGS),
   };
 
-  // Error: Index `i` should be present in arguments
   const test30: ArgumentTestCase = {
+    name: 'Error: Index `i` should be present in arguments',
     input: {
       providedArgs: ['tc30_value', 'tc30_value', 'tc30_value'],
       requestedArgs: [
@@ -1679,8 +1679,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: new ArgumentsError(BM.INDEX_SHOULD_BE_PRESENT_IN_ARGS(1)),
   };
 
-  // Error: Argument `notFoundIndex` is not provided
   const test31: ArgumentTestCase = {
+    name: 'Error: Argument `notFoundIndex` is not provided',
     input: {
       providedArgs: ['tc31_value', 'tc31_value'],
       requestedArgs: [
@@ -1717,8 +1717,8 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     error: new ArgumentsError(BM.ARG_IS_NOT_PROVIDED(3)),
   };
 
-  // Branches: requestedArgs can be null
   const test32: ArgumentTestCase = {
+    name: 'Branches: requestedArgs can be null',
     input: {
       providedArgs: [],
       requestedArgs: null,
@@ -1765,40 +1765,44 @@ test('chatbots.decorators.utils.getParsedArguments function', async () => {
     test32,
   ];
 
-  testCases.forEach(({ input, output, error }) => {
-    const { providedArgs, requestedArgs } = input;
+  testCases.forEach(({
+    name, input, output, error,
+  }) => {
+    test(name, async () => {
+      const { providedArgs, requestedArgs } = input;
 
-    // Add providedArgs to context
-    const context = mockContext();
-    context.text = `/fake_command ${providedArgs.join(' ')}`;
+      // Add providedArgs to context
+      const context = generateMockContext();
+      context.text = `/fake_command ${providedArgs.join(' ')}`;
 
-    if (error) {
-      expect(() => getPositionalParsedArguments(context, requestedArgs))
-        .toThrowError(error);
-    } else {
-      const { byKey, byIndex } = output;
+      if (error) {
+        expect(() => getPositionalParsedArguments(context, requestedArgs))
+          .toThrowError(error);
+      } else {
+        const { byKey, byIndex } = output;
 
-      const argumentManager1 = (
-        getPositionalParsedArguments(context, requestedArgs)
-      );
+        const argumentManager1 = (
+          getPositionalParsedArguments(context, requestedArgs)
+        );
 
-      // Check by Key
-      Object.entries(byKey).forEach(([key, argument]) => {
-        expect(argumentManager1.pop(key)).toEqual(argument);
-      });
+        // Check by Key
+        Object.entries(byKey).forEach(([key, argument]) => {
+          expect(argumentManager1.pop(key)).toEqual(argument);
+        });
 
-      const argumentManager2 = (
-        getPositionalParsedArguments(context, requestedArgs)
-      );
+        const argumentManager2 = (
+          getPositionalParsedArguments(context, requestedArgs)
+        );
 
-      // Check by Index
-      Object.entries(byIndex).forEach(([index, argument]) => {
-        expect(argumentManager2.pop(Number(index))).toEqual(argument);
-      });
+        // Check by Index
+        Object.entries(byIndex).forEach(([index, argument]) => {
+          expect(argumentManager2.pop(Number(index))).toEqual(argument);
+        });
 
-      // Should not have any more arguments
-      expect(argumentManager1.getAll()).toEqual([]);
-      expect(argumentManager2.getAll()).toEqual([]);
-    }
+        // Should not have any more arguments
+        expect(argumentManager1.getAll()).toEqual([]);
+        expect(argumentManager2.getAll()).toEqual([]);
+      }
+    });
   });
 });

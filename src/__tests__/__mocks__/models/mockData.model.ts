@@ -22,6 +22,7 @@ export interface ArgumentTestCaseParsedArgument extends IParsedArgument {
 }
 
 export interface ArgumentTestCase {
+  name: string;
   input: {
     providedArgs: string[];
     requestedArgs: Argument[];

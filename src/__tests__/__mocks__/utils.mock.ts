@@ -122,7 +122,7 @@ export function mockUserWithSolved(
   return newUser;
 }
 
-export function mockContext(): Context {
+export function generateMockContext(): Context {
   return {
     text: 'random_text',
     reply: () => new Promise(() => ('asd')),
