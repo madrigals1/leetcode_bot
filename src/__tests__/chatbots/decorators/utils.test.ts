@@ -2,31 +2,28 @@
 import {
   getArgs, getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
-import { Args } from '../../../chatbots/models';
 import { ArgumentsError, InputError } from '../../../utils/errors';
 import { ArgumentTestCase } from '../../__mocks__/models';
 import { mockContext } from '../../__mocks__/utils.mock';
 import { BOT_MESSAGES as BM } from '../../../utils/dictionary';
 
-test('chatbots.decorators.utils.getArgs function', async () => {
-  const testCases: Args[] = [
-    {
-      message: '/action Random action with Args',
-      expectedArgs: ['Random', 'action', 'with', 'Args'],
-    },
-    {
-      message: '!action wow here',
-      expectedArgs: ['wow', 'here'],
-    },
-    {
-      message: 'any words with separator',
-      expectedArgs: ['words', 'with', 'separator'],
-    },
-  ];
+describe('chatbots.decorators.utils - getArgs function', () => {
+  test('Correct case - Only command with no arguments', async () => {
+    expect(getArgs('/action')).toStrictEqual([]);
+  });
 
-  testCases.forEach(({ message, expectedArgs }) => {
-    const args: string[] = getArgs(message);
-    expect(args).toStrictEqual(expectedArgs);
+  test('Correct case - Slash command', async () => {
+    expect(getArgs('/action Random action with Args'))
+      .toStrictEqual(['Random', 'action', 'with', 'Args']);
+  });
+
+  test('Correct case - Exclamation mark command', async () => {
+    expect(getArgs('!action wow here')).toStrictEqual(['wow', 'here']);
+  });
+
+  test('Correct case - No prefix command', async () => {
+    expect(getArgs('any words with separator'))
+      .toStrictEqual(['words', 'with', 'separator']);
   });
 });
 
