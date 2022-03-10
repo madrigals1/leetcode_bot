@@ -3,7 +3,9 @@ import {
 } from '../slack/slack.model';
 
 import { Context, Options } from './context.model';
-import { Button, ButtonOptions, ButtonContainer } from './buttons.model';
+import {
+  Button, ButtonOptions, ButtonContainer, ButtonContainerType,
+} from './buttons.model';
 import { TelegramTestCase, DiscordTestCase } from './testCase.model';
 import {
   TelegramChat, TelegramEntity, TelegramUser, TelegramMessage,
@@ -16,6 +18,7 @@ export {
   ButtonOptions,
   Button,
   ButtonContainer,
+  ButtonContainerType,
   TelegramTestCase,
   DiscordTestCase,
   SlackMessage,
