@@ -1,10 +1,9 @@
 import { log } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
 import { ChannelData, ChannelKey } from '../../cache/models/channel.model';
+import { User, Channel, ChannelUser } from '../models';
 
-import {
-  sequelize, User, Channel, ChannelUser,
-} from './helper';
+import { sequelize } from './helper';
 
 class SQLite extends DatabaseProvider {
   sequelize = sequelize;
