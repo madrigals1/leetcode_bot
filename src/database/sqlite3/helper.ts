@@ -1,44 +1,12 @@
-/* eslint-disable camelcase */
-import {
-  Sequelize, Model, DataTypes, InferAttributes, InferCreationAttributes,
-} from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
 
 import { constants } from '../../utils/constants';
+import { User, Channel, ChannelUser } from '../models';
 
 export const sequelize = new Sequelize('sqlite::memory:', {
   storage: `database/sqlite3/${constants.DATABASE.SQLITE3.FILENAME}`,
   logging: false,
 });
-
-export class User
-  extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare id: number;
-
-  declare username: string;
-}
-
-export class Channel
-  extends Model<InferAttributes<Channel>, InferCreationAttributes<Channel>> {
-  declare id: number;
-
-  declare chat_id: string;
-
-  declare provider: number;
-
-  declare user_limit: number;
-}
-
-export class ChannelUser
-  extends Model<
-    InferAttributes<ChannelUser>,
-    InferCreationAttributes<ChannelUser>
-  > {
-  declare id: number;
-
-  declare channel_id: number;
-
-  declare username: string;
-}
 
 User.init({
   id: {
