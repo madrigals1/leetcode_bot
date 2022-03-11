@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "allowJs": true,
+        "target": "ES2017",
+        "module": "CommonJS",
+        "sourceMap": true,
+        "types": ["node"],
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true
+    },
+    "include": ["./src/**/*"],
+    "exclude": ["./src/__tests__"]
+}

@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "LeetCode BOT for checking rating of users",
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc --project tsconfig.prod.json",
     "start": "npm run build && node dist/index.js",
     "fix": "eslint --fix src/*",
     "test": "jest --forceExit",
@@ -24,7 +24,6 @@
     "discord-api-types": "^0.23.1",
     "discord.js": "^13.2.0",
     "dotenv": "^10.0.0",
-    "jest": "^27.2.4",
     "lodash": "^4.17.21",
     "mongoose": "^6.0.8",
     "node-schedule": "^2.0.0",
@@ -47,6 +46,7 @@
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.2",
+    "jest": "^27.5.1",
     "mongodb-memory-server": "^8.1.0",
     "telegram-test": "^0.1.8",
     "ts-jest": "^27.0.5"
