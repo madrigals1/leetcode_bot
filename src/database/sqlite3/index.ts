@@ -1,219 +1,233 @@
-import * as sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
-
 import { log } from '../../utils/helper';
-import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
-import { constants } from '../../utils/constants';
 import DatabaseProvider from '../database.proto';
 import { ChannelData, ChannelKey } from '../../cache/models/channel.model';
 
-import QUERIES from './queries';
+import {
+  sequelize, User, Channel, ChannelUser,
+} from './helper';
 
 class SQLite extends DatabaseProvider {
-  database;
+  sequelize = sequelize;
+
+  User = User;
+
+  Channel = Channel;
+
+  ChannelUser = ChannelUser;
 
   // Connect to Database
   async connect(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      const sqlite3filename = constants.DATABASE.SQLITE3.FILENAME;
-
-      // Create database connection
-      open({
-        filename: `database/sqlite3/${sqlite3filename}`,
-        driver: sqlite3.Database,
-      })
-        .then(async (database) => {
-          // Log that database is connected
-          log(SM.CONNECTION_STATUS.SUCCESSFUL);
-
-          // Set database object
-          this.database = database;
-
-          // Create database table
-          await this.createTables();
-
-          resolve(true);
-        })
-        .catch((err) => {
-          // Log that database connection had errors
-          log(SM.CONNECTION_STATUS.ERROR(err));
-
-          reject(Error(err));
-        });
-    });
-  }
-
-  // Create Tables
-  private async createTables(): Promise<void> {
-    // Create Users Table
-    await this.database
-      .run(QUERIES.CREATE_USERS_TABLE)
-      .catch((err) => log(err));
-
-    // Create Channels Table
-    await this.database
-      .run(QUERIES.CREATE_CHANNELS_TABLE)
-      .catch((err) => log(err));
-
-    // Create Channel Users Table
-    await this.database
-      .run(QUERIES.CREATE_CHANNEL_USERS_TABLE)
-      .catch((err) => log(err));
+    return this.sequelize
+      .sync()
+      .then(() => true)
+      .catch((err) => {
+        log(err);
+        return false;
+      });
   }
 
   // Find all Users
-  async findAllUsers(): Promise<unknown> {
-    return this.database
-      .all(QUERIES.FIND_ALL_USERS)
-      .catch((err) => log(err));
+  async findAllUsers(): Promise<User[]> {
+    return this.User
+      .findAll()
+      .catch((err) => {
+        log(err);
+        return [];
+      });
   }
 
   // Load User by `username`
   async userExists(username: string): Promise<boolean> {
-    return this.database
-      .get(QUERIES.LOAD_USER, username)
+    return this.User
+      .findOne({ where: { username } })
       .then((res) => !!res)
-      .catch((err) => log(err));
+      .catch((err) => {
+        log(err);
+        return false;
+      });
   }
 
   // Add User to Database
-  async addUser(username: string): Promise<unknown> {
+  async addUser(username: string): Promise<User> {
     // Check if user already exists is in database
-    const userExists = await this
-      .userExists(username)
-      .catch((err) => log(err));
+    const userExists = await this.userExists(username);
 
     // If user already exists, do not add User to Database
-    if (userExists) return false;
+    if (userExists) return null;
 
-    return this.database
-      .run(QUERIES.ADD_USER, username)
-      .catch((err) => log(err));
+    return this.User
+      .create({ username })
+      .catch((err) => {
+        log(err);
+        return null;
+      });
   }
 
   // Remove User from Database
-  async removeUser(username: string): Promise<unknown> {
+  async removeUser(username: string): Promise<boolean> {
     // Check if user exists is in database
-    const userExists = await this
-      .userExists(username)
-      .catch((err) => log(err));
+    const userExists = await this.userExists(username);
 
     // If user does not exist, return false
     if (!userExists) return false;
 
-    return this.database
-      .run(QUERIES.REMOVE_USER, username)
-      .catch((err) => log(err));
+    return this.User
+      .destroy({ where: { username } })
+      .then((res) => !!res)
+      .catch((err) => {
+        log(err);
+        return false;
+      });
   }
 
   // Remove all Users from Database
-  async removeAllUsers(): Promise<unknown> {
-    return this.database
-      .run(QUERIES.REMOVE_ALL_USERS)
-      .catch((err) => log(err));
+  async removeAllUsers(): Promise<boolean> {
+    return this.User
+      .destroy({ truncate: true })
+      .then(() => true)
+      .catch((err) => {
+        log(err);
+        return false;
+      });
   }
 
+  // Add Channel
   async addChannel(channelData: ChannelData): Promise<ChannelData> {
     const { chatId, provider } = channelData.key;
     const { userLimit } = channelData;
 
     // Create Channel
-    const result = await this.database
-      .run(QUERIES.CREATE_CHANNEL, chatId, provider, userLimit)
-      .catch((err) => log(err));
-
-    return { ...channelData, id: result.lastID };
+    return this.Channel
+      .create({
+        chat_id: chatId,
+        provider,
+        user_limit: userLimit,
+      })
+      .then((res) => {
+        if (!res) return null;
+        return { ...channelData, id: res.id };
+      })
+      .catch((err) => {
+        log(err);
+        return null;
+      });
   }
 
   async getAllChannels(): Promise<ChannelData[]> {
-    const result = await this.database
-      .all(QUERIES.GET_ALL_CHANNELS)
-      .catch((err) => log(err));
-
-    return result.map((channel) => ({
-      id: channel.id,
-      key: {
-        chatId: channel.chat_id,
-        provider: channel.provider,
-      },
-      userLimit: channel.user_limit,
-    }));
+    return this.Channel
+      .findAll()
+      .then((res) => res.map((channel) => ({
+        id: channel.id,
+        key: {
+          chatId: channel.chat_id,
+          provider: channel.provider,
+        },
+        userLimit: channel.user_limit,
+      })))
+      .catch((err) => {
+        log(err);
+        return [];
+      });
   }
 
   async getChannel(channelKey: ChannelKey): Promise<ChannelData> {
     const { chatId, provider } = channelKey;
 
-    const result = await this.database
-      .get(QUERIES.GET_CHANNEL, chatId, provider)
-      .catch((err) => log(err));
-
-    return {
-      id: result.id,
-      key: channelKey,
-      userLimit: result.user_limit,
-    };
+    return this.Channel
+      .findOne({ where: { chat_id: chatId, provider } })
+      .then((res) => {
+        if (!res) return null;
+        return {
+          id: res.id,
+          key: channelKey,
+          userLimit: res.user_limit,
+        };
+      })
+      .catch((err) => {
+        log(err);
+        return null;
+      });
   }
 
   async getUsersForChannel(channelKey: ChannelKey): Promise<string[]> {
-    const { chatId, provider } = channelKey;
+    const channel = await this.getChannel(channelKey);
 
-    const result = await this.database
-      .all(QUERIES.GET_USERS_FOR_CHANNEL, chatId, provider)
-      .catch((err) => log(err));
+    if (!channel) return [];
 
-    return result?.map((row) => row.username);
+    return this.ChannelUser
+      .findAll({ where: { channel_id: channel.id } })
+      .then((res) => res.map((row) => row.username))
+      .catch((err) => {
+        log(err);
+        return [];
+      });
   }
 
   async deleteChannel(channelKey: ChannelKey): Promise<boolean> {
     const { chatId, provider } = channelKey;
 
-    await this.database
-      .run(QUERIES.DELETE_CHANNEL, chatId, provider)
-      .catch((err) => log(err));
-
-    return true;
+    return this.Channel
+      .destroy({ where: { chat_id: chatId, provider } })
+      .then((res) => !!res)
+      .catch((err) => {
+        log(err);
+        return false;
+      });
   }
 
   async deleteAllChannels(): Promise<boolean> {
-    await this.database
-      .run(QUERIES.DELETE_ALL_CHANNELS)
-      .catch((err) => log(err));
-
-    return true;
+    return this.Channel
+      .destroy({ truncate: true })
+      .then(() => true)
+      .catch((err) => {
+        log(err);
+        return false;
+      });
   }
 
   async addUserToChannel(
     channelKey: ChannelKey, username: string,
-  ): Promise<boolean> {
-    const { chatId, provider } = channelKey;
+  ): Promise<User> {
+    const channel = await this.getChannel(channelKey);
 
-    await this.database
-      .run(QUERIES.ADD_USER_TO_CHANNEL, username, chatId, provider)
-      .catch((err) => log(err));
+    if (!channel) return null;
 
-    return true;
+    return this.ChannelUser
+      .create({ channel_id: channel.id, username })
+      .catch((err) => {
+        log(err);
+        return null;
+      });
   }
 
   async removeUserFromChannel(
     channelKey: ChannelKey, username: string,
   ): Promise<boolean> {
-    const { chatId, provider } = channelKey;
+    const channel = await this.getChannel(channelKey);
 
-    await this.database
-      .run(QUERIES.REMOVE_USER_FROM_CHANNEL, username, chatId, provider)
-      .catch((err) => log(err));
+    if (!channel) return false;
 
-    return true;
+    return this.ChannelUser
+      .destroy({ where: { channel_id: channel.id, username } })
+      .then((res) => !!res)
+      .catch((err) => {
+        log(err);
+        return false;
+      });
   }
 
   async clearChannel(channelKey: ChannelKey): Promise<boolean> {
-    const { chatId, provider } = channelKey;
+    const channel = await this.getChannel(channelKey);
 
-    await this.database
-      .run(QUERIES.CLEAR_CHANNEL, chatId, provider)
-      .catch((err) => log(err));
+    if (!channel) return false;
 
-    return true;
+    return this.ChannelUser
+      .destroy({ where: { channel_id: channel.id } })
+      .then(() => true)
+      .catch((err) => {
+        log(err);
+        return false;
+      });
   }
 }
 
