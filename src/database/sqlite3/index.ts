@@ -1,17 +1,16 @@
-import { Sequelize } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 
 import { log } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
 import { ChannelData, ChannelKey } from '../../cache/models/channel.model';
 import { User, Channel, ChannelUser } from '../models';
 import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
-
-import { sequelize } from './helper';
+import { constants } from '../../utils/constants';
 
 class SQLite extends DatabaseProvider {
   providerName = 'SQLite';
 
-  sequelize: Sequelize = sequelize;
+  sequelize: Sequelize;
 
   User: typeof User = User;
 
@@ -19,9 +18,66 @@ class SQLite extends DatabaseProvider {
 
   ChannelUser: typeof ChannelUser = ChannelUser;
 
+  initialize(): void {
+    this.sequelize = new Sequelize('sqlite::memory:', {
+      storage: `database/sqlite3/${constants.DATABASE.SQLITE3.FILENAME}`,
+      logging: false,
+    });
+
+    this.User.init({
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    }, { sequelize: this.sequelize, modelName: 'users' });
+
+    this.Channel.init({
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      chat_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      provider: {
+        type: DataTypes.NUMBER,
+        allowNull: false,
+      },
+      user_limit: {
+        type: DataTypes.NUMBER,
+        allowNull: false,
+      },
+    }, { sequelize: this.sequelize, modelName: 'channels' });
+
+    this.ChannelUser.init({
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      channel_id: {
+        type: DataTypes.NUMBER,
+        allowNull: false,
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    }, { sequelize: this.sequelize, modelName: 'channel_users' });
+
+    log(SM.IS_CONNECTING(this.providerName));
+  }
+
   // Connect to Database
   async connect(): Promise<boolean> {
-    log(SM.IS_CONNECTING(this.providerName));
+    this.initialize();
 
     return this.sequelize
       .sync()
