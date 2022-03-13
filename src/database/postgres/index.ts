@@ -1,79 +1,67 @@
-import pg from 'pg';
-
 import { error, log } from '../../utils/helper';
-import { constants } from '../../utils/constants';
 import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import DatabaseProvider from '../database.proto';
+import { User, ChannelUser, Channel } from '../models';
 
-import QUERIES from './queries';
-
-const { POSTGRES } = constants.DATABASE;
+import { sequelize } from './helper';
 
 class Postgres extends DatabaseProvider {
-  client = new pg.Client({
-    user: POSTGRES.USER,
-    host: POSTGRES.URL,
-    database: POSTGRES.NAME,
-    password: POSTGRES.PASSWORD,
-    port: POSTGRES.PORT,
-  });
+  sequelize = sequelize;
+
+  User: typeof User = User;
+
+  Channel: typeof Channel = Channel;
+
+  ChannelUser: typeof ChannelUser = ChannelUser;
 
   // Connect database
   async connect(): Promise<boolean> {
-    this.client.connect();
-
-    // Query for creating users table
-    const query = QUERIES.CREATE_USERS_TABLE;
-
-    // Create table for users if not exist
-    return this.client.query(query)
+    return this.sequelize
+      .sync()
       .then(() => {
         log(SM.CONNECTION_STATUS.SUCCESSFUL);
         return true;
       })
       .catch((err) => {
-        error(SM.CONNECTION_STATUS.ERROR(err));
-        this.client.end();
+        log(SM.CONNECTION_STATUS.ERROR(err));
         return false;
       });
   }
 
   // Find all Users
-  async findAllUsers(): Promise<unknown> {
-    return this.client.query(QUERIES.GET_ALL_USERS)
-      .then((res) => res.rows)
+  async findAllUsers(): Promise<User[]> {
+    return this.User
+      .findAll()
       .catch((err) => {
-        error(err);
-        this.client.end();
-        return false;
+        log(err);
+        return [];
       });
   }
 
   // Load User by `username`
   async userExists(username: string): Promise<boolean> {
-    return this.client.query(QUERIES.LOAD_USER(username))
-      .then((res) => res.rows.length !== 0)
+    return this.User
+      .findOne({ where: { username } })
+      .then((res) => !!res)
       .catch((err) => {
-        error(err);
-        this.client.end();
+        log(err);
         return false;
       });
   }
 
   // Add User to Database
-  async addUser(username: string): Promise<unknown> {
+  async addUser(username: string): Promise<User> {
     // Check if user already exists is in database
     const userExists = await this.userExists(username);
 
     // If user already exists, do not add User to Database
-    if (userExists) return false;
+    if (userExists) return null;
 
-    return this.client.query(QUERIES.ADD_USER(username))
-      .then(() => true)
+    return this.User
+      .create({ username })
       .catch((err) => {
-        error(err);
-        this.client.end();
-        return false;
+        log(err);
+        return null;
       });
   }
 
@@ -85,22 +73,22 @@ class Postgres extends DatabaseProvider {
     // If user does not exist, return false
     if (!userExists) return false;
 
-    return this.client.query(QUERIES.REMOVE_USER(username))
+    return this.User
+      .destroy()
       .then(() => true)
       .catch((err) => {
-        error(err);
-        this.client.end();
+        log(err);
         return false;
       });
   }
 
   // Remove all Users from Database
   async removeAllUsers(): Promise<boolean> {
-    return this.client.query(QUERIES.REMOVE_ALL_USERS)
-      .then(() => true)
+    return this.User
+      .destroy()
+      .then((res) => !!res)
       .catch((err) => {
         error(err);
-        this.client.end();
         return false;
       });
   }
