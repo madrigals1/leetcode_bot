@@ -5,7 +5,7 @@ import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
 
-import UserModel, { IUserModel } from './schemas';
+import { UserModel, IUserModel } from './schemas';
 
 const { MONGO } = constants.DATABASE;
 
@@ -30,7 +30,7 @@ class MongoDB extends DatabaseProvider {
   // URL for Connection to MongoDB, that contains authentication
   mongoUrl = `mongodb://${this.credentials}${this.databaseUrl}${this.authSource}`;
 
-  UserModel = UserModel;
+  UserModel: typeof UserModel = UserModel;
 
   // Connect to Database
   async connect(): Promise<void> {
