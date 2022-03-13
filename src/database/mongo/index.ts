@@ -11,6 +11,8 @@ const { MONGO } = constants.DATABASE;
 
 // Main class for MongoDB Database
 class MongoDB extends DatabaseProvider {
+  providerName = 'MongoDB';
+
   // If authentication credentials were provided in environment, use them.
   // If not, use empty string in MongoDB connection
   credentials: string = MONGO.AUTHENTICATION_ENABLED
@@ -32,6 +34,8 @@ class MongoDB extends DatabaseProvider {
 
   // Connect to Database
   async connect(): Promise<void> {
+    log(SM.IS_CONNECTING(this.providerName));
+
     await mongoose
       .connect(this.mongoUrl)
       .then(() => {

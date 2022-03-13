@@ -4,10 +4,13 @@ import { log } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
 import { ChannelData, ChannelKey } from '../../cache/models/channel.model';
 import { User, Channel, ChannelUser } from '../models';
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 
 import { sequelize } from './helper';
 
 class SQLite extends DatabaseProvider {
+  providerName = 'SQLite';
+
   sequelize: Sequelize = sequelize;
 
   User: typeof User = User;
@@ -18,6 +21,8 @@ class SQLite extends DatabaseProvider {
 
   // Connect to Database
   async connect(): Promise<boolean> {
+    log(SM.IS_CONNECTING(this.providerName));
+
     return this.sequelize
       .sync()
       .then(() => true)

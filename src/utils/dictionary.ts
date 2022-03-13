@@ -28,10 +28,13 @@ export const SERVER_MESSAGES = {
 
   // CONNECTION TO DB
   CONNECTION_STATUS: {
-    SUCCESSFUL: 'Database connection successful!',
+    SUCCESSFUL: '>>> Database connection successful!',
     ERROR(error: Error | string): string {
-      return `Database connection error: ${error}`;
+      return `>>> Database connection error: ${error}`;
     },
+  },
+  IS_CONNECTING(providerName: string): string {
+    return `>>> Connecting to ${providerName}`;
   },
 
   // BOT LOGS
