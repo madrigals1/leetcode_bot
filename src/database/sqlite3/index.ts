@@ -1,3 +1,5 @@
+import { Sequelize } from 'sequelize';
+
 import { log } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
 import { ChannelData, ChannelKey } from '../../cache/models/channel.model';
@@ -6,13 +8,13 @@ import { User, Channel, ChannelUser } from '../models';
 import { sequelize } from './helper';
 
 class SQLite extends DatabaseProvider {
-  sequelize = sequelize;
+  sequelize: Sequelize = sequelize;
 
-  User = User;
+  User: typeof User = User;
 
-  Channel = Channel;
+  Channel: typeof Channel = Channel;
 
-  ChannelUser = ChannelUser;
+  ChannelUser: typeof ChannelUser = ChannelUser;
 
   // Connect to Database
   async connect(): Promise<boolean> {
