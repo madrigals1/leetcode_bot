@@ -54,6 +54,7 @@ export interface Context {
   password?: string;
   channelKey?: ChannelKey;
   channelCache?: ChannelCache;
+  isAdmin?: Promise<boolean>;
   // Discord
   discordProvidedArguments?: readonly CommandInteractionOption[];
   interaction?: ComplexInteraction;
