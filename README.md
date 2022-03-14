@@ -88,13 +88,7 @@ Make sure you have installed these:
     SLACK_APP_TOKEN=
     ```
 
-3. Change **MASTER_PASSWORD** value to secure password, that will be used for admin actions
-
-    ```bash
-    MASTER_PASSWORD=admin
-    ```
-
-4. Change settings for **Database**
+3. Change settings for **Database**
 
     - **SQLite3** - no changes needed.
 
@@ -117,13 +111,13 @@ Make sure you have installed these:
         POSTGRES_DB_PORT=5432
         ```
 
-5. Delay time after loading each User is set to 4s, depends on LeetCode RPM
+4. Delay time after loading each User is set to 4s, depends on LeetCode RPM
 
     ```bash
     USER_REQUEST_DELAY_MS=4000
     ```
 
-6. Install npm packages
+5. Install npm packages
 
     ```bash
     npm ci

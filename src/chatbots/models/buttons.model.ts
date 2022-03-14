@@ -14,7 +14,6 @@ export interface Button {
 export interface ButtonOptions {
   action: string;
   users: User[];
-  password?: string;
 }
 
 export interface ButtonContainer {

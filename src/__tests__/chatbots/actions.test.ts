@@ -24,9 +24,6 @@ Cache.database = mockDatabaseProvider;
 UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 UserCache.delayTime = 0;
 
-const mockPassword = 'random_password';
-constants.SYSTEM.MASTER_PASSWORD = mockPassword;
-
 const realUsername1 = users[0].username;
 const realUsername2 = users[1].username;
 const fakeUsername = 'fake_username';

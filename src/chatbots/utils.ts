@@ -8,15 +8,13 @@ import {
   ButtonContainerType,
 } from './models';
 
-export function createButtonsFromUsers(
-  options: ButtonOptions,
-): Button[] {
-  const { action, users, password } = options;
+export function createButtonsFromUsers(options: ButtonOptions): Button[] {
+  const { action, users } = options;
 
   // Create Button for each User
   const buttons = users.map((user: User) => ({
     text: user.username,
-    action: `/${action} ${user.username} ${password || ''}`,
+    action: `/${action} ${user.username}`,
   }));
 
   return buttons;

@@ -60,7 +60,7 @@ export function action(actionContext: ActionContext): (
       // Add args to the context
       const updatedContext = { ...context, args: argumentManager };
 
-      // Check password if action is Admin Action
+      // Check admin rights if action is Admin Action
       if (isAdminAction) {
         const isMessageFromAdmin = await context.isAdmin;
 

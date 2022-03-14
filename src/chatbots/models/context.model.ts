@@ -51,7 +51,6 @@ export interface Context {
   options?: Options;
   bot?: Client | TelegramBot | MockBotTelegram;
   photoUrl?: string;
-  password?: string;
   channelKey?: ChannelKey;
   channelCache?: ChannelCache;
   isAdmin?: Promise<boolean>;

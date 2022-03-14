@@ -188,10 +188,10 @@ export const BOT_MESSAGES = {
 <b><i>${prefix}compare username1 username2</i></b> - Compare 2 Users' stats
 <b><i>${prefix}problems username</i></b> - Chart with Solved Problems for specific User
 
-<b>Admin commands:</b>
-<b><i>${prefix}remove username master_password</i></b> - Remove User
-<b><i>${prefix}clear master_password</i></b> - Clear Database from all Users
-<b><i>${prefix}stats master_password</i></b> - Show Stats for this Bot
+<b>Admin commands (Only admin or local chat):</b>
+<b><i>${prefix}remove username</i></b> - Remove User
+<b><i>${prefix}clear</i></b> - Clear Database from all Users
+<b><i>${prefix}stats</i></b> - Show Stats for this Bot
 `;
   },
   USER_TEXT(user: User): string {

@@ -80,9 +80,9 @@ export async function mockRatingGraph(u: User[]): Promise<VizapiResponse> {
 }
 
 export function mockButtonOptions(
-  action: string, _users: User[], password?: string,
+  action: string, _users: User[],
 ): ButtonOptions {
-  return { action, password, users: _users };
+  return { action, users: _users };
 }
 
 export function mockUserWithSolved(
