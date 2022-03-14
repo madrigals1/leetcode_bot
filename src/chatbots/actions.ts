@@ -83,53 +83,24 @@ export default class Actions {
     name: 'remove',
     args: [
       {
-        key: 'username_or_password',
-        name: 'Username or Password',
+        key: 'username',
+        name: 'Username',
         index: 0,
-        isRequired: false,
-      },
-      {
-        key: 'password',
-        name: 'Password',
-        index: 1,
         isRequired: false,
       },
     ],
     isAdmin: true,
   })
   static async remove(context: Context): Promise<string> {
-    const usernameOrPassword = context.args.get('username_or_password').value;
-    const password = context.args.get('password').value;
+    const username = context.args.get('username').value;
 
-    // Handle case with /remove <username_or_password>
-    if (password === '') {
-      // Add Buttons with User List
-      context.options.buttons = [{
-        buttons: createButtonsFromUsers({
-          action: 'remove',
-          users: context.channelCache.users,
-          password: usernameOrPassword,
-        }),
-        buttonPerRow: 3,
-        placeholder: 'Username',
-        type: ButtonContainerType.MultipleButtons,
-      }, getCloseButton()];
-
-      return BM.USER_LIST_REMOVE;
-    }
-
-    // We know for sure now, this is username
-    const username = usernameOrPassword;
-
-    // Handle case with /remove <password>
-    // Discord specific
+    // If Username is not provided, show buttons
     if (username === '') {
       // Add Buttons with User List
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'remove',
           users: context.channelCache.users,
-          password,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -151,18 +122,7 @@ export default class Actions {
     return result.detail;
   }
 
-  @action({
-    name: 'clear',
-    args: [
-      {
-        key: 'password',
-        name: 'Password',
-        index: 0,
-        isRequired: true,
-      },
-    ],
-    isAdmin: true,
-  })
+  @action({ name: 'clear', isAdmin: true })
   static async clear(context: Context): Promise<string> {
     // Send message, that Database will be cleared
     await context.reply(BM.CHANNEL_WILL_BE_CLEARED, context);
@@ -173,18 +133,7 @@ export default class Actions {
     return result.detail;
   }
 
-  @action({
-    name: 'stats',
-    args: [
-      {
-        key: 'password',
-        name: 'Password',
-        index: 0,
-        isRequired: true,
-      },
-    ],
-    isAdmin: true,
-  })
+  @action({ name: 'stats', isAdmin: true })
   static async stats(context: Context): Promise<string> {
     // Send message with stats
     return BM.STATS_TEXT(context.provider);

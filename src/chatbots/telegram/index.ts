@@ -21,8 +21,11 @@ export default class Telegram {
 
   id = constants.PROVIDERS.TELEGRAM.ID;
 
-  getContext(message: TelegramBot.Message, text: string = null): Context {
+  getContext(
+    message: TelegramBot.Message, userId: number, text: string = null,
+  ): Context {
     const textCorrect = text || message.text;
+    const chatId = message.chat.id;
 
     return {
       text: textCorrect,
@@ -36,6 +39,18 @@ export default class Telegram {
         chatId: message.chat.id.toString(),
         provider: this.id,
       },
+      isAdmin: new Promise((resolve) => {
+        const isLocalChat = message.chat.id === userId;
+        if (isLocalChat) resolve(true);
+
+        this.bot
+          .getChatAdministrators(chatId)
+          .then((admins) => {
+            const isChatAdmin = admins.map((m) => m.user.id).includes(userId);
+            resolve(isChatAdmin);
+          })
+          .catch(() => resolve(false));
+      }),
       bot: this.bot,
     };
   }
@@ -57,11 +72,11 @@ export default class Telegram {
         if (message.chat) {
           this.bot
             .sendChatAction(message.chat.id, constants.CHAT_STATUS.TYPING)
-            .then();
+            .catch((err) => log(err));
         }
 
         // Create context for message
-        const context: Context = this.getContext(message);
+        const context: Context = this.getContext(message, message.from.id);
 
         Actions[property](context);
       });
@@ -72,7 +87,7 @@ export default class Telegram {
 
     // Handle button clicks
     this.bot.on('callback_query', (query) => {
-      const { message, data } = query;
+      const { message, data, from } = query;
 
       // Delete all buttons after button is clicked
       this.bot.answerCallbackQuery(query.id)
@@ -93,7 +108,7 @@ export default class Telegram {
         // If message starts with /rating, call rating action
         if (data.match(name)) {
           // Create context for message
-          const context: Context = this.getContext(message, data);
+          const context: Context = this.getContext(message, from.id, data);
 
           Actions[property](context);
         }
