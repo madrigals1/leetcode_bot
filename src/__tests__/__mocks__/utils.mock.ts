@@ -3,12 +3,13 @@ import * as _ from 'lodash';
 import { ButtonOptions, Context } from '../../chatbots/models';
 import { VizapiResponse } from '../../vizapi/models';
 import { User } from '../../leetcode/models';
-import dictionary from '../../utils/dictionary';
+import {
+  SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
+} from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
+import { ChatbotProvider } from '../../chatbots';
 
 import { users, user1 } from './data.mock';
-
-const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 
 export async function mockGetLeetcodeDataFromUsername(
   username: string,
@@ -58,10 +59,30 @@ export async function mockCompareMenu(
   });
 }
 
+export async function mockProblemsChart(user: User): Promise<VizapiResponse> {
+  if (!user.name) {
+    return {
+      error: 'placeholder',
+      reason: 'placeholder',
+    };
+  }
+
+  return new Promise((resolve) => {
+    resolve({ link: 'http://random_link_compare' });
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function mockRatingGraph(u: User[]): Promise<VizapiResponse> {
+  return new Promise((resolve) => {
+    resolve({ link: 'some_random_link' });
+  });
+}
+
 export function mockButtonOptions(
-  action: string, password?: string,
+  action: string, _users: User[],
 ): ButtonOptions {
-  return { action, password };
+  return { action, users: _users };
 }
 
 export function mockUserWithSolved(
@@ -99,12 +120,12 @@ export function mockUserWithSolved(
   return newUser;
 }
 
-export function mockContext(): Context {
+export function generateMockContext(): Context {
   return {
     text: 'random_text',
     reply: () => new Promise(() => ('asd')),
     argumentParser: () => undefined,
-    provider: 'mockbot',
+    provider: ChatbotProvider.Mockbot,
     prefix: '/',
   };
 }

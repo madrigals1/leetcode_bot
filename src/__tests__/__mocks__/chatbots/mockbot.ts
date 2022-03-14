@@ -1,20 +1,26 @@
 import { Context } from '../../../chatbots/models';
 import Actions, { registeredActions } from '../../../chatbots/actions';
-import constants from '../../../utils/constants';
+import { constants } from '../../../utils/constants';
 import {
   getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
+import { ChatbotProvider } from '../../../chatbots';
 
 export default class Mockbot {
   output: string[] = [];
 
   context: Context;
 
-  name = constants.PROVIDERS.MOCKBOT.NAME;
+  id = constants.PROVIDERS.MOCKBOT.ID;
 
   prefix = constants.PROVIDERS.MOCKBOT.PREFIX;
 
-  async send(message: string): Promise<void> {
+  channelKey = {
+    chatId: 'unique_chat_id',
+    provider: ChatbotProvider.Mockbot,
+  }
+
+  async send(message: string, isAdmin = false): Promise<void> {
     // If message is not command, ignore it
     if (!message.startsWith(this.prefix)) return;
 
@@ -44,9 +50,11 @@ export default class Mockbot {
             return promise;
           },
           argumentParser: getPositionalParsedArguments,
-          provider: this.name,
+          isAdmin: new Promise((resolve) => resolve(isAdmin)),
+          provider: this.id,
           chatId: 123123123,
           prefix: this.prefix,
+          channelKey: this.channelKey,
           options: {},
         };
 

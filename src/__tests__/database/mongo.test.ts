@@ -4,10 +4,8 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { jest } from '@jest/globals';
 import * as mongoose from 'mongoose';
 
-import dictionary from '../../utils/dictionary';
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import MongoDB from '../../database/mongo';
-
-const { SERVER_MESSAGES: SM } = dictionary;
 
 let mongoMemoryServer: MongoMemoryServer;
 let mongoDB: MongoDB;
@@ -76,7 +74,7 @@ test('database.mongo.findAllUsers method', async () => {
   });
 });
 
-test('database.mongo.loadUser method', async () => {
+test('database.mongo - userExists method', async () => {
   // Connect
   await mongoDB.connect();
 
@@ -84,14 +82,14 @@ test('database.mongo.loadUser method', async () => {
   await mongoDB.addUser('username1');
   await mongoDB.addUser('username2');
 
-  const loadedUser1 = await mongoDB.loadUser('username1');
-  expect(loadedUser1['username']).toBe('username1');
+  const user1exists = await mongoDB.userExists('username1');
+  expect(user1exists).toBe(true);
 
-  const loadedUser2 = await mongoDB.loadUser('username2');
-  expect(loadedUser2['username']).toBe('username2');
+  const user2exists = await mongoDB.userExists('username2');
+  expect(user2exists).toBe(true);
 
-  const notFoundUser = await mongoDB.loadUser('not_found_username');
-  expect(notFoundUser).toBeNull();
+  const userDoesNotExist = await mongoDB.userExists('not_found_username');
+  expect(userDoesNotExist).toBe(false);
 });
 
 test('database.mongo.removeUser method', async () => {
@@ -103,14 +101,14 @@ test('database.mongo.removeUser method', async () => {
   await mongoDB.addUser('username2');
 
   // Remove User
-  const loadedUser1 = await mongoDB.loadUser('username1');
-  expect(loadedUser1['username']).toBe('username1');
+  const user1exists = await mongoDB.userExists('username1');
+  expect(user1exists).toBe(true);
 
   const result1 = await mongoDB.removeUser('username1');
   expect(result1).toBeTruthy();
 
-  const removedUser = await mongoDB.loadUser('username1');
-  expect(removedUser).toBeNull();
+  const userDoesNotExist = await mongoDB.userExists('username1');
+  expect(userDoesNotExist).toBe(false);
 
   // Remove not existing user
   const result2 = await mongoDB.removeUser('not_found_username');

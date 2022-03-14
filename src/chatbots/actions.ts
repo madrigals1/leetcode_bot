@@ -1,24 +1,18 @@
-import dictionary from '../utils/dictionary';
-import Cache from '../cache';
-import constants from '../utils/constants';
-import { CacheResponse } from '../cache/response.model';
-import { User } from '../leetcode/models';
+import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
+import { constants } from '../utils/constants';
 import {
   tableForSubmissions,
   compareMenu,
   solvedProblemsChart,
   ratingGraph,
 } from '../vizapi';
-import { VizapiResponse } from '../vizapi/models';
+import { UserCache } from '../cache/userCache';
 
 import { action } from './decorators';
 import {
-  Context, Button, RegisteredAction,
+  Context, Button, RegisteredAction, ButtonContainerType,
 } from './models';
 import { createButtonsFromUsers, getCloseButton } from './utils';
-import { ButtonContainerType } from './models/buttons.model';
-
-const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 
 export const registeredActions: RegisteredAction[] = [];
 
@@ -68,7 +62,7 @@ export default class Actions {
     for (let i = 0; i < usernames.length; i++) {
       // Get results of adding
       // eslint-disable-next-line no-await-in-loop
-      const result: CacheResponse = await Cache.addUser(usernames[i]);
+      const result = await context.channelCache.addUser(usernames[i]);
 
       message += result.detail;
     }
@@ -82,7 +76,7 @@ export default class Actions {
     await context.reply(BM.CACHE_STARTED_REFRESH, context);
 
     // Refresh and return result
-    const result: CacheResponse = await Cache.refreshUsers();
+    const result = await UserCache.refresh();
     return result.detail;
   }
 
@@ -90,49 +84,24 @@ export default class Actions {
     name: 'remove',
     args: [
       {
-        key: 'username_or_password',
-        name: 'Username or Password',
+        key: 'username',
+        name: 'Username',
         index: 0,
-        isRequired: false,
-      },
-      {
-        key: 'password',
-        name: 'Password',
-        index: 1,
         isRequired: false,
       },
     ],
     isAdmin: true,
   })
   static async remove(context: Context): Promise<string> {
-    const usernameOrPassword = context.args.get('username_or_password').value;
-    const password = context.args.get('password').value;
+    const username = context.args.get('username').value;
 
-    // Handle case with /remove <username_or_password>
-    if (password === '') {
-      // Add Buttons with User List
-      context.options.buttons = [{
-        buttons: createButtonsFromUsers({
-          action: 'remove', password: usernameOrPassword,
-        }),
-        buttonPerRow: 3,
-        placeholder: 'Username',
-        type: ButtonContainerType.MultipleButtons,
-      }, getCloseButton()];
-
-      return BM.USER_LIST_REMOVE;
-    }
-
-    // We know for sure now, this is username
-    const username = usernameOrPassword;
-
-    // Handle case with /remove <password>
-    // Discord specific
+    // If Username is not provided, show buttons
     if (username === '') {
       // Add Buttons with User List
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
-          action: 'remove', password,
+          action: 'remove',
+          users: context.channelCache.users,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -142,57 +111,35 @@ export default class Actions {
       return BM.USER_LIST_REMOVE;
     }
 
-    await context.reply(
-      BM.USERNAME_WILL_BE_DELETED(username),
-      context,
-    );
+    // Check if User exists
+    const user = context.channelCache.loadUser(username);
+    if (!user) return BM.USERNAME_NOT_FOUND(username);
+
+    await context.reply(BM.USERNAME_WILL_BE_DELETED(username), context);
 
     // Remove User
-    const result: CacheResponse = await Cache.removeUser(username);
+    const result = await context.channelCache.removeUser(username);
 
     return result.detail;
   }
 
-  @action({
-    name: 'clear',
-    args: [
-      {
-        key: 'password',
-        name: 'Password',
-        index: 0,
-        isRequired: true,
-      },
-    ],
-    isAdmin: true,
-  })
+  @action({ name: 'clear', isAdmin: true })
   static async clear(context: Context): Promise<string> {
     // Send message, that Database will be cleared
-    await context.reply(
-      BM.DATABASE_WILL_BE_CLEARED,
-      context,
-    );
+    await context.reply(BM.CHANNEL_WILL_BE_CLEARED, context);
 
     // Remove all Users and send the result (success or failure)
-    const result: CacheResponse = await Cache.clearUsers();
+    const result = await context.channelCache.clear();
 
     return result.detail;
   }
 
-  @action({
-    name: 'stats',
-    args: [
-      {
-        key: 'password',
-        name: 'Password',
-        index: 0,
-        isRequired: true,
-      },
-    ],
-    isAdmin: true,
-  })
+  @action({ name: 'stats', isAdmin: true })
   static async stats(context: Context): Promise<string> {
+    const { users } = context.channelCache;
+
     // Send message with stats
-    return BM.STATS_TEXT(context.provider, Cache);
+    return BM.STATS_TEXT(context.provider, users);
   }
 
   @action({
@@ -208,6 +155,7 @@ export default class Actions {
   })
   static async rating(context: Context): Promise<string> {
     const type = context.args.get('type').value;
+    const users = context.channelCache?.users ?? [];
 
     // Prepare buttons
     const cmlButton = {
@@ -243,7 +191,7 @@ export default class Actions {
       // Add buttons
       context.options.buttons = [cmlButton, graphButton];
 
-      return BM.RATING_TEXT(Cache.allUsers());
+      return BM.RATING_TEXT(users);
     }
 
     // Cumulative rating:
@@ -254,15 +202,13 @@ export default class Actions {
       // Add buttons
       context.options.buttons = [regularButton, graphButton];
 
-      return BM.CML_RATING_TEXT(Cache.allUsers());
+      return BM.CML_RATING_TEXT(users);
     }
 
     // Rating with graph
     if (type === 'graph') {
       // Create HTML image with Graph
-      const response: VizapiResponse = (
-        await vizapiActions.ratingGraph(Cache.allUsers())
-      );
+      const response = await vizapiActions.ratingGraph(users);
 
       // If image was created
       if (response.link) {
@@ -300,7 +246,10 @@ export default class Actions {
     if (username === '') {
       // Add user buttons
       context.options.buttons = [{
-        buttons: createButtonsFromUsers({ action: 'profile' }),
+        buttons: createButtonsFromUsers({
+          action: 'profile',
+          users: context.channelCache.users,
+        }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
@@ -310,7 +259,7 @@ export default class Actions {
     }
 
     // Get User from username
-    const user: User = Cache.loadUser(username);
+    const user = context.channelCache.loadUser(username);
 
     if (!user) return BM.USERNAME_NOT_FOUND(username);
 
@@ -360,7 +309,7 @@ export default class Actions {
 
     // If 1 User was sent
     if (username !== '') {
-      const user: User = Cache.loadUser(username);
+      const user = context.channelCache.loadUser(username);
 
       if (user) {
         // Add photo to context
@@ -373,7 +322,10 @@ export default class Actions {
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
-      buttons: createButtonsFromUsers({ action: 'avatar' }),
+      buttons: createButtonsFromUsers({
+        action: 'avatar',
+        users: context.channelCache.users,
+      }),
       buttonPerRow: 3,
       placeholder: 'Username',
       type: ButtonContainerType.MultipleButtons,
@@ -400,15 +352,13 @@ export default class Actions {
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user: User = Cache.loadUser(username);
+      const user = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
       if (!user) return BM.USERNAME_NOT_FOUND(username);
 
       // Create HTML image with Table
-      const response: VizapiResponse = (
-        await vizapiActions.tableForSubmissions(user)
-      );
+      const response = await vizapiActions.tableForSubmissions(user);
 
       // If image was created
       if (response.link) {
@@ -419,9 +369,7 @@ export default class Actions {
       }
 
       // If error is because of User not having any submissions
-      if (response.reason === SM.NO_SUBMISSIONS) {
-        return response.error;
-      }
+      if (response.reason === SM.NO_SUBMISSIONS) return response.error;
 
       // If image link was not achieved from VizAPI
       return BM.ERROR_ON_THE_SERVER;
@@ -429,7 +377,10 @@ export default class Actions {
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
-      buttons: createButtonsFromUsers({ action: 'submissions' }),
+      buttons: createButtonsFromUsers({
+        action: 'submissions',
+        users: context.channelCache.users,
+      }),
       buttonPerRow: 3,
       placeholder: 'Username',
       type: ButtonContainerType.MultipleButtons,
@@ -456,15 +407,13 @@ export default class Actions {
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user: User = Cache.loadUser(username);
+      const user = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
       if (!user) return BM.USERNAME_NOT_FOUND(username);
 
       // Create HTML image with Table
-      const response: VizapiResponse = (
-        await vizapiActions.solvedProblemsChart(user)
-      );
+      const response = await vizapiActions.solvedProblemsChart(user);
 
       // If image was created
       if (response.link) {
@@ -480,7 +429,10 @@ export default class Actions {
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
-      buttons: createButtonsFromUsers({ action: 'problems' }),
+      buttons: createButtonsFromUsers({
+        action: 'problems',
+        users: context.channelCache.users,
+      }),
       buttonPerRow: 3,
       placeholder: 'Username',
       type: ButtonContainerType.MultipleButtons,
@@ -508,17 +460,16 @@ export default class Actions {
     ],
   })
   static async compare(context: Context): Promise<string> {
-    const first = (
-      context.args.get('first_username').value.toLowerCase()
-    );
-    const second = (
-      context.args.get('second_username').value.toLowerCase()
-    );
+    const first = context.args.get('first_username').value.toLowerCase();
+    const second = context.args.get('second_username').value.toLowerCase();
 
     // Getting left User
     if (first === '') {
       context.options.buttons = [{
-        buttons: createButtonsFromUsers({ action: 'compare' }),
+        buttons: createButtonsFromUsers({
+          action: 'compare',
+          users: context.channelCache.users,
+        }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
@@ -530,7 +481,10 @@ export default class Actions {
     // Getting right User
     if (second === '') {
       context.options.buttons = [{
-        buttons: createButtonsFromUsers({ action: `compare ${first}` }),
+        buttons: createButtonsFromUsers({
+          action: `compare ${first}`,
+          users: context.channelCache.users,
+        }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
@@ -540,8 +494,8 @@ export default class Actions {
     }
 
     // Get Users from args
-    const leftUser: User = Cache.loadUser(first);
-    const rightUser: User = Cache.loadUser(second);
+    const leftUser = context.channelCache.loadUser(first);
+    const rightUser = context.channelCache.loadUser(second);
 
     if (!leftUser) {
       return BM.USERNAME_NOT_FOUND(first);
@@ -551,9 +505,7 @@ export default class Actions {
       return BM.USERNAME_NOT_FOUND(second);
     }
 
-    const response: VizapiResponse = (
-      await vizapiActions.compareMenu(leftUser, rightUser)
-    );
+    const response = await vizapiActions.compareMenu(leftUser, rightUser);
 
     // If image was created
     if (response.link) {

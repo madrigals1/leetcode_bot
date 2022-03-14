@@ -16,8 +16,3 @@ export interface CompareUser {
   // eslint-disable-next-line camelcase
   compare_fields: CompareField[];
 }
-
-export interface Compare {
-  left: CompareUser;
-  right: CompareUser;
-}

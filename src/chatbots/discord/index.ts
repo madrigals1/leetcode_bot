@@ -9,13 +9,12 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 
-import constants from '../../utils/constants';
-import dictionary from '../../utils/dictionary';
+import { constants } from '../../utils/constants';
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
-import { Context } from '../models';
+import { Context, ComplexInteraction } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
-import { ComplexInteraction } from '../models/context.model';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
 
@@ -24,7 +23,6 @@ import { getKeyBasedParsedArguments, reply } from './utils';
 import buttonIndexer from './buttonIndexer';
 
 const { DISCORD } = constants.PROVIDERS;
-const { SERVER_MESSAGES: SM } = dictionary;
 
 class Discord {
   token: string = DISCORD.TOKEN;
@@ -43,6 +41,7 @@ class Discord {
     ) => ArgumentManager,
   ) {
     const commandName = action.split(' ')[0].substring(1);
+    const id = constants.PROVIDERS.DISCORD.ID;
 
     // Find appropriate action by name and execute it
     for (let i = 0; i < registeredActions.length; i++) {
@@ -53,8 +52,12 @@ class Discord {
           reply,
           interaction,
           argumentParser,
-          provider: constants.PROVIDERS.DISCORD.NAME,
+          provider: id,
           prefix: constants.PROVIDERS.DISCORD.PREFIX,
+          channelKey: {
+            chatId: interaction.channelId,
+            provider: id,
+          },
           options: {},
         };
 

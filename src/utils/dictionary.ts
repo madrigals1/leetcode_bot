@@ -1,10 +1,11 @@
 import { User } from '../leetcode/models';
-import Cache from '../cache';
 import { getCmlFromUsers } from '../leetcode/utils';
+import { ChatbotProvider } from '../chatbots';
+import { ChannelKey } from '../cache/models';
 
-import constants from './constants';
+import { constants } from './constants';
 
-const SERVER_MESSAGES = {
+export const SERVER_MESSAGES = {
   // ERROR
   ERROR_ON_THE_SERVER(error: Error | string): string {
     return `Error on the server: ${error}`;
@@ -23,14 +24,17 @@ const SERVER_MESSAGES = {
   USERNAME_WAS_NOT_REFRESHED(username: string): string {
     return `${username} was not refreshed`;
   },
-  CACHE_ALREADY_REFRESHED: 'Cache was refreshed less than 15 minutes ago',
+  CACHE_ALREADY_REFRESHED: 'Cache was refreshed less than 5 minutes ago',
 
   // CONNECTION TO DB
   CONNECTION_STATUS: {
-    SUCCESSFUL: 'Database connection successful!',
+    SUCCESSFUL: '>>> Database connection successful!',
     ERROR(error: Error | string): string {
-      return `Database connection error: ${error}`;
+      return `>>> Database connection error: ${error}`;
     },
+  },
+  IS_CONNECTING(providerName: string): string {
+    return `>>> Connecting to ${providerName}`;
   },
 
   // BOT LOGS
@@ -50,6 +54,11 @@ const SERVER_MESSAGES = {
   // TABLE API
   API_NOT_WORKING: 'api_not_working',
   NO_SUBMISSIONS: 'no_submissions',
+
+  // Channel errors
+  CHANNEL_DOES_NOT_EXIST: (channelKey: ChannelKey): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `Channel does not exist - ${channelKey}`,
 };
 
 const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;
@@ -60,11 +69,11 @@ ${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
   
 `;
 
-const BOT_MESSAGES = {
+export const BOT_MESSAGES = {
   // ERROR MESSAGES
-  INCORRECT_INPUT: `${constants.EMOJI.ERROR} Incorrect input`,
   INCORRECT_RATING_TYPE: `${constants.EMOJI.ERROR} Incorrect rating type`,
-  PASSWORD_IS_INCORRECT: `${constants.EMOJI.ERROR} Password is incorrect`,
+  NO_ADMIN_RIGHTS: `${constants.EMOJI.ERROR} You need administrator priveleges `
+    + 'to execute this action',
   ERROR_ON_THE_SERVER: `${constants.EMOJI.ERROR} Error on the server`,
   INSUFFICIENT_ARGS_IN_MESSAGE:
     `${constants.EMOJI.ERROR} Insufficient arguments in message`,
@@ -72,8 +81,6 @@ const BOT_MESSAGES = {
     `${constants.EMOJI.ERROR} Should not request more than 100 arguments`,
   SHOULD_NOT_PROVIDE_MORE_THAN_100_ARGS:
     `${constants.EMOJI.ERROR} Should not provide more than 100 arguments`,
-  PASSWORD_NOT_FOUND_IN_ARGS:
-    `${constants.EMOJI.ERROR} Password not found in arguments`,
   REQUIRED_ARG_X_WAS_NOT_PROVIDED: (name: string): string =>
     // eslint-disable-next-line implicit-arrow-linebreak
     `${constants.EMOJI.ERROR} Required argument ${name} was not provided`,
@@ -127,10 +134,8 @@ const BOT_MESSAGES = {
   USERNAME_ALREADY_EXISTS(username: string): string {
     return `${constants.EMOJI.ERROR} User <b>${username}</b> already exists in database\n`;
   },
-  USERNAME_WAS_ADDED(
-    username: string, userAmount: number, userLimit: number,
-  ): string {
-    return `${constants.EMOJI.SUCCESS} <b>${username}</b> was added <b>${userAmount}/${userLimit}</b>\n`;
+  USERNAME_WAS_ADDED(username: string): string {
+    return `${constants.EMOJI.SUCCESS} <b>${username}</b> was added\n`;
   },
   USERNAME_WILL_BE_DELETED(username: string): string {
     return `${constants.EMOJI.WAITING} User <b>${username}</b> will be deleted`;
@@ -140,6 +145,12 @@ const BOT_MESSAGES = {
   },
   USERNAME_NOT_ADDED_USER_LIMIT(username: string, userLimit: number): string {
     return `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`;
+  },
+  USERNAME_ADDING_ERROR(username: string): string {
+    return `${constants.EMOJI.ERROR} <b>${username}</b> was not added due to internal error`;
+  },
+  USERNAME_DOES_NOT_EXIST_IN_CHANNEL(username: string): string {
+    return `${constants.EMOJI.ERROR} <b>${username}</b> does not exist`;
   },
   USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions`,
   USER_LIST_PROBLEMS: `${constants.EMOJI.CHART} Problems`,
@@ -156,11 +167,6 @@ const BOT_MESSAGES = {
   USERS_COMPARE: (leftUsername: string, rightUsername: string): string =>
     // eslint-disable-next-line implicit-arrow-linebreak
     `Comparing ${leftUsername} to ${rightUsername}`,
-
-  // DATABASE
-  DATABASE_WILL_BE_CLEARED: `${constants.EMOJI.WASTEBASKET} Database will be cleared`,
-  DATABASE_WAS_CLEARED: `${constants.EMOJI.SUCCESS} Database was cleared`,
-  DATABASE_WAS_NOT_CLEARED: `${constants.EMOJI.ERROR} Database was not cleared`,
 
   // COMPARE ACTION
   SELECT_LEFT_USER: `${constants.EMOJI.PERSON} Select Left User`,
@@ -188,10 +194,10 @@ const BOT_MESSAGES = {
 <b><i>${prefix}compare username1 username2</i></b> - Compare 2 Users' stats
 <b><i>${prefix}problems username</i></b> - Chart with Solved Problems for specific User
 
-<b>Admin commands:</b>
-<b><i>${prefix}remove username master_password</i></b> - Remove User
-<b><i>${prefix}clear master_password</i></b> - Clear Database from all Users
-<b><i>${prefix}stats master_password</i></b> - Show Stats for this Bot
+<b>Admin commands (Only admin or local chat):</b>
+<b><i>${prefix}remove username</i></b> - Remove User
+<b><i>${prefix}clear</i></b> - Clear Database from all Users
+<b><i>${prefix}stats</i></b> - Show Stats for this Bot
 `;
   },
   USER_TEXT(user: User): string {
@@ -228,12 +234,10 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
     return rating;
   },
 
-  STATS_TEXT(providerName: string, cache: typeof Cache): string {
-    const { userLimit, users } = cache;
-
+  STATS_TEXT(provider: ChatbotProvider, users: User[]): string {
     // Get prefix for provider
-    const provider = Object.keys(constants.PROVIDERS)
-      .find((key) => constants.PROVIDERS[key].NAME === providerName);
+    const providerKey = Object.keys(constants.PROVIDERS)
+      .find((key) => constants.PROVIDERS[key].ID === provider);
 
     const userNameList = users.map(
       (user) => (`<b>- ${user.username}</b>`),
@@ -241,15 +245,14 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 
     return `
 <b>PROVIDER RELATED</b>
-<b>Provider:</b> ${providerName}
-<b>Prefix:</b> ${constants.PROVIDERS[provider].PREFIX}
+<b>Provider:</b> ${constants.PROVIDERS[providerKey].NAME}
+<b>Prefix:</b> ${constants.PROVIDERS[providerKey].PREFIX}
 <b>Discord enabled:</b> ${constants.PROVIDERS.DISCORD.ENABLE}
 <b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
 
 <b>DATABASE RELATED</b>
 <b>Database:</b> ${constants.DATABASE.PROVIDER}
 <b>User Count:</b> ${users.length}
-<b>User amount limit:</b> ${userLimit}
 
 <b>SYSTEM RELATED</b>
 <b>Delay between calls:</b> ${constants.SYSTEM.USER_REQUEST_DELAY_MS}
@@ -258,9 +261,9 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 ${userNameList}
     `;
   },
-};
 
-export default {
-  BOT_MESSAGES,
-  SERVER_MESSAGES,
+  // Channel Related
+  CHANNEL_WILL_BE_CLEARED: `${constants.EMOJI.WASTEBASKET} Channel will be cleared`,
+  CHANNEL_WAS_CLEARED: `${constants.EMOJI.SUCCESS} Channel was cleared`,
+  CHANNEL_WAS_NOT_CLEARED: `${constants.EMOJI.ERROR} Channel was not cleared`,
 };

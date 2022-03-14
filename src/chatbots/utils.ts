@@ -1,22 +1,20 @@
-import constants from '../utils/constants';
+import { constants } from '../utils/constants';
 import { User } from '../leetcode/models';
-import Cache from '../cache';
 
 import {
   Button,
   ButtonOptions,
+  ButtonContainer,
+  ButtonContainerType,
 } from './models';
-import { ButtonContainer, ButtonContainerType } from './models/buttons.model';
 
-export function createButtonsFromUsers(
-  options: ButtonOptions,
-): Button[] {
-  const { action, password } = options;
+export function createButtonsFromUsers(options: ButtonOptions): Button[] {
+  const { action, users } = options;
 
-  // Get all user from Cache and create Button for each
-  const buttons = Cache.allUsers().map((user: User) => ({
+  // Create Button for each User
+  const buttons = users.map((user: User) => ({
     text: user.username,
-    action: `/${action} ${user.username} ${password || ''}`,
+    action: `/${action} ${user.username}`,
   }));
 
   return buttons;

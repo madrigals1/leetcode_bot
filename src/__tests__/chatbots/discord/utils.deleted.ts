@@ -1,6 +1,7 @@
 import { formatMessage, reply } from '../../../chatbots/discord/utils';
-import { MockFuncDiscord } from '../../__mocks__/chatbots/discord.mock';
+import { MockBotDiscord } from '../../__mocks__/chatbots/discord.mock';
 import { DiscordTestCase } from '../../../chatbots/models';
+import { ChatbotProvider } from '../../../chatbots';
 
 test('chatbots.discord.utils.formatMessage function', async () => {
   const testCases: string[][] = [
@@ -20,10 +21,10 @@ test('chatbots.discord.utils.formatMessage function', async () => {
 });
 
 test('chatbots.discord.utils.reply function', async () => {
-  const mockDiscordInstances: MockFuncDiscord[] = [
-    new MockFuncDiscord(),
-    new MockFuncDiscord(),
-    new MockFuncDiscord(),
+  const mockDiscordInstances = [
+    new MockBotDiscord(),
+    new MockBotDiscord(),
+    new MockBotDiscord(),
   ];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,7 +36,7 @@ test('chatbots.discord.utils.reply function', async () => {
         argumentParser: () => undefined,
         photoUrl: 'random_url',
         reply: () => new Promise(() => 'asd'),
-        provider: 'Random',
+        provider: ChatbotProvider.Random,
         interaction: null,
         prefix: '!',
       },
@@ -49,7 +50,7 @@ test('chatbots.discord.utils.reply function', async () => {
         text: 'asd asd asd',
         reply: () => new Promise(() => 'asd'),
         argumentParser: () => undefined,
-        provider: 'Random',
+        provider: ChatbotProvider.Random,
         interaction: null,
         prefix: '!',
       },
@@ -64,7 +65,7 @@ test('chatbots.discord.utils.reply function', async () => {
         photoUrl: 'random_url_3',
         reply: () => new Promise(() => 'asd'),
         argumentParser: () => undefined,
-        provider: 'Random',
+        provider: ChatbotProvider.Random,
         interaction: null,
         prefix: '!',
       },

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
   Client,
   TextChannel,
@@ -9,19 +10,23 @@ import {
   CommandInteraction,
 } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
-import { LabelValues } from 'prom-client';
 
+import { ChatbotProvider } from '..';
+import { ChannelCache } from '../../cache/channel';
+import { ChannelKey } from '../../cache/models';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
+import MockBotTelegram from '../../__tests__/__mocks__/chatbots/telegram.mock';
 
 import { ButtonContainer } from './buttons.model';
 
 export interface Options {
   polling?: boolean;
-  parseMode?: string;
   buttons?: ButtonContainer[];
   files?: string[];
   baseApiUrl?: string;
+  reply_markup?: TelegramBot.InlineKeyboardMarkup;
+  parse_mode?: TelegramBot.ParseMode;
 }
 
 export interface Channel {
@@ -40,13 +45,15 @@ export interface Context {
   argumentParser: (
     context: Context, requestedArgs: Argument[],
   ) => ArgumentManager;
-  provider: string;
+  provider: ChatbotProvider;
   prefix: string;
   chatId?: number;
   options?: Options;
-  bot?: Client | TelegramBot;
+  bot?: Client | TelegramBot | MockBotTelegram;
   photoUrl?: string;
-  password?: string;
+  channelKey?: ChannelKey;
+  channelCache?: ChannelCache;
+  isAdmin?: Promise<boolean>;
   // Discord
   discordProvidedArguments?: readonly CommandInteractionOption[];
   interaction?: ComplexInteraction;

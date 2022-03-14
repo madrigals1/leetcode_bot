@@ -1,11 +1,13 @@
+import { ChannelData, ChannelUser } from '../../../cache/models';
 import { Argument, IParsedArgument } from '../../../chatbots/decorators/models';
 import { User } from '../../../leetcode/models';
 
 export interface MockDatabaseInterface {
   users: string[];
+  channels: ChannelData[];
+  channelUsers: ChannelUser[];
   mockUser1: () => User;
   savedUsers: () => User[];
-  fakeResult: boolean;
 }
 
 export interface OtherModel {
@@ -20,6 +22,7 @@ export interface ArgumentTestCaseParsedArgument extends IParsedArgument {
 }
 
 export interface ArgumentTestCase {
+  name: string;
   input: {
     providedArgs: string[];
     requestedArgs: Argument[];

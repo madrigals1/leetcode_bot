@@ -2,11 +2,9 @@ import * as DiscordBot from 'discord.js';
 import { jest } from '@jest/globals';
 
 import createBot from '../../../chatbots/discord/bot';
-import constants from '../../../utils/constants';
-import dictionary from '../../../utils/dictionary';
+import { constants } from '../../../utils/constants';
+import { SERVER_MESSAGES as SM } from '../../../utils/dictionary';
 import DiscordBotInstance from '../../../chatbots/discord';
-
-const { SERVER_MESSAGES: SM } = dictionary;
 
 jest.setTimeout(30000);
 

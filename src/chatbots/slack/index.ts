@@ -1,16 +1,14 @@
 import { App } from '@slack/bolt';
 
 import Actions, { registeredActions } from '../actions';
-import constants from '../../utils/constants';
-import dictionary from '../../utils/dictionary';
+import { constants } from '../../utils/constants';
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
 
 import { reply } from './utils';
 import createBot from './bot';
-
-const { SERVER_MESSAGES: SM } = dictionary;
 
 class Slack {
   token: string = constants.PROVIDERS.SLACK.TOKEN;
@@ -20,6 +18,8 @@ class Slack {
   appToken: string = constants.PROVIDERS.SLACK.APP_TOKEN;
 
   bot: App;
+
+  id = constants.PROVIDERS.SLACK.ID;
 
   async run() {
     // Create Bot with Slack credentials
@@ -38,7 +38,11 @@ class Slack {
           channel: {
             send: say,
           },
-          provider: constants.PROVIDERS.SLACK.NAME,
+          channelKey: {
+            chatId: command.channel_id,
+            provider: this.id,
+          },
+          provider: this.id,
           prefix: constants.PROVIDERS.SLACK.PREFIX,
           options: {},
         };

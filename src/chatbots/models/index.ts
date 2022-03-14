@@ -2,12 +2,11 @@ import {
   SlackMessage, SlackBlock, SlackAccessory, SlackAttachment, SlackField,
 } from '../slack/slack.model';
 
-import { Context, Options } from './context.model';
-import { Button, ButtonOptions, ButtonContainer } from './buttons.model';
-import { TelegramTestCase, Args, DiscordTestCase } from './testCase.model';
+import { Context, Options, ComplexInteraction } from './context.model';
 import {
-  TelegramChat, TelegramEntity, TelegramUser, TelegramMessage,
-} from './ntba.model';
+  Button, ButtonOptions, ButtonContainer, ButtonContainerType,
+} from './buttons.model';
+import { TelegramTestCase, DiscordTestCase } from './testCase.model';
 import { RegisteredAction } from './registeredAction.model';
 
 export {
@@ -16,17 +15,14 @@ export {
   ButtonOptions,
   Button,
   ButtonContainer,
+  ButtonContainerType,
   TelegramTestCase,
-  Args,
   DiscordTestCase,
   SlackMessage,
   SlackBlock,
   SlackAccessory,
   SlackAttachment,
   SlackField,
-  TelegramChat,
-  TelegramEntity,
-  TelegramUser,
-  TelegramMessage,
   RegisteredAction,
+  ComplexInteraction,
 };

@@ -1,227 +1,98 @@
 /* eslint-disable no-await-in-loop */
-import * as dayjs from 'dayjs';
-
-import getLeetcodeDataFromUsername from '../leetcode';
 import Database from '../database';
-import { log, delay } from '../utils/helper';
-import constants from '../utils/constants';
-import dictionary from '../utils/dictionary';
-import { User } from '../leetcode/models';
+import DatabaseProvider from '../database/database.proto';
+import { constants } from '../utils/constants';
 
-import { CacheResponse } from './response.model';
-
-const { DATE_FORMAT } = constants.SYSTEM;
-const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
+import { ChannelCache } from './channel';
+import { UserCache } from './userCache';
+import { ChannelKey } from './models';
 
 class Cache {
-  users: User[] = [];
+  channels: Map<string, ChannelCache> = new Map<string, ChannelCache>();
 
-  database = Database;
+  database: DatabaseProvider = Database;
 
-  userLimit: number = constants.SYSTEM.USER_AMOUNT_LIMIT;
-
-  getLeetcodeDataFromUsername: CallableFunction = getLeetcodeDataFromUsername;
-
-  delayTime: number = constants.SYSTEM.USER_REQUEST_DELAY_MS;
-
-  delay = delay;
-
-  lastRefreshedAt: dayjs.Dayjs;
-
-  // Return all users
-  allUsers(): User[] {
-    return this.users;
+  /**
+   * Get the number of channels in the channel list.
+   * @returns The number of channels in the channel list.
+   */
+  get channelAmount(): number {
+    return this.channels.size;
   }
 
-  // Get amount of users
-  get userAmount(): number {
-    return this.allUsers().length;
+  /**
+   * Get the channel data from the database, create a channel cache from the
+   * channel data, and add the channel cache to the map.
+   * @param {ChannelKey} channelKey - The key of the channel to register.
+   * @returns A ChannelCache object.
+   */
+  public async registerChannel(channelKey: ChannelKey): Promise<ChannelCache> {
+    // Create Channel Data in Database
+    const channelData = await this.database.addChannel({
+      key: channelKey,
+      userLimit: constants.SYSTEM.USER_AMOUNT_LIMIT,
+    });
+
+    // Create Channel Cache from Channel Data
+    const channelCache = new ChannelCache(channelData);
+
+    // Add Channel Cache to map
+    this.setChannel(channelCache);
+
+    return channelCache;
   }
 
-  // Replace User with username in the cache
-  addOrReplaceUserInCache(username: string, userData: User): void {
-    for (let i = 0; i < this.userAmount; i++) {
-      if (this.users[i].username.toLowerCase() === username.toLowerCase()) {
-        this.users[i] = userData;
-        return;
-      }
-    }
-
-    // If user was not found in cache, add user
-    this.users.push(userData);
+  /**
+   * Set the channel cache in the channels map
+   * @param {ChannelCache} channelCache - ChannelCache
+   */
+  public setChannel(channelCache: ChannelCache): void {
+    const { channelData } = channelCache;
+    this.channels.set(JSON.stringify(channelData.key), channelCache);
   }
 
-  // Refresh Users map
-  async refreshUsers(): Promise<CacheResponse> {
-    const now = dayjs();
-    const { lastRefreshedAt } = this;
+  /**
+   * It refreshes the user cache and gets all the channel data from the
+   * database.
+   */
+  async preload(): Promise<void> {
+    // Refresh Users from Database
+    await UserCache.refresh();
 
-    // If database was refreshed less than 15 minutes ago
-    if (lastRefreshedAt && now.diff(lastRefreshedAt, 'minutes') < 15) {
-      log(SM.CACHE_ALREADY_REFRESHED);
-      return {
-        status: constants.STATUS.ERROR,
-        detail: BM.CACHE_ALREADY_REFRESHED,
-      };
-    }
+    // Get all Channel IDs from Database
+    const channelDataList = await this.database.getAllChannels();
 
-    // Set database refresh time
-    this.lastRefreshedAt = now;
-
-    // Log when refresh started
-    log(SM.DATABASE_STARTED_REFRESH(now.format(DATE_FORMAT)));
-
-    // Actual refresh
-    try {
-      // Get all users from database
-      const databaseUsers = await this.database.findAllUsers();
-
-      // Modify users with data from LeetCode
-      for (let i = 0; i < databaseUsers.length; i++) {
-        const databaseUser = databaseUsers[i];
-
-        // Get username from Database User
-        const { username } = databaseUser;
-
-        // Get data from LeetCode related to this User
-        const userData = await this.getLeetcodeDataFromUsername(username);
-
-        // If UserData was returned from Backend, replace User in cache
-        if (userData.exists) {
-          this.addOrReplaceUserInCache(username, userData);
-          log(SM.USERNAME_WAS_REFRESHED(username));
-        } else {
-          log(SM.USERNAME_WAS_NOT_REFRESHED(username));
-        }
-
-        // Wait X seconds until loading next User, X is set in .env
-        await this.delay(this.delayTime);
-      }
-
-      // Sort objects after refresh
-      this.sortUsers();
-    } catch (err) {
-      log(err.message);
-    }
-
-    // Log when refresh ended
-    log(SM.DATABASE_FINISHED_REFRESH(dayjs().format(DATE_FORMAT)));
-
-    return {
-      status: constants.STATUS.SUCCESS,
-      detail: BM.CACHE_IS_REFRESHED,
-    };
+    await Promise.all(channelDataList.map((channelData) => {
+      const channelCache = new ChannelCache(channelData);
+      this.setChannel(channelCache);
+      return channelCache.preload();
+    }));
   }
 
-  // Sort all Users by amount of solved questions on LeetCode
-  sortUsers(): void {
-    this.users.sort(
-      (user1, user2) => {
-        const solved1 = user1.solved !== undefined ? user1.solved : -Infinity;
-        const solved2 = user2.solved !== undefined ? user2.solved : -Infinity;
-        return solved2 - solved1;
-      },
-    );
+  /**
+   * Get a channel from the cache
+   * @param {ChannelKey} channelKey - The key of the channel to get.
+   * @returns The channel cache.
+   */
+  getChannel(channelKey: ChannelKey): ChannelCache {
+    return this.channels.get(JSON.stringify(channelKey));
   }
 
-  // Add User by Username
-  async addUser(username: string): Promise<CacheResponse> {
-    // If user count is gte user amount limit, stop execution
-    if (this.userAmount >= this.userLimit) {
-      return {
-        status: constants.STATUS.ERROR,
-        detail: BM.USERNAME_NOT_ADDED_USER_LIMIT(username, this.userLimit),
-      };
-    }
-
-    // Add User to Database
-    const usernameLower = username.toLowerCase();
-    const user = await this.database.addUser(usernameLower);
-
-    if (user) {
-      // Load data from LeetCode by Username
-      const userData = await this.getLeetcodeDataFromUsername(username);
-
-      if (userData.exists) {
-        this.users.push(userData);
-
-        // Sort objects after adding
-        this.sortUsers();
-
-        return {
-          status: constants.STATUS.SUCCESS,
-          detail: BM.USERNAME_WAS_ADDED(
-            username, this.userAmount, this.userLimit,
-          ),
-        };
-      }
-
-      // If user does not exist in LeetCode, remove User
-      await this.database.removeUser(usernameLower);
-
-      return {
-        status: constants.STATUS.ERROR,
-        detail: BM.USERNAME_NOT_FOUND_ON_LEETCODE(username),
-      };
-    }
-
-    return {
-      status: constants.STATUS.ERROR,
-      detail: BM.USERNAME_ALREADY_EXISTS(username),
-    };
+  /**
+   * Clear the contents of a channel
+   * @param {ChannelKey} channelKey - The key of the channel to clear.
+   */
+  async clearChannel(channelKey: ChannelKey): Promise<void> {
+    const existingChannel = this.channels.get(JSON.stringify(channelKey));
+    if (existingChannel) await existingChannel.clear();
   }
 
-  // Remove User by Username
-  async removeUser(username: string): Promise<CacheResponse> {
-    const usernameLower = username.toLowerCase();
-    const deleted = await this.database.removeUser(usernameLower);
-
-    if (deleted) {
-      // Set objects array to tempObjects
-      this.users = this.users.filter((user) => (
-        user.username.toLowerCase() !== username
-      ));
-
-      // Sort objects after removing
-      this.sortUsers();
-
-      return {
-        status: constants.STATUS.SUCCESS,
-        detail: BM.USERNAME_WAS_DELETED(username),
-      };
-    }
-
-    return {
-      status: constants.STATUS.ERROR,
-      detail: BM.USERNAME_NOT_FOUND(username),
-    };
-  }
-
-  // Remove all Users from Database
-  async clearUsers() {
-    const deleted = await this.database.removeAllUsers();
-
-    if (deleted) {
-      // Remove all Users from cache
-      this.users = [];
-
-      return {
-        status: constants.STATUS.SUCCESS,
-        detail: BM.DATABASE_WAS_CLEARED,
-      };
-    }
-
-    return {
-      status: constants.STATUS.ERROR,
-      detail: BM.DATABASE_WAS_NOT_CLEARED,
-    };
-  }
-
-  // Load User by Username
-  loadUser(username: string): User {
-    return this.users.find((user) => (
-      user.username.toLowerCase() === username.toLowerCase()
-    ));
+  /**
+   * Remove all channels from the channel list
+   */
+  async removeAllChannels(): Promise<void> {
+    await this.database.deleteAllChannels();
+    this.channels.clear();
   }
 }
 

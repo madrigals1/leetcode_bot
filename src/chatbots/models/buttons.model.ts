@@ -1,3 +1,5 @@
+import { User } from '../../leetcode/models';
+
 export enum ButtonContainerType {
   SingleButton = 0,
   MultipleButtons,
@@ -11,7 +13,7 @@ export interface Button {
 
 export interface ButtonOptions {
   action: string;
-  password?: string;
+  users: User[];
 }
 
 export interface ButtonContainer {

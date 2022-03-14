@@ -10,7 +10,7 @@ import {
   getCmlFromUser,
   getCmlFromUsers,
 } from '../../leetcode/utils';
-import constants from '../../utils/constants';
+import { constants } from '../../utils/constants';
 import { RecentSubmissionList, User } from '../../leetcode/models';
 
 const { CML, SYSTEM } = constants;

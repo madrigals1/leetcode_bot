@@ -3,11 +3,12 @@ import * as _ from 'lodash';
 import ArgumentManager from '../argumentManager';
 import { Context } from '../models';
 import { ArgumentsError, InputError } from '../../utils/errors';
-import dictionary from '../../utils/dictionary';
+import { BOT_MESSAGES as BM } from '../../utils/dictionary';
+import Cache from '../../cache';
+import { ChannelKey } from '../../cache/models';
+import { ChannelCache } from '../../cache/channel';
 
 import { Argument, ParsedArgument } from './models';
-
-const { BOT_MESSAGES: BM } = dictionary;
 
 export function getArgs(message: string): string[] {
   // Get all args from message
@@ -245,19 +246,14 @@ export function getPositionalParsedArguments(
   return argumentManager;
 }
 
-export function getPassword(argumentManager: ArgumentManager): string {
-  const passwordArguments = ['password', 'username_or_password'];
+export async function getOrCreateChannel(
+  channelKey: ChannelKey,
+): Promise<ChannelCache> {
+  const existingChannelCache = Cache.getChannel(channelKey);
 
-  for (let i = 0; i < passwordArguments.length; i++) {
-    const passwordArgument = passwordArguments[i];
+  if (existingChannelCache) return existingChannelCache;
 
-    const parsedArgument = argumentManager.get(passwordArgument);
+  const newChannelCache = await Cache.registerChannel(channelKey);
 
-    if (parsedArgument && parsedArgument.value !== '') {
-      return parsedArgument.value;
-    }
-  }
-
-  const reason = BM.PASSWORD_NOT_FOUND_IN_ARGS;
-  throw new InputError(reason);
+  return newChannelCache;
 }

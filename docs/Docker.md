@@ -39,12 +39,6 @@ SLACK_SIGNING_SECRET=
 SLACK_APP_TOKEN=
 ```
 
-Change **MASTER_PASSWORD** value to secure password, that will be used for deleting data.
-
-```bash
-MASTER_PASSWORD=admin
-```
-
 Change settings for Database
 
 - **SQLite3** - no changes needed.

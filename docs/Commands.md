@@ -181,7 +181,6 @@ Admin action, that removes specified User from Database and Cache
 | Name | Remove |
 | --- | --- |
 | Arguments | [1] `username` - username of User in LeetCode |
-| | [2] `master_password` - MASTER_PASSWORD, specified in .env |
 | Telegram | Yes |
 | Discord | Yes |
 | Slack | Yes |
@@ -189,8 +188,8 @@ Admin action, that removes specified User from Database and Cache
 
 | Request | Response |
 | --- | --- |
-| `/remove password` | ![Remove](https://i.imgur.com/kbuzG4O.png) |
-| `/remove madrigals1 password` | ![Remove](https://i.imgur.com/2SvP59r.png) |
+| `/remove` | ![Remove](https://i.imgur.com/lZUkLR4.png) |
+| `/remove madrigals1` | ![Remove](https://i.imgur.com/vGIkaZs.png) |
 
 ---
 
@@ -200,7 +199,7 @@ Admin action, that clears Database and Cache from all Users
 
 | Name | Clear |
 | --- | --- |
-| Arguments | [1] `master_password` - MASTER_PASSWORD, specified in .env |
+| Arguments | - |
 | Telegram | Yes |
 | Discord | Yes |
 | Slack | Yes |
@@ -208,7 +207,7 @@ Admin action, that clears Database and Cache from all Users
 
 | Request | Response |
 | --- | --- |
-| `/clear password` | ![Clear](https://i.imgur.com/5L9PS8X.png) |
+| `/clear` | ![Clear](https://i.imgur.com/GN6sSvn.png) |
 
 ---
 
@@ -218,7 +217,7 @@ Admin action, that shows some lets us see some part of data, only accessible by 
 
 | Name | Stats |
 | --- | --- |
-| Arguments | [1] `master_password` - MASTER_PASSWORD, specified in .env |
+| Arguments | - |
 | Telegram | Yes |
 | Discord | Yes |
 | Slack | Yes |
@@ -226,4 +225,4 @@ Admin action, that shows some lets us see some part of data, only accessible by 
 
 | Request | Response |
 | --- | --- |
-| `/stats password` | ![Stats](https://i.imgur.com/lFWBTmE.png) |
+| `/stats` | ![Stats](https://i.imgur.com/2i9ssej.png) |

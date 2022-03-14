@@ -1,16 +1,13 @@
-import dictionary from '../../utils/dictionary';
+import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import { Context } from '../models';
 import { registeredActions } from '../actions';
-import constants from '../../utils/constants';
 import ArgumentManager from '../argumentManager';
 import { ArgumentsError, InputError } from '../../utils/errors';
 import { actionLogger } from '../../prometheus';
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
-import { getPassword } from './utils';
-
-const { BOT_MESSAGES: BM } = dictionary;
+import { getOrCreateChannel } from './utils';
 
 export function action(actionContext: ActionContext): (
   target: unknown,
@@ -22,7 +19,7 @@ export function action(actionContext: ActionContext): (
     propertyKey: string,
     descriptor: PropertyDescriptor,
   ) => {
-    const { name, args: requestedArgs, isAdmin } = actionContext;
+    const { name, args: requestedArgs, isAdmin: isAdminAction } = actionContext;
 
     const originalMethod = descriptor.value;
 
@@ -32,6 +29,12 @@ export function action(actionContext: ActionContext): (
       const replyHandler = new ReplyHandler(
         actionLogger.startTimer(), name, context,
       );
+
+      // Get Channel Cache
+      const channelCache = await getOrCreateChannel(context.channelKey);
+
+      // Add Channel Cache and Key to Context
+      context.channelCache = channelCache;
 
       const { argumentParser } = context;
 
@@ -57,28 +60,13 @@ export function action(actionContext: ActionContext): (
       // Add args to the context
       const updatedContext = { ...context, args: argumentManager };
 
-      // Check password if action is Admin Action
-      if (isAdmin) {
-        // Password should be last argument of message
-        let password: string;
+      // Check admin rights if action is Admin Action
+      if (isAdminAction) {
+        const isMessageFromAdmin = await context.isAdmin;
 
-        try {
-          password = getPassword(argumentManager);
-        } catch (e) {
-          // If error is caused by incorrect input, return error cause to User
-          if (e instanceof InputError) {
-            return replyHandler.handleError(e.message);
-          }
-
-          throw e;
+        if (!isMessageFromAdmin) {
+          return replyHandler.handleError(BM.NO_ADMIN_RIGHTS);
         }
-
-        if (password !== constants.SYSTEM.MASTER_PASSWORD) {
-          return replyHandler.handleError(BM.PASSWORD_IS_INCORRECT);
-        }
-
-        // Add password to context
-        updatedContext.password = password;
       }
 
       const message = await originalMethod(updatedContext);

@@ -1,4 +1,4 @@
-import constants from '../utils/constants';
+import { constants } from '../utils/constants';
 
 import DatabaseProvider from './database.proto';
 import MongoDB from './mongo';

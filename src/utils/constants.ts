@@ -1,4 +1,7 @@
 import * as dotenv from 'dotenv';
+import TelegramBot from 'node-telegram-bot-api';
+
+import { ChatbotProvider } from '../chatbots';
 
 import { isTrue } from './helper';
 
@@ -63,7 +66,6 @@ const {
   CML_HARD_POINTS,
 
   // System settings
-  MASTER_PASSWORD,
   LEETCODE_URL,
   USER_AMOUNT_LIMIT,
   USER_REQUEST_DELAY_MS,
@@ -110,19 +112,23 @@ const STATUS = {
   SUCCESS: 'success',
 };
 
+const TYPING: TelegramBot.ChatAction = 'typing';
+
 const CHAT_STATUS = {
-  TYPING: 'typing',
+  TYPING,
 };
 
 const TELEGRAM = {
-  NAME: 'telegram',
+  ID: ChatbotProvider.Telegram,
+  NAME: 'Telegram',
   ENABLE: !!TELEGRAM_TOKEN,
   TOKEN: TELEGRAM_TOKEN,
   PREFIX: '/',
 };
 
 const DISCORD = {
-  NAME: 'discord',
+  ID: ChatbotProvider.Discord,
+  NAME: 'Discord',
   ENABLE: !!DISCORD_TOKEN,
   TOKEN: DISCORD_TOKEN,
   APP_ID: DISCORD_APP_ID,
@@ -131,7 +137,8 @@ const DISCORD = {
 };
 
 const SLACK = {
-  NAME: 'slack',
+  ID: ChatbotProvider.Slack,
+  NAME: 'Slack',
   ENABLE: !!SLACK_TOKEN,
   TOKEN: SLACK_TOKEN,
   SIGNING_SECRET: SLACK_SIGNING_SECRET,
@@ -140,7 +147,8 @@ const SLACK = {
 };
 
 const MOCKBOT = {
-  NAME: 'mockbot',
+  ID: ChatbotProvider.Mockbot,
+  NAME: 'Mockbot',
   PREFIX: '/',
 };
 
@@ -186,7 +194,6 @@ const CML = {
 };
 
 const SYSTEM = {
-  MASTER_PASSWORD: MASTER_PASSWORD || 'admin',
   LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',
   USER_AMOUNT_LIMIT: Number(USER_AMOUNT_LIMIT) || 30,
   USER_REQUEST_DELAY_MS: USER_REQUEST_DELAY_MS
@@ -196,7 +203,7 @@ const SYSTEM = {
   DATE_FORMAT: 'YYYY-MM-DD hh:mm a',
 };
 
-export default {
+export const constants = {
   PROVIDERS,
   DATABASE,
   PORT,

@@ -1,13 +1,11 @@
 import axios from 'axios';
 
-import constants from '../utils/constants';
+import { constants } from '../utils/constants';
 import { log, error } from '../utils/helper';
-import dictionary from '../utils/dictionary';
+import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { User } from '../leetcode/models';
 
 import { VizapiResponse, CompareUser } from './models';
-
-const { SERVER_MESSAGES: SM, BOT_MESSAGES: BM } = dictionary;
 
 export function getCompareDataFromUser(user: User): CompareUser {
   return {

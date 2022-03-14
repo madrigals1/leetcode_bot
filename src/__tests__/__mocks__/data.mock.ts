@@ -1,10 +1,10 @@
 import {
   getLeetcodeProblemLink, getLeetcodeUsernameLink,
 } from '../../leetcode/utils';
-import constants from '../../utils/constants';
+import { constants } from '../../utils/constants';
 import { User } from '../../leetcode/models';
 
-import { MockDatabaseInterface } from './models/mockData.model';
+import { MockDatabaseInterface } from './models';
 
 export const user1: User = {
   exists: true,
@@ -210,11 +210,12 @@ export const users: User[] = [user1, user2];
 
 export const mockDatabaseData: MockDatabaseInterface = {
   users: [],
+  channels: [],
+  channelUsers: [],
   mockUser1() { return this.users[0]; },
   savedUsers() {
     return this.users.map((user: User) => (
       { ...this.mockUser1(), username: user.username }
     ));
   },
-  fakeResult: true,
 };

@@ -1,17 +1,18 @@
 import * as mongoose from 'mongoose';
 
-import constants from '../../utils/constants';
-import dictionary from '../../utils/dictionary';
+import { constants } from '../../utils/constants';
+import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
 
-import UserModel, { IUserModel } from './schemas';
+import { UserModel, IUserModel } from './schemas';
 
 const { MONGO } = constants.DATABASE;
-const { SERVER_MESSAGES: SM } = dictionary;
 
 // Main class for MongoDB Database
 class MongoDB extends DatabaseProvider {
+  providerName = 'MongoDB';
+
   // If authentication credentials were provided in environment, use them.
   // If not, use empty string in MongoDB connection
   credentials: string = MONGO.AUTHENTICATION_ENABLED
@@ -29,10 +30,12 @@ class MongoDB extends DatabaseProvider {
   // URL for Connection to MongoDB, that contains authentication
   mongoUrl = `mongodb://${this.credentials}${this.databaseUrl}${this.authSource}`;
 
-  UserModel = UserModel;
+  UserModel: typeof UserModel = UserModel;
 
   // Connect to Database
   async connect(): Promise<void> {
+    log(SM.IS_CONNECTING(this.providerName));
+
     await mongoose
       .connect(this.mongoUrl)
       .then(() => {
@@ -49,16 +52,16 @@ class MongoDB extends DatabaseProvider {
   }
 
   // Load User by `username`
-  async loadUser(username: string): Promise<IUserModel> {
-    return this.UserModel.findOne({ username });
+  async userExists(username: string): Promise<boolean> {
+    return this.UserModel.findOne({ username }).then((res) => !!res);
   }
 
   // Add User to Database
   async addUser(username: string): Promise<IUserModel> {
-    const existingUser = await this.loadUser(username);
+    const userExists = await this.userExists(username);
 
     // If User does exist, no need to add new
-    if (existingUser) return null;
+    if (userExists) return null;
 
     // Create new User and save
     const newUser = new this.UserModel({ username });
@@ -68,10 +71,10 @@ class MongoDB extends DatabaseProvider {
   }
 
   async removeUser(username: string): Promise<boolean> {
-    const user = await this.loadUser(username);
+    const userExists = await this.userExists(username);
 
     // If User does exist, no delete him, otherwise
-    if (!user) return false;
+    if (!userExists) return false;
 
     // If User exists, delete him
     await this.UserModel.deleteOne({ username });
