@@ -1,6 +1,6 @@
 import { User } from '../leetcode/models';
 import { getCmlFromUsers } from '../leetcode/utils';
-import { Context } from '../chatbots/models';
+import { ChatbotProvider } from '../chatbots';
 
 import { constants } from './constants';
 
@@ -240,12 +240,10 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
     return rating;
   },
 
-  STATS_TEXT(context: Context): string {
-    const users = context.channelCache?.users ?? [];
-
+  STATS_TEXT(provider: ChatbotProvider, users: User[]): string {
     // Get prefix for provider
-    const provider = Object.keys(constants.PROVIDERS)
-      .find((key) => constants.PROVIDERS[key].ID === context.provider);
+    const providerKey = Object.keys(constants.PROVIDERS)
+      .find((key) => constants.PROVIDERS[key].ID === provider);
 
     const userNameList = users.map(
       (user) => (`<b>- ${user.username}</b>`),
@@ -253,8 +251,8 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 
     return `
 <b>PROVIDER RELATED</b>
-<b>Provider:</b> ${constants.PROVIDERS[provider].NAME}
-<b>Prefix:</b> ${constants.PROVIDERS[provider].PREFIX}
+<b>Provider:</b> ${constants.PROVIDERS[providerKey].NAME}
+<b>Prefix:</b> ${constants.PROVIDERS[providerKey].PREFIX}
 <b>Discord enabled:</b> ${constants.PROVIDERS.DISCORD.ENABLE}
 <b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
 

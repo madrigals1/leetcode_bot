@@ -262,7 +262,7 @@ describe('chatbots.actions - stats action', () => {
 
     await mockbot.send(`/stats ${mockPassword}`);
     expect(mockbot.lastMessage())
-      .toEqual(BM.STATS_TEXT(constants.PROVIDERS.MOCKBOT.ID));
+      .toEqual(BM.STATS_TEXT(constants.PROVIDERS.MOCKBOT.ID, users));
   });
 
   test('Incorrect case - Incorrect password', async () => {

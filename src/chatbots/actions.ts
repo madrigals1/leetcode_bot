@@ -136,8 +136,10 @@ export default class Actions {
 
   @action({ name: 'stats', isAdmin: true })
   static async stats(context: Context): Promise<string> {
+    const { users } = context.channelCache;
+
     // Send message with stats
-    return BM.STATS_TEXT(context);
+    return BM.STATS_TEXT(context.provider, users);
   }
 
   @action({
@@ -153,7 +155,7 @@ export default class Actions {
   })
   static async rating(context: Context): Promise<string> {
     const type = context.args.get('type').value;
-    const { users } = context.channelCache;
+    const users = context.channelCache?.users ?? [];
 
     // Prepare buttons
     const cmlButton = {
