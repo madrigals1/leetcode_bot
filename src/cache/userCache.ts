@@ -141,7 +141,7 @@ export class UserCache {
     const { lastRefreshedAt } = this;
 
     // If database was refreshed less than 15 minutes ago
-    if (lastRefreshedAt && now.diff(lastRefreshedAt, 'minutes') < 15) {
+    if (lastRefreshedAt && now.diff(lastRefreshedAt, 'minutes') < 5) {
       log(SM.CACHE_ALREADY_REFRESHED);
       return {
         status: constants.STATUS.ERROR,
@@ -185,6 +185,9 @@ export class UserCache {
 
     // Log when refresh ended
     log(SM.DATABASE_FINISHED_REFRESH(dayjs().format(DATE_FORMAT)));
+
+    // Set database refresh time
+    this.lastRefreshedAt = now;
 
     return {
       status: constants.STATUS.SUCCESS,

@@ -23,7 +23,7 @@ export const SERVER_MESSAGES = {
   USERNAME_WAS_NOT_REFRESHED(username: string): string {
     return `${username} was not refreshed`;
   },
-  CACHE_ALREADY_REFRESHED: 'Cache was refreshed less than 15 minutes ago',
+  CACHE_ALREADY_REFRESHED: 'Cache was refreshed less than 5 minutes ago',
 
   // CONNECTION TO DB
   CONNECTION_STATUS: {
