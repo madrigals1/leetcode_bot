@@ -1,7 +1,6 @@
 import { User } from '../leetcode/models';
 import { getCmlFromUsers } from '../leetcode/utils';
-import { UserCache } from '../cache/userCache';
-import { ChatbotProvider } from '../chatbots';
+import { Context } from '../chatbots/models';
 
 import { constants } from './constants';
 
@@ -241,12 +240,12 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
     return rating;
   },
 
-  STATS_TEXT(providerId: ChatbotProvider): string {
-    const users = UserCache.getAllUsers();
+  STATS_TEXT(context: Context): string {
+    const users = context.channelCache?.users ?? [];
 
     // Get prefix for provider
     const provider = Object.keys(constants.PROVIDERS)
-      .find((key) => constants.PROVIDERS[key].ID === providerId);
+      .find((key) => constants.PROVIDERS[key].ID === context.provider);
 
     const userNameList = users.map(
       (user) => (`<b>- ${user.username}</b>`),

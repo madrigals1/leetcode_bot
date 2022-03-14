@@ -136,7 +136,7 @@ export default class Actions {
   @action({ name: 'stats', isAdmin: true })
   static async stats(context: Context): Promise<string> {
     // Send message with stats
-    return BM.STATS_TEXT(context.provider);
+    return BM.STATS_TEXT(context);
   }
 
   @action({
