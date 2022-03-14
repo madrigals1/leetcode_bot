@@ -27,6 +27,10 @@ UserCache.delayTime = 0;
 const mockPassword = 'random_password';
 constants.SYSTEM.MASTER_PASSWORD = mockPassword;
 
+const realUsername1 = users[0].username;
+const realUsername2 = users[1].username;
+const fakeUsername = 'fake_username';
+
 beforeEach(async () => {
   mockbot.clear();
   UserCache.clear();
@@ -81,14 +85,14 @@ describe('chatbots.actions - help action', () => {
 describe('chatbots.actions - add action', () => {
   test('Correct case', async () => {
     // Add 2 users
-    await mockbot.send('/add random_username random_username_2');
+    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
 
     // Cache should have 2 users
     expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(2);
 
     // Both usernames should be added
-    const msg1 = BM.USERNAME_WAS_ADDED('random_username');
-    const msg2 = BM.USERNAME_WAS_ADDED('random_username_2');
+    const msg1 = BM.USERNAME_WAS_ADDED(realUsername1);
+    const msg2 = BM.USERNAME_WAS_ADDED(realUsername2);
     expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}${msg2}`);
   });
 
@@ -96,30 +100,27 @@ describe('chatbots.actions - add action', () => {
     // Clear channel
     await Cache.clearChannel(mockbot.channelKey);
 
-    // Correct username
-    const username = 'random_username';
-
     // Add username
-    await mockbot.send(`/add ${username}`);
+    await mockbot.send(`/add ${realUsername1}`);
 
     // Username should be added
-    const msg1 = BM.USERNAME_WAS_ADDED(username);
+    const msg1 = BM.USERNAME_WAS_ADDED(realUsername1);
     expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}`);
 
     // Add same username again
-    await mockbot.send(`/add ${username}`);
+    await mockbot.send(`/add ${realUsername1}`);
 
     // Username should already exist
-    const msg2 = BM.USERNAME_ALREADY_EXISTS(username);
+    const msg2 = BM.USERNAME_ALREADY_EXISTS(realUsername1);
     expect(mockbot.lastMessage()).toEqual(`User List:\n${msg2}`);
   });
 
   test('Incorrect case - User not found in Leetcode', async () => {
     // Add incorrect username
-    await mockbot.send('/add incorrect_username');
+    await mockbot.send(`/add ${fakeUsername}`);
 
     // Generate message
-    const message = BM.USERNAME_NOT_FOUND_ON_LEETCODE('incorrect_username');
+    const message = BM.USERNAME_NOT_FOUND_ON_LEETCODE(fakeUsername);
 
     // Should receive correct message
     expect(mockbot.lastMessage()).toEqual(`User List:\n${message}`);
@@ -144,11 +145,11 @@ describe('chatbots.actions - add action', () => {
     await mockbot.send(add30message);
 
     // Add 2 extra users after reaching User limit
-    await mockbot.send('/add random_username random_username_2');
+    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
 
     // Generate 2 messages
-    const msg1 = BM.USERNAME_NOT_ADDED_USER_LIMIT('random_username', 30);
-    const msg2 = BM.USERNAME_NOT_ADDED_USER_LIMIT('random_username_2', 30);
+    const msg1 = BM.USERNAME_NOT_ADDED_USER_LIMIT(realUsername1, 30);
+    const msg2 = BM.USERNAME_NOT_ADDED_USER_LIMIT(realUsername2, 30);
 
     // Should receive correct message
     expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}${msg2}`);
@@ -190,23 +191,23 @@ describe('chatbots.actions - remove action', () => {
   // TODO: Check buttons
 
   test('Correct case - With username', async () => {
-    await mockbot.send('/add random_username');
+    await mockbot.send(`/add ${realUsername1}`);
 
-    await mockbot.send('/remove random_username', true);
+    await mockbot.send(`/remove ${realUsername1}`, true);
     const messages = mockbot.messages(2);
 
-    expect(messages[0]).toBe(BM.USERNAME_WILL_BE_DELETED('random_username'));
-    expect(messages[1]).toBe(BM.USERNAME_WAS_DELETED('random_username'));
+    expect(messages[0]).toBe(BM.USERNAME_WILL_BE_DELETED(realUsername1));
+    expect(messages[1]).toBe(BM.USERNAME_WAS_DELETED(realUsername1));
   });
 
   test('Incorrect case - Username does not exist', async () => {
-    await mockbot.send('/remove not_existing_username', true);
+    await mockbot.send(`/remove ${fakeUsername}`, true);
     expect(mockbot.lastMessage())
-      .toBe(BM.USERNAME_NOT_FOUND('not_existing_username'));
+      .toBe(BM.USERNAME_NOT_FOUND(fakeUsername));
   });
 
   test('Incorrect case - Not admin', async () => {
-    await mockbot.send('/remove blablabla', false);
+    await mockbot.send(`/remove ${fakeUsername}`, false);
     expect(mockbot.lastMessage()).toBe(BM.NO_ADMIN_RIGHTS);
     await mockbot.send('/remove', false);
     expect(mockbot.lastMessage()).toBe(BM.NO_ADMIN_RIGHTS);
@@ -220,11 +221,11 @@ describe('chatbots.actions - remove action', () => {
 
 describe('chatbots.actions - clear action', () => {
   test('Correct case', async () => {
-    await mockbot.send('/add random_username random_username_2');
+    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
 
     expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(2);
 
-    await mockbot.send(`/clear ${mockPassword}`);
+    await mockbot.send('/clear', true);
 
     const messages = mockbot.messages(2);
 
@@ -234,52 +235,45 @@ describe('chatbots.actions - clear action', () => {
     expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(0);
   });
 
-  test('Incorrect case - Incorrect password', async () => {
-    await mockbot.send('/clear incorrect_password');
-    expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
-  });
-
-  test('Incorrect case - Not enough args', async () => {
+  test('Incorrect case - Not admin', async () => {
     await mockbot.send('/clear');
-    expect(mockbot.lastMessage()).toEqual(BM.INSUFFICIENT_ARGS_IN_MESSAGE);
+    expect(mockbot.lastMessage()).toBe(BM.NO_ADMIN_RIGHTS);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/clear asd asd');
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
   });
 });
 
 describe('chatbots.actions - stats action', () => {
   test('Correct case', async () => {
     // Add 2 Users
-    await mockbot.send('/add random_username random_username_2');
+    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
 
-    await mockbot.send(`/stats ${mockPassword}`);
+    await mockbot.send('/stats', true);
+
+    const sortedUsers = [users[1], users[0]];
+
     expect(mockbot.lastMessage())
-      .toEqual(BM.STATS_TEXT(constants.PROVIDERS.MOCKBOT.ID, users));
+      .toEqual(BM.STATS_TEXT(constants.PROVIDERS.MOCKBOT.ID, sortedUsers));
   });
 
-  test('Incorrect case - Incorrect password', async () => {
-    await mockbot.send('/stats incorrect_password');
-    expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
-  });
-
-  test('Incorrect case - Not enough args', async () => {
-    await mockbot.send('/stats');
-    expect(mockbot.lastMessage()).toEqual(BM.INSUFFICIENT_ARGS_IN_MESSAGE);
+  test('Incorrect case - Not admin', async () => {
+    await mockbot.send('/stats', false);
+    expect(mockbot.lastMessage()).toBe(BM.NO_ADMIN_RIGHTS);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/stats asd asd');
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
   });
 });
 
 describe('chatbots.actions - rating action', () => {
   test('Correct case - Regular rating', async () => {
     // Confirm that 2 users exist in Database
-    await mockbot.send('/add random_username random_username_2');
+    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
     expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(2);
 
     // Test regular rating with correct arguments
@@ -354,15 +348,15 @@ describe('chatbots.actions - profile action', () => {
   /* TODO: Test buttons */
 
   test('Correct case - Single user', async () => {
-    await mockbot.send('/add random_username');
-    await mockbot.send('/profile random_username');
-    const user = UserCache.getUser('random_username');
+    await mockbot.send(`/add ${realUsername1}`);
+    await mockbot.send(`/profile ${realUsername1}`);
+    const user = UserCache.getUser(realUsername1);
     expect(mockbot.lastMessage()).toEqual(BM.USER_TEXT(user));
   });
 
   test('Incorrect case - Username not found', async () => {
-    await mockbot.send('/profile not_found');
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found'));
+    await mockbot.send(`/profile ${fakeUsername}`);
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
   });
 
   test('Incorrect case - Too many args', async () => {
@@ -380,21 +374,19 @@ describe('chatbots.actions - avatar action', () => {
   /* TODO: Test buttons */
 
   test('Correct case - Single user', async () => {
-    const username = 'random_username';
+    await mockbot.send(`/add ${realUsername1}`);
+    await mockbot.send(`/avatar ${realUsername1}`);
 
-    await mockbot.send(`/add ${username}`);
-    await mockbot.send(`/avatar ${username}`);
-
-    const user = UserCache.getUser(username);
+    const user = UserCache.getUser(realUsername1);
     const context = mockbot.getContext();
 
     expect(context.photoUrl).toEqual(user.profile.userAvatar);
-    expect(mockbot.lastMessage()).toEqual(BM.USER_AVATAR(username));
+    expect(mockbot.lastMessage()).toEqual(BM.USER_AVATAR(realUsername1));
   });
 
   test('Incorrect case - Username not found', async () => {
-    await mockbot.send('/avatar not_found');
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found'));
+    await mockbot.send(`/avatar ${fakeUsername}`);
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
   });
 
   test('Incorrect case - Too many args', async () => {
@@ -412,23 +404,21 @@ describe('chatbots.actions - submissions action', () => {
   /* TODO: Test buttons */
 
   test('Correct case - Single user', async () => {
-    const username = 'random_username';
-
     vizapiActions.tableForSubmissions = mockTableForSubmissions;
 
-    await mockbot.send(`/add ${username}`);
-    await mockbot.send(`/submissions ${username}`);
+    await mockbot.send(`/add ${realUsername1}`);
+    await mockbot.send(`/submissions ${realUsername1}`);
 
     const context = mockbot.getContext();
 
     expect(context.photoUrl).toEqual('http://random_link');
     expect(mockbot.lastMessage())
-      .toEqual(BM.USER_RECENT_SUBMISSIONS(username));
+      .toEqual(BM.USER_RECENT_SUBMISSIONS(realUsername1));
   });
 
   test('Incorrect case - Username not found', async () => {
-    await mockbot.send('/submissions not_found');
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found'));
+    await mockbot.send(`/submissions ${fakeUsername}`);
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
   });
 
   test('Incorrect case - User has no submissions', async () => {
@@ -476,17 +466,15 @@ describe('chatbots.actions - problems action', () => {
   });
 
   test('Correct case - Single user', async () => {
-    const username = 'random_username';
-    await mockbot.send(`/add ${username}`);
-    await mockbot.send(`/problems ${username}`);
+    await mockbot.send(`/add ${realUsername1}`);
+    await mockbot.send(`/problems ${realUsername1}`);
     expect(mockbot.lastMessage())
-      .toEqual(BM.USER_SOLVED_PROBLEMS_CHART(username));
+      .toEqual(BM.USER_SOLVED_PROBLEMS_CHART(realUsername1));
   });
 
   test('Incorrect case - Username not found', async () => {
-    const username = 'not_found_username';
-    await mockbot.send(`/problems ${username}`);
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(username));
+    await mockbot.send(`/problems ${fakeUsername}`);
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
   });
 
   test('Incorrect case - Error on the server', async () => {
@@ -517,37 +505,34 @@ describe('chatbots.actions - compare action', () => {
 
   /* TODO: Test buttons */
 
-  const firstUsername = 'random_username';
-  const secondUsername = 'random_username_2';
-
   test('Correct case - Select right user', async () => {
-    await mockbot.send(`/compare ${firstUsername}`);
+    await mockbot.send(`/compare ${realUsername1}`);
     expect(mockbot.lastMessage()).toEqual(BM.SELECT_RIGHT_USER);
   });
 
   test('Correct case - Both users picked', async () => {
     vizapiActions.compareMenu = mockCompareMenu;
 
-    await mockbot.send(`/add ${firstUsername} ${secondUsername}`);
-    await mockbot.send(`/compare ${firstUsername} ${secondUsername}`);
+    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
+    await mockbot.send(`/compare ${realUsername1} ${realUsername2}`);
 
     const context = mockbot.getContext();
 
     expect(context.photoUrl).toEqual('http://random_link_compare');
-    const expectedMessage = BM.USERS_COMPARE(firstUsername, secondUsername);
+    const expectedMessage = BM.USERS_COMPARE(realUsername1, realUsername2);
     expect(mockbot.lastMessage()).toEqual(expectedMessage);
   });
 
   test('Incorrect case - Right user not found', async () => {
-    await mockbot.send(`/add ${firstUsername}`);
-    await mockbot.send(`/compare ${firstUsername} not_found_1`);
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found_1'));
+    await mockbot.send(`/add ${realUsername1}`);
+    await mockbot.send(`/compare ${realUsername1} ${fakeUsername}`);
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
   });
 
   test('Incorrect case - Left user not found', async () => {
-    await mockbot.send(`/add ${firstUsername}`);
-    await mockbot.send(`/compare not_found_2 ${firstUsername}`);
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND('not_found_2'));
+    await mockbot.send(`/add ${realUsername1}`);
+    await mockbot.send(`/compare ${fakeUsername} ${realUsername1}`);
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
   });
 
   test('Incorrect case - Error on the server', async () => {
@@ -560,8 +545,8 @@ describe('chatbots.actions - compare action', () => {
     newUser.name = null;
     users.push(newUser);
 
-    await mockbot.send(`/add ${firstUsername} ${thirdUsername}`);
-    await mockbot.send(`/compare ${firstUsername} ${thirdUsername}`);
+    await mockbot.send(`/add ${realUsername1} ${thirdUsername}`);
+    await mockbot.send(`/compare ${realUsername1} ${thirdUsername}`);
 
     expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
     users.pop();
