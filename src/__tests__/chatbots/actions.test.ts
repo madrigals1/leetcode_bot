@@ -183,7 +183,7 @@ describe('chatbots.actions - refresh action', () => {
 
 describe('chatbots.actions - remove action', () => {
   test('Correct case - Without username', async () => {
-    await mockbot.send(`/remove ${mockPassword}`);
+    await mockbot.send('/remove', true);
     expect(mockbot.lastMessage()).toBe(BM.USER_LIST_REMOVE);
   });
 
@@ -192,7 +192,7 @@ describe('chatbots.actions - remove action', () => {
   test('Correct case - With username', async () => {
     await mockbot.send('/add random_username');
 
-    await mockbot.send(`/remove random_username ${mockPassword}`);
+    await mockbot.send('/remove random_username', true);
     const messages = mockbot.messages(2);
 
     expect(messages[0]).toBe(BM.USERNAME_WILL_BE_DELETED('random_username'));
@@ -200,21 +200,16 @@ describe('chatbots.actions - remove action', () => {
   });
 
   test('Incorrect case - Username does not exist', async () => {
-    await mockbot.send(`/remove not_existing_username ${mockPassword}`);
+    await mockbot.send('/remove not_existing_username', true);
     expect(mockbot.lastMessage())
       .toBe(BM.USERNAME_NOT_FOUND('not_existing_username'));
   });
 
-  test('Incorrect case - Incorrect password', async () => {
-    await mockbot.send('/remove blablabla incorrect_password');
-    expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
-    await mockbot.send('/remove incorrect_password');
-    expect(mockbot.lastMessage()).toBe(BM.PASSWORD_IS_INCORRECT);
-  });
-
-  test('Incorrect case - Not enough args', async () => {
-    await mockbot.send('/remove');
-    expect(mockbot.lastMessage()).toEqual(BM.PASSWORD_NOT_FOUND_IN_ARGS);
+  test('Incorrect case - Not admin', async () => {
+    await mockbot.send('/remove blablabla', false);
+    expect(mockbot.lastMessage()).toBe(BM.NO_ADMIN_RIGHTS);
+    await mockbot.send('/remove', false);
+    expect(mockbot.lastMessage()).toBe(BM.NO_ADMIN_RIGHTS);
   });
 
   test('Incorrect case - Too many args', async () => {
