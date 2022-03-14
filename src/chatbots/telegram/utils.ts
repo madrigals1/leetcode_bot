@@ -1,23 +1,31 @@
+import * as TelegramBot from 'node-telegram-bot-api';
+
+import { BOT_MESSAGES as BM } from '../../utils/dictionary';
+import { log } from '../../utils/helper';
+import MockBotTelegram from '../../__tests__/__mocks__/chatbots/telegram.mock';
 import { Context } from '../models';
 import { ButtonContainer } from '../models/buttons.model';
 
 function getReplyMarkupFromButtons(
   buttonContainers: ButtonContainer[],
-): string {
+): TelegramBot.InlineKeyboardMarkup {
   const keyboard = [];
 
   buttonContainers?.forEach((buttonContainer) => {
     const { buttons, buttonPerRow } = buttonContainer;
 
     for (let i = 0; i < Math.ceil(buttons.length / buttonPerRow); i++) {
-      const row = [];
+      const row: TelegramBot.InlineKeyboardButton[] = [];
 
       for (let j = 0; j < buttonPerRow; j++) {
         const index = (i * buttonPerRow) + j;
 
         if (index < buttons.length) {
           const button = buttons[index];
-          row.push({ text: button.text, callback_data: button.action });
+          const keyboardButton: TelegramBot.InlineKeyboardButton = {
+            text: button.text, callback_data: button.action,
+          };
+          row.push(keyboardButton);
         }
       }
 
@@ -25,13 +33,20 @@ function getReplyMarkupFromButtons(
     }
   });
 
-  return JSON.stringify({ inline_keyboard: keyboard });
+  return { inline_keyboard: keyboard };
 }
 
-export function reply(message: string, context: Context): Promise<string> {
+export async function reply(
+  message: string, context: Context,
+): Promise<string> {
   const {
     chatId, options, bot, photoUrl,
   } = context;
+
+  if (!(bot instanceof TelegramBot) && !(bot instanceof MockBotTelegram)) {
+    log('Incorrect bot type');
+    return BM.ERROR_ON_THE_SERVER;
+  }
 
   const replyMarkupOptions = options.buttons
     ? { reply_markup: getReplyMarkupFromButtons(options.buttons) }
@@ -41,8 +56,18 @@ export function reply(message: string, context: Context): Promise<string> {
   const updatedOptions = { ...options, ...replyMarkupOptions };
 
   if (photoUrl) {
-    return bot.sendPhoto(chatId, photoUrl, { captions: message });
+    return bot.sendPhoto(chatId, photoUrl, { caption: message })
+      .then((res) => res.text)
+      .catch((err) => {
+        log(err);
+        return BM.ERROR_ON_THE_SERVER;
+      });
   }
 
-  return bot.sendMessage(chatId, message, updatedOptions);
+  return bot.sendMessage(chatId, message, updatedOptions)
+    .then((res) => res.text)
+    .catch((err) => {
+      log(err);
+      return BM.ERROR_ON_THE_SERVER;
+    });
 }

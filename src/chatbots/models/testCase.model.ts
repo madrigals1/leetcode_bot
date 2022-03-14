@@ -1,4 +1,6 @@
 /* eslint-disable camelcase */
+import TelegramBot from 'node-telegram-bot-api';
+
 import { Context, Options } from '.';
 
 export interface TelegramTestCase {
@@ -11,7 +13,7 @@ export interface TelegramTestCase {
     message: string;
     options: {
       captions?: string;
-      reply_markup?: string;
+      reply_markup?: TelegramBot.InlineKeyboardMarkup;
     };
   };
 }

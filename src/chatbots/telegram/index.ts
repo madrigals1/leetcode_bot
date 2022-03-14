@@ -7,7 +7,7 @@ import { log } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { constants } from '../../utils/constants';
 import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
-import { Options, Context, TelegramMessage } from '../models';
+import { Options, Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
 
 import { reply } from './utils';
@@ -21,7 +21,7 @@ export default class Telegram {
 
   id = constants.PROVIDERS.TELEGRAM.ID;
 
-  getContext(message: TelegramMessage, text: string = null): Context {
+  getContext(message: TelegramBot.Message, text: string = null): Context {
     const textCorrect = text || message.text;
 
     return {

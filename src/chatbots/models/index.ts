@@ -7,9 +7,6 @@ import {
   Button, ButtonOptions, ButtonContainer, ButtonContainerType,
 } from './buttons.model';
 import { TelegramTestCase, DiscordTestCase } from './testCase.model';
-import {
-  TelegramChat, TelegramEntity, TelegramUser, TelegramMessage,
-} from './ntba.model';
 import { RegisteredAction } from './registeredAction.model';
 
 export {
@@ -26,9 +23,5 @@ export {
   SlackAccessory,
   SlackAttachment,
   SlackField,
-  TelegramChat,
-  TelegramEntity,
-  TelegramUser,
-  TelegramMessage,
   RegisteredAction,
 };

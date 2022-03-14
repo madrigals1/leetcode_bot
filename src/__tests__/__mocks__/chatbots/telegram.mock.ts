@@ -1,3 +1,5 @@
+import TelegramBot from 'node-telegram-bot-api';
+
 import { Options } from '../../../chatbots/models';
 
 class MockBotTelegram {
@@ -13,16 +15,40 @@ class MockBotTelegram {
     this.nullify();
   }
 
-  sendPhoto(chatId: number, photoUrl: string, options: Options): void {
+  async sendPhoto(
+    chatId: number, photoUrl: string, options: Options,
+  ): Promise<TelegramBot.Message> {
     this.chatId = chatId;
     this.photoUrl = photoUrl;
     this.options = options;
+
+    return {
+      message_id: 1,
+      date: 12312321,
+      chat: {
+        id: 1,
+        type: 'private',
+      },
+      text: '',
+    };
   }
 
-  sendMessage(chatId: number, message: string, options: Options): void {
+  async sendMessage(
+    chatId: number, message: string, options: Options,
+  ): Promise<TelegramBot.Message> {
     this.chatId = chatId;
     this.message = message;
     this.options = options;
+
+    return {
+      message_id: 1,
+      date: 12312321,
+      chat: {
+        id: 1,
+        type: 'private',
+      },
+      text: message,
+    };
   }
 
   nullify(): void {

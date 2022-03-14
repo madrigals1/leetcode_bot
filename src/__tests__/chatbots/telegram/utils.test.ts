@@ -99,7 +99,7 @@ describe('chatbots.telegram.utils - reply function', () => {
         photoUrl: null,
         message: 'Random Message 3',
         options: {
-          reply_markup: JSON.stringify({
+          reply_markup: {
             inline_keyboard: [
               [
                 {
@@ -122,7 +122,7 @@ describe('chatbots.telegram.utils - reply function', () => {
                 },
               ],
             ],
-          }),
+          },
         },
       },
     },
@@ -154,7 +154,7 @@ describe('chatbots.telegram.utils - reply function', () => {
         photoUrl: null,
         message: 'Random Message 4',
         options: {
-          reply_markup: JSON.stringify({ inline_keyboard: [] }),
+          reply_markup: { inline_keyboard: [] },
         },
       },
     },
@@ -189,12 +189,12 @@ describe('chatbots.telegram.utils - reply function', () => {
         photoUrl: null,
         message: 'Random Message 5',
         options: {
-          reply_markup: JSON.stringify({
+          reply_markup: {
             inline_keyboard: [[{
               text: 'text1',
               callback_data: 'action1',
             }]],
-          }),
+          },
         },
       },
     },
@@ -247,7 +247,7 @@ describe('chatbots.telegram.utils - reply function', () => {
         photoUrl: null,
         message: 'Random Message 5',
         options: {
-          reply_markup: JSON.stringify({
+          reply_markup: {
             inline_keyboard: [
               [
                 {
@@ -276,7 +276,7 @@ describe('chatbots.telegram.utils - reply function', () => {
                 },
               ],
             ],
-          }),
+          },
         },
       },
     },

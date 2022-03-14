@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import TelegramBot from 'node-telegram-bot-api';
 
 import { ChatbotProvider } from '../chatbots';
 
@@ -112,8 +113,10 @@ const STATUS = {
   SUCCESS: 'success',
 };
 
+const TYPING: TelegramBot.ChatAction = 'typing';
+
 const CHAT_STATUS = {
-  TYPING: 'typing',
+  TYPING,
 };
 
 const TELEGRAM = {

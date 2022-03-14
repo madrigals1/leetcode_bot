@@ -16,6 +16,7 @@ import { ChannelCache } from '../../cache/channel';
 import { ChannelKey } from '../../cache/models/channel.model';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
+import MockBotTelegram from '../../__tests__/__mocks__/chatbots/telegram.mock';
 
 import { ButtonContainer } from './buttons.model';
 
@@ -24,8 +25,8 @@ export interface Options {
   buttons?: ButtonContainer[];
   files?: string[];
   baseApiUrl?: string;
-  reply_markup?: string;
-  parse_mode?: string;
+  reply_markup?: TelegramBot.InlineKeyboardMarkup;
+  parse_mode?: TelegramBot.ParseMode;
 }
 
 export interface Channel {
@@ -48,7 +49,7 @@ export interface Context {
   prefix: string;
   chatId?: number;
   options?: Options;
-  bot?: Client | TelegramBot;
+  bot?: Client | TelegramBot | MockBotTelegram;
   photoUrl?: string;
   password?: string;
   channelKey?: ChannelKey;
