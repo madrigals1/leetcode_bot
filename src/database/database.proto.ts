@@ -15,8 +15,6 @@ import { ChannelData, ChannelKey } from '../cache/models';
 class DatabaseProvider {
   providerName = 'prototype';
 
-  lastRefreshTime: dayjs.Dayjs;
-
   /**
    * Connect to the database and return a promise that resolves to the
    * connection object.
