@@ -1,6 +1,7 @@
 import { User } from '../leetcode/models';
 import { getCmlFromUsers } from '../leetcode/utils';
 import { ChatbotProvider } from '../chatbots';
+import { ChannelKey } from '../cache/models';
 
 import { constants } from './constants';
 
@@ -53,6 +54,11 @@ export const SERVER_MESSAGES = {
   // TABLE API
   API_NOT_WORKING: 'api_not_working',
   NO_SUBMISSIONS: 'no_submissions',
+
+  // Channel errors
+  CHANNEL_DOES_NOT_EXIST: (channelKey: ChannelKey): string =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    `Channel does not exist - ${channelKey}`,
 };
 
 const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;

@@ -252,14 +252,13 @@ class SQLite extends DatabaseProvider {
   ): Promise<User> {
     const channel = await this.getChannel(channelKey);
 
-    if (!channel) return null;
+    if (!channel) throw new Error(SM.CHANNEL_DOES_NOT_EXIST(channelKey));
 
-    return this.ChannelUser
-      .create({ channel_id: channel.id, username })
-      .catch((err) => {
-        log(err);
-        return null;
-      });
+    const usersInChannel = await this.getUsersForChannel(channelKey);
+
+    if (usersInChannel.includes(username)) return null;
+
+    return this.ChannelUser.create({ channel_id: channel.id, username });
   }
 
   async removeUserFromChannel(
