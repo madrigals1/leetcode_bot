@@ -9,9 +9,10 @@ import {
 import { UserCache } from '../cache/userCache';
 
 import { action } from './decorators';
-import { Context, Button, RegisteredAction } from './models';
+import {
+  Context, Button, RegisteredAction, ButtonContainerType,
+} from './models';
 import { createButtonsFromUsers, getCloseButton } from './utils';
-import { ButtonContainerType } from './models/buttons.model';
 
 export const registeredActions: RegisteredAction[] = [];
 

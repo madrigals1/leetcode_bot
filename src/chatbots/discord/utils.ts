@@ -8,8 +8,7 @@ import {
 import { ArgumentsError, InputError } from '../../utils/errors';
 import ArgumentManager from '../argumentManager';
 import { Argument, ParsedArgument } from '../decorators/models';
-import { Context, ButtonContainer } from '../models';
-import { ButtonContainerType } from '../models/buttons.model';
+import { Context, ButtonContainer, ButtonContainerType } from '../models';
 import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 
 import buttonIndexer from './buttonIndexer';

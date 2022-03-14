@@ -5,7 +5,7 @@ import { Context } from '../models';
 import { ArgumentsError, InputError } from '../../utils/errors';
 import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import Cache from '../../cache';
-import { ChannelKey } from '../../cache/models/channel.model';
+import { ChannelKey } from '../../cache/models';
 import { ChannelCache } from '../../cache/channel';
 
 import { Argument, ParsedArgument } from './models';

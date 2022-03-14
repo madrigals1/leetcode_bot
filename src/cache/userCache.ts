@@ -7,7 +7,7 @@ import { log, delay } from '../utils/helper';
 import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { constants } from '../utils/constants';
 
-import { CacheResponse, UserCacheResponse } from './models/response.model';
+import { CacheResponse, UserCacheResponse } from './models';
 
 import Cache from './index';
 

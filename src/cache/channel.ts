@@ -6,8 +6,7 @@ import { log } from '../utils/helper';
 import { constants } from '../utils/constants';
 import { BOT_MESSAGES as BM } from '../utils/dictionary';
 
-import { ChannelData } from './models/channel.model';
-import { CacheResponse, UserCacheResponse } from './models/response.model';
+import { ChannelData, CacheResponse, UserCacheResponse } from './models';
 import { UserCache } from './userCache';
 
 import Cache from './index';

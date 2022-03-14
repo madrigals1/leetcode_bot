@@ -3,8 +3,7 @@ import * as TelegramBot from 'node-telegram-bot-api';
 import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import { log } from '../../utils/helper';
 import MockBotTelegram from '../../__tests__/__mocks__/chatbots/telegram.mock';
-import { Context } from '../models';
-import { ButtonContainer } from '../models/buttons.model';
+import { Context, ButtonContainer } from '../models';
 
 function getReplyMarkupFromButtons(
   buttonContainers: ButtonContainer[],

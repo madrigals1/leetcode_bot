@@ -2,7 +2,7 @@ import { DataTypes, Sequelize } from 'sequelize';
 
 import { log } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
-import { ChannelData, ChannelKey } from '../../cache/models/channel.model';
+import { ChannelData, ChannelKey } from '../../cache/models';
 import { User, Channel, ChannelUser } from '../models';
 import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { constants } from '../../utils/constants';

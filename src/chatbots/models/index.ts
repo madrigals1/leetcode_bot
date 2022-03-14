@@ -2,7 +2,7 @@ import {
   SlackMessage, SlackBlock, SlackAccessory, SlackAttachment, SlackField,
 } from '../slack/slack.model';
 
-import { Context, Options } from './context.model';
+import { Context, Options, ComplexInteraction } from './context.model';
 import {
   Button, ButtonOptions, ButtonContainer, ButtonContainerType,
 } from './buttons.model';
@@ -24,4 +24,5 @@ export {
   SlackAttachment,
   SlackField,
   RegisteredAction,
+  ComplexInteraction,
 };

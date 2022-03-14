@@ -13,9 +13,8 @@ import { constants } from '../../utils/constants';
 import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
-import { Context } from '../models';
+import { Context, ComplexInteraction } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
-import { ComplexInteraction } from '../models/context.model';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
 

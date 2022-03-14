@@ -5,9 +5,7 @@ import * as _ from 'lodash';
 
 import { User } from '../../leetcode/models';
 import DatabaseProvider from '../../database/database.proto';
-import {
-  ChannelData, ChannelKey, ChannelUser,
-} from '../../cache/models/channel.model';
+import { ChannelData, ChannelKey, ChannelUser } from '../../cache/models';
 
 import { mockDatabaseData } from './data.mock';
 

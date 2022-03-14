@@ -5,7 +5,7 @@
 
 import * as dayjs from 'dayjs';
 
-import { ChannelData, ChannelKey } from '../cache/models/channel.model';
+import { ChannelData, ChannelKey } from '../cache/models';
 
 /**
  * The DatabaseProvider class is a class that provides an interface to the

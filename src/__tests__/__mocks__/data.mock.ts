@@ -4,7 +4,7 @@ import {
 import { constants } from '../../utils/constants';
 import { User } from '../../leetcode/models';
 
-import { MockDatabaseInterface } from './models/mockData.model';
+import { MockDatabaseInterface } from './models';
 
 export const user1: User = {
   exists: true,

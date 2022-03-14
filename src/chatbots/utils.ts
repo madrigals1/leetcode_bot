@@ -4,8 +4,9 @@ import { User } from '../leetcode/models';
 import {
   Button,
   ButtonOptions,
+  ButtonContainer,
+  ButtonContainerType,
 } from './models';
-import { ButtonContainer, ButtonContainerType } from './models/buttons.model';
 
 export function createButtonsFromUsers(
   options: ButtonOptions,

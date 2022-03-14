@@ -1,4 +1,4 @@
-import { ChannelData, ChannelUser } from '../../../cache/models/channel.model';
+import { ChannelData, ChannelUser } from '../../../cache/models';
 import { Argument, IParsedArgument } from '../../../chatbots/decorators/models';
 import { User } from '../../../leetcode/models';
 

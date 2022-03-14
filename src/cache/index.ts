@@ -5,7 +5,7 @@ import { constants } from '../utils/constants';
 
 import { ChannelCache } from './channel';
 import { UserCache } from './userCache';
-import { ChannelKey } from './models/channel.model';
+import { ChannelKey } from './models';
 
 class Cache {
   channels: Map<string, ChannelCache> = new Map<string, ChannelCache>();
