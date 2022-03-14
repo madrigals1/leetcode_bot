@@ -4,7 +4,3 @@ export interface Submission {
   Language: string;
   Status: string;
 }
-
-export interface Table {
-  table: Submission[];
-}
