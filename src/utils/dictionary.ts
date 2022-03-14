@@ -65,9 +65,7 @@ ${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
 
 export const BOT_MESSAGES = {
   // ERROR MESSAGES
-  INCORRECT_INPUT: `${constants.EMOJI.ERROR} Incorrect input`,
   INCORRECT_RATING_TYPE: `${constants.EMOJI.ERROR} Incorrect rating type`,
-  PASSWORD_IS_INCORRECT: `${constants.EMOJI.ERROR} Password is incorrect`,
   NO_ADMIN_RIGHTS: `${constants.EMOJI.ERROR} You need administrator priveleges `
     + 'to execute this action',
   ERROR_ON_THE_SERVER: `${constants.EMOJI.ERROR} Error on the server`,
@@ -77,8 +75,6 @@ export const BOT_MESSAGES = {
     `${constants.EMOJI.ERROR} Should not request more than 100 arguments`,
   SHOULD_NOT_PROVIDE_MORE_THAN_100_ARGS:
     `${constants.EMOJI.ERROR} Should not provide more than 100 arguments`,
-  PASSWORD_NOT_FOUND_IN_ARGS:
-    `${constants.EMOJI.ERROR} Password not found in arguments`,
   REQUIRED_ARG_X_WAS_NOT_PROVIDED: (name: string): string =>
     // eslint-disable-next-line implicit-arrow-linebreak
     `${constants.EMOJI.ERROR} Required argument ${name} was not provided`,
@@ -141,9 +137,6 @@ export const BOT_MESSAGES = {
   USERNAME_WAS_DELETED(username: string): string {
     return `${constants.EMOJI.SUCCESS} User <b>${username}</b> was deleted`;
   },
-  USERNAME_WAS_NOT_DELETED(username: string): string {
-    return `${constants.EMOJI.ERROR} User <b>${username}</b> was not deleted`;
-  },
   USERNAME_NOT_ADDED_USER_LIMIT(username: string, userLimit: number): string {
     return `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`;
   },
@@ -168,11 +161,6 @@ export const BOT_MESSAGES = {
   USERS_COMPARE: (leftUsername: string, rightUsername: string): string =>
     // eslint-disable-next-line implicit-arrow-linebreak
     `Comparing ${leftUsername} to ${rightUsername}`,
-
-  // DATABASE
-  DATABASE_WILL_BE_CLEARED: `${constants.EMOJI.WASTEBASKET} Database will be cleared`,
-  DATABASE_WAS_CLEARED: `${constants.EMOJI.SUCCESS} Database was cleared`,
-  DATABASE_WAS_NOT_CLEARED: `${constants.EMOJI.ERROR} Database was not cleared`,
 
   // COMPARE ACTION
   SELECT_LEFT_USER: `${constants.EMOJI.PERSON} Select Left User`,

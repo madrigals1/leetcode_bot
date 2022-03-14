@@ -246,23 +246,6 @@ export function getPositionalParsedArguments(
   return argumentManager;
 }
 
-export function getPassword(argumentManager: ArgumentManager): string {
-  const passwordArguments = ['password', 'username_or_password'];
-
-  for (let i = 0; i < passwordArguments.length; i++) {
-    const passwordArgument = passwordArguments[i];
-
-    const parsedArgument = argumentManager.get(passwordArgument);
-
-    if (parsedArgument && parsedArgument.value !== '') {
-      return parsedArgument.value;
-    }
-  }
-
-  const reason = BM.PASSWORD_NOT_FOUND_IN_ARGS;
-  throw new InputError(reason);
-}
-
 export async function getOrCreateChannel(
   channelKey: ChannelKey,
 ): Promise<ChannelCache> {
