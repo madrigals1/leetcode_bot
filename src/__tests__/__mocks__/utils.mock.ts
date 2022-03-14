@@ -59,10 +59,8 @@ export async function mockCompareMenu(
   });
 }
 
-export async function mockProblemsChart(
-  leftUser: User,
-): Promise<VizapiResponse> {
-  if (!leftUser.name) {
+export async function mockProblemsChart(user: User): Promise<VizapiResponse> {
+  if (!user.name) {
     return {
       error: 'placeholder',
       reason: 'placeholder',
