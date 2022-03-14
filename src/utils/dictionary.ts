@@ -69,6 +69,8 @@ export const BOT_MESSAGES = {
   INCORRECT_INPUT: `${constants.EMOJI.ERROR} Incorrect input`,
   INCORRECT_RATING_TYPE: `${constants.EMOJI.ERROR} Incorrect rating type`,
   PASSWORD_IS_INCORRECT: `${constants.EMOJI.ERROR} Password is incorrect`,
+  NO_ADMIN_RIGHTS: `${constants.EMOJI.ERROR} You need administrator priveleges `
+    + 'to execute this action',
   ERROR_ON_THE_SERVER: `${constants.EMOJI.ERROR} Error on the server`,
   INSUFFICIENT_ARGS_IN_MESSAGE:
     `${constants.EMOJI.ERROR} Insufficient arguments in message`,
