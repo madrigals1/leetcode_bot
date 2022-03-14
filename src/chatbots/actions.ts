@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { constants } from '../utils/constants';
 import {
@@ -61,6 +60,7 @@ export default class Actions {
     // Add all Users 1 by 1 and log into message
     for (let i = 0; i < usernames.length; i++) {
       // Get results of adding
+      // eslint-disable-next-line no-await-in-loop
       const result = await context.channelCache.addUser(usernames[i]);
 
       message += result.detail;
