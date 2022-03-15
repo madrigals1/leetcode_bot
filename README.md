@@ -37,8 +37,8 @@ Leetcode Bot is an app, that gets data for **LeetCode Users** and creates **Rati
 
 You can create your own rating by deploying this project on your machine!!!
 
-[Demo BOT on Telegram](https://t.me/l33tcode_bot)
-[Demo BOT on Discord](https://discord.gg/Zuvpjr3v)
+- [Demo BOT on Telegram](https://t.me/l33tcode_bot)
+- [Demo BOT on Discord](https://discord.gg/Zuvpjr3v)
 
 ## Table of Contents
 
