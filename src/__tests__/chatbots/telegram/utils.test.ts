@@ -1,12 +1,17 @@
+import { Client, Intents } from 'discord.js';
+
 import { reply } from '../../../chatbots/telegram/utils';
 import MockBotTelegram from '../../__mocks__/chatbots/telegram.mock';
 import {
-  TelegramTestCase, ButtonContainerType,
+  TelegramTestCase, ButtonContainerType, Context,
 } from '../../../chatbots/models';
 import {
   getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
 import { ChatbotProvider } from '../../../chatbots';
+import {
+  SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
+} from '../../../utils/dictionary';
 
 const bot = new MockBotTelegram();
 
@@ -302,5 +307,86 @@ describe('chatbots.telegram.utils - reply function', () => {
 
       bot.nullify();
     });
+  });
+
+  test('Incorrect bot type', async () => {
+    const context: Context = {
+      text: '',
+      bot: new Client({ intents: [Intents.FLAGS.GUILDS] }),
+      options: {},
+      reply: () => new Promise(() => ''),
+      argumentParser: getPositionalParsedArguments,
+      provider: ChatbotProvider.Telegram,
+      prefix: '!',
+    };
+
+    const result = await reply('', context);
+
+    // eslint-disable-next-line no-console
+    expect(console.log).toHaveBeenCalledWith(SM.INCORRECT_BOT_TYPE);
+    expect(result).toBe(BM.ERROR_ON_THE_SERVER);
+
+    bot.nullify();
+  });
+
+  test('Error on sendMessage', async () => {
+    const context: Context = {
+      text: '',
+      bot,
+      options: {},
+      reply: () => new Promise(() => ''),
+      argumentParser: getPositionalParsedArguments,
+      provider: ChatbotProvider.Telegram,
+      prefix: '!',
+    };
+
+    const fakeErrorMessage = 'fake error message';
+
+    // Save original method
+    const { sendMessage } = bot;
+
+    bot.sendMessage = () => new Promise((resolve, reject) => {
+      reject(fakeErrorMessage);
+    });
+
+    const result = await reply('', context);
+
+    // eslint-disable-next-line no-console
+    expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
+    expect(result).toBe(BM.ERROR_ON_THE_SERVER);
+
+    bot.nullify();
+    bot.sendMessage = sendMessage;
+  });
+
+  test('Error on sendPhoto', async () => {
+    const context: Context = {
+      text: '',
+      bot,
+      options: {},
+      photoUrl: 'random_url',
+      reply: () => new Promise(() => ''),
+      argumentParser: getPositionalParsedArguments,
+      provider: ChatbotProvider.Telegram,
+      prefix: '!',
+    };
+
+    const fakeErrorMessage = 'fake error message';
+
+    // Save original method
+    const { sendPhoto } = bot;
+
+    bot.sendPhoto = () => new Promise((resolve, reject) => {
+      reject(fakeErrorMessage);
+    });
+
+    const result = await reply('', context);
+
+    // eslint-disable-next-line no-console
+    expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
+    expect(result).toBe(BM.ERROR_ON_THE_SERVER);
+
+    bot.nullify();
+    bot.sendPhoto = sendPhoto;
   });
 });

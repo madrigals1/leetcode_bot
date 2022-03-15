@@ -1,16 +1,18 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 
-import { BOT_MESSAGES as BM } from '../../utils/dictionary';
+import {
+  BOT_MESSAGES as BM, SERVER_MESSAGES as SM,
+} from '../../utils/dictionary';
 import { log } from '../../utils/helper';
 import MockBotTelegram from '../../__tests__/__mocks__/chatbots/telegram.mock';
 import { Context, ButtonContainer } from '../models';
 
-function getReplyMarkupFromButtons(
+export function getReplyMarkupFromButtons(
   buttonContainers: ButtonContainer[],
 ): TelegramBot.InlineKeyboardMarkup {
   const keyboard = [];
 
-  buttonContainers?.forEach((buttonContainer) => {
+  buttonContainers.forEach((buttonContainer) => {
     const { buttons, buttonPerRow } = buttonContainer;
 
     for (let i = 0; i < Math.ceil(buttons.length / buttonPerRow); i++) {
@@ -43,7 +45,7 @@ export async function reply(
   } = context;
 
   if (!(bot instanceof TelegramBot) && !(bot instanceof MockBotTelegram)) {
-    log('Incorrect bot type');
+    log(SM.INCORRECT_BOT_TYPE);
     return BM.ERROR_ON_THE_SERVER;
   }
 

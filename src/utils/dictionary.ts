@@ -59,6 +59,9 @@ export const SERVER_MESSAGES = {
   CHANNEL_DOES_NOT_EXIST: (channelKey: ChannelKey): string =>
     // eslint-disable-next-line implicit-arrow-linebreak
     `Channel does not exist - ${channelKey}`,
+
+  // MISC
+  INCORRECT_BOT_TYPE: 'Incorrect bot type',
 };
 
 const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;
@@ -172,7 +175,10 @@ export const BOT_MESSAGES = {
   SELECT_LEFT_USER: `${constants.EMOJI.PERSON} Select Left User`,
   SELECT_RIGHT_USER: `${constants.EMOJI.PERSON} Select Right User`,
 
+  // ---------------------------------------------------------------------------
   // BIG TEXTS
+  // ---------------------------------------------------------------------------
+
   WELCOME_TEXT(prefix: string): string {
     return `Welcome! This is Leetcode Rating Bot Elite ${constants.EMOJI.COOL} Boys
 
@@ -200,6 +206,7 @@ export const BOT_MESSAGES = {
 <b><i>${prefix}stats</i></b> - Show Stats for this Bot
 `;
   },
+
   USER_TEXT(user: User): string {
     const {
       easy, medium, hard, all, cumulative,
@@ -214,6 +221,7 @@ ${constants.EMOJI.RED_CIRCLE} Hard - <b>${hard}</b>
 ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all} / ${user.all}</b>
 ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
   },
+
   HELP_TEXT: 'Contact @madrigals1 in Telegram or madrigals1#9652 in Discord ',
 
   RATING_TEXT(users: User[]): string {
