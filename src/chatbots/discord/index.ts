@@ -3,6 +3,7 @@ import {
   Client,
   CommandInteraction,
   Interaction,
+  Permissions,
   SelectMenuInteraction,
 } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
@@ -58,6 +59,11 @@ class Discord {
             chatId: interaction.channelId,
             provider: id,
           },
+          isAdmin: new Promise((resolve) => {
+            const adminPerm = Permissions.FLAGS.ADMINISTRATOR;
+            const userIsAdmin = interaction.memberPermissions.has(adminPerm);
+            resolve(userIsAdmin);
+          }),
           options: {},
         };
 
