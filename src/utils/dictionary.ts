@@ -158,6 +158,7 @@ export const BOT_MESSAGES = {
   USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions`,
   USER_LIST_PROBLEMS: `${constants.EMOJI.CHART} Problems`,
   USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars`,
+  USER_LIST_LANGSTATS: `${constants.EMOJI.PROGRAMMER} Language stats`,
   USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove User`,
   USER_LIST_PROFILES: `${constants.EMOJI.PERSON} Profiles`,
   USER_AVATAR: (username: string): string => `${username}'s avatar`,
