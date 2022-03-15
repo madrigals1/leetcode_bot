@@ -41,6 +41,7 @@ class Discord {
       context: Context, requestedArgs: Argument[],
     ) => ArgumentManager,
   ) {
+    await interaction.deferReply();
     const commandName = action.split(' ')[0].substring(1);
     const id = constants.PROVIDERS.DISCORD.ID;
 
