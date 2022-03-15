@@ -1,5 +1,5 @@
 export interface GraphQLQuery {
-  operationName: string;
+  operationName?: string;
   query: string;
   variables: Record<string, string>;
 }
