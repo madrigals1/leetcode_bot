@@ -10,6 +10,7 @@ import ArgumentManager from '../argumentManager';
 import { Argument, ParsedArgument } from '../decorators/models';
 import { Context, ButtonContainer, ButtonContainerType } from '../models';
 import { BOT_MESSAGES as BM } from '../../utils/dictionary';
+import { log } from '../../utils/helper';
 
 import buttonIndexer from './buttonIndexer';
 
@@ -83,12 +84,8 @@ export async function discordIReply(
     components,
   };
 
-  // Edit message, if second message is sent
-  if (interaction.replied) {
-    await interaction.editReply(messageOptions);
-  } else {
-    await interaction.reply(messageOptions);
-  }
+  // Send message
+  await interaction.followUp(messageOptions).catch((err) => log(err));
 }
 
 export function reply(message: string, context: Context): Promise<string> {
