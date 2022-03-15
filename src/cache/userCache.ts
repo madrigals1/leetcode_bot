@@ -2,7 +2,7 @@
 import * as dayjs from 'dayjs';
 
 import { User } from '../leetcode/models';
-import getLeetcodeDataFromUsername from '../leetcode';
+import { getLeetcodeDataFromUsername } from '../leetcode';
 import { log, delay } from '../utils/helper';
 import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { constants } from '../utils/constants';

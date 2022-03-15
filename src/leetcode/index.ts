@@ -65,4 +65,4 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
   };
 }
 
-export default getLeetcodeDataFromUsername;
+export { getLeetcodeDataFromUsername };
