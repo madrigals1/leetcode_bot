@@ -14,6 +14,7 @@ const {
 
   // Telegram
   TELEGRAM_TOKEN,
+  TELEGRAM_BOT_NAME,
 
   // Slack
   SLACK_TOKEN,
@@ -125,6 +126,7 @@ const TELEGRAM = {
   ENABLE: !!TELEGRAM_TOKEN,
   TOKEN: TELEGRAM_TOKEN,
   PREFIX: '/',
+  BOT_NAME: TELEGRAM_BOT_NAME,
 };
 
 const DISCORD = {

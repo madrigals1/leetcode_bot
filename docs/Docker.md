@@ -25,8 +25,9 @@ cp .env.example .env
 To enable **Telegram BOT** or **Discord BOT**, change respective values inside `.env`
 
 ```bash
-# Get token from https://t.me/botfather
+# Get token and bot name from https://t.me/botfather
 TELEGRAM_TOKEN=
+TELEGRAM_BOT_NAME=
 
 # Get values from https://discord.com/developers/applications
 DISCORD_TOKEN=
