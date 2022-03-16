@@ -36,6 +36,7 @@ export class ChannelCache {
           const user = UserCache.getUser(username);
           if (user !== undefined) this.users.push(user);
         });
+        this.sortUsers();
       })
       .catch((err) => { log(err); });
   }
@@ -181,7 +182,7 @@ export class ChannelCache {
   /**
    * Sort the users by the number of solved problems
    */
-  private sortUsers(): void {
+  sortUsers(): void {
     this.users.sort(
       (user1, user2) => {
         const solved1 = user1.solved !== undefined ? user1.solved : -Infinity;

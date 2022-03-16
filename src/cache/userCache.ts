@@ -183,6 +183,10 @@ export class UserCache {
       log(err.message);
     }
 
+    // Re-sort users after refresh
+    const allChannels = [...Cache.channels.values()];
+    allChannels.forEach((channel) => channel.sortUsers());
+
     // Log when refresh ended
     log(SM.DATABASE_FINISHED_REFRESH(dayjs().format(DATE_FORMAT)));
 
