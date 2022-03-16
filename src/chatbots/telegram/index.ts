@@ -21,8 +21,16 @@ export default class Telegram {
 
   id = constants.PROVIDERS.TELEGRAM.ID;
 
-  static getActionRegex(actionName: string): RegExp {
-    return new RegExp(`^(/${actionName}|/${actionName} [a-zA-Z0-9_ ]+)$`);
+  botName = constants.PROVIDERS.TELEGRAM.BOT_NAME;
+
+  getActionRegex(actionName: string): RegExp {
+    const botNameWithAtSign = this.botName ? `@${this.botName}` : '';
+
+    const part1 = `/${actionName}`;
+    const part2 = `/${actionName} [a-zA-Z0-9_ ]+`;
+    const part3 = `/${actionName}${botNameWithAtSign}`;
+    const part4 = `/${actionName}${botNameWithAtSign} [a-zA-Z0-9_ ]+`;
+    return new RegExp(`^(${part1}|${part2}|${part3}|${part4})$`);
   }
 
   getContext(
@@ -69,7 +77,7 @@ export default class Telegram {
     // Add regular actions
     registeredActions.forEach(({ name, property }) => {
       // convert regular string to regexp
-      const actionNameRegex = Telegram.getActionRegex(name);
+      const actionNameRegex = this.getActionRegex(name);
 
       this.bot.onText(actionNameRegex, (message) => {
         // If action is send from User, send typing indicator
@@ -108,7 +116,7 @@ export default class Telegram {
       // Check if callback data is a command
       for (let i = 0; i < registeredActions.length; i++) {
         const { name, property } = registeredActions[i];
-        const actionNameRegex = Telegram.getActionRegex(name);
+        const actionNameRegex = this.getActionRegex(name);
 
         // If message starts with /rating, call rating action
         if (data.match(actionNameRegex)) {
