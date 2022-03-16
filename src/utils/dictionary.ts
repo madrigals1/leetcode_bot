@@ -110,7 +110,7 @@ export const BOT_MESSAGES = {
   // REFRESHING
   CACHE_STARTED_REFRESH: `${constants.EMOJI.WAITING} Cache refresh was requested...`,
   CACHE_IS_REFRESHED: `${constants.EMOJI.SUCCESS} Cache is refreshed`,
-  CACHE_ALREADY_REFRESHED: `${constants.EMOJI.ERROR} Cache was refreshed less than 15 minutes ago`,
+  CACHE_ALREADY_REFRESHED: `${constants.EMOJI.ERROR} Cache was refreshed less than 5 minutes ago`,
 
   // USER RELATED
   USER_LIST(userList: string): string {
