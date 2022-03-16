@@ -1,4 +1,4 @@
-import { User } from '../leetcode/models';
+import { LanguageProblemCount, User } from '../leetcode/models';
 import { getCmlFromUsers } from '../leetcode/utils';
 import { ChatbotProvider } from '../chatbots';
 import { ChannelKey } from '../cache/models';
@@ -269,6 +269,23 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 <b>USER LIST</b>
 ${userNameList}
     `;
+  },
+
+  LANGUAGE_STATS_TEXT(username: string, lpc: LanguageProblemCount[]): string {
+    // Sort by amount of solved problems
+    // eslint-disable-next-line arrow-body-style
+    const lpcSorted = lpc.sort((value1, value2) => {
+      return value2.problemsSolved - value1.problemsSolved;
+    });
+
+    // eslint-disable-next-line arrow-body-style
+    const lpcText = lpcSorted.map(({ languageName, problemsSolved }) => {
+      return `- <b>${languageName}</b> ${problemsSolved}`;
+    }).join('\n');
+    const emoji = constants.EMOJI.PROGRAMMER;
+    const prefix = `${emoji} Problems solved by <b>${username}</b> in:\n`;
+
+    return prefix + lpcText;
   },
 
   // Channel Related

@@ -7,6 +7,7 @@ import {
   ratingGraph,
 } from '../vizapi';
 import { UserCache } from '../cache/userCache';
+import { getLanguageStats } from '../leetcode';
 
 import { action } from './decorators';
 import {
@@ -516,5 +517,49 @@ export default class Actions {
 
     // If image link was not achieved from VizAPI
     return BM.ERROR_ON_THE_SERVER;
+  }
+
+  @action({
+    name: 'langstats',
+    args: [
+      {
+        key: 'username',
+        name: 'Username',
+        index: 0,
+        isRequired: false,
+      },
+    ],
+  })
+  static async langstats(context: Context): Promise<string> {
+    const username = context.args.get('username').value.toLowerCase();
+
+    // If 1 User was sent
+    if (username !== '') {
+      // Get User from args
+      const user = context.channelCache.loadUser(username);
+
+      // If User does not exist, return error message
+      if (!user) return BM.USERNAME_NOT_FOUND(username);
+
+      // Get language stats from LeetCode
+      const response = await getLanguageStats(username);
+      const data = response?.matchedUser?.languageProblemCount ?? [];
+
+      return BM.LANGUAGE_STATS_TEXT(username, data);
+    }
+
+    // If 0 User was sent, add reply markup context for User
+    context.options.buttons = [{
+      buttons: createButtonsFromUsers({
+        action: 'langstats',
+        users: context.channelCache.users,
+      }),
+      buttonPerRow: 3,
+      placeholder: 'Username',
+      type: ButtonContainerType.MultipleButtons,
+    }, getCloseButton()];
+
+    // If 0 User was sent
+    return BM.USER_LIST_LANGSTATS;
   }
 }
