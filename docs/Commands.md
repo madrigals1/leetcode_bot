@@ -135,6 +135,25 @@ Gets amount of solved problems in different levels of difficulty for given User,
 
 ---
 
+### Langstats
+
+Gets amount of solved problems in different languages for given User.
+
+| Name | Langstats |
+| --- | --- |
+| Arguments | [1] `username` - username of User in LeetCode |
+| Telegram | Yes |
+| Discord | Yes |
+| Slack | Limited |
+| Admin | No |
+
+| Request | Response |
+| --- | --- |
+| `/langstats` | ![Langstats](https://i.imgur.com/S7JgGM0.png) |
+| `/langstats username` | ![Langstats username](https://i.imgur.com/c2c61xf.png) |
+
+---
+
 ### Compare
 
 Creates small **Comparison** visualization between 2 users using [VizAPI](https://github.com/madrigals1/vizapi). Returns visualization as image.
