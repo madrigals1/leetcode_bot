@@ -192,6 +192,7 @@ export const BOT_MESSAGES = {
 <b><i>${prefix}submissions</i></b> - Submissions for Users
 <b><i>${prefix}avatar</i></b> - Avatars for Users
 <b><i>${prefix}problems</i></b> - Chart with Solved Problems for Users
+<b><i>${prefix}langstats</i></b> - Amount of Solved Problems in each language for Users
 
 <b>User related commands:</b>
 <b><i>${prefix}add username1 username2</i></b> ... - adding Users
@@ -200,6 +201,7 @@ export const BOT_MESSAGES = {
 <b><i>${prefix}submissions username</i></b> - Get all recent submissions for User as Table
 <b><i>${prefix}compare username1 username2</i></b> - Compare 2 Users' stats
 <b><i>${prefix}problems username</i></b> - Chart with Solved Problems for specific User
+<b><i>${prefix}langstats username</i></b> - Amount of Solved Problems in each language given User
 
 <b>Admin commands (Only admin or local chat):</b>
 <b><i>${prefix}remove username</i></b> - Remove User
