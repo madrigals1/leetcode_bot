@@ -24,10 +24,12 @@ export default class Telegram {
   botName = constants.PROVIDERS.TELEGRAM.BOT_NAME;
 
   getActionRegex(actionName: string): RegExp {
+    const botNameWithAtSign = this.botName ? `@${this.botName}` : '';
+
     const part1 = `/${actionName}`;
     const part2 = `/${actionName} [a-zA-Z0-9_ ]+`;
-    const part3 = `/${actionName}@${this.botName}`;
-    const part4 = `/${actionName}@${this.botName} [a-zA-Z0-9_ ]+`;
+    const part3 = `/${actionName}${botNameWithAtSign}`;
+    const part4 = `/${actionName}${botNameWithAtSign} [a-zA-Z0-9_ ]+`;
     return new RegExp(`^(${part1}|${part2}|${part3}|${part4})$`);
   }
 
