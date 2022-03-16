@@ -38,9 +38,11 @@ export function getRecentSubmissionListContext(
         recentSubmissionList(username: $username, limit: $limit) {
           title
           titleSlug
-          timestamp
+          time
           statusDisplay
           lang
+          memory
+          runtime
           __typename
         }
         languageList {

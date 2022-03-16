@@ -34,6 +34,8 @@ export const user1: User = {
         language: 'cpp',
         name: 'Random Problem Name',
         time: '10 minutes ago',
+        memory: '14.1 MB',
+        runtime: '28 ms',
       },
       {
         link: getLeetcodeProblemLink('random_problem_slug_2'),
@@ -41,6 +43,8 @@ export const user1: User = {
         language: 'python',
         name: 'Random Problem Name 2',
         time: '2 weeks ago',
+        memory: '14.0 MB',
+        runtime: '24 ms',
       },
     ],
     problemsSolved: {
@@ -134,6 +138,8 @@ export const user2: User = {
         language: 'java',
         name: 'Random Problem Name 3',
         time: '2 hours ago',
+        memory: '13.4 MB',
+        runtime: '44 ms',
       },
       {
         link: getLeetcodeProblemLink('random_problem_slug_4'),
@@ -141,6 +147,8 @@ export const user2: User = {
         language: 'javascript',
         name: 'Random Problem Name 4',
         time: '9 hours ago',
+        memory: '13.8 MB',
+        runtime: '40 ms',
       },
     ],
     problemsSolved: {

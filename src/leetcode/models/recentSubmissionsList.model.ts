@@ -7,9 +7,11 @@ export interface LanguageNode {
 export interface SubmissionDumpNode {
   lang: string;
   statusDisplay: string;
-  timestamp: string;
+  time: string;
   title: string;
   titleSlug: string;
+  memory: string;
+  runtime: string;
 }
 
 export interface RecentSubmissionList {

@@ -180,23 +180,29 @@ test('leetcode.utils.getRecentSubmissions action', async () => {
       {
         lang: 'python',
         statusDisplay: 'Time Limit Exceeded',
-        timestamp: '46468465651',
+        time: '1 day',
         title: 'Submission Name 1',
         titleSlug: 'submission-name-1',
+        memory: '13.5 MB',
+        runtime: '58 ms',
       },
       {
         lang: 'javascript',
         statusDisplay: 'Accepted',
-        timestamp: '46468465652',
+        time: '2 days',
         title: 'Submission Name 2',
         titleSlug: 'submission-name-2',
+        memory: '13.8 MB',
+        runtime: '84 ms',
       },
       {
         lang: 'csharp',
         statusDisplay: 'Memory Limit Exceeded',
-        timestamp: '46468465653',
+        time: '3 days',
         title: 'Submission Name 3',
         titleSlug: 'submission-name-3',
+        memory: '14.1 MB',
+        runtime: '40 ms',
       },
     ],
   };
@@ -213,6 +219,8 @@ test('leetcode.utils.getRecentSubmissions action', async () => {
     .toBe(constants.SUBMISSION_STATUS_MAP['Time Limit Exceeded']);
   expect(submissionNode1.language).toBe('Python');
   expect(submissionNode1.name).toBe('Submission Name 1');
+  expect(submissionNode1.memory).toBe('13.5 MB');
+  expect(submissionNode1.runtime).toBe('58 ms');
 
   // Check Submission 2
   expect(submissionNode2.link)
@@ -221,6 +229,8 @@ test('leetcode.utils.getRecentSubmissions action', async () => {
     .toBe(constants.SUBMISSION_STATUS_MAP.Accepted);
   expect(submissionNode2.language).toBe('Javascript');
   expect(submissionNode2.name).toBe('Submission Name 2');
+  expect(submissionNode2.memory).toBe('13.8 MB');
+  expect(submissionNode2.runtime).toBe('84 ms');
 
   // Check Submission 3
   expect(submissionNode3.link)
@@ -229,6 +239,8 @@ test('leetcode.utils.getRecentSubmissions action', async () => {
     .toBe(constants.SUBMISSION_STATUS_MAP['Memory Limit Exceeded']);
   expect(submissionNode3.language).toBe('C#');
   expect(submissionNode3.name).toBe('Submission Name 3');
+  expect(submissionNode3.memory).toBe('14.1 MB');
+  expect(submissionNode3.runtime).toBe('40 ms');
 });
 
 test('leetcode.utils.getCmlFromUser action', async () => {

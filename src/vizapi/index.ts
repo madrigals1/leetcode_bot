@@ -81,6 +81,8 @@ export async function tableForSubmissions(user: User): Promise<VizapiResponse> {
     Time: submission.time,
     Language: submission.language,
     Status: submission.status,
+    Memory: submission.memory,
+    Runtime: submission.runtime,
   }));
 
   return axios

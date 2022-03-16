@@ -4,4 +4,6 @@ export interface SubmissionData {
   language: string;
   name: string;
   time: string;
+  memory: string;
+  runtime: string;
 }

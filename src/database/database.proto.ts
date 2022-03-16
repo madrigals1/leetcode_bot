@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
 /* eslint-disable class-methods-use-this */
-
-import * as dayjs from 'dayjs';
-
 import { ChannelData, ChannelKey } from '../cache/models';
 
 /**

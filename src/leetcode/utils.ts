@@ -1,7 +1,3 @@
-import * as dayjs from 'dayjs';
-import * as duration from 'dayjs/plugin/duration';
-import * as relativeTime from 'dayjs/plugin/relativeTime';
-
 import { constants } from '../utils/constants';
 
 import {
@@ -13,9 +9,6 @@ import {
   User,
   UserProblemsSolvedData,
 } from './models';
-
-dayjs.extend(duration);
-dayjs.extend(relativeTime);
 
 export function getLeetcodeUsernameLink(username: string): string {
   return `${constants.SYSTEM.LEETCODE_URL}/${username}`;
@@ -32,21 +25,18 @@ export function getGraphqlLink(): string {
 export function getRecentSubmissions(
   data: RecentSubmissionList,
 ): SubmissionData[] {
-  const now: number = dayjs().unix();
   return data.recentSubmissionList.map(
-    (submission: SubmissionDumpNode) => {
-      const unixTime = Number(submission.timestamp);
-
-      return {
-        link: getLeetcodeProblemLink(submission.titleSlug),
-        status: constants.SUBMISSION_STATUS_MAP[submission.statusDisplay],
-        language: data.languageList.find((language: LanguageNode) => (
-          language.name === submission.lang
-        )).verboseName,
-        name: submission.title,
-        time: dayjs.duration((unixTime - now) * 1000).humanize(true),
-      };
-    },
+    (submission: SubmissionDumpNode) => ({
+      link: getLeetcodeProblemLink(submission.titleSlug),
+      status: constants.SUBMISSION_STATUS_MAP[submission.statusDisplay],
+      language: data.languageList.find((language: LanguageNode) => (
+        language.name === submission.lang
+      )).verboseName,
+      name: submission.title,
+      time: `${submission.time} ago`,
+      memory: submission.memory,
+      runtime: submission.runtime,
+    }),
   );
 }
 
