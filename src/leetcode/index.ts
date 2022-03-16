@@ -8,11 +8,13 @@ import {
   RecentSubmissionList,
   Contest,
   User,
+  LanguageStats,
 } from './models';
 import {
   getUserProfileContext,
   getRecentSubmissionListContext,
   getContestRankingContext,
+  getLanguageStatsContext,
 } from './graphql';
 import gqlQuery from './graphql/utils';
 
@@ -65,4 +67,9 @@ async function getLeetcodeDataFromUsername(username: string): Promise<User> {
   };
 }
 
-export { getLeetcodeDataFromUsername };
+async function getLanguageStats(username: string): Promise<LanguageStats> {
+  const context = getLanguageStatsContext(username);
+  return gqlQuery<LanguageStats>(context);
+}
+
+export { getLeetcodeDataFromUsername, getLanguageStats };
