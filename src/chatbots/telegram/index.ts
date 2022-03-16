@@ -21,6 +21,10 @@ export default class Telegram {
 
   id = constants.PROVIDERS.TELEGRAM.ID;
 
+  static getActionRegex(actionName: string): RegExp {
+    return new RegExp(`^(/${actionName}|/${actionName} [a-zA-Z0-9_ ]+)$`);
+  }
+
   getContext(
     message: TelegramBot.Message, userId: number, text: string = null,
   ): Context {
@@ -65,7 +69,7 @@ export default class Telegram {
     // Add regular actions
     registeredActions.forEach(({ name, property }) => {
       // convert regular string to regexp
-      const actionNameRegex = new RegExp(name);
+      const actionNameRegex = Telegram.getActionRegex(name);
 
       this.bot.onText(actionNameRegex, (message) => {
         // If action is send from User, send typing indicator
@@ -104,9 +108,10 @@ export default class Telegram {
       // Check if callback data is a command
       for (let i = 0; i < registeredActions.length; i++) {
         const { name, property } = registeredActions[i];
+        const actionNameRegex = Telegram.getActionRegex(name);
 
         // If message starts with /rating, call rating action
-        if (data.match(name)) {
+        if (data.match(actionNameRegex)) {
           // Create context for message
           const context: Context = this.getContext(message, from.id, data);
 
