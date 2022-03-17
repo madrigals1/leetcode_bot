@@ -134,7 +134,7 @@ export async function mockLanguageStats(
   username: string,
 ): Promise<LanguageStats> {
   return new Promise((resolve) => {
-    if (username === user1[0].username) {
+    if (username === user1.username) {
       resolve({
         matchedUser: {
           languageProblemCount: [
@@ -155,7 +155,7 @@ export async function mockLanguageStats(
       });
     }
 
-    if (username === user2[0].username) {
+    if (username === user2.username) {
       resolve({
         matchedUser: {
           languageProblemCount: [
