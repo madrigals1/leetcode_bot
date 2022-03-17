@@ -33,7 +33,13 @@ export class ParsedArgument implements IParsedArgument {
     this.index = index;
     this.key = key;
     this.name = name;
-    this._value = value;
+
+    // All arguments should be converted to lowercase
+    if (typeof value === 'string') {
+      this._value = value.toLowerCase();
+    } else {
+      this._value = value.map((elem) => elem.toLowerCase());
+    }
   }
 
   public get value(): string {

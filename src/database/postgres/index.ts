@@ -1,11 +1,12 @@
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes, Sequelize, Op } from 'sequelize';
 
-import { error, log } from '../../utils/helper';
+import { log } from '../../utils/helper';
 import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import DatabaseProvider from '../database.proto';
 import { User, ChannelUser, Channel } from '../models';
 import { ChannelData, ChannelKey } from '../../cache/models';
 import { constants } from '../../utils/constants';
+import { usernameFindOptions } from '../utils';
 
 const { POSTGRES } = constants.DATABASE;
 const {
@@ -78,17 +79,15 @@ class Postgres extends DatabaseProvider {
     log(SM.IS_CONNECTING(this.providerName));
   }
 
-  // Connect database
+  // Connect to Database
   async connect(): Promise<boolean> {
     this.initialize();
+
     return this.sequelize
       .sync()
-      .then(() => {
-        log(SM.CONNECTION_STATUS.SUCCESSFUL);
-        return true;
-      })
+      .then(() => true)
       .catch((err) => {
-        log(SM.CONNECTION_STATUS.ERROR(err));
+        log(err);
         return false;
       });
   }
@@ -106,7 +105,7 @@ class Postgres extends DatabaseProvider {
   // Load User by `username`
   async userExists(username: string): Promise<boolean> {
     return this.User
-      .findOne({ where: { username } })
+      .findOne(usernameFindOptions(username))
       .then((res) => !!res)
       .catch((err) => {
         log(err);
@@ -123,7 +122,7 @@ class Postgres extends DatabaseProvider {
     if (userExists) return null;
 
     return this.User
-      .create({ username })
+      .create({ username: username.toLowerCase() })
       .catch((err) => {
         log(err);
         return null;
@@ -139,8 +138,8 @@ class Postgres extends DatabaseProvider {
     if (!userExists) return false;
 
     return this.User
-      .destroy()
-      .then(() => true)
+      .destroy(usernameFindOptions(username))
+      .then((res) => !!res)
       .catch((err) => {
         log(err);
         return false;
@@ -151,13 +150,14 @@ class Postgres extends DatabaseProvider {
   async removeAllUsers(): Promise<boolean> {
     return this.User
       .destroy({ truncate: true })
-      .then((res) => !!res)
+      .then(() => true)
       .catch((err) => {
-        error(err);
+        log(err);
         return false;
       });
   }
 
+  // Add Channel
   async addChannel(channelData: ChannelData): Promise<ChannelData> {
     const { chatId, provider } = channelData.key;
     const { userLimit } = channelData;
@@ -262,7 +262,10 @@ class Postgres extends DatabaseProvider {
 
     if (usersInChannel.includes(username)) return null;
 
-    return this.ChannelUser.create({ channel_id: channel.id, username });
+    return this.ChannelUser.create({
+      channel_id: channel.id,
+      username: username.toLowerCase(),
+    });
   }
 
   async removeUserFromChannel(
@@ -273,7 +276,14 @@ class Postgres extends DatabaseProvider {
     if (!channel) return false;
 
     return this.ChannelUser
-      .destroy({ where: { channel_id: channel.id, username } })
+      .destroy({
+        where: {
+          [Op.and]: [
+            usernameFindOptions(username).where,
+            { channel_id: channel.id },
+          ],
+        },
+      })
       .then((res) => !!res)
       .catch((err) => {
         log(err);

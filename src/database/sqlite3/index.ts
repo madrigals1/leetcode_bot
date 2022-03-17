@@ -1,4 +1,4 @@
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes, Sequelize, Op } from 'sequelize';
 
 import { log } from '../../utils/helper';
 import DatabaseProvider from '../database.proto';
@@ -6,6 +6,7 @@ import { ChannelData, ChannelKey } from '../../cache/models';
 import { User, Channel, ChannelUser } from '../models';
 import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { constants } from '../../utils/constants';
+import { usernameFindOptions } from '../utils';
 
 class SQLite extends DatabaseProvider {
   providerName = 'SQLite';
@@ -101,7 +102,7 @@ class SQLite extends DatabaseProvider {
   // Load User by `username`
   async userExists(username: string): Promise<boolean> {
     return this.User
-      .findOne({ where: { username } })
+      .findOne(usernameFindOptions(username))
       .then((res) => !!res)
       .catch((err) => {
         log(err);
@@ -118,7 +119,7 @@ class SQLite extends DatabaseProvider {
     if (userExists) return null;
 
     return this.User
-      .create({ username })
+      .create({ username: username.toLowerCase() })
       .catch((err) => {
         log(err);
         return null;
@@ -134,7 +135,7 @@ class SQLite extends DatabaseProvider {
     if (!userExists) return false;
 
     return this.User
-      .destroy({ where: { username } })
+      .destroy(usernameFindOptions(username))
       .then((res) => !!res)
       .catch((err) => {
         log(err);
@@ -258,7 +259,10 @@ class SQLite extends DatabaseProvider {
 
     if (usersInChannel.includes(username)) return null;
 
-    return this.ChannelUser.create({ channel_id: channel.id, username });
+    return this.ChannelUser.create({
+      channel_id: channel.id,
+      username: username.toLowerCase(),
+    });
   }
 
   async removeUserFromChannel(
@@ -269,7 +273,14 @@ class SQLite extends DatabaseProvider {
     if (!channel) return false;
 
     return this.ChannelUser
-      .destroy({ where: { channel_id: channel.id, username } })
+      .destroy({
+        where: {
+          [Op.and]: [
+            usernameFindOptions(username).where,
+            { channel_id: channel.id },
+          ],
+        },
+      })
       .then((res) => !!res)
       .catch((err) => {
         log(err);
