@@ -24,6 +24,10 @@ export const vizapiActions = {
   ratingGraph,
 };
 
+export const leetcodeActions = {
+  getLanguageStats,
+};
+
 export default class Actions {
   @action({ name: 'ping' })
   static ping(): string {
@@ -542,7 +546,7 @@ export default class Actions {
       if (!user) return BM.USERNAME_NOT_FOUND(username);
 
       // Get language stats from LeetCode
-      const response = await getLanguageStats(username);
+      const response = await leetcodeActions.getLanguageStats(username);
       const data = response?.matchedUser?.languageProblemCount ?? [];
 
       return BM.LANGUAGE_STATS_TEXT(username, data);
