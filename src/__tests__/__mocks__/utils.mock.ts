@@ -130,7 +130,7 @@ export function generateMockContext(): Context {
   };
 }
 
-export async function moclLanguageStats(
+export async function mockLanguageStats(
   username: string,
 ): Promise<LanguageStats> {
   return new Promise((resolve) => {
