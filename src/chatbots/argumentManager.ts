@@ -18,11 +18,7 @@ export default class ArgumentManager {
       return this.indexMap.get(kex);
     }
 
-    if (typeof kex === 'string') {
-      return this.keyMap.get(kex);
-    }
-
-    return undefined;
+    return this.keyMap.get(kex);
   }
 
   // Get and remove element by key or index
