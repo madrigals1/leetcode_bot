@@ -18,7 +18,7 @@ function addArgument(
   argumentManager.indexMap.set(argument.index, argument);
 }
 
-test('chatbots.argumentManager init', async () => {
+test('chatbots.argumentManager - initialize', async () => {
   const argumentManager = new ArgumentManager();
 
   expect(argumentManager.getAll()).toEqual([]);
@@ -26,111 +26,132 @@ test('chatbots.argumentManager init', async () => {
   expect(argumentManager.keyMap.size).toEqual(0);
 });
 
-test('chatbots.argumentManager.get', async () => {
-  const argumentManager = new ArgumentManager();
+describe('chatbots.argumentManager - get method', () => {
+  test('Correct case - 0 arguments', () => {
+    const argumentManager = new ArgumentManager();
 
-  // Should have no elements
-  expect(argumentManager.get('wrong_key')).toBe(undefined);
-  expect(argumentManager.get(3)).toBe(undefined);
+    // Should have no elements
+    expect(argumentManager.get('wrong_key')).toBe(undefined);
+    expect(argumentManager.get(3)).toBe(undefined);
+  });
 
-  // Create single argument
-  const argument = generateArgument();
-  addArgument(argumentManager, argument);
+  test('Correct case - 1 argument', () => {
+    const argumentManager = new ArgumentManager();
 
-  // Get by key and index
-  expect(argumentManager.get(argument.key)).toEqual(argument);
-  expect(argumentManager.get(argument.index)).toEqual(argument);
+    // Create single argument
+    const argument = generateArgument();
+    addArgument(argumentManager, argument);
 
-  // Create multiple arguments
-  const args = [
-    generateArgument(),
-    generateArgument(),
-    generateArgument(),
-  ];
-  args.forEach((arg: ParsedArgument) => addArgument(argumentManager, arg));
+    // Get by key and index
+    expect(argumentManager.get(argument.key)).toEqual(argument);
+    expect(argumentManager.get(argument.index)).toEqual(argument);
+  });
 
-  // Get by key and index
-  args.forEach((arg: ParsedArgument) => {
-    expect(argumentManager.get(arg.index)).toEqual(arg);
-    expect(argumentManager.get(arg.key)).toEqual(arg);
+  test('Correct case - 3 arguments', () => {
+    const argumentManager = new ArgumentManager();
+
+    // Create multiple arguments
+    const args = [
+      generateArgument(),
+      generateArgument(),
+      generateArgument(),
+    ];
+    args.forEach((arg: ParsedArgument) => addArgument(argumentManager, arg));
+
+    // Get by key and index
+    args.forEach((arg: ParsedArgument) => {
+      expect(argumentManager.get(arg.index)).toEqual(arg);
+      expect(argumentManager.get(arg.key)).toEqual(arg);
+    });
   });
 });
 
-test('chatbots.argumentManager.pop', async () => {
-  const argumentManager = new ArgumentManager();
+describe('chatbots.argumentManager - pop method', () => {
+  test('Correct case - 0 arguments', () => {
+    const argumentManager = new ArgumentManager();
 
-  // Shouldn't pop when no arguments are present
-  expect(argumentManager.pop('wrong_key')).toBe(undefined);
-  expect(argumentManager.pop(3)).toBe(undefined);
+    // Shouldn't pop when no arguments are present
+    expect(argumentManager.pop('wrong_key')).toBe(undefined);
+    expect(argumentManager.pop(3)).toBe(undefined);
+  });
 
-  // Create 3 random arguments
-  const args = [
-    generateArgument(),
-    generateArgument(),
-    generateArgument(),
-  ];
-  args.forEach((arg: ParsedArgument) => addArgument(argumentManager, arg));
+  test('Correct case - Pop arguments 1 by 1', () => {
+    const argumentManager = new ArgumentManager();
 
-  // Select random argument from 3
-  const randomArgument = args[randomNumber(args.length)];
+    // Create 3 random arguments
+    const args = [
+      generateArgument(),
+      generateArgument(),
+      generateArgument(),
+    ];
+    args.forEach((arg: ParsedArgument) => addArgument(argumentManager, arg));
 
-  // Pop first element
-  expect(argumentManager.pop(randomArgument.key)).toEqual(randomArgument);
+    // Select random argument from 3
+    const randomArgument = args[randomNumber(args.length)];
 
-  const argsLeft = args.filter((arg) => arg.key !== randomArgument.key);
+    // Pop first element
+    expect(argumentManager.pop(randomArgument.key)).toEqual(randomArgument);
 
-  // Should have 2 elements
-  expect(argumentManager.keyMap.size).toBe(2);
-  expect(argumentManager.indexMap.size).toBe(2);
+    const argsLeft = args.filter((arg) => arg.key !== randomArgument.key);
 
-  // Select random argument from 2
-  const randomArgument2 = argsLeft[randomNumber(argsLeft.length)];
+    // Should have 2 elements
+    expect(argumentManager.keyMap.size).toBe(2);
+    expect(argumentManager.indexMap.size).toBe(2);
 
-  // Pop first element
-  expect(argumentManager.pop(randomArgument2.key)).toEqual(randomArgument2);
+    // Select random argument from 2
+    const randomArgument2 = argsLeft[randomNumber(argsLeft.length)];
 
-  // Should have 1 element
-  expect(argumentManager.keyMap.size).toBe(1);
-  expect(argumentManager.indexMap.size).toBe(1);
+    // Pop first element
+    expect(argumentManager.pop(randomArgument2.key)).toEqual(randomArgument2);
+
+    // Should have 1 element
+    expect(argumentManager.keyMap.size).toBe(1);
+    expect(argumentManager.indexMap.size).toBe(1);
+  });
 });
 
-test('chatbots.argumentManager.getAll', async () => {
-  const argumentManager = new ArgumentManager();
+describe('chatbots.argumentManager - getAll method', () => {
+  test('Correct case - 0 elements', () => {
+    const argumentManager = new ArgumentManager();
 
-  // Shouldn't have any elements
-  expect(argumentManager.getAll()).toEqual([]);
+    // Shouldn't have any elements
+    expect(argumentManager.getAll()).toEqual([]);
+  });
 
-  // Create 3 random arguments
-  const args = [
-    generateArgument(),
-    generateArgument(),
-    generateArgument(),
-  ];
-  args.forEach((arg: ParsedArgument) => addArgument(argumentManager, arg));
+  test('Correct case - Multiple elements', () => {
+    const argumentManager = new ArgumentManager();
 
-  // Should have all 3 elements
-  expect(argumentManager.getAll()).toEqual(args);
+    // Create 3 random arguments
+    const args = [
+      generateArgument(),
+      generateArgument(),
+      generateArgument(),
+    ];
+    args.forEach((arg: ParsedArgument) => addArgument(argumentManager, arg));
 
-  // Select random argument from 3
-  const randomArgument = args[randomNumber(args.length)];
+    // Should have all 3 elements
+    expect(argumentManager.getAll()).toEqual(args);
 
-  // Pop random element
-  argumentManager.pop(randomArgument.key);
+    // Select random argument from 3
+    const randomArgument = args[randomNumber(args.length)];
 
-  // Should have 2 left
-  expect(argumentManager.getAll().length).toEqual(2);
+    // Pop random element
+    argumentManager.pop(randomArgument.key);
 
-  const argsLeft = args.filter((arg) => arg.key !== randomArgument.key);
+    // Should have 2 left
+    expect(argumentManager.getAll().length).toEqual(2);
 
-  // Should have correct args
-  expect(argumentManager.getAll()).toEqual(argsLeft);
+    const argsLeft = args.filter((arg) => arg.key !== randomArgument.key);
+
+    // Should have correct args
+    expect(argumentManager.getAll()).toEqual(argsLeft);
+  });
 });
 
-test('chatbots.argumentManager.clear', async () => {
+test('chatbots.argumentManager - clear method', async () => {
   const argumentManager = new ArgumentManager();
 
-  // Shouldn't have any elements
-  expect(argumentManager.getAll()).toEqual([]);
+  expect(argumentManager.getAll().length).toEqual(0);
 
   // Create 3 random arguments
   const args = [
@@ -150,35 +171,61 @@ test('chatbots.argumentManager.clear', async () => {
   expect(argumentManager.getAll().length).toEqual(0);
 });
 
-test('chatbots.argumentManager.upsert', async () => {
-  const argumentManager = new ArgumentManager();
+describe('chatbots.argumentManager - upsert method', () => {
+  test('Correct case - 1 argument', () => {
+    const argumentManager = new ArgumentManager();
 
-  // Shouldn't have any elements
-  expect(argumentManager.getAll()).toEqual([]);
+    // Shouldn't have any elements
+    expect(argumentManager.getAll().length).toEqual(0);
 
-  // Create 1 random argument
-  const randomArgument1 = generateArgument();
+    // Create 1 random argument
+    const randomArgument1 = generateArgument();
 
-  // Should have 1 element
-  expect(argumentManager.upsert(randomArgument1).length).toEqual(1);
+    // Should have 1 element after adding
+    expect(argumentManager.upsert(randomArgument1).length).toEqual(1);
+    expect(argumentManager.getAll().length).toEqual(1);
 
-  // Should have the same argument by both key and index
-  expect(argumentManager.get(randomArgument1.key)).toEqual(randomArgument1);
-  expect(argumentManager.get(randomArgument1.index)).toEqual(randomArgument1);
+    // Should have the same argument by both key and index
+    expect(argumentManager.get(randomArgument1.key)).toEqual(randomArgument1);
+    expect(argumentManager.get(randomArgument1.index)).toEqual(randomArgument1);
+  });
 
-  // Generate 3 more args
-  const args = [
-    generateArgument(),
-    generateArgument(),
-    generateArgument(),
-  ];
-  args.forEach((arg: ParsedArgument) => argumentManager.upsert(arg));
+  test('Correct case - 3 arguments', () => {
+    const argumentManager = new ArgumentManager();
 
-  expect(argumentManager.getAll().length).toEqual(4);
-  expect(argumentManager.getAll()).toEqual([randomArgument1, ...args]);
+    // Generate 3 more args
+    const args = [
+      generateArgument(),
+      generateArgument(),
+      generateArgument(),
+    ];
+    args.forEach((arg: ParsedArgument) => argumentManager.upsert(arg));
+
+    expect(argumentManager.getAll().length).toEqual(3);
+  });
+
+  test('Correct case - Update argument', () => {
+    const argumentManager = new ArgumentManager();
+
+    // Create new argument
+    const argument = new ParsedArgument(0, 'hello', 'Hello', 'world!');
+    argumentManager.upsert(argument);
+
+    // Argument should exist by both key and value
+    expect(argumentManager.get(0)).toBe(argument);
+    expect(argumentManager.get('hello')).toBe(argument);
+
+    // Update argument
+    const newArgument = new ParsedArgument(0, 'hello', 'Other', 'value');
+    argumentManager.upsert(newArgument);
+
+    // Argument should exist by both key and value
+    expect(argumentManager.get(0)).toBe(newArgument);
+    expect(argumentManager.get('hello')).toBe(newArgument);
+  });
 });
 
-test('chatbots.argumentManager.remove', async () => {
+test('chatbots.argumentManager - remove method', async () => {
   const argumentManager = new ArgumentManager();
 
   // Should not remove non-existing arguments
@@ -203,7 +250,7 @@ test('chatbots.argumentManager.remove', async () => {
   expect(argumentManager.getAll()).toEqual(argsLeft);
 });
 
-test('chatbots.argumentManager.count', async () => {
+test('chatbots.argumentManager - count method', async () => {
   const argumentManager = new ArgumentManager();
 
   // Should not remove non-existing arguments
