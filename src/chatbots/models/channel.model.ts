@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 export interface User {
   id: number;
   username: string;
@@ -7,13 +6,13 @@ export interface User {
 
 export interface Channel {
   id: number;
-  chat_id: string;
+  chatId: string;
   provider: number;
-  user_limit: number;
+  userLimit: number;
 }
 
 export interface ChannelUser {
   id: number;
-  channel_id: number;
+  channelId: number;
   username: string;
 }
