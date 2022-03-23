@@ -12,7 +12,7 @@ import { UserCache } from './userCache';
 import Cache from './index';
 
 export class ChannelCache {
-  users: User[] = [];
+  users: string[] = [];
 
   channelData: ChannelData = null;
 
@@ -33,8 +33,9 @@ export class ChannelCache {
     return Cache.database.getUsersForChannel(this.channelData.key)
       .then((usernameList) => {
         usernameList.forEach((username) => {
-          const user = UserCache.getUser(username);
-          if (user !== undefined) this.users.push(user);
+          if (UserCache.getUser(username) !== undefined) {
+            this.users.push(username);
+          }
         });
         this.sortUsers();
       })
@@ -110,7 +111,7 @@ export class ChannelCache {
         }
 
         // Add User to Cache
-        this.users.push(addOrGetUserResponse.user);
+        this.users.push(username);
 
         // Sort Users after adding new one
         this.sortUsers();
@@ -152,7 +153,10 @@ export class ChannelCache {
         }
 
         // Remove User from Cache
-        _.remove(this.users, { username: usernameLower });
+        _.remove(
+          this.users,
+          (existingUsername) => existingUsername === username,
+        );
 
         return {
           status: constants.STATUS.SUCCESS,
@@ -176,20 +180,31 @@ export class ChannelCache {
    * @returns The user object that matches the username.
    */
   loadUser(username: string): User {
-    return this.users.find((user) => user.username === username);
+    if (!this.users.includes(username)) {
+      return null;
+    }
+
+    return UserCache.getUser(username);
   }
 
   /**
    * Sort the users by the number of solved problems
    */
   sortUsers(): void {
-    this.users.sort(
+    // Get all Users from Cache
+    const users = this.users.map((username) => UserCache.getUser(username));
+
+    // Sort Users
+    const sortedUsers = users.sort(
       (user1, user2) => {
         const solved1 = user1.solved !== undefined ? user1.solved : -Infinity;
         const solved2 = user2.solved !== undefined ? user2.solved : -Infinity;
         return solved2 - solved1;
       },
     );
+
+    // Set usernames for Users
+    this.users = sortedUsers.map((user) => user.username);
   }
 
   /**
