@@ -221,21 +221,6 @@ describe('cache.channel - removeUser method', () => {
     expect(channelCache.userAmount).toBe(0);
   });
 
-  test('Correct case - Delete User with incorrect case username', async () => {
-    const channelCache = await generateChannelCache();
-    const capitalizedUsername = capitalizeFirstLetter(realUsername1);
-
-    await channelCache.addUser(realUsername1);
-
-    // Remove User to Channel
-    const result = await channelCache.removeUser(capitalizedUsername);
-
-    expect(result.status).toBe(constants.STATUS.SUCCESS);
-    expect(result.detail).toBe(BM.USERNAME_WAS_DELETED(capitalizedUsername));
-    expect(UserCache.userAmount).toBe(1);
-    expect(channelCache.userAmount).toBe(0);
-  });
-
   test('Incorrect case - Username does not exist', async () => {
     const channelCache = await generateChannelCache();
 
