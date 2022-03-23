@@ -12,7 +12,7 @@ import { UserCache } from './userCache';
 import Cache from './index';
 
 export class ChannelCache {
-  users: string[] = [];
+  usernames: string[] = [];
 
   channelData: ChannelData = null;
 
@@ -34,7 +34,7 @@ export class ChannelCache {
       .then((usernameList) => {
         usernameList.forEach((username) => {
           if (UserCache.getUser(username) !== undefined) {
-            this.users.push(username);
+            this.usernames.push(username);
           }
         });
         this.sortUsers();
@@ -47,7 +47,7 @@ export class ChannelCache {
    * @returns The number of users in the array.
    */
   get userAmount(): number {
-    return this.users.length;
+    return this.usernames.length;
   }
 
   /**
@@ -111,7 +111,7 @@ export class ChannelCache {
         }
 
         // Add User to Cache
-        this.users.push(username);
+        this.usernames.push(username);
 
         // Sort Users after adding new one
         this.sortUsers();
@@ -154,7 +154,7 @@ export class ChannelCache {
 
         // Remove User from Cache
         _.remove(
-          this.users,
+          this.usernames,
           (existingUsername) => existingUsername === username,
         );
 
@@ -180,7 +180,7 @@ export class ChannelCache {
    * @returns The user object that matches the username.
    */
   loadUser(username: string): User {
-    if (!this.users.includes(username)) {
+    if (!this.usernames.includes(username)) {
       return null;
     }
 
@@ -192,7 +192,7 @@ export class ChannelCache {
    */
   sortUsers(): void {
     // Get all Users from Cache
-    const users = this.users.map((username) => UserCache.getUser(username));
+    const users = this.usernames.map((username) => UserCache.getUser(username));
 
     // Sort Users
     const sortedUsers = users.sort(
@@ -204,7 +204,7 @@ export class ChannelCache {
     );
 
     // Set usernames for Users
-    this.users = sortedUsers.map((user) => user.username);
+    this.usernames = sortedUsers.map((user) => user.username);
   }
 
   /**
@@ -222,7 +222,7 @@ export class ChannelCache {
         }
 
         // Clear Users Cache
-        this.users.length = 0;
+        this.usernames.length = 0;
 
         return {
           status: constants.STATUS.SUCCESS,
