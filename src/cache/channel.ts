@@ -189,7 +189,7 @@ export class ChannelCache {
    */
   loadUser(username: string): User {
     if (!this.usernames.includes(username)) {
-      return null;
+      return undefined;
     }
 
     return UserCache.getUser(username);
