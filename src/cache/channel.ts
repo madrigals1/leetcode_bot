@@ -26,6 +26,14 @@ export class ChannelCache {
   }
 
   /**
+   * Return an array of users, where each user is retrieved from the cache
+   * @returns An array of User objects.
+   */
+  get users(): User[] {
+    return this.usernames.map((username) => UserCache.getUser(username));
+  }
+
+  /**
    * It gets all the users for the channel and adds them to the users array.
    * @returns A promise with void.
    */
@@ -191,11 +199,8 @@ export class ChannelCache {
    * Sort the users by the number of solved problems
    */
   sortUsers(): void {
-    // Get all Users from Cache
-    const users = this.usernames.map((username) => UserCache.getUser(username));
-
     // Sort Users
-    const sortedUsers = users.sort(
+    const sortedUsers = this.users.sort(
       (user1, user2) => {
         const solved1 = user1.solved !== undefined ? user1.solved : -Infinity;
         const solved2 = user2.solved !== undefined ? user2.solved : -Infinity;
