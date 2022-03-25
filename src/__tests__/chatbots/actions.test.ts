@@ -123,39 +123,6 @@ describe('chatbots.actions - add action', () => {
     expect(mockbot.lastMessage()).toEqual(`User List:\n${message}`);
   });
 
-  test('Incorrect case - User limit is reached', async () => {
-    // Clear channel
-    await Cache.clearChannel(mockbot.channelKey);
-
-    // Save original users from Mock LeetCode
-    const originalUsers = _.clone(users);
-
-    // Add 30 users to Mock LeetCode
-    let add30message = '/add';
-    for (let i = 0; i < 30; i++) {
-      const fakeUser = { ...users[0], username: `fake_user_${i + 1}` };
-      users.push(fakeUser);
-      add30message += ` ${fakeUser.username}`;
-    }
-
-    // Add same 30 users to Channel
-    await mockbot.send(add30message);
-
-    // Add 2 extra users after reaching User limit
-    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
-
-    // Generate 2 messages
-    const msg1 = BM.USERNAME_NOT_ADDED_USER_LIMIT(realUsername1, 30);
-    const msg2 = BM.USERNAME_NOT_ADDED_USER_LIMIT(realUsername2, 30);
-
-    // Should receive correct message
-    expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}${msg2}`);
-
-    // Bring back original Mock LeetCode
-    users.length = 0;
-    originalUsers.forEach((user) => { users.push(user); });
-  });
-
   test('Incorrect case - Incorrect arguments', async () => {
     // Send message with excess arg
     await mockbot.send('/add');
