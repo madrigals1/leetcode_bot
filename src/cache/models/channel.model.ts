@@ -8,7 +8,6 @@ export interface ChannelKey {
 export interface ChannelData {
   id?: number;
   key: ChannelKey;
-  userLimit: number;
 }
 
 export interface ChannelUser {

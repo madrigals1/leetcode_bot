@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import Cache from '../../cache';
-import { constants } from '../../utils/constants';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import {
   generateChannelKey, generateChannelCache,
@@ -66,8 +65,6 @@ test('cache.index - registerChannel method', async () => {
   // Check results
   expect(newChannel.channelData).not.toBeUndefined();
   expect(newChannel.channelData.key).toBe(channelKey);
-  expect(newChannel.channelData.userLimit)
-    .toBe(constants.SYSTEM.USER_AMOUNT_LIMIT);
   expect(Cache.channels.get(JSON.stringify(channelKey))).not.toBeUndefined();
 });
 

@@ -12,7 +12,7 @@ import { UserCache } from './userCache';
 import Cache from './index';
 
 export class ChannelCache {
-  users: User[] = [];
+  usernames: string[] = [];
 
   channelData: ChannelData = null;
 
@@ -26,6 +26,14 @@ export class ChannelCache {
   }
 
   /**
+   * Return an array of users, where each user is retrieved from the cache
+   * @returns An array of User objects.
+   */
+  get users(): User[] {
+    return this.usernames.map((username) => UserCache.getUser(username));
+  }
+
+  /**
    * It gets all the users for the channel and adds them to the users array.
    * @returns A promise with void.
    */
@@ -33,8 +41,9 @@ export class ChannelCache {
     return Cache.database.getUsersForChannel(this.channelData.key)
       .then((usernameList) => {
         usernameList.forEach((username) => {
-          const user = UserCache.getUser(username);
-          if (user !== undefined) this.users.push(user);
+          if (UserCache.getUser(username) !== undefined) {
+            this.usernames.push(username);
+          }
         });
         this.sortUsers();
       })
@@ -46,7 +55,7 @@ export class ChannelCache {
    * @returns The number of users in the array.
    */
   get userAmount(): number {
-    return this.users.length;
+    return this.usernames.length;
   }
 
   /**
@@ -100,17 +109,8 @@ export class ChannelCache {
           };
         }
 
-        // Block case, where we already have too many users
-        const { userLimit } = this.channelData;
-        if (this.userAmount >= userLimit) {
-          return {
-            status: constants.STATUS.ERROR,
-            detail: BM.USERNAME_NOT_ADDED_USER_LIMIT(username, userLimit),
-          };
-        }
-
         // Add User to Cache
-        this.users.push(addOrGetUserResponse.user);
+        this.usernames.push(username);
 
         // Sort Users after adding new one
         this.sortUsers();
@@ -152,7 +152,10 @@ export class ChannelCache {
         }
 
         // Remove User from Cache
-        _.remove(this.users, { username: usernameLower });
+        _.remove(
+          this.usernames,
+          (existingUsername) => existingUsername === username,
+        );
 
         return {
           status: constants.STATUS.SUCCESS,
@@ -176,20 +179,28 @@ export class ChannelCache {
    * @returns The user object that matches the username.
    */
   loadUser(username: string): User {
-    return this.users.find((user) => user.username === username);
+    if (!this.usernames.includes(username)) {
+      return undefined;
+    }
+
+    return UserCache.getUser(username);
   }
 
   /**
    * Sort the users by the number of solved problems
    */
   sortUsers(): void {
-    this.users.sort(
+    // Sort Users
+    const sortedUsers = this.users.sort(
       (user1, user2) => {
         const solved1 = user1.solved !== undefined ? user1.solved : -Infinity;
         const solved2 = user2.solved !== undefined ? user2.solved : -Infinity;
         return solved2 - solved1;
       },
     );
+
+    // Set usernames for Users
+    this.usernames = sortedUsers.map((user) => user.username);
   }
 
   /**
@@ -207,7 +218,7 @@ export class ChannelCache {
         }
 
         // Clear Users Cache
-        this.users.length = 0;
+        this.usernames.length = 0;
 
         return {
           status: constants.STATUS.SUCCESS,
