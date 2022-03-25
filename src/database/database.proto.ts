@@ -55,6 +55,15 @@ class DatabaseProvider {
   }
 
   /**
+   * It updates the user with the given username with the given user.
+   * @param {string} username - The username of the user to update.
+   * @param {LeetCodeUser} user - The user object that you want to update.
+   */
+  async updateUser(username: string, user: LeetCodeUser): Promise<boolean> {
+    throw new Error('Not Implemented');
+  }
+
+  /**
    * Remove all users from the database.
    */
   async removeAllUsers(): Promise<boolean> {

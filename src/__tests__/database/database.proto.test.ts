@@ -31,6 +31,9 @@ test('database.proto class', async () => {
   await expect(database.removeUser(fakeUsername))
     .rejects
     .toThrowError(new Error(errorMessage));
+  await expect(database.updateUser(fakeUsername, fakeUser))
+    .rejects
+    .toThrowError(new Error(errorMessage));
   await expect(database.removeAllUsers())
     .rejects
     .toThrowError(new Error(errorMessage));
