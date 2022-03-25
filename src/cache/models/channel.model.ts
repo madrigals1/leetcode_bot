@@ -9,8 +9,3 @@ export interface ChannelData {
   id?: number;
   key: ChannelKey;
 }
-
-export interface ChannelUser {
-  channelId: number;
-  username: string;
-}
