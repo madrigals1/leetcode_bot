@@ -52,8 +52,8 @@ class Cache {
    * database.
    */
   async preload(): Promise<void> {
-    // Refresh Users from Database
-    await UserCache.refresh();
+    // Preload Users from Database
+    await UserCache.preload();
 
     // Get all Channel IDs from Database
     const channelList = await this.database.getAllChannels();
