@@ -17,7 +17,6 @@ export async function generateChannelCache(): Promise<ChannelCache> {
   const channelData: ChannelData = {
     id: Math.floor(Math.random() * 10000),
     key: generateChannelKey(),
-    userLimit: Math.floor(Math.random() * 10000),
   };
 
   // Create Channel in Database

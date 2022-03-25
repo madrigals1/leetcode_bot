@@ -68,7 +68,6 @@ const {
 
   // System settings
   LEETCODE_URL,
-  USER_AMOUNT_LIMIT,
   USER_REQUEST_DELAY_MS,
   USERS_REFRESH_DELAY,
 } = process.env;
@@ -198,7 +197,6 @@ const CML = {
 
 const SYSTEM = {
   LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',
-  USER_AMOUNT_LIMIT: Number(USER_AMOUNT_LIMIT) || 30,
   USER_REQUEST_DELAY_MS: USER_REQUEST_DELAY_MS
     ? Number(USER_REQUEST_DELAY_MS)
     : 4000,

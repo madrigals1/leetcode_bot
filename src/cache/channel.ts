@@ -109,15 +109,6 @@ export class ChannelCache {
           };
         }
 
-        // Block case, where we already have too many users
-        const { userLimit } = this.channelData;
-        if (this.userAmount >= userLimit) {
-          return {
-            status: constants.STATUS.ERROR,
-            detail: BM.USERNAME_NOT_ADDED_USER_LIMIT(username, userLimit),
-          };
-        }
-
         // Add User to Cache
         this.usernames.push(username);
 

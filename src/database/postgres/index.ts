@@ -160,14 +160,13 @@ class Postgres extends DatabaseProvider {
   // Add Channel
   async addChannel(channelData: ChannelData): Promise<ChannelData> {
     const { chatId, provider } = channelData.key;
-    const { userLimit } = channelData;
 
     // Create Channel
     return this.Channel
       .create({
         chat_id: chatId,
         provider,
-        user_limit: userLimit,
+        user_limit: 1000,
       })
       .then((res) => {
         if (!res) return null;

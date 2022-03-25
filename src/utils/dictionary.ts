@@ -146,9 +146,6 @@ export const BOT_MESSAGES = {
   USERNAME_WAS_DELETED(username: string): string {
     return `${constants.EMOJI.SUCCESS} User <b>${username}</b> was deleted`;
   },
-  USERNAME_NOT_ADDED_USER_LIMIT(username: string, userLimit: number): string {
-    return `${constants.EMOJI.ERROR} <b>${username}</b> was not added because of User Limit: <b>${userLimit}</b>\n`;
-  },
   USERNAME_ADDING_ERROR(username: string): string {
     return `${constants.EMOJI.ERROR} <b>${username}</b> was not added due to internal error`;
   },
