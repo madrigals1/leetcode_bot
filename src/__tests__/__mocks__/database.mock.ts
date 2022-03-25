@@ -96,6 +96,11 @@ class MockDatabaseProvider extends DatabaseProvider {
     return foundUserInCache;
   }
 
+  // Add User to Database
+  async updateUser(username: string): Promise<boolean> {
+    return true;
+  }
+
   // Remove User from Database
   async removeUser(username: string): Promise<boolean> {
     if (!mockDatabaseData.users.includes(username)) {

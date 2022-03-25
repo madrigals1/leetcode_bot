@@ -8,7 +8,7 @@ import {
   ChannelKey, User, Channel, ChannelUser,
 } from '../../cache/models';
 import { constants } from '../../utils/constants';
-import { usernameFindOptions } from '../utils';
+import { usernameFindOptions, usernameUpdateOptions } from '../utils';
 import { User as LeetCodeUser } from '../../leetcode/models';
 
 class SQLite extends DatabaseProvider {
@@ -140,6 +140,23 @@ class SQLite extends DatabaseProvider {
       .catch((err) => {
         log(err);
         return null;
+      });
+  }
+
+  // Update User in Database
+  async updateUser(username: string, user: LeetCodeUser): Promise<boolean> {
+    // Check if user exists is in database
+    const userExists = await this.userExists(username);
+
+    // If user does not exist, return false
+    if (!userExists) return false;
+
+    return this.User
+      .update({ data: JSON.stringify(user) }, usernameUpdateOptions(username))
+      .then((res) => !!res)
+      .catch((err) => {
+        log(err);
+        return false;
       });
   }
 
