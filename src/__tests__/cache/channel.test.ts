@@ -3,7 +3,6 @@ import Cache from '../../cache';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import { UserCache } from '../../cache/userCache';
 import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
-import { capitalizeFirstLetter } from '../../utils/helper';
 import { user2, user1 } from '../__mocks__/data.mock';
 import { constants } from '../../utils/constants';
 import { BOT_MESSAGES as BM } from '../../utils/dictionary';
@@ -77,42 +76,6 @@ describe('cache.channel - preload method', () => {
   });
 });
 
-describe('cache.channel - userAmount property', () => {
-  beforeEach(_startup);
-
-  test('Correct case - 2 users', async () => {
-    const channelCache = await generateChannelCache();
-    const { channelData } = channelCache;
-
-    // Should have 0 users by default
-    expect(channelCache.userAmount).toBe(0);
-
-    // Add 2 Users to UserCache
-    await UserCache.addUser(realUsername1);
-    await UserCache.addUser(realUsername2);
-
-    // Add 2 Users to Channel
-    await Cache.database.addUserToChannel(channelData.key, realUsername1);
-    await Cache.database.addUserToChannel(channelData.key, realUsername2);
-    await channelCache.preload();
-
-    expect(channelCache.userAmount).toBe(2);
-  });
-
-  test('Correct case - 0 users', async () => {
-    const channelCache = await generateChannelCache();
-
-    // Should have 0 users by default
-    expect(channelCache.userAmount).toBe(0);
-
-    // Preload to check, if any users where added
-    await channelCache.preload();
-
-    // Should have 0 users after preload
-    expect(channelCache.userAmount).toBe(0);
-  });
-});
-
 describe('cache.channel - addUser method', () => {
   beforeEach(_startup);
 
@@ -158,21 +121,6 @@ describe('cache.channel - addUser method', () => {
     const result2 = await channelCache.addUser(realUsername1);
     expect(result2.status).toBe(constants.STATUS.ERROR);
     expect(result2.detail).toBe(BM.USERNAME_ALREADY_EXISTS(realUsername1));
-    expect(channelCache.userAmount).toBe(1);
-  });
-
-  test('Incorrect case - User limit is reached', async () => {
-    const channelCache = await generateChannelCache();
-    channelCache.channelData.userLimit = 1;
-
-    // Add 1 User
-    await channelCache.addUser(realUsername1);
-
-    // Add 2nd User
-    const result = await channelCache.addUser(realUsername2);
-    expect(result.status).toBe(constants.STATUS.ERROR);
-    expect(result.detail)
-      .toBe(BM.USERNAME_NOT_ADDED_USER_LIMIT(realUsername2, 1));
     expect(channelCache.userAmount).toBe(1);
   });
 
