@@ -31,6 +31,14 @@ export class UserCache {
   static lastRefreshedAt: dayjs.Dayjs = null;
 
   /**
+   * Get the number of users in the database.
+   * @returns The number of users in the database.
+   */
+  static get userAmount(): number {
+    return this.getAllUsers().length;
+  }
+
+  /**
    * If the user exists in the database, return an error.
    * Otherwise, get the user from LeetCode and add it to the database.
    * @param {string} username - string

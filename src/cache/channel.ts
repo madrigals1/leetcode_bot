@@ -51,6 +51,14 @@ export class ChannelCache {
   }
 
   /**
+   * Get the number of users in the system.
+   * @returns The number of users in the array.
+   */
+  get userAmount(): number {
+    return this.usernames.length;
+  }
+
+  /**
    * If the user is already in the cache, return it. If not, add it to the
    * cache and return it
    * @param {string} username - The username of the user to get or add.
