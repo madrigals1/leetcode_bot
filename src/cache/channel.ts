@@ -51,14 +51,6 @@ export class ChannelCache {
   }
 
   /**
-   * Get the number of users in the system.
-   * @returns The number of users in the array.
-   */
-  get userAmount(): number {
-    return this.usernames.length;
-  }
-
-  /**
    * If the user is already in the cache, return it. If not, add it to the
    * cache and return it
    * @param {string} username - The username of the user to get or add.
@@ -106,15 +98,6 @@ export class ChannelCache {
           return {
             status: constants.STATUS.ERROR,
             detail: BM.USERNAME_ALREADY_EXISTS(username),
-          };
-        }
-
-        // Block case, where we already have too many users
-        const { userLimit } = this.channelData;
-        if (this.userAmount >= userLimit) {
-          return {
-            status: constants.STATUS.ERROR,
-            detail: BM.USERNAME_NOT_ADDED_USER_LIMIT(username, userLimit),
           };
         }
 
