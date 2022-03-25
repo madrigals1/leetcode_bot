@@ -1,15 +1,23 @@
 /* eslint-disable camelcase */
 import { Model, InferAttributes, InferCreationAttributes } from 'sequelize';
 
-export class User
-  extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+export class DatabaseUser
+  extends Model<
+    InferAttributes<DatabaseUser>,
+    InferCreationAttributes<DatabaseUser>
+  > {
   declare id: number;
 
   declare username: string;
+
+  declare data: string;
 }
 
-export class Channel
-  extends Model<InferAttributes<Channel>, InferCreationAttributes<Channel>> {
+export class DatabaseChannel
+  extends Model<
+    InferAttributes<DatabaseChannel>,
+    InferCreationAttributes<DatabaseChannel>
+  > {
   declare id: number;
 
   declare chat_id: string;
@@ -19,10 +27,10 @@ export class Channel
   declare user_limit: number;
 }
 
-export class ChannelUser
+export class DatabaseChannelUser
   extends Model<
-    InferAttributes<ChannelUser>,
-    InferCreationAttributes<ChannelUser>
+    InferAttributes<DatabaseChannelUser>,
+    InferCreationAttributes<DatabaseChannelUser>
   > {
   declare id: number;
 

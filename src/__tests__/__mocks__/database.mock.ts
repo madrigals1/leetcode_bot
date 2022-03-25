@@ -3,18 +3,52 @@
 /* eslint-disable no-unused-vars */
 import * as _ from 'lodash';
 
-import { User } from '../../leetcode/models';
+import {
+  User, Channel, ChannelUser, ChannelKey,
+} from '../../cache/models';
 import DatabaseProvider from '../../database/database.proto';
-import { ChannelData, ChannelKey, ChannelUser } from '../../cache/models';
 
-import { mockDatabaseData } from './data.mock';
+import { mockDatabaseData, users as leetcodeUsers } from './data.mock';
 
 class MockDatabaseProvider extends DatabaseProvider {
   channelId = 1;
 
+  channelUserIds: Map<number, number> = new Map<number, number>();
+
+  userIndexer = 1;
+
+  userIds: Map<string, number> = new Map<string, number>();
+
   // Connect to Database
   async connect(): Promise<boolean> {
     return new Promise((resolve) => resolve(true));
+  }
+
+  private getIdForChannel(): number {
+    const currentChannelId = this.channelId;
+    this.channelId += 1;
+    return currentChannelId;
+  }
+
+  private getIdForChannelUser(channelId: number) {
+    const existingChannelUserId = this.channelUserIds.get(channelId);
+
+    if (!existingChannelUserId) {
+      this.channelUserIds.set(channelId, 1);
+    } else {
+      this.channelUserIds.set(channelId, existingChannelUserId + 1);
+    }
+
+    return this.channelUserIds.get(channelId);
+  }
+
+  private getIdForUser(username: string) {
+    if (!this.userIds.get(username)) {
+      this.userIds.set(username, this.userIndexer);
+      this.userIndexer += 1;
+    }
+
+    return this.userIds.get(username);
   }
 
   createTables(): boolean {
@@ -23,9 +57,21 @@ class MockDatabaseProvider extends DatabaseProvider {
 
   // Find all Users
   async findAllUsers(): Promise<User[]> {
-    return mockDatabaseData.users.map((username) => (
-      { ...mockDatabaseData.mockUser1(), username }
-    ));
+    return mockDatabaseData.users
+      .map((username) => {
+        const foundUser = leetcodeUsers
+          .find((user) => user.username === username);
+
+        if (foundUser) {
+          return {
+            id: this.getIdForUser(username),
+            username: foundUser.username,
+            data: JSON.stringify(foundUser),
+          };
+        }
+
+        return null;
+      });
   }
 
   // Load User by `username`
@@ -34,12 +80,20 @@ class MockDatabaseProvider extends DatabaseProvider {
   }
 
   // Add User to Database
-  async addUser(username: string): Promise<boolean> {
+  async addUser(username: string): Promise<User> {
+    const foundUserInCache = leetcodeUsers
+      .map((user, index) => ({
+        id: index,
+        username: user.username,
+        data: JSON.stringify(user),
+      }))
+      .find((user) => user.username === username);
+
     if (mockDatabaseData.users.includes(username)) {
-      return false;
+      return foundUserInCache;
     }
     mockDatabaseData.users.push(username);
-    return true;
+    return foundUserInCache;
   }
 
   // Remove User from Database
@@ -59,17 +113,21 @@ class MockDatabaseProvider extends DatabaseProvider {
     return true;
   }
 
-  async addChannel(channelData: ChannelData): Promise<ChannelData> {
-    mockDatabaseData.channels.push({ ...channelData, id: this.channelId });
-    this.channelId += 1;
-    return channelData;
+  async addChannel(channel: Channel): Promise<Channel> {
+    const newChannel = {
+      id: this.getIdForChannel(),
+      key: channel.key,
+      userLimit: 1000,
+    };
+    mockDatabaseData.channels.push(newChannel);
+    return newChannel;
   }
 
-  async getAllChannels(): Promise<ChannelData[]> {
+  async getAllChannels(): Promise<Channel[]> {
     return mockDatabaseData.channels;
   }
 
-  async getChannel(channelKey: ChannelKey): Promise<ChannelData> {
+  async getChannel(channelKey: ChannelKey): Promise<Channel> {
     return mockDatabaseData.channels
       .find((channel) => channel.key === channelKey);
   }
@@ -103,20 +161,24 @@ class MockDatabaseProvider extends DatabaseProvider {
 
   async addUserToChannel(
     channelKey: ChannelKey, username: string,
-  ): Promise<boolean> {
+  ): Promise<ChannelUser> {
     // Add User
     await this.addUser(username);
 
     const channel = await this.getChannel(channelKey);
-    const channelUser = { channelId: channel.id, username };
+    const channelUser = {
+      id: this.getIdForChannelUser(channel.id),
+      channelId: channel.id,
+      username,
+    };
 
     // If User already exists, return false
     if (this.existsChannelUser(channelUser)) {
-      return false;
+      return null;
     }
 
-    mockDatabaseData.channelUsers.push({ channelId: channel.id, username });
-    return true;
+    mockDatabaseData.channelUsers.push(channelUser);
+    return channelUser;
   }
 
   async removeUserFromChannel(

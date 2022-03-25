@@ -24,7 +24,7 @@ async function _startup() {
 test('cache.channel - constructor method', async () => {
   const channelCache = await generateChannelCache();
   const createdChannel = await Cache.database
-    .getChannel(channelCache.channelData.key);
+    .getChannel(channelCache.channel.key);
   expect(createdChannel).toBeTruthy();
 });
 
@@ -33,15 +33,15 @@ describe('cache.channel - preload method', () => {
 
   test('Correct case - 2 users', async () => {
     const channelCache = await generateChannelCache();
-    const { channelData } = channelCache;
+    const { channel } = channelCache;
 
     // Add 2 Users to UserCache
     await UserCache.addUser(realUsername1);
     await UserCache.addUser(realUsername2);
 
     // Add Users to Channel
-    await Cache.database.addUserToChannel(channelData.key, realUsername1);
-    await Cache.database.addUserToChannel(channelData.key, realUsername2);
+    await Cache.database.addUserToChannel(channel.key, realUsername1);
+    await Cache.database.addUserToChannel(channel.key, realUsername2);
 
     await channelCache.preload();
 

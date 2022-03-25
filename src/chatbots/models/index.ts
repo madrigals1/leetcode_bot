@@ -2,7 +2,6 @@ import {
   SlackMessage, SlackBlock, SlackAccessory, SlackAttachment, SlackField,
 } from '../slack/slack.model';
 
-import { Channel, ChannelUser, User } from './channel.model';
 import { Context, Options, ComplexInteraction } from './context.model';
 import {
   Button, ButtonOptions, ButtonContainer, ButtonContainerType,
@@ -26,7 +25,4 @@ export {
   SlackField,
   RegisteredAction,
   ComplexInteraction,
-  Channel,
-  ChannelUser,
-  User,
 };

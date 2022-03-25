@@ -1,6 +1,13 @@
 import { CacheResponse, UserCacheResponse } from './response.model';
-import { ChannelData, ChannelKey } from './channel.model';
+import {
+  Channel, ChannelKey, User, ChannelUser,
+} from './channel.model';
 
 export {
-  CacheResponse, UserCacheResponse, ChannelData, ChannelKey,
+  CacheResponse,
+  UserCacheResponse,
+  Channel,
+  ChannelKey,
+  User,
+  ChannelUser,
 };

@@ -5,7 +5,20 @@ export interface ChannelKey {
   provider: ChatbotProvider;
 }
 
-export interface ChannelData {
+export interface Channel {
   id?: number;
   key: ChannelKey;
+  userLimit?: number;
+}
+
+export interface User {
+  id?: number;
+  username: string;
+  data?: string;
+}
+
+export interface ChannelUser {
+  id?: number;
+  channelId: number;
+  username: string;
 }

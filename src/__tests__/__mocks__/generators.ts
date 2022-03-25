@@ -1,5 +1,5 @@
 import { ChannelCache } from '../../cache/channel';
-import { ChannelData, ChannelKey } from '../../cache/models';
+import { Channel, ChannelKey } from '../../cache/models';
 import { ChatbotProvider } from '../../chatbots';
 import Cache from '../../cache';
 
@@ -14,13 +14,13 @@ export function generateChannelKey(): ChannelKey {
 
 export async function generateChannelCache(): Promise<ChannelCache> {
   // Generate values
-  const channelData: ChannelData = {
+  const channel: Channel = {
     id: Math.floor(Math.random() * 10000),
     key: generateChannelKey(),
   };
 
   // Create Channel in Database
-  await Cache.database.addChannel(channelData);
+  await Cache.database.addChannel(channel);
 
-  return new ChannelCache(channelData);
+  return new ChannelCache(channel);
 }

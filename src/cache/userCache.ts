@@ -69,7 +69,7 @@ export class UserCache {
         }
 
         // Add username to Database
-        Cache.database.addUser(username);
+        Cache.database.addUser(username, user);
 
         // Add User to Cache
         this.users.set(username.toLowerCase(), user);
