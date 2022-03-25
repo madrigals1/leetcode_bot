@@ -26,13 +26,11 @@ class Cache {
    * @returns A ChannelCache object.
    */
   public async registerChannel(channelKey: ChannelKey): Promise<ChannelCache> {
-    // Create Channel Data in Database
-    const channelData = await this.database.addChannel({
-      key: channelKey,
-    });
+    // Create Channel in Database
+    const channel = await this.database.addChannel({ key: channelKey });
 
     // Create Channel Cache from Channel Data
-    const channelCache = new ChannelCache(channelData);
+    const channelCache = new ChannelCache(channel);
 
     // Add Channel Cache to map
     this.setChannel(channelCache);
@@ -45,8 +43,8 @@ class Cache {
    * @param {ChannelCache} channelCache - ChannelCache
    */
   public setChannel(channelCache: ChannelCache): void {
-    const { channelData } = channelCache;
-    this.channels.set(JSON.stringify(channelData.key), channelCache);
+    const { channel } = channelCache;
+    this.channels.set(JSON.stringify(channel.key), channelCache);
   }
 
   /**
@@ -54,14 +52,14 @@ class Cache {
    * database.
    */
   async preload(): Promise<void> {
-    // Refresh Users from Database
-    await UserCache.refresh();
+    // Preload Users from Database
+    await UserCache.preload();
 
     // Get all Channel IDs from Database
-    const channelDataList = await this.database.getAllChannels();
+    const channelList = await this.database.getAllChannels();
 
-    await Promise.all(channelDataList.map((channelData) => {
-      const channelCache = new ChannelCache(channelData);
+    await Promise.all(channelList.map((channel) => {
+      const channelCache = new ChannelCache(channel);
       this.setChannel(channelCache);
       return channelCache.preload();
     }));

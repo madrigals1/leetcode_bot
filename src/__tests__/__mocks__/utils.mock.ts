@@ -2,14 +2,14 @@ import * as _ from 'lodash';
 
 import { ButtonOptions, Context } from '../../chatbots/models';
 import { VizapiResponse } from '../../vizapi/models';
-import { User } from '../../leetcode/models';
+import { LanguageStats, User } from '../../leetcode/models';
 import {
   SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
 } from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
 import { ChatbotProvider } from '../../chatbots';
 
-import { users, user1 } from './data.mock';
+import { users, user1, user2 } from './data.mock';
 
 export async function mockGetLeetcodeDataFromUsername(
   username: string,
@@ -128,4 +128,48 @@ export function generateMockContext(): Context {
     provider: ChatbotProvider.Mockbot,
     prefix: '/',
   };
+}
+
+export async function mockLanguageStats(
+  username: string,
+): Promise<LanguageStats> {
+  return new Promise((resolve) => {
+    if (username === user1.username) {
+      resolve({
+        matchedUser: {
+          languageProblemCount: [
+            {
+              languageName: 'C++',
+              problemsSolved: 421,
+            },
+            {
+              languageName: 'Python',
+              problemsSolved: 200,
+            },
+            {
+              languageName: 'JavaScript',
+              problemsSolved: 127,
+            },
+          ],
+        },
+      });
+    }
+
+    if (username === user2.username) {
+      resolve({
+        matchedUser: {
+          languageProblemCount: [
+            {
+              languageName: 'TypeScript',
+              problemsSolved: 10,
+            },
+            {
+              languageName: 'C#',
+              problemsSolved: 5,
+            },
+          ],
+        },
+      });
+    }
+  });
 }

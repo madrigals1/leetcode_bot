@@ -63,16 +63,16 @@ test('cache.index - registerChannel method', async () => {
   const newChannel = await Cache.registerChannel(channelKey);
 
   // Check results
-  expect(newChannel.channelData).not.toBeUndefined();
-  expect(newChannel.channelData.key).toBe(channelKey);
+  expect(newChannel.channel).not.toBeUndefined();
+  expect(newChannel.channel.key).toBe(channelKey);
   expect(Cache.channels.get(JSON.stringify(channelKey))).not.toBeUndefined();
 });
 
 describe('cache.index - setChannel method', () => {
   test('Correct case - Should be able set new Channel', async () => {
     const channelCache = await generateChannelCache();
-    const { channelData } = channelCache;
-    const keyAsString = JSON.stringify(channelData.key);
+    const { channel } = channelCache;
+    const keyAsString = JSON.stringify(channel.key);
 
     // Set channel
     Cache.setChannel(channelCache);
@@ -91,16 +91,16 @@ describe('cache.index - preload method', () => {
     const channel2 = await Cache.registerChannel(generateChannelKey());
 
     // Remove channels only from Cache
-    Cache.channels.delete(JSON.stringify(channel1.channelData.key));
-    Cache.channels.delete(JSON.stringify(channel2.channelData.key));
+    Cache.channels.delete(JSON.stringify(channel1.channel.key));
+    Cache.channels.delete(JSON.stringify(channel2.channel.key));
 
     // Preload
     await Cache.preload();
 
     // Both channels should exist in Cache
-    expect(Cache.channels.get(JSON.stringify(channel1.channelData.key)))
+    expect(Cache.channels.get(JSON.stringify(channel1.channel.key)))
       .not.toBeUndefined();
-    expect(Cache.channels.get(JSON.stringify(channel2.channelData.key)))
+    expect(Cache.channels.get(JSON.stringify(channel2.channel.key)))
       .not.toBeUndefined();
   });
 
@@ -118,7 +118,7 @@ describe('cache.index - getChannel method', () => {
 
   test('Correct case - Should be able to get existing channel', async () => {
     const channel = await Cache.registerChannel(generateChannelKey());
-    expect(Cache.getChannel(channel.channelData.key)).not.toBeUndefined();
+    expect(Cache.getChannel(channel.channel.key)).not.toBeUndefined();
   });
 
   test('Incorrect case - Should not fetch non-existent channel', async () => {
@@ -138,7 +138,7 @@ describe('cache.index - clearChannel method', () => {
     expect(channel.userAmount).toBe(2);
 
     // Clear channel
-    await Cache.clearChannel(channel.channelData.key);
+    await Cache.clearChannel(channel.channel.key);
 
     expect(channel.userAmount).toBe(0);
   });

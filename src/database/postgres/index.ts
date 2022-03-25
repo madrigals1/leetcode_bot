@@ -3,10 +3,13 @@ import { DataTypes, Sequelize, Op } from 'sequelize';
 import { log } from '../../utils/helper';
 import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import DatabaseProvider from '../database.proto';
-import { User, ChannelUser, Channel } from '../models';
-import { ChannelData, ChannelKey } from '../../cache/models';
+import { DatabaseUser, DatabaseChannelUser, DatabaseChannel } from '../models';
+import {
+  Channel, ChannelKey, User, ChannelUser,
+} from '../../cache/models';
 import { constants } from '../../utils/constants';
-import { usernameFindOptions } from '../utils';
+import { usernameFindOptions, usernameUpdateOptions } from '../utils';
+import { User as LeetCodeUser } from '../../leetcode/models';
 
 const { POSTGRES } = constants.DATABASE;
 const {
@@ -18,11 +21,11 @@ class Postgres extends DatabaseProvider {
 
   sequelize: Sequelize;
 
-  User: typeof User = User;
+  User: typeof DatabaseUser = DatabaseUser;
 
-  Channel: typeof Channel = Channel;
+  Channel: typeof DatabaseChannel = DatabaseChannel;
 
-  ChannelUser: typeof ChannelUser = ChannelUser;
+  ChannelUser: typeof DatabaseChannelUser = DatabaseChannelUser;
 
   initialize(): void {
     const uri = `postgres://${USER}:${PASSWORD}@${URL}:${PORT}/${NAME}`;
@@ -37,6 +40,10 @@ class Postgres extends DatabaseProvider {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      data: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
     }, { sequelize: this.sequelize, modelName: 'users' });
 
@@ -96,6 +103,11 @@ class Postgres extends DatabaseProvider {
   async findAllUsers(): Promise<User[]> {
     return this.User
       .findAll()
+      .then((users: DatabaseUser[]) => users.map((user) => ({
+        id: user.id,
+        username: user.username,
+        data: user.data,
+      })))
       .catch((err) => {
         log(err);
         return [];
@@ -114,7 +126,7 @@ class Postgres extends DatabaseProvider {
   }
 
   // Add User to Database
-  async addUser(username: string): Promise<User> {
+  async addUser(username: string, user: LeetCodeUser): Promise<User> {
     // Check if user already exists is in database
     const userExists = await this.userExists(username);
 
@@ -122,10 +134,32 @@ class Postgres extends DatabaseProvider {
     if (userExists) return null;
 
     return this.User
-      .create({ username: username.toLowerCase() })
+      .create({ username: username.toLowerCase(), data: JSON.stringify(user) })
+      .then((foundUser: DatabaseUser) => ({
+        id: foundUser.id,
+        username: foundUser.username,
+        data: foundUser.data,
+      }))
       .catch((err) => {
         log(err);
         return null;
+      });
+  }
+
+  // Update User in Database
+  async updateUser(username: string, user: LeetCodeUser): Promise<boolean> {
+    // Check if user exists is in database
+    const userExists = await this.userExists(username);
+
+    // If user does not exist, return false
+    if (!userExists) return false;
+
+    return this.User
+      .update({ data: JSON.stringify(user) }, usernameUpdateOptions(username))
+      .then((res) => !!res)
+      .catch((err) => {
+        log(err);
+        return false;
       });
   }
 
@@ -158,8 +192,8 @@ class Postgres extends DatabaseProvider {
   }
 
   // Add Channel
-  async addChannel(channelData: ChannelData): Promise<ChannelData> {
-    const { chatId, provider } = channelData.key;
+  async addChannel(channel: Channel): Promise<Channel> {
+    const { chatId, provider } = channel.key;
 
     // Create Channel
     return this.Channel
@@ -170,7 +204,7 @@ class Postgres extends DatabaseProvider {
       })
       .then((res) => {
         if (!res) return null;
-        return { ...channelData, id: res.id };
+        return { ...channel, id: res.id };
       })
       .catch((err) => {
         log(err);
@@ -178,34 +212,36 @@ class Postgres extends DatabaseProvider {
       });
   }
 
-  async getAllChannels(): Promise<ChannelData[]> {
+  async getAllChannels(): Promise<Channel[]> {
     return this.Channel
       .findAll()
-      .then((res) => res.map((channel) => ({
-        id: channel.id,
-        key: {
-          chatId: channel.chat_id,
-          provider: channel.provider,
-        },
-        userLimit: channel.user_limit,
-      })))
+      .then((channels: DatabaseChannel[]) => channels
+        .map((channel: DatabaseChannel) => ({
+          id: channel.id,
+          key: {
+            chatId: channel.chat_id,
+            provider: channel.provider,
+          },
+          userLimit: channel.user_limit,
+        })))
       .catch((err) => {
         log(err);
         return [];
       });
   }
 
-  async getChannel(channelKey: ChannelKey): Promise<ChannelData> {
+  async getChannel(channelKey: ChannelKey): Promise<Channel> {
     const { chatId, provider } = channelKey;
 
     return this.Channel
       .findOne({ where: { chat_id: chatId, provider } })
-      .then((res) => {
-        if (!res) return null;
+      .then((channel: DatabaseChannel) => {
+        if (!channel) return null;
         return {
-          id: res.id,
-          key: channelKey,
-          userLimit: res.user_limit,
+          id: channel.id,
+          chat_id: channel.chat_id,
+          provider: channel.provider,
+          userLimit: channel.user_limit,
         };
       })
       .catch((err) => {
@@ -252,7 +288,7 @@ class Postgres extends DatabaseProvider {
 
   async addUserToChannel(
     channelKey: ChannelKey, username: string,
-  ): Promise<User> {
+  ): Promise<ChannelUser> {
     const channel = await this.getChannel(channelKey);
 
     if (!channel) throw new Error(SM.CHANNEL_DOES_NOT_EXIST(channelKey));
@@ -261,10 +297,20 @@ class Postgres extends DatabaseProvider {
 
     if (usersInChannel.includes(username)) return null;
 
-    return this.ChannelUser.create({
-      channel_id: channel.id,
-      username: username.toLowerCase(),
-    });
+    return this.ChannelUser
+      .create({
+        channel_id: channel.id,
+        username: username.toLowerCase(),
+      })
+      .then((res) => ({
+        id: res.id,
+        channelId: res.channel_id,
+        username: res.username,
+      }))
+      .catch((err) => {
+        log(err);
+        return null;
+      });
   }
 
   async removeUserFromChannel(

@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable class-methods-use-this */
-import { ChannelData, ChannelKey } from '../cache/models';
+import {
+  User, ChannelUser, Channel, ChannelKey,
+} from '../cache/models';
+import { User as LeetCodeUser } from '../leetcode/models';
 
 /**
  * The DatabaseProvider class is a class that provides an interface to the
@@ -15,14 +18,14 @@ class DatabaseProvider {
    * Connect to the database and return a promise that resolves to the
    * connection object.
    */
-  async connect(): Promise<any> {
+  async connect(): Promise<boolean> {
     throw new Error('Not Implemented');
   }
 
   /**
    * Find all users.
    */
-  async findAllUsers(): Promise<any> {
+  async findAllUsers(): Promise<User[]> {
     throw new Error('Not Implemented');
   }
 
@@ -39,7 +42,7 @@ class DatabaseProvider {
    * Add a user to the database.
    * @param {string} username - The username of the user to add.
    */
-  async addUser(username: string): Promise<any> {
+  async addUser(username: string, user: LeetCodeUser): Promise<User> {
     throw new Error('Not Implemented');
   }
 
@@ -47,29 +50,38 @@ class DatabaseProvider {
    * Remove a user from the database.
    * @param {string} username - The username of the user to remove.
    */
-  async removeUser(username: string): Promise<any> {
+  async removeUser(username: string): Promise<boolean> {
+    throw new Error('Not Implemented');
+  }
+
+  /**
+   * It updates the user with the given username with the given user.
+   * @param {string} username - The username of the user to update.
+   * @param {LeetCodeUser} user - The user object that you want to update.
+   */
+  async updateUser(username: string, user: LeetCodeUser): Promise<boolean> {
     throw new Error('Not Implemented');
   }
 
   /**
    * Remove all users from the database.
    */
-  async removeAllUsers(): Promise<any> {
+  async removeAllUsers(): Promise<boolean> {
     throw new Error('Not Implemented');
   }
 
   /**
-   * Create `Channel` using given channelData
-   * @param {ChannelData} channelData - IChannel
+   * Create `Channel` using given channel
+   * @param {Channel} channel - IChannel
    */
-  async addChannel(channelData: ChannelData): Promise<any> {
+  async addChannel(channel: Channel): Promise<Channel> {
     throw new Error('Not Implemented');
   }
 
   /**
    * It returns Channel list as an array of strings.
    */
-  async getAllChannels(): Promise<ChannelData[]> {
+  async getAllChannels(): Promise<Channel[]> {
     throw new Error('Not Implemented');
   }
 
@@ -77,7 +89,7 @@ class DatabaseProvider {
    * It returns a channel.
    * @param {ChannelKey} channelKey - The key of the channel to get.
    */
-  async getChannel(channelKey: ChannelKey): Promise<ChannelData> {
+  async getChannel(channelKey: ChannelKey): Promise<Channel> {
     throw new Error('Not Implemented');
   }
 
@@ -94,14 +106,14 @@ class DatabaseProvider {
    * It deletes a channel.
    * @param {ChannelKey} channelKey - The key of the channel to delete.
    */
-  async deleteChannel(channelKey: ChannelKey): Promise<any> {
+  async deleteChannel(channelKey: ChannelKey): Promise<boolean> {
     throw new Error('Not Implemented');
   }
 
   /**
    * It deletes all channels.
    */
-  async deleteAllChannels(): Promise<any> {
+  async deleteAllChannels(): Promise<boolean> {
     throw new Error('Not Implemented');
   }
 
@@ -112,7 +124,7 @@ class DatabaseProvider {
    */
   async addUserToChannel(
     channelKey: ChannelKey, username: string,
-  ): Promise<any> {
+  ): Promise<ChannelUser> {
     throw new Error('Not Implemented');
   }
 
@@ -125,7 +137,7 @@ class DatabaseProvider {
    */
   async removeUserFromChannel(
     channelKey: ChannelKey, username: string,
-  ): Promise<any> {
+  ): Promise<boolean> {
     throw new Error('Not Implemented');
   }
 

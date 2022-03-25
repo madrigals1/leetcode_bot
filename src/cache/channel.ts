@@ -6,7 +6,7 @@ import { log } from '../utils/helper';
 import { constants } from '../utils/constants';
 import { BOT_MESSAGES as BM } from '../utils/dictionary';
 
-import { ChannelData, CacheResponse, UserCacheResponse } from './models';
+import { Channel, CacheResponse, UserCacheResponse } from './models';
 import { UserCache } from './userCache';
 
 import Cache from './index';
@@ -14,15 +14,15 @@ import Cache from './index';
 export class ChannelCache {
   usernames: string[] = [];
 
-  channelData: ChannelData = null;
+  channel: Channel = null;
 
   /**
-   * It takes a channel object as a parameter and assigns it to the channelData
+   * It takes a channel object as a parameter and assigns it to the channel
    * property
-   * @param {ChannelData} channel - The channel data object.
+   * @param {Channel} channel - The channel data object.
    */
-  constructor(channel: ChannelData) {
-    this.channelData = channel;
+  constructor(channel: Channel) {
+    this.channel = channel;
   }
 
   /**
@@ -38,7 +38,7 @@ export class ChannelCache {
    * @returns A promise with void.
    */
   async preload(): Promise<void> {
-    return Cache.database.getUsersForChannel(this.channelData.key)
+    return Cache.database.getUsersForChannel(this.channel.key)
       .then((usernameList) => {
         usernameList.forEach((username) => {
           if (UserCache.getUser(username) !== undefined) {
@@ -100,7 +100,7 @@ export class ChannelCache {
 
     // Add User to Channel in Database
     return Cache.database
-      .addUserToChannel(this.channelData.key, username)
+      .addUserToChannel(this.channel.key, username)
       .then((addedToDB) => {
         if (!addedToDB) {
           return {
@@ -142,7 +142,7 @@ export class ChannelCache {
 
     // Remove User from Channel in Database
     return Cache.database
-      .removeUserFromChannel(this.channelData.key, usernameLower)
+      .removeUserFromChannel(this.channel.key, usernameLower)
       .then((deletedFromDB) => {
         if (!deletedFromDB) {
           return {
@@ -208,7 +208,7 @@ export class ChannelCache {
    * @returns A promise with CacheResponse
    */
   async clear(): Promise<CacheResponse> {
-    return Cache.database.clearChannel(this.channelData.key)
+    return Cache.database.clearChannel(this.channel.key)
       .then((cleared) => {
         if (!cleared) {
           return {

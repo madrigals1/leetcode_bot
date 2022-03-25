@@ -9,14 +9,16 @@ import {
   mockCompareMenu,
   mockProblemsChart,
   mockRatingGraph,
+  mockLanguageStats,
 } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import { constants } from '../../utils/constants';
-import { vizapiActions } from '../../chatbots/actions';
+import { vizapiActions, leetcodeActions } from '../../chatbots/actions';
 import { tableForSubmissions, compareMenu, ratingGraph } from '../../vizapi';
 import { users } from '../__mocks__/data.mock';
 import { UserCache } from '../../cache/userCache';
 import { User } from '../../leetcode/models';
+import { getLanguageStats } from '../../leetcode';
 
 const mockbot = new Mockbot();
 const mockDatabaseProvider = new MockDatabaseProvider();
@@ -35,6 +37,7 @@ beforeEach(async () => {
   vizapiActions.tableForSubmissions = tableForSubmissions;
   vizapiActions.compareMenu = compareMenu;
   vizapiActions.ratingGraph = ratingGraph;
+  leetcodeActions.getLanguageStats = getLanguageStats;
 });
 
 afterEach(async () => {
@@ -519,5 +522,64 @@ describe('chatbots.actions - compare action', () => {
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/compare asd asd asd');
     expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+  });
+});
+
+describe('chatbots.actions - langstats action', () => {
+  test('Correct case - All users', async () => {
+    leetcodeActions.getLanguageStats = mockLanguageStats;
+
+    await mockbot.send('/langstats');
+    expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_LANGSTATS);
+  });
+
+  /* TODO: Test buttons */
+
+  test('Correct case - Single user', async () => {
+    leetcodeActions.getLanguageStats = mockLanguageStats;
+
+    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
+    await mockbot.send(`/langstats ${realUsername1}`);
+
+    const lpc1 = [
+      {
+        languageName: 'C++',
+        problemsSolved: 421,
+      },
+      {
+        languageName: 'Python',
+        problemsSolved: 200,
+      },
+      {
+        languageName: 'JavaScript',
+        problemsSolved: 127,
+      },
+    ];
+
+    expect(mockbot.lastMessage())
+      .toEqual(BM.LANGUAGE_STATS_TEXT(realUsername1, lpc1));
+
+    await mockbot.send(`/langstats ${realUsername2}`);
+
+    const lpc2 = [
+      {
+        languageName: 'TypeScript',
+        problemsSolved: 10,
+      },
+      {
+        languageName: 'C#',
+        problemsSolved: 5,
+      },
+    ];
+
+    expect(mockbot.lastMessage())
+      .toEqual(BM.LANGUAGE_STATS_TEXT(realUsername2, lpc2));
+  });
+
+  test('Incorrect case - Username not found', async () => {
+    leetcodeActions.getLanguageStats = mockLanguageStats;
+
+    await mockbot.send(`/langstats ${fakeUsername}`);
+    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
   });
 });

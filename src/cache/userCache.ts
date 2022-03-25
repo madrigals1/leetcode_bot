@@ -69,7 +69,7 @@ export class UserCache {
         }
 
         // Add username to Database
-        Cache.database.addUser(username);
+        Cache.database.addUser(username, user);
 
         // Add User to Cache
         this.users.set(username.toLowerCase(), user);
@@ -123,12 +123,33 @@ export class UserCache {
     for (let i = 0; i < users.length; i++) {
       if (users[i].username.toLowerCase() === username.toLowerCase()) {
         this.users.set(users[i].username, user);
+
+        // Update User Data asynchronously
+        Cache.database.updateUser(username, user);
+
         return;
       }
     }
 
     // If user was not found in Cache, add User to Cache
     this.users.set(username, user);
+  }
+
+  /**
+   * Function that loads all the users from the database into the cache from
+   * JSON data that is saved. After that, it refreshes users asynchronously.
+   */
+  static async preload(): Promise<void> {
+    const users = await Cache.database.findAllUsers();
+
+    users.forEach((user) => {
+      if (user.data) {
+        this.addOrReplaceUser(user.username, JSON.parse(user.data));
+      }
+    });
+
+    // Refresh users asynchronously
+    this.refresh();
   }
 
   /**

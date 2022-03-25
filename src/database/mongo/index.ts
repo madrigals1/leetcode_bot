@@ -33,16 +33,18 @@ class MongoDB extends DatabaseProvider {
   UserModel: typeof UserModel = UserModel;
 
   // Connect to Database
-  async connect(): Promise<void> {
+  async connect(): Promise<boolean> {
     log(SM.IS_CONNECTING(this.providerName));
 
-    await mongoose
+    return mongoose
       .connect(this.mongoUrl)
       .then(() => {
         log(SM.CONNECTION_STATUS.SUCCESSFUL);
+        return true;
       })
       .catch((err) => {
         error(SM.CONNECTION_STATUS.ERROR(err));
+        return false;
       });
   }
 
