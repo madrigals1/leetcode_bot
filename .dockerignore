@@ -20,4 +20,4 @@ README.md
 .env.example
 
 # Database related
-**/leetbot*.db
+**/leetbot*.sqlite
