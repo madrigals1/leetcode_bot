@@ -3,7 +3,6 @@ import { Context } from '../models';
 import { registeredActions } from '../actions';
 import ArgumentManager from '../argumentManager';
 import { ArgumentsError, InputError } from '../../utils/errors';
-import { actionLogger } from '../../prometheus';
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
@@ -19,16 +18,18 @@ export function action(actionContext: ActionContext): (
     propertyKey: string,
     descriptor: PropertyDescriptor,
   ) => {
-    const { name, args: requestedArgs, isAdmin: isAdminAction } = actionContext;
+    const {
+      name: actionName,
+      args: requestedArgs,
+      isAdmin: isAdminAction,
+    } = actionContext;
 
     const originalMethod = descriptor.value;
 
     // eslint-disable-next-line no-param-reassign
     descriptor.value = async (context: Context) => {
-      // Create action handler and start logging action
-      const replyHandler = new ReplyHandler(
-        actionLogger.startTimer(), name, context,
-      );
+      // Create action handler
+      const replyHandler = new ReplyHandler(actionName, context);
 
       // Add Channel to Context
       context.channelCache = await getOrCreateChannel(context.channelKey);
@@ -75,7 +76,9 @@ export function action(actionContext: ActionContext): (
 
     // Register action
     registeredActions.push({
-      name, args: requestedArgs, property: propertyKey,
+      name: actionName,
+      args: requestedArgs,
+      property: propertyKey,
     });
 
     return descriptor;
