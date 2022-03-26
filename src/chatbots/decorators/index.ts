@@ -30,30 +30,27 @@ export function action(actionContext: ActionContext): (
         actionLogger.startTimer(), name, context,
       );
 
-      // Get Channel Cache
-      const channelCache = await getOrCreateChannel(context.channelKey);
+      // Add Channel to Context
+      context.channelCache = await getOrCreateChannel(context.channelKey);
 
-      // Add Channel Cache and Key to Context
-      context.channelCache = channelCache;
-
-      const { argumentParser } = context;
-
-      // Make it mutable, so that we can apply try-catch on it
+      // Create mutable argumentManager, so that we can apply try-catch on it
       let argumentManager: ArgumentManager;
 
       try {
-        argumentManager = argumentParser(context, requestedArgs);
+        // Parse arguments
+        argumentManager = context.argumentParser(context, requestedArgs);
       } catch (e) {
         // If error is caused by incorrect input, return error cause to User
         if (e instanceof InputError) {
           return replyHandler.handleError(e.message);
         }
 
-        // If error is caused by codebase issues, throw it
+        // If error is caused by codebase issues, throw generic Error
         if (e instanceof ArgumentsError) {
           return replyHandler.handleError(BM.ERROR_ON_THE_SERVER);
         }
 
+        // If error is not known, throw it
         throw e;
       }
 
@@ -69,7 +66,10 @@ export function action(actionContext: ActionContext): (
         }
       }
 
+      // Run action to get message
       const message = await originalMethod(updatedContext);
+
+      // Reply message with Grafana logging
       return replyHandler.reply(message, updatedContext);
     };
 
