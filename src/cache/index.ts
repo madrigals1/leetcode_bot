@@ -23,7 +23,7 @@ class Cache {
    * Get the channel data from the database, create a channel cache from the
    * channel data, and add the channel cache to the map.
    * @param {ChannelKey} channelKey - The key of the channel to register.
-   * @returns A ChannelCache object.
+   * @returns Promise with ChannelCache.
    */
   public async registerChannel(channelKey: ChannelKey): Promise<ChannelCache> {
     // Create Channel in Database
@@ -48,8 +48,7 @@ class Cache {
   }
 
   /**
-   * It refreshes the user cache and gets all the channel data from the
-   * database.
+   * Preload UserCache, load all channels from Database and recreate in Cache
    */
   async preload(): Promise<void> {
     // Preload Users from Database
@@ -68,7 +67,7 @@ class Cache {
   /**
    * Get a channel from the cache
    * @param {ChannelKey} channelKey - The key of the channel to get.
-   * @returns The channel cache.
+   * @returns ChannelCache.
    */
   getChannel(channelKey: ChannelKey): ChannelCache {
     return this.channels.get(JSON.stringify(channelKey));
