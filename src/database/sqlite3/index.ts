@@ -16,6 +16,8 @@ class SQLite extends DatabaseProvider {
 
   sequelize: Sequelize;
 
+  filename: string = constants.DATABASE.SQLITE3.FILENAME;
+
   User: typeof DatabaseUser = DatabaseUser;
 
   Channel: typeof DatabaseChannel = DatabaseChannel;
@@ -24,7 +26,7 @@ class SQLite extends DatabaseProvider {
 
   initialize(): void {
     this.sequelize = new Sequelize('sqlite::memory:', {
-      storage: `database/sqlite3/${constants.DATABASE.SQLITE3.FILENAME}`,
+      storage: `database/sqlite3/${this.filename}`,
       logging: false,
     });
 
