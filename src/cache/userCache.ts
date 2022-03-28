@@ -93,7 +93,7 @@ export class UserCache {
   /**
    * Get the user with the given username
    * @param {string} username - The username of the user to get.
-   * @returns The user object.
+   * @returns User.
    */
   static getUser(username: string): User {
     return this.users.get(username);
@@ -101,7 +101,7 @@ export class UserCache {
 
   /**
    * Return an array of all the users in the users map
-   * @returns An array of User objects.
+   * @returns User[].
    */
   static getAllUsers(): User[] {
     return [...this.users.values()];
@@ -113,7 +113,6 @@ export class UserCache {
    * to the cache
    * @param {string} username - The username of the user.
    * @param {User} user - User
-   * @returns Nothing.
    */
   static addOrReplaceUser(username: string, user: User): void {
     // Get all Users
