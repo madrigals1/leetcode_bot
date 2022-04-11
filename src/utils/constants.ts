@@ -210,7 +210,7 @@ export const constants = {
   PORT,
   CML,
   SYSTEM,
-  VIZAPI_LINK: VIZAPI_LINK || 'https://vizapi.adigame.dev',
+  VIZAPI_LINK: VIZAPI_LINK || 'https://vizapi.madrigal.pro',
   SUBMISSION_STATUS_MAP,
   EMOJI,
   STATUS,
