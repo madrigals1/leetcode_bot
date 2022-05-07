@@ -25,11 +25,21 @@ export default class Telegram {
 
   getActionRegex(actionName: string): RegExp {
     const botNameWithAtSign = this.botName ? `@${this.botName}` : '';
+    /*
+     Allowed characters:
+     - Small English alphabet letters from "a" to "z"
+     - Capital English alphabet letters from "A" to "Z"
+     - Digits from "0" to "9"
+     - Undescore "_"
+     - Hyphen "-"
+     - Whitespace " "
+     */
+    const argRegex = '[a-zA-Z0-9_- ]+';
 
     const part1 = `/${actionName}`;
-    const part2 = `/${actionName} [a-zA-Z0-9_ ]+`;
+    const part2 = `/${actionName} ${argRegex}`;
     const part3 = `/${actionName}${botNameWithAtSign}`;
-    const part4 = `/${actionName}${botNameWithAtSign} [a-zA-Z0-9_ ]+`;
+    const part4 = `/${actionName}${botNameWithAtSign} ${argRegex}`;
     return new RegExp(`^(${part1}|${part2}|${part3}|${part4})$`);
   }
 
