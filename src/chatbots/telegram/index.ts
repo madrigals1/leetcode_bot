@@ -34,7 +34,7 @@ export default class Telegram {
      - Hyphen "-"
      - Whitespace " "
      */
-    const argRegex = '[a-zA-Z0-9_- ]+';
+    const argRegex = '[-a-zA-Z0-9_ ]+';
 
     const part1 = `/${actionName}`;
     const part2 = `/${actionName} ${argRegex}`;
