@@ -1,6 +1,6 @@
 import { SubscriptionType } from './models';
 
-interface FullSubscriptionModel {
+export interface FullSubscriptionTypeModel {
   subscriptionType: SubscriptionType;
   key: string;
   humanName: string;
@@ -8,11 +8,11 @@ interface FullSubscriptionModel {
 
 class SubscriptionTypeManager {
   private subscriptionsBySubscriptionType = (
-    new Map<SubscriptionType, FullSubscriptionModel>()
+    new Map<SubscriptionType, FullSubscriptionTypeModel>()
   );
 
   private subscriptionsByKey = (
-    new Map<string, FullSubscriptionModel>()
+    new Map<string, FullSubscriptionTypeModel>()
   );
 
   constructor() {
@@ -53,6 +53,10 @@ class SubscriptionTypeManager {
 
   getType(key: string): SubscriptionType {
     return this.subscriptionsByKey.get(key)?.subscriptionType;
+  }
+
+  getAll(): FullSubscriptionTypeModel[] {
+    return [...this.subscriptionsBySubscriptionType.values()];
   }
 }
 
