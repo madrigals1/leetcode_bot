@@ -594,12 +594,7 @@ export default class Actions {
       // Subscribe
       const result = await context.channelCache.subscribe(subscriptionType);
 
-      // If Subscription does not exist
-      if (!result.subscription) {
-        return BM.SUBSCRIPTION_WAS_NOT_MADE(subscriptionType);
-      }
-
-      return BM.SUBSCRIPTION_WAS_SUCCESSFULL(subscriptionType);
+      return result.detail;
     }
 
     // If Subscription Type was not sent, return buttons
@@ -615,5 +610,44 @@ export default class Actions {
     }, getCloseButton()];
 
     return BM.SUBSCRIPTION_LIST;
+  }
+
+  @action({
+    name: 'unsubscribe',
+    args: [
+      {
+        key: 'subscription_type',
+        name: 'Subscription Type',
+        index: 0,
+        isRequired: false,
+      },
+    ],
+  })
+  static async unsubscribe(context: Context): Promise<string> {
+    const subscriptionTypeKey = context.args.get('subscription_type').value;
+    const subscriptionType = SubscriptionTypeManager
+      .getType(subscriptionTypeKey);
+
+    // If Subscription Type was sent
+    if (subscriptionTypeKey !== '') {
+      // Unsubscribe
+      const result = await context.channelCache.unsubscribe(subscriptionType);
+
+      return result.detail;
+    }
+
+    // If Subscription Type was not sent, return buttons
+    context.options.buttons = [{
+      buttons: SubscriptionTypeManager.getAll()
+        .map((subscriptionTypeModel: FullSubscriptionTypeModel) => ({
+          text: subscriptionTypeModel.humanName,
+          action: `/unsubscribe ${subscriptionTypeModel.key}`,
+        })),
+      buttonPerRow: 3,
+      placeholder: 'Subscription Type',
+      type: ButtonContainerType.MultipleButtons,
+    }, getCloseButton()];
+
+    return BM.UNSUBSCRIPTION_LIST;
   }
 }
