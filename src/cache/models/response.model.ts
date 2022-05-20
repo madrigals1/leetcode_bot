@@ -1,3 +1,4 @@
+import { Subscription } from '../../chatbots/models';
 import { User } from '../../leetcode/models';
 
 export interface CacheResponse {
@@ -7,4 +8,8 @@ export interface CacheResponse {
 
 export interface UserCacheResponse extends CacheResponse {
   user?: User;
+}
+
+export interface SubscriptionCacheResponse extends CacheResponse {
+  subscription?: Subscription;
 }
