@@ -7,7 +7,11 @@ import { BOT_MESSAGES as BM } from '../utils/dictionary';
 import { Subscription, SubscriptionType } from '../chatbots/models';
 
 import {
-  Channel, CacheResponse, UserCacheResponse, SubscriptionCacheResponse,
+  Channel,
+  CacheResponse,
+  UserCacheResponse,
+  SubscriptionCacheResponse,
+  ChannelKey,
 } from './models';
 import { UserCache } from './userCache';
 
@@ -359,5 +363,10 @@ export class ChannelCache {
           detail: BM.UNSUBSCRIPTION_WAS_NOT_MADE(subscriptionType),
         };
       });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async getAllSubscriptions(channelKey: ChannelKey): Promise<Subscription[]> {
+    return Cache.database.getAllSubscriptions(channelKey);
   }
 }
