@@ -4,6 +4,7 @@
 import {
   User, ChannelUser, Channel, ChannelKey,
 } from '../cache/models';
+import { Subscription } from '../chatbots/models';
 import { User as LeetCodeUser } from '../leetcode/models';
 
 /**
@@ -146,6 +147,18 @@ class DatabaseProvider {
    * @param {ChannelKey} channelKey - The key of the channel to clear.
    */
   async clearChannel(channelKey: ChannelKey): Promise<boolean> {
+    throw new Error('Not Implemented');
+  }
+
+  async addSubscription(subscription: Subscription): Promise<Subscription> {
+    throw new Error('Not Implemented');
+  }
+
+  async getSubscription(subscription: Subscription): Promise<Subscription> {
+    throw new Error('Not Implemented');
+  }
+
+  async removeSubscription(subscription: Subscription): Promise<boolean> {
     throw new Error('Not Implemented');
   }
 }
