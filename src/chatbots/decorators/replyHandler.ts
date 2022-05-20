@@ -1,5 +1,6 @@
 import { LabelValues } from 'prom-client';
 
+import { actionLogger } from '../../prometheus';
 import { Context } from '../models';
 
 export class ReplyHandler {
@@ -9,12 +10,8 @@ export class ReplyHandler {
 
   context: Context;
 
-  constructor(
-    endLogging: (labels?: LabelValues<string>) => number,
-    actionName: string,
-    context: Context,
-  ) {
-    this.endLogging = endLogging;
+  constructor(actionName: string, context: Context) {
+    this.endLogging = actionLogger.startTimer();
     this.actionName = actionName;
     this.context = context;
   }

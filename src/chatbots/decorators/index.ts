@@ -3,7 +3,6 @@ import { Context } from '../models';
 import { registeredActions } from '../actions';
 import ArgumentManager from '../argumentManager';
 import { ArgumentsError, InputError } from '../../utils/errors';
-import { actionLogger } from '../../prometheus';
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
@@ -19,41 +18,40 @@ export function action(actionContext: ActionContext): (
     propertyKey: string,
     descriptor: PropertyDescriptor,
   ) => {
-    const { name, args: requestedArgs, isAdmin: isAdminAction } = actionContext;
+    const {
+      name: actionName,
+      args: requestedArgs,
+      isAdmin: isAdminAction,
+    } = actionContext;
 
     const originalMethod = descriptor.value;
 
     // eslint-disable-next-line no-param-reassign
     descriptor.value = async (context: Context) => {
-      // Create action handler and start logging action
-      const replyHandler = new ReplyHandler(
-        actionLogger.startTimer(), name, context,
-      );
+      // Create action handler
+      const replyHandler = new ReplyHandler(actionName, context);
 
-      // Get Channel Cache
-      const channelCache = await getOrCreateChannel(context.channelKey);
+      // Add Channel to Context
+      context.channelCache = await getOrCreateChannel(context.channelKey);
 
-      // Add Channel Cache and Key to Context
-      context.channelCache = channelCache;
-
-      const { argumentParser } = context;
-
-      // Make it mutable, so that we can apply try-catch on it
+      // Create mutable argumentManager, so that we can apply try-catch on it
       let argumentManager: ArgumentManager;
 
       try {
-        argumentManager = argumentParser(context, requestedArgs);
+        // Parse arguments
+        argumentManager = context.argumentParser(context, requestedArgs);
       } catch (e) {
         // If error is caused by incorrect input, return error cause to User
         if (e instanceof InputError) {
           return replyHandler.handleError(e.message);
         }
 
-        // If error is caused by codebase issues, throw it
+        // If error is caused by codebase issues, throw generic Error
         if (e instanceof ArgumentsError) {
           return replyHandler.handleError(BM.ERROR_ON_THE_SERVER);
         }
 
+        // If error is not known, throw it
         throw e;
       }
 
@@ -69,13 +67,18 @@ export function action(actionContext: ActionContext): (
         }
       }
 
+      // Run action to get message
       const message = await originalMethod(updatedContext);
+
+      // Reply message with Grafana logging
       return replyHandler.reply(message, updatedContext);
     };
 
     // Register action
     registeredActions.push({
-      name, args: requestedArgs, property: propertyKey,
+      name: actionName,
+      args: requestedArgs,
+      property: propertyKey,
     });
 
     return descriptor;
