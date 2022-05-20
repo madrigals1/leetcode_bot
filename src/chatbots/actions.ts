@@ -652,4 +652,12 @@ export default class Actions {
 
     return BM.UNSUBSCRIPTION_LIST;
   }
+
+  @action({ name: 'subscription', isAdmin: true })
+  static async subscription(context: Context): Promise<string> {
+    const subscriptions = await context.channelCache
+      .getAllSubscriptions(context.channelKey);
+
+    return SubscriptionTypeManager.getSubscriptionsText(subscriptions);
+  }
 }
