@@ -32,6 +32,7 @@ export class UserCache {
 
   /**
    * Get the number of users in the database.
+   *
    * @returns The number of users in the database.
    */
   static get userAmount(): number {
@@ -41,6 +42,7 @@ export class UserCache {
   /**
    * If the user exists in the database, return an error.
    * Otherwise, get the user from LeetCode and add it to the database.
+   *
    * @param {string} username - string
    * @returns A Promise<UserCacheResponse>
    */
@@ -91,7 +93,8 @@ export class UserCache {
   }
 
   /**
-   * Get the user with the given username
+   * Get the user with the given username.
+   *
    * @param {string} username - The username of the user to get.
    * @returns User.
    */
@@ -100,7 +103,8 @@ export class UserCache {
   }
 
   /**
-   * Return an array of all the users in the users map
+   * Return an array of all the users in the users map.
+   *
    * @returns User[].
    */
   static getAllUsers(): User[] {
@@ -110,7 +114,8 @@ export class UserCache {
   /**
    * If the username is already in the cache, replace the user in the cache
    * with the new user. If the username is not in the cache, add the user
-   * to the cache
+   * to the cache.
+   *
    * @param {string} username - The username of the user.
    * @param {User} user - User
    */
@@ -153,7 +158,8 @@ export class UserCache {
 
   /**
    * Load all Users from Database, refresh them with newest data from LeetCode,
-   * and replace them in Cache
+   * and replace them in Cache.
+   *
    * @returns A Promise<UserCacheResponse>
    */
   static async refresh(): Promise<UserCacheResponse> {
@@ -221,6 +227,7 @@ export class UserCache {
 
   /**
    * Remove a user from the database and the cache.
+   *
    * @param {string} username - The username of the user to be deleted.
    * @returns A Promise<UserCacheResponse>
    */
@@ -254,7 +261,7 @@ export class UserCache {
   }
 
   /**
-   * Clear the cache from Users and remove them from Database
+   * Clear the cache from Users and remove them from Database.
    */
   static async clear(): Promise<void> {
     await Cache.database.removeAllUsers();
