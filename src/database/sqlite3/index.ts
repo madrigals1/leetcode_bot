@@ -428,6 +428,27 @@ class SQLite extends DatabaseProvider {
       .catch(() => null);
   }
 
+  // Get Subscription from Database
+  async getAllSubscriptions(channelKey: ChannelKey): Promise<Subscription[]> {
+    const { chatId, provider } = channelKey;
+
+    return this.Subscription
+      .findAll({
+        where: { chat_id: chatId, provider },
+      })
+      .then((subscriptionsFromDB: DatabaseSubscription[]) => (
+        subscriptionsFromDB.map((subscriptionFromDB) => ({
+          id: subscriptionFromDB.id,
+          channelKey: {
+            chatId: subscriptionFromDB.chat_id,
+            provider: subscriptionFromDB.provider,
+          },
+          subscriptionType: subscriptionFromDB.subscription_type,
+        }))
+      ))
+      .catch(() => []);
+  }
+
   // Remove Subscription from Database
   async removeSubscription(subscription: Subscription): Promise<boolean> {
     const { chatId, provider } = subscription.channelKey;

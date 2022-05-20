@@ -158,6 +158,10 @@ class DatabaseProvider {
     throw new Error('Not Implemented');
   }
 
+  async getAllSubscriptions(channelKey: ChannelKey): Promise<Subscription[]> {
+    throw new Error('Not Implemented');
+  }
+
   async removeSubscription(subscription: Subscription): Promise<boolean> {
     throw new Error('Not Implemented');
   }
