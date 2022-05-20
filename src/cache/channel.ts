@@ -16,7 +16,8 @@ export class ChannelCache {
   channel: Channel = null;
 
   /**
-   * Save channel in this Channel
+   * Save channel in this Channel.
+   *
    * @param {Channel} channel - The channel data object.
    */
   constructor(channel: Channel) {
@@ -25,8 +26,8 @@ export class ChannelCache {
 
   /**
    * Return an array of users.
+   * Each user is retrieved from the UserCache.
    *
-   * Each user is retrieved from the UserCache
    * @returns List of Users.
    */
   get users(): User[] {
@@ -36,10 +37,12 @@ export class ChannelCache {
   /**
    * Gets all users for this Channel and add their usernames to usernames array.
    * Sorts users by amount of solved problems.
+   *
    * @returns Promise with void
    */
   async preload(): Promise<void> {
-    return Cache.database.getUsersForChannel(this.channel.key)
+    return Cache.database
+      .getUsersForChannel(this.channel.key)
       .then((usernameList) => {
         usernameList.forEach((username) => {
           if (UserCache.getUser(username) !== undefined) {
@@ -52,7 +55,8 @@ export class ChannelCache {
   }
 
   /**
-   * Get the number of users in this Channel.
+   * Get the number of users in this Channel. Only used for testing.
+   *
    * @returns The number of users in this Channel.
    */
   get userAmount(): number {
@@ -61,7 +65,8 @@ export class ChannelCache {
 
   /**
    * If the user is already in the UserCache, return it. If not, add it to the
-   * UserCache and return it
+   * UserCache and return it.
+   *
    * @param {string} username - The username of the user to get or add.
    * @returns The promise with UserCacheResponse.
    */
@@ -84,7 +89,8 @@ export class ChannelCache {
   }
 
   /**
-   * Add a user to the channel
+   * Add a user to the channel.
+   *
    * @param {string} username - The username of the user that is being added
    * to the channel.
    * @returns A Promise with CacheResponse.
@@ -133,7 +139,8 @@ export class ChannelCache {
   }
 
   /**
-   * Remove a user from the channel
+   * Remove a user from the channel.
+   *
    * @param {string} username - The username of the user to be removed.
    * @returns A Promise with CacheResponse.
    */
@@ -172,7 +179,8 @@ export class ChannelCache {
   }
 
   /**
-   * Return user with given username
+   * Return user with given username.
+   *
    * @param {string} username - username of user to get.
    * @returns User.
    */
@@ -185,7 +193,7 @@ export class ChannelCache {
   }
 
   /**
-   * Sort the users by the number of solved problems
+   * Sort the users by the number of solved problems.
    */
   sortUsers(): void {
     // Sort Users
@@ -202,8 +210,9 @@ export class ChannelCache {
   }
 
   /**
-   * It clears the this Channel from users
-   * @returns A promise with CacheResponse
+   * It clears the this Channel from users.
+   *
+   * @returns A promise with CacheResponse.
    */
   async clear(): Promise<CacheResponse> {
     return Cache.database.clearChannel(this.channel.key)
