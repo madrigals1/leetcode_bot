@@ -196,6 +196,7 @@ export const BOT_MESSAGES = {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
     return `${constants.EMOJI.ERROR} Subscription to ${humanName} was successfull`;
   },
+  SUBSCRIPTION_LIST: `${constants.EMOJI.BELL} Subscribe`,
 
   // ---------------------------------------------------------------------------
   // BIG TEXTS
