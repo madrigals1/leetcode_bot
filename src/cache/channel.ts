@@ -279,7 +279,7 @@ export class ChannelCache {
         if (!createdSubscription) {
           return {
             status: constants.STATUS.ERROR,
-            detail: BM.ERROR_ON_THE_SERVER,
+            detail: BM.SUBSCRIPTION_WAS_NOT_MADE(subscriptionType),
           };
         }
 
@@ -297,7 +297,7 @@ export class ChannelCache {
         // Send message as Internal Server Error
         return {
           status: constants.STATUS.ERROR,
-          detail: BM.ERROR_ON_THE_SERVER,
+          detail: BM.SUBSCRIPTION_WAS_NOT_MADE(subscriptionType),
         };
       });
   }
@@ -315,7 +315,7 @@ export class ChannelCache {
         if (!isDeleted) {
           return {
             status: constants.STATUS.ERROR,
-            detail: BM.ERROR_ON_THE_SERVER,
+            detail: BM.UNSUBSCRIPTION_WAS_NOT_MADE(subscriptionType),
           };
         }
 
@@ -332,7 +332,7 @@ export class ChannelCache {
         // Send message as Internal Server Error
         return {
           status: constants.STATUS.ERROR,
-          detail: BM.ERROR_ON_THE_SERVER,
+          detail: BM.UNSUBSCRIPTION_WAS_NOT_MADE(subscriptionType),
         };
       });
   }

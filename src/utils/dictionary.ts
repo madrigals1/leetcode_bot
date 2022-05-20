@@ -190,13 +190,14 @@ export const BOT_MESSAGES = {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
     return `${constants.EMOJI.ERROR} Subscription to ${humanName} was not made`;
   },
-  SUBSCRIPTION_WAS_SUCCESSFULL: (
+  UNSUBSCRIPTION_WAS_NOT_MADE: (
     subscriptionType: SubscriptionType,
   ): string => {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
-    return `${constants.EMOJI.BELL} Subscription to ${humanName} was successfull`;
+    return `${constants.EMOJI.ERROR} Unsubscription from ${humanName} was not made`;
   },
   SUBSCRIPTION_LIST: `${constants.EMOJI.BELL} Subscribe`,
+  UNSUBSCRIPTION_LIST: `${constants.EMOJI.BELL} Unsubscribe`,
 
   // ---------------------------------------------------------------------------
   // BIG TEXTS
