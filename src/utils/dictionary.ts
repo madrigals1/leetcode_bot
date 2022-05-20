@@ -178,11 +178,11 @@ export const BOT_MESSAGES = {
   // SUBSCRIPTION
   SUBSCRIBED: (subscriptionType: SubscriptionType): string => {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
-    return `${constants.EMOJI.PERSON} Subscribed to ${humanName}`;
+    return `${constants.EMOJI.BELL} Subscribed to ${humanName}`;
   },
   UNSUBSCRIBED: (subscriptionType: SubscriptionType): string => {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
-    return `${constants.EMOJI.PERSON} Unsubscribed from ${humanName}`;
+    return `${constants.EMOJI.BELL} Unsubscribed from ${humanName}`;
   },
   SUBSCRIPTION_WAS_NOT_MADE: (
     subscriptionType: SubscriptionType,
@@ -194,7 +194,7 @@ export const BOT_MESSAGES = {
     subscriptionType: SubscriptionType,
   ): string => {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
-    return `${constants.EMOJI.ERROR} Subscription to ${humanName} was successfull`;
+    return `${constants.EMOJI.BELL} Subscription to ${humanName} was successfull`;
   },
   SUBSCRIPTION_LIST: `${constants.EMOJI.BELL} Subscribe`,
 
