@@ -61,6 +61,6 @@ const subscriptionSchema = new mongoose.Schema({
 const UserModel = mongoose.model<IUserModel>('User', userSchema);
 const ChannelModel = mongoose.model<IChannelModel>('Channel', channelSchema);
 const SubscriptionModel = mongoose
-  .model<ISubscriptionModel>('Channel', subscriptionSchema);
+  .model<ISubscriptionModel>('Subscription', subscriptionSchema);
 
 export { UserModel, ChannelModel, SubscriptionModel };
