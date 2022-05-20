@@ -3,6 +3,7 @@ import { getCmlFromUsers } from '../leetcode/utils';
 import { ChatbotProvider } from '../chatbots';
 import { ChannelKey } from '../cache/models';
 import { SubscriptionType } from '../chatbots/models';
+import SubscriptionTypeManager from '../chatbots/subscriptionTypeManager';
 
 import { constants } from './constants';
 
@@ -176,36 +177,25 @@ export const BOT_MESSAGES = {
 
   // SUBSCRIPTION
   SUBSCRIBED: (subscriptionType: SubscriptionType): string => {
-    const subscriptionSubject = () => {
-      if (subscriptionType === SubscriptionType.DailyStats) {
-        return 'Daily Stats';
-      }
-
-      if (subscriptionType === SubscriptionType.Contest) {
-        return 'Contest';
-      }
-
-      return 'X';
-    };
-
-    return `${constants.EMOJI.PERSON} Subscribed to ${subscriptionSubject()}`;
+    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    return `${constants.EMOJI.PERSON} Subscribed to ${humanName}`;
   },
   UNSUBSCRIBED: (subscriptionType: SubscriptionType): string => {
-    const subscriptionSubject = () => {
-      if (subscriptionType === SubscriptionType.DailyStats) {
-        return 'Daily Stats';
-      }
-
-      if (subscriptionType === SubscriptionType.Contest) {
-        return 'Contest';
-      }
-
-      return 'X';
-    };
-
-    return `${constants.EMOJI.PERSON} Unsubscribed from ${subscriptionSubject()}`;
+    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    return `${constants.EMOJI.PERSON} Unsubscribed from ${humanName}`;
   },
-  // SUBSCRIBED: `${constants.EMOJI.PERSON} Subscribed`,
+  SUBSCRIPTION_WAS_NOT_MADE: (
+    subscriptionType: SubscriptionType,
+  ): string => {
+    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    return `${constants.EMOJI.ERROR} Subscription to ${humanName} was not made`;
+  },
+  SUBSCRIPTION_WAS_SUCCESSFULL: (
+    subscriptionType: SubscriptionType,
+  ): string => {
+    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    return `${constants.EMOJI.ERROR} Subscription to ${humanName} was successfull`;
+  },
 
   // ---------------------------------------------------------------------------
   // BIG TEXTS
