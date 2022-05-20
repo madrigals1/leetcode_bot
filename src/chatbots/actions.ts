@@ -11,9 +11,15 @@ import { getLanguageStats } from '../leetcode';
 
 import { action } from './decorators';
 import {
-  Context, Button, RegisteredAction, ButtonContainerType,
+  Context,
+  Button,
+  RegisteredAction,
+  ButtonContainerType,
 } from './models';
 import { createButtonsFromUsers, getCloseButton } from './utils';
+import SubscriptionTypeManager, {
+  FullSubscriptionTypeModel,
+} from './subscriptionTypeManager';
 
 export const registeredActions: RegisteredAction[] = [];
 
@@ -565,5 +571,49 @@ export default class Actions {
 
     // If 0 User was sent
     return BM.USER_LIST_LANGSTATS;
+  }
+
+  @action({
+    name: 'subscribe',
+    args: [
+      {
+        key: 'subscription_type',
+        name: 'Subscription Type',
+        index: 0,
+        isRequired: false,
+      },
+    ],
+  })
+  static async subscribe(context: Context): Promise<string> {
+    const subscriptionTypeKey = context.args.get('subscription_type').value;
+    const subscriptionType = SubscriptionTypeManager
+      .getType(subscriptionTypeKey);
+
+    // If Subscription Type was sent
+    if (subscriptionTypeKey !== '') {
+      // Subscribe
+      const result = await context.channelCache.subscribe(subscriptionType);
+
+      // If Subscription does not exist
+      if (!result.subscription) {
+        return BM.SUBSCRIPTION_WAS_NOT_MADE(subscriptionType);
+      }
+
+      return BM.SUBSCRIPTION_WAS_SUCCESSFULL(subscriptionType);
+    }
+
+    // If Subscription Type was not sent, return buttons
+    context.options.buttons = [{
+      buttons: SubscriptionTypeManager.getAll()
+        .map((subscriptionTypeModel: FullSubscriptionTypeModel) => ({
+          text: subscriptionTypeModel.humanName,
+          action: `/subscribe ${subscriptionTypeModel.key}`,
+        })),
+      buttonPerRow: 3,
+      placeholder: 'Subscription Type',
+      type: ButtonContainerType.MultipleButtons,
+    }, getCloseButton()];
+
+    return BM.SUBSCRIPTION_LIST;
   }
 }
