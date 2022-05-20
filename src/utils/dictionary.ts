@@ -196,6 +196,18 @@ export const BOT_MESSAGES = {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
     return `${constants.EMOJI.ERROR} Unsubscription from ${humanName} was not made`;
   },
+  SUBSCRIPTION_DOES_NOT_EXIST: (
+    subscriptionType: SubscriptionType,
+  ): string => {
+    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    return `${constants.EMOJI.ERROR} Subscription to ${humanName} does not exist`;
+  },
+  SUBSCRIPTION_ALREADY_EXISTS: (
+    subscriptionType: SubscriptionType,
+  ): string => {
+    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    return `${constants.EMOJI.ERROR} Subscription to ${humanName} already exists`;
+  },
   SUBSCRIPTION_LIST: `${constants.EMOJI.BELL} Subscribe`,
   UNSUBSCRIPTION_LIST: `${constants.EMOJI.BELL} Unsubscribe`,
 

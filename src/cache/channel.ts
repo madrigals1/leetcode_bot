@@ -273,6 +273,18 @@ export class ChannelCache {
       channelKey: this.channel.key, subscriptionType,
     };
 
+    const foundSubscription = (
+      await Cache.database.getSubscription(subscription)
+    );
+
+    // If Subscription already exists
+    if (foundSubscription) {
+      return {
+        status: constants.STATUS.ERROR,
+        detail: BM.SUBSCRIPTION_ALREADY_EXISTS(subscriptionType),
+      };
+    }
+
     return Cache.database
       .addSubscription(subscription)
       .then((createdSubscription: Subscription) => {
@@ -308,6 +320,18 @@ export class ChannelCache {
     const subscription: Subscription = {
       channelKey: this.channel.key, subscriptionType,
     };
+
+    const foundSubscription = (
+      await Cache.database.getSubscription(subscription)
+    );
+
+    // If Subscription was not found
+    if (!foundSubscription) {
+      return {
+        status: constants.STATUS.ERROR,
+        detail: BM.SUBSCRIPTION_DOES_NOT_EXIST(subscriptionType),
+      };
+    }
 
     return Cache.database
       .removeSubscription(subscription)
