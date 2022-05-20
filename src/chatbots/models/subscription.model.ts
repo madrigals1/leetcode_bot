@@ -9,5 +9,4 @@ export interface Subscription {
   id?: number;
   channelKey: ChannelKey;
   subscriptionType: SubscriptionType;
-  isSubscribed: boolean;
 }
