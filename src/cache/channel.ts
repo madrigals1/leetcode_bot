@@ -4,8 +4,11 @@ import { User } from '../leetcode/models';
 import { log } from '../utils/helper';
 import { constants } from '../utils/constants';
 import { BOT_MESSAGES as BM } from '../utils/dictionary';
+import { Subscription, SubscriptionType } from '../chatbots/models';
 
-import { Channel, CacheResponse, UserCacheResponse } from './models';
+import {
+  Channel, CacheResponse, UserCacheResponse, SubscriptionCacheResponse,
+} from './models';
 import { UserCache } from './userCache';
 
 import Cache from './index';
@@ -15,6 +18,8 @@ export class ChannelCache {
 
   channel: Channel = null;
 
+  subscriptions = new Map<number, boolean>();
+
   /**
    * Save channel in this Channel.
    *
@@ -22,6 +27,8 @@ export class ChannelCache {
    */
   constructor(channel: Channel) {
     this.channel = channel;
+    this.subscriptions.set(SubscriptionType.DailyStats, false);
+    this.subscriptions.set(SubscriptionType.Contest, false);
   }
 
   /**
@@ -41,6 +48,22 @@ export class ChannelCache {
    * @returns Promise with void
    */
   async preload(): Promise<void> {
+    const dailyStatsSubscription: Subscription = {
+      channelKey: this.channel.key,
+      subscriptionType: SubscriptionType.DailyStats,
+    };
+    const contestSubscription: Subscription = {
+      channelKey: this.channel.key,
+      subscriptionType: SubscriptionType.Contest,
+    };
+
+    if (await Cache.database.getSubscription(dailyStatsSubscription)) {
+      this.subscriptions.set(SubscriptionType.DailyStats, true);
+    }
+    if (await Cache.database.getSubscription(contestSubscription)) {
+      this.subscriptions.set(SubscriptionType.Contest, true);
+    }
+
     return Cache.database
       .getUsersForChannel(this.channel.key)
       .then((usernameList) => {
@@ -230,6 +253,77 @@ export class ChannelCache {
         return {
           status: constants.STATUS.SUCCESS,
           detail: BM.CHANNEL_WAS_CLEARED,
+        };
+      })
+      .catch((err) => {
+        log(err);
+
+        // Send message as Internal Server Error
+        return {
+          status: constants.STATUS.ERROR,
+          detail: BM.ERROR_ON_THE_SERVER,
+        };
+      });
+  }
+
+  async subscribe(
+    subscriptionType: SubscriptionType,
+  ): Promise<SubscriptionCacheResponse> {
+    const subscription: Subscription = {
+      channelKey: this.channel.key, subscriptionType,
+    };
+
+    return Cache.database
+      .addSubscription(subscription)
+      .then((createdSubscription: Subscription) => {
+        if (!createdSubscription) {
+          return {
+            status: constants.STATUS.ERROR,
+            detail: BM.ERROR_ON_THE_SERVER,
+          };
+        }
+
+        this.subscriptions.set(subscriptionType, true);
+
+        return {
+          status: constants.STATUS.SUCCESS,
+          detail: BM.SUBSCRIBED(subscriptionType),
+          subscription: createdSubscription,
+        };
+      })
+      .catch((err) => {
+        log(err);
+
+        // Send message as Internal Server Error
+        return {
+          status: constants.STATUS.ERROR,
+          detail: BM.ERROR_ON_THE_SERVER,
+        };
+      });
+  }
+
+  async unsubscribe(
+    subscriptionType: SubscriptionType,
+  ): Promise<CacheResponse> {
+    const subscription: Subscription = {
+      channelKey: this.channel.key, subscriptionType,
+    };
+
+    return Cache.database
+      .removeSubscription(subscription)
+      .then((isDeleted: boolean) => {
+        if (!isDeleted) {
+          return {
+            status: constants.STATUS.ERROR,
+            detail: BM.ERROR_ON_THE_SERVER,
+          };
+        }
+
+        this.subscriptions.set(subscriptionType, false);
+
+        return {
+          status: constants.STATUS.SUCCESS,
+          detail: BM.UNSUBSCRIBED(subscriptionType),
         };
       })
       .catch((err) => {
