@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import * as _ from 'lodash';
 
 import { User } from '../leetcode/models';
@@ -66,6 +65,7 @@ export class ChannelCache {
    * @param {string} username - The username of the user to get or add.
    * @returns The promise with UserCacheResponse.
    */
+  // eslint-disable-next-line class-methods-use-this
   private async getOrAddUser(username: string): Promise<UserCacheResponse> {
     // Get User from UserCache
     const user = UserCache.getUser(username);
