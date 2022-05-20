@@ -1,4 +1,6 @@
-import { SubscriptionType } from './models';
+import { constants } from '../utils/constants';
+
+import { Subscription, SubscriptionType } from './models';
 
 export interface FullSubscriptionTypeModel {
   subscriptionType: SubscriptionType;
@@ -57,6 +59,23 @@ class SubscriptionTypeManager {
 
   getAll(): FullSubscriptionTypeModel[] {
     return [...this.subscriptionsBySubscriptionType.values()];
+  }
+
+  getSubscriptionsText(subscriptions: Subscription[]): string {
+    const allSubscriptionTypes = this.getAll();
+    const subscriptionTypesForSubscriptions = subscriptions
+      .map((subscription: Subscription) => subscription.subscriptionType);
+
+    return allSubscriptionTypes
+      .map((fsub: FullSubscriptionTypeModel) => {
+        const contains = (
+          subscriptionTypesForSubscriptions.includes(fsub.subscriptionType)
+        );
+
+        return contains
+          ? `${fsub.humanName} - ${constants.EMOJI.SUCCESS}`
+          : `${fsub.humanName} - ${constants.EMOJI.CROSS_MARK}`;
+      }).join('\n');
   }
 }
 
