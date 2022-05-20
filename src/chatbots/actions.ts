@@ -583,6 +583,7 @@ export default class Actions {
         isRequired: false,
       },
     ],
+    isAdmin: true,
   })
   static async subscribe(context: Context): Promise<string> {
     const subscriptionTypeKey = context.args.get('subscription_type').value;
@@ -622,6 +623,7 @@ export default class Actions {
         isRequired: false,
       },
     ],
+    isAdmin: true,
   })
   static async unsubscribe(context: Context): Promise<string> {
     const subscriptionTypeKey = context.args.get('subscription_type').value;
