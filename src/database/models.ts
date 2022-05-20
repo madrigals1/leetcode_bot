@@ -38,3 +38,17 @@ export class DatabaseChannelUser
 
   declare username: string;
 }
+
+export class DatabaseSubscription
+  extends Model<
+    InferAttributes<DatabaseSubscription>,
+    InferCreationAttributes<DatabaseSubscription>
+  > {
+  declare id: number;
+
+  declare chat_id: string;
+
+  declare provider: number;
+
+  declare subscription_type: number;
+}
