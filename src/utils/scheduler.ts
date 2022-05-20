@@ -10,5 +10,3 @@ export function refreshUsersCron(): void {
     () => UserCache.refresh(),
   );
 }
-
-export default refreshUsersCron;

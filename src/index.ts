@@ -2,7 +2,7 @@ import { startRest } from './rest';
 import Telegram from './chatbots/telegram';
 import Discord from './chatbots/discord';
 import Slack from './chatbots/slack';
-import refreshUsersCron from './utils/scheduler';
+import { refreshUsersCron } from './utils/scheduler';
 import Database from './database';
 import Cache from './cache';
 import { constants } from './utils/constants';
