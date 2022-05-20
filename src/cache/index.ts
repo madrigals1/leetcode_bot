@@ -13,6 +13,7 @@ class Cache {
 
   /**
    * Get the number of channels in the channel list.
+   *
    * @returns The number of channels in the channel list.
    */
   get channelAmount(): number {
@@ -22,6 +23,7 @@ class Cache {
   /**
    * Get the channel data from the database, create a channel cache from the
    * channel data, and add the channel cache to the map.
+   *
    * @param {ChannelKey} channelKey - The key of the channel to register.
    * @returns Promise with ChannelCache.
    */
@@ -39,8 +41,9 @@ class Cache {
   }
 
   /**
-   * Set the channel cache in the channels map
-   * @param {ChannelCache} channelCache - ChannelCache
+   * Set the channel cache in the channels map.
+   *
+   * @param {ChannelCache} channelCache - ChannelCache.
    */
   public setChannel(channelCache: ChannelCache): void {
     const { channel } = channelCache;
@@ -48,7 +51,7 @@ class Cache {
   }
 
   /**
-   * Preload UserCache, load all channels from Database and recreate in Cache
+   * Preload UserCache, load all channels from Database and recreate in Cache.
    */
   async preload(): Promise<void> {
     // Preload Users from Database
@@ -65,7 +68,8 @@ class Cache {
   }
 
   /**
-   * Get a channel from the cache
+   * Get a channel from the cache.
+   *
    * @param {ChannelKey} channelKey - The key of the channel to get.
    * @returns ChannelCache.
    */
@@ -74,7 +78,8 @@ class Cache {
   }
 
   /**
-   * Clear the contents of a channel
+   * Clear the contents of a channel.
+   *
    * @param {ChannelKey} channelKey - The key of the channel to clear.
    */
   async clearChannel(channelKey: ChannelKey): Promise<void> {
@@ -83,7 +88,7 @@ class Cache {
   }
 
   /**
-   * Remove all channels from the channel list
+   * Remove all channels from the channel list.
    */
   async removeAllChannels(): Promise<void> {
     await this.database.deleteAllChannels();
