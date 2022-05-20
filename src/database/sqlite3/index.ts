@@ -87,6 +87,26 @@ class SQLite extends DatabaseProvider {
       },
     }, { sequelize: this.sequelize, modelName: 'channel_users' });
 
+    this.Subscription.init({
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      chat_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      provider: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      subscription_type: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+    }, { sequelize: this.sequelize, modelName: 'subscriptions' });
+
     log(SM.IS_CONNECTING(this.providerName));
   }
 
