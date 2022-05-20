@@ -8,6 +8,7 @@ import {
 } from './buttons.model';
 import { TelegramTestCase, DiscordTestCase } from './testCase.model';
 import { RegisteredAction } from './registeredAction.model';
+import { Subscription, SubscriptionType } from './subscription.model';
 
 export {
   Context,
@@ -25,4 +26,6 @@ export {
   SlackField,
   RegisteredAction,
   ComplexInteraction,
+  Subscription,
+  SubscriptionType,
 };
