@@ -3,13 +3,16 @@ import { DataTypes, Sequelize, Op } from 'sequelize';
 import { log } from '../../utils/helper';
 import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import DatabaseProvider from '../database.proto';
-import { DatabaseUser, DatabaseChannelUser, DatabaseChannel } from '../models';
+import {
+  DatabaseUser, DatabaseChannelUser, DatabaseChannel, DatabaseSubscription,
+} from '../models';
 import {
   ChannelKey, User, Channel, ChannelUser,
 } from '../../cache/models';
 import { constants } from '../../utils/constants';
 import { usernameFindOptions, usernameUpdateOptions } from '../utils';
 import { User as LeetCodeUser } from '../../leetcode/models';
+import { Subscription } from '../../chatbots/models';
 
 class SQLite extends DatabaseProvider {
   providerName = 'SQLite';
@@ -23,6 +26,8 @@ class SQLite extends DatabaseProvider {
   Channel: typeof DatabaseChannel = DatabaseChannel;
 
   ChannelUser: typeof DatabaseChannelUser = DatabaseChannelUser;
+
+  Subscription: typeof DatabaseSubscription = DatabaseSubscription;
 
   initialize(): void {
     this.sequelize = new Sequelize('sqlite::memory:', {
@@ -342,6 +347,85 @@ class SQLite extends DatabaseProvider {
 
     return this.ChannelUser
       .destroy({ where: { channel_id: channel.id } })
+      .then(() => true)
+      .catch((err) => {
+        log(err);
+        return false;
+      });
+  }
+
+  // Add Subscription to Database
+  async addSubscription(subscription: Subscription): Promise<Subscription> {
+    const { chatId, provider } = subscription.channelKey;
+    const { subscriptionType } = subscription;
+
+    // Check if subscription already exists
+    const foundSubscription = await this.getSubscription(subscription);
+
+    if (foundSubscription) return foundSubscription;
+
+    return this.Subscription
+      .create({
+        chat_id: chatId,
+        provider,
+        subscription_type: subscriptionType,
+      })
+      .then((createdSubscription: DatabaseSubscription) => ({
+        id: createdSubscription.id,
+        channelKey: {
+          chatId: createdSubscription.chat_id,
+          provider: createdSubscription.provider,
+        },
+        subscriptionType: createdSubscription.subscription_type,
+      }))
+      .catch((err) => {
+        log(err);
+        return null;
+      });
+  }
+
+  // Get Subscription from Database
+  async getSubscription(subscription: Subscription): Promise<Subscription> {
+    const { chatId, provider } = subscription.channelKey;
+    const { subscriptionType } = subscription;
+
+    return this.Subscription
+      .findOne({
+        where: {
+          chat_id: chatId,
+          provider,
+          subscription_type: subscriptionType,
+        },
+      })
+      .then((subscriptionFromDB: DatabaseSubscription) => ({
+        id: subscriptionFromDB.id,
+        channelKey: {
+          chatId: subscriptionFromDB.chat_id,
+          provider: subscriptionFromDB.provider,
+        },
+        subscriptionType: subscriptionFromDB.subscription_type,
+      }))
+      .catch(() => null);
+  }
+
+  // Remove Subscription from Database
+  async removeSubscription(subscription: Subscription): Promise<boolean> {
+    const { chatId, provider } = subscription.channelKey;
+    const { subscriptionType } = subscription;
+
+    // Check if subscription already exists
+    const foundSubscription = await this.getSubscription(subscription);
+
+    if (!foundSubscription) return false;
+
+    return this.Subscription
+      .destroy({
+        where: {
+          chat_id: chatId,
+          provider,
+          subscription_type: subscriptionType,
+        },
+      })
       .then(() => true)
       .catch((err) => {
         log(err);
