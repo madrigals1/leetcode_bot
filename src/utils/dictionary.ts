@@ -178,35 +178,37 @@ export const BOT_MESSAGES = {
   // SUBSCRIPTION
   SUBSCRIBED: (subscriptionType: SubscriptionType): string => {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
-    return `${constants.EMOJI.BELL} Subscribed to ${humanName}`;
+    return `${constants.EMOJI.BELL} Subscribed to <b>${humanName}</b>`;
   },
   UNSUBSCRIBED: (subscriptionType: SubscriptionType): string => {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
-    return `${constants.EMOJI.BELL} Unsubscribed from ${humanName}`;
+    return `${constants.EMOJI.BELL} Unsubscribed from <b>${humanName}</b>`;
   },
   SUBSCRIPTION_WAS_NOT_MADE: (
     subscriptionType: SubscriptionType,
   ): string => {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
-    return `${constants.EMOJI.ERROR} Subscription to ${humanName} was not made`;
+    const message = `Internal error while subscribing to <b>${humanName}</b>`;
+    return `${constants.EMOJI.ERROR} ${message}`;
   },
   UNSUBSCRIPTION_WAS_NOT_MADE: (
     subscriptionType: SubscriptionType,
   ): string => {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
-    return `${constants.EMOJI.ERROR} Unsubscription from ${humanName} was not made`;
+    const message = `Internal error while unsubscribing from <b>${humanName}</b>`;
+    return `${constants.EMOJI.ERROR} ${message}`;
   },
   SUBSCRIPTION_DOES_NOT_EXIST: (
     subscriptionType: SubscriptionType,
   ): string => {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
-    return `${constants.EMOJI.ERROR} Subscription to ${humanName} does not exist`;
+    return `${constants.EMOJI.ERROR} You are not subscribed to <b>${humanName}</b>`;
   },
   SUBSCRIPTION_ALREADY_EXISTS: (
     subscriptionType: SubscriptionType,
   ): string => {
     const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
-    return `${constants.EMOJI.ERROR} Subscription to ${humanName} already exists`;
+    return `${constants.EMOJI.ERROR} You are already subscribed to <b>${humanName}</b>`;
   },
   SUBSCRIPTION_LIST: `${constants.EMOJI.BELL} Subscribe`,
   UNSUBSCRIPTION_LIST: `${constants.EMOJI.BELL} Unsubscribe`,
