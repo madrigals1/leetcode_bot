@@ -2,6 +2,7 @@ import { LanguageProblemCount, User } from '../leetcode/models';
 import { getCmlFromUsers } from '../leetcode/utils';
 import { ChatbotProvider } from '../chatbots';
 import { ChannelKey } from '../cache/models';
+import { SubscriptionType } from '../chatbots/models';
 
 import { constants } from './constants';
 
@@ -172,6 +173,39 @@ export const BOT_MESSAGES = {
   // COMPARE ACTION
   SELECT_LEFT_USER: `${constants.EMOJI.PERSON} Select Left User`,
   SELECT_RIGHT_USER: `${constants.EMOJI.PERSON} Select Right User`,
+
+  // SUBSCRIPTION
+  SUBSCRIBED: (subscriptionType: SubscriptionType): string => {
+    const subscriptionSubject = () => {
+      if (subscriptionType === SubscriptionType.DailyStats) {
+        return 'Daily Stats';
+      }
+
+      if (subscriptionType === SubscriptionType.Contest) {
+        return 'Contest';
+      }
+
+      return 'X';
+    };
+
+    return `${constants.EMOJI.PERSON} Subscribed to ${subscriptionSubject()}`;
+  },
+  UNSUBSCRIBED: (subscriptionType: SubscriptionType): string => {
+    const subscriptionSubject = () => {
+      if (subscriptionType === SubscriptionType.DailyStats) {
+        return 'Daily Stats';
+      }
+
+      if (subscriptionType === SubscriptionType.Contest) {
+        return 'Contest';
+      }
+
+      return 'X';
+    };
+
+    return `${constants.EMOJI.PERSON} Unsubscribed from ${subscriptionSubject()}`;
+  },
+  // SUBSCRIBED: `${constants.EMOJI.PERSON} Subscribed`,
 
   // ---------------------------------------------------------------------------
   // BIG TEXTS
