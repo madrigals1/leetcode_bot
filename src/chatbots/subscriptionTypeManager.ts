@@ -50,6 +50,10 @@ class SubscriptionTypeManager {
   getKey(subscriptionType: SubscriptionType): string {
     return this.subscriptionsBySubscriptionType.get(subscriptionType)?.key;
   }
+
+  getType(key: string): SubscriptionType {
+    return this.subscriptionsByKey.get(key)?.subscriptionType;
+  }
 }
 
 export default new SubscriptionTypeManager();
