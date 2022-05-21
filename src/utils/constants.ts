@@ -26,6 +26,11 @@ const {
   DISCORD_APP_ID,
   DISCORD_GUILD_ID,
 
+  // LeetCode BOT Backend
+  LBB_URL,
+  LBB_USERNAME,
+  LBB_PASSWORD,
+
   // REST
   PORT,
 
@@ -205,8 +210,15 @@ const SYSTEM = {
   DATE_FORMAT: 'YYYY-MM-DD hh:mm a',
 };
 
+const LBB = {
+  URL: LBB_URL,
+  USERNAME: LBB_USERNAME,
+  PASSWORD: LBB_PASSWORD,
+};
+
 export const constants = {
   PROVIDERS,
+  LBB,
   DATABASE,
   PORT,
   CML,
