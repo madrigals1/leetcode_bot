@@ -150,7 +150,7 @@ export function getUserProfileContext(username: string): GraphQLContext {
 
 export function getLanguageStatsContext(username: string): GraphQLContext {
   const graphqlLink: string = getGraphqlLink();
-  const userProfileQuery: GraphQLQuery = {
+  const languageStatsQuery: GraphQLQuery = {
     query: `
       query languageStats($username: String!) {
         matchedUser(username: $username) {
@@ -166,7 +166,7 @@ export function getLanguageStatsContext(username: string): GraphQLContext {
 
   return {
     link: graphqlLink,
-    query: userProfileQuery,
+    query: languageStatsQuery,
     headers: {},
   };
 }
