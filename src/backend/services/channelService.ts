@@ -4,6 +4,7 @@ import { LBBChannel } from '../models';
 import { convertResponseBody } from './utils';
 
 type M = LBBChannel;
+const model = '/channels';
 
 class Requests {
   static async get(url: string) {
@@ -32,25 +33,23 @@ class Requests {
 }
 
 export class ChannelService {
-  static model = 'channels';
-
   static create(book: M): Promise<M> {
-    return Requests.post(this.model, book);
+    return Requests.post(model, book);
   }
 
   static get(id: number): Promise<M> {
-    return Requests.get(`${this.model}/${id}`);
+    return Requests.get(`${model}/${id}`);
   }
 
   static fetch(): Promise<M[]> {
-    return Requests.get(this.model);
+    return Requests.get(model);
   }
 
   static update(id: number, book: M): Promise<M> {
-    return Requests.patch(`${this.model}/${id}`, book);
+    return Requests.patch(`${model}/${id}`, book);
   }
 
   static delete(id: number): Promise<M> {
-    return Requests.delete(`${this.model}/${id}`);
+    return Requests.delete(`${model}/${id}`);
   }
 }
