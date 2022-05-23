@@ -23,7 +23,7 @@ class Requests {
       .catch(convertResponseError);
   }
 
-  static async post(url: string, body: any) {
+  static async post(url: string, body: unknown) {
     return authAxios
       .post<M>(url, body)
       .then(convertResponseBody)
