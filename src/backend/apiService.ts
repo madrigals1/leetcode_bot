@@ -1,63 +1,121 @@
+/* eslint-disable class-methods-use-this */
+import { ChannelKey } from '../cache/models';
+
 import {
   ChannelService, ChannelUserService, SubscriptionService, UserService,
-} from './services';
+} from './api';
+import {
+  LBBChannel, LBBChannelUser, LBBSubscription, LBBUser,
+} from './models';
 
-export class ApiService {
+class ApiService {
   // ---------------------------------------------------------------------------
   // Channel
   // ---------------------------------------------------------------------------
 
-  static createChannel = ChannelService.create;
+  createChannel(channel: LBBChannel): Promise<LBBChannel> {
+    return ChannelService.create(channel);
+  }
 
-  static getChannel = ChannelService.get;
+  getChannel(id: number): Promise<LBBChannel> {
+    return ChannelService.get(id);
+  }
 
-  static fetchChannels = ChannelService.fetch;
+  fetchChannels(): Promise<LBBChannel[]> {
+    return ChannelService.fetch();
+  }
 
-  static updateChannel = ChannelService.update;
+  updateChannel(id: number, channel: LBBChannel): Promise<LBBChannel> {
+    return ChannelService.update(id, channel);
+  }
 
-  static deleteChannel = ChannelService.delete;
+  deleteChannel(id: number): Promise<boolean> {
+    return ChannelService.delete(id);
+  }
 
-  static findChannelByKey = ChannelService.findChannelByKey;
+  findChannelByKey(channelKey: ChannelKey): Promise<LBBChannel> {
+    return ChannelService.findChannelByKey(channelKey);
+  }
 
   // ---------------------------------------------------------------------------
   // Channel User
   // ---------------------------------------------------------------------------
 
-  static createChannelUser = ChannelUserService.create;
+  createChannelUser(channelUser: LBBChannelUser): Promise<LBBChannelUser> {
+    return ChannelUserService.create(channelUser);
+  }
 
-  static getChannelUser = ChannelUserService.get;
+  getChannelUser(id: number): Promise<LBBChannelUser> {
+    return ChannelUserService.get(id);
+  }
 
-  static fetchChannelUsers = ChannelUserService.fetch;
+  fetchChannelUsers(): Promise<LBBChannelUser[]> {
+    return ChannelUserService.fetch();
+  }
 
-  static updateChannelUser = ChannelUserService.update;
+  updateChannelUser(
+    id: number, channelUser: LBBChannelUser,
+  ): Promise<LBBChannelUser> {
+    return ChannelUserService.update(id, channelUser);
+  }
 
-  static deleteChannelUser = ChannelUserService.delete;
+  deleteChannelUser(id: number): Promise<boolean> {
+    return ChannelUserService.delete(id);
+  }
 
   // ---------------------------------------------------------------------------
   // Subscription
   // ---------------------------------------------------------------------------
 
-  static createSubscription = SubscriptionService.create;
+  createSubscription(subscription: LBBSubscription): Promise<LBBSubscription> {
+    return SubscriptionService.create(subscription);
+  }
 
-  static getSubscription = SubscriptionService.get;
+  getSubscription(id: number): Promise<LBBSubscription> {
+    return SubscriptionService.get(id);
+  }
 
-  static fetchSubscriptions = SubscriptionService.fetch;
+  fetchSubscriptions(): Promise<LBBSubscription[]> {
+    return SubscriptionService.fetch();
+  }
 
-  static updateSubscription = SubscriptionService.update;
+  updateSubscription(
+    id: number, subscription: LBBSubscription,
+  ): Promise<LBBSubscription> {
+    return SubscriptionService.update(id, subscription);
+  }
 
-  static deleteSubscription = SubscriptionService.delete;
+  deleteSubscription(id: number): Promise<boolean> {
+    return SubscriptionService.delete(id);
+  }
 
   // ---------------------------------------------------------------------------
   // User
   // ---------------------------------------------------------------------------
 
-  static createUser = UserService.create;
+  createUser(user: LBBUser): Promise<LBBUser> {
+    return UserService.create(user);
+  }
 
-  static getUser = UserService.get;
+  getUser(id: number): Promise<LBBUser> {
+    return UserService.get(id);
+  }
 
-  static fetchUsers = UserService.fetch;
+  fetchUsers(): Promise<LBBUser[]> {
+    return UserService.fetch();
+  }
 
-  static updateUser = UserService.update;
+  updateUser(id: number, user: LBBUser): Promise<LBBUser> {
+    return UserService.update(id, user);
+  }
 
-  static deleteUser = UserService.delete;
+  deleteUser(id: number): Promise<boolean> {
+    return UserService.delete(id);
+  }
+
+  getCount(channelId: number): Promise<number> {
+    return UserService.getCount(channelId);
+  }
 }
+
+export default new ApiService();
