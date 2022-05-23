@@ -17,6 +17,8 @@ export class ApiService {
 
   static deleteChannel = ChannelService.delete;
 
+  static findChannelByKey = ChannelService.findChannelByKey;
+
   // ---------------------------------------------------------------------------
   // Channel User
   // ---------------------------------------------------------------------------

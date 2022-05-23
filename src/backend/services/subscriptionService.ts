@@ -4,7 +4,7 @@ import { LBBSubscription } from '../models';
 import { convertResponseBody } from './utils';
 
 type M = LBBSubscription;
-const model = '/subscriptions/';
+const model = '/subscriptions';
 
 class Requests {
   static async get(url: string) {
@@ -34,22 +34,22 @@ class Requests {
 
 export class SubscriptionService {
   static create(book: M): Promise<M> {
-    return Requests.post(model, book);
+    return Requests.post(`${model}/`, book);
   }
 
   static get(id: number): Promise<M> {
-    return Requests.get(`${model}/${id}`);
+    return Requests.get(`${model}/${id}/`);
   }
 
   static fetch(): Promise<M[]> {
-    return Requests.get(model);
+    return Requests.get(`${model}/`);
   }
 
   static update(id: number, book: M): Promise<M> {
-    return Requests.patch(`${model}/${id}`, book);
+    return Requests.patch(`${model}/${id}/`, book);
   }
 
   static delete(id: number): Promise<M> {
-    return Requests.delete(`${model}/${id}`);
+    return Requests.delete(`${model}/${id}/`);
   }
 }
