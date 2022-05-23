@@ -8,6 +8,10 @@ const { LBB } = constants;
 const authAxios = axios.create({
   baseURL: `${LBB.URL}/api/v1`,
   timeout: 15000,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
 });
 
 authAxios.interceptors.request.use(
@@ -17,9 +21,8 @@ authAxios.interceptors.request.use(
     return {
       ...config,
       headers: {
+        ...config.headers,
         Authorization: `Basic ${encodedToken}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
       },
     };
   },
