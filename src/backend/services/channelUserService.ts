@@ -1,7 +1,7 @@
 import { authAxios } from '../axios/authAxios';
 import { LBBChannelUser } from '../models';
 
-import { convertResponseBody } from './utils';
+import { convertResponseBody, convertResponseError } from './utils';
 
 type M = LBBChannelUser;
 const model = '/channel-users';
@@ -10,25 +10,29 @@ class Requests {
   static async get(url: string) {
     return authAxios
       .get<M>(url)
-      .then(convertResponseBody);
+      .then(convertResponseBody)
+      .catch(convertResponseError);
   }
 
   static async post(url: string, body: M) {
     return authAxios
       .post<M>(url, body)
-      .then(convertResponseBody);
+      .then(convertResponseBody)
+      .catch(convertResponseError);
   }
 
   static async delete(url: string) {
     return authAxios
       .delete<M>(url)
-      .then(convertResponseBody);
+      .then(convertResponseBody)
+      .catch(convertResponseError);
   }
 
   static async patch(url: string, body: M) {
     return authAxios
       .patch<M>(url, body)
-      .then(convertResponseBody);
+      .then(convertResponseBody)
+      .catch(convertResponseError);
   }
 }
 

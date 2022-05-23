@@ -3,7 +3,7 @@ import { authAxios } from '../axios/authAxios';
 import { LBBChannel } from '../models';
 import { ChatbotProvider } from '../../chatbots';
 
-import { convertResponseBody } from './utils';
+import { convertResponseBody, convertResponseError } from './utils';
 
 type M = LBBChannel;
 const model = '/channels';
@@ -19,25 +19,29 @@ class Requests {
   static async get(url: string) {
     return authAxios
       .get<M>(url)
-      .then(convertResponseBody);
+      .then(convertResponseBody)
+      .catch(convertResponseError);
   }
 
-  static async post(url: string, body: unknown) {
+  static async post(url: string, body: any) {
     return authAxios
       .post<M>(url, body)
-      .then(convertResponseBody);
+      .then(convertResponseBody)
+      .catch(convertResponseError);
   }
 
   static async delete(url: string) {
     return authAxios
       .delete<M>(url)
-      .then(convertResponseBody);
+      .then(convertResponseBody)
+      .catch(convertResponseError);
   }
 
   static async patch(url: string, body: unknown) {
     return authAxios
       .patch<M>(url, body)
-      .then(convertResponseBody);
+      .then(convertResponseBody)
+      .catch(convertResponseError);
   }
 }
 
