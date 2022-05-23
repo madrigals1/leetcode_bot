@@ -5,7 +5,7 @@ import {
   ChannelService, ChannelUserService, SubscriptionService, UserService,
 } from './api';
 import {
-  LBBChannel, LBBChannelUser, LBBSubscription, LBBUser,
+  LBBChannel, LBBChannelUser, LBBSubscription, LBBUser, LBBUserOnlyUsername,
 } from './models';
 
 class ApiService {
@@ -115,6 +115,10 @@ class ApiService {
 
   getCount(channelId: number): Promise<number> {
     return UserService.getCount(channelId);
+  }
+
+  fetchOnlyUsernames(): Promise<LBBUserOnlyUsername[]> {
+    return UserService.fetchOnlyUsernames();
   }
 }
 

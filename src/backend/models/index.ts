@@ -1,10 +1,11 @@
 import { LBBChannel, LBBChannelUser } from './channel';
 import { LBBSubscription } from './subscription';
-import { LBBUser } from './user';
+import { LBBUser, LBBUserOnlyUsername } from './user';
 
 export {
   LBBChannel,
   LBBChannelUser,
   LBBSubscription,
   LBBUser,
+  LBBUserOnlyUsername,
 };

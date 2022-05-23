@@ -8,3 +8,8 @@ export interface LBBUser {
   created_at: string;
   updated_at: string;
 }
+
+export interface LBBUserOnlyUsername {
+  id: number;
+  username: string;
+}
