@@ -4,7 +4,8 @@ import { LBBSubscription } from '../models';
 import { convertResponseBody } from './utils';
 
 type M = LBBSubscription;
-const model = '/subscriptions';
+const model = '/subscriptions/';
+
 class Requests {
   static async get(url: string) {
     return authAxios

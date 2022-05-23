@@ -4,7 +4,7 @@ import { LBBChannel } from '../models';
 import { convertResponseBody } from './utils';
 
 type M = LBBChannel;
-const model = '/channels';
+const model = '/channels/';
 
 class Requests {
   static async get(url: string) {

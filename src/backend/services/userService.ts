@@ -4,7 +4,7 @@ import { LBBUser } from '../models';
 import { convertResponseBody } from './utils';
 
 type M = LBBUser;
-const model = '/users';
+const model = '/users/';
 
 class Requests {
   static async get(url: string) {
