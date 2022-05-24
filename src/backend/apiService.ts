@@ -113,11 +113,11 @@ class ApiService {
     return UserService.delete(id);
   }
 
-  getCount(channelId: number): Promise<number> {
+  getUserCount(channelId: number): Promise<number> {
     return UserService.getCount(channelId);
   }
 
-  fetchOnlyUsernames(): Promise<LBBUserOnlyUsername[]> {
+  fetchUsersOnlyUsernames(): Promise<LBBUserOnlyUsername[]> {
     return UserService.fetchOnlyUsernames();
   }
 }
