@@ -1,6 +1,7 @@
 import { LBBChannel, LBBChannelUser, LBBChannelKey } from './channel';
 import { LBBSubscription } from './subscription';
 import { LBBUser, LBBUserOnlyUsername } from './user';
+import { LBBUsernameResponse } from './response';
 
 export {
   LBBChannel,
@@ -9,4 +10,5 @@ export {
   LBBSubscription,
   LBBUser,
   LBBUserOnlyUsername,
+  LBBUsernameResponse,
 };

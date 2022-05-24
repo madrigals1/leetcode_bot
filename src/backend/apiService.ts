@@ -7,6 +7,7 @@ import {
 import {
   LBBSubscription,
   LBBUser,
+  LBBUsernameResponse,
   LBBUserOnlyUsername,
 } from './models';
 import {
@@ -68,6 +69,12 @@ class ApiService {
 
   async clearChannel(id: number): Promise<boolean> {
     return ChannelService.clear(id);
+  }
+
+  async bulkAddUsersToChannel(
+    id: number, usernames: string[],
+  ): Promise<LBBUsernameResponse[]> {
+    return ChannelService.bulkAddUsers(id, usernames);
   }
 
   // ---------------------------------------------------------------------------

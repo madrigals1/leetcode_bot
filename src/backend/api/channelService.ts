@@ -1,5 +1,5 @@
 import { ChannelKey } from '../../cache/models';
-import { LBBChannel, LBBChannelKey } from '../models';
+import { LBBChannel, LBBChannelKey, LBBUsernameResponse } from '../models';
 import { ChatbotProvider } from '../../chatbots';
 
 import { Service, Requests } from './requests';
@@ -41,6 +41,12 @@ class ChannelService extends Service<LBBChannel> {
       .get(`${this.url}/${id}/clear/`)
       .then(() => true)
       .catch(() => false);
+  }
+
+  async bulkAddUsers(
+    channelId: number, usernames: string[],
+  ): Promise<LBBUsernameResponse[]> {
+    return Requests.post(`${this.url}/${channelId}/bulk-add/`, { usernames });
   }
 }
 
