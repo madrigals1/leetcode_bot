@@ -4,7 +4,7 @@ export interface LBBUser {
   id?: number;
   url?: string;
   username: string;
-  data: User;
+  data?: User;
   created_at?: string;
   updated_at?: string;
 }
