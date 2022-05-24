@@ -28,6 +28,13 @@ class ChannelService extends Service<LBBChannel> {
   async fetchOnlyKeys(): Promise<LBBChannelKey[]> {
     return Requests.get(`${this.url}/only-keys/`);
   }
+
+  async refresh(id: number): Promise<boolean> {
+    return Requests
+      .get(`${this.url}/${id}/refresh/`)
+      .then(() => true)
+      .catch(() => false);
+  }
 }
 
 export default new ChannelService();

@@ -62,6 +62,10 @@ class ApiService {
       .then((keys) => keys?.map(convertLBBToChannelKey));
   }
 
+  async refreshChannel(id: number): Promise<boolean> {
+    return ChannelService.refresh(id);
+  }
+
   // ---------------------------------------------------------------------------
   // Channel User
   // ---------------------------------------------------------------------------
