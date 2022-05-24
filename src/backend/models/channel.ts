@@ -3,7 +3,7 @@ export interface LBBChannel {
   url?: string;
   chat_id: string;
   provider: number;
-  user_limit: number;
+  user_limit?: number;
   created_at?: string;
   updated_at?: string;
 }
