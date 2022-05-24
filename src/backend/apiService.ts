@@ -1,84 +1,95 @@
 /* eslint-disable class-methods-use-this */
-import { Channel, ChannelKey } from '../cache/models';
+import { Channel, ChannelKey, ChannelUser } from '../cache/models';
 
 import {
   ChannelService, ChannelUserService, SubscriptionService, UserService,
 } from './api';
 import {
-  LBBChannelUser,
   LBBSubscription,
   LBBUser,
   LBBUserOnlyUsername,
 } from './models';
+import {
+  convertChannelToLBB,
+  convertChannelUserToLBB,
+  convertLBBToChannel,
+  convertLBBToChannelKey,
+  convertLBBToChannelUser,
+} from './converters';
 
 class ApiService {
   // ---------------------------------------------------------------------------
   // Channel
   // ---------------------------------------------------------------------------
 
-  createChannel(channel: Channel): Promise<Channel> {
+  async createChannel(channel: Channel): Promise<Channel> {
     return ChannelService
-      .create(channel)
-      .then((res) => res.toChannel());
+      .create(convertChannelToLBB(channel))
+      .then(convertLBBToChannel);
   }
 
-  getChannel(id: number): Promise<Channel> {
+  async getChannel(id: number): Promise<Channel> {
     return ChannelService
       .get(id)
-      .then((res) => res.toChannel());
+      .then(convertLBBToChannel);
   }
 
-  fetchChannels(): Promise<Channel[]> {
+  async fetchChannels(): Promise<Channel[]> {
     return ChannelService
       .fetch()
-      .then((channels) => channels.map((res) => res.toChannel()));
+      .then((channels) => channels?.map(convertLBBToChannel));
   }
 
-  updateChannel(id: number, channel: Channel): Promise<Channel> {
+  async updateChannel(id: number, channel: Channel): Promise<Channel> {
     return ChannelService
-      .update(id, channel)
-      .then((res) => res.toChannel());
+      .update(id, convertChannelToLBB(channel))
+      .then(convertLBBToChannel);
   }
 
-  deleteChannel(id: number): Promise<boolean> {
+  async deleteChannel(id: number): Promise<boolean> {
     return ChannelService.delete(id);
   }
 
-  findChannelByKey(channelKey: ChannelKey): Promise<Channel> {
+  async findChannelByKey(channelKey: ChannelKey): Promise<Channel> {
     return ChannelService
       .findChannelByKey(channelKey)
-      .then((res) => res.toChannel());
+      .then(convertLBBToChannel);
   }
 
-  fetchChannelsOnlyKeys(): Promise<ChannelKey[]> {
+  async fetchChannelsOnlyKeys(): Promise<ChannelKey[]> {
     return ChannelService
       .fetchOnlyKeys()
-      .then((keys) => keys.map((res) => res.toChannelKey()));
+      .then((keys) => keys?.map(convertLBBToChannelKey));
   }
 
   // ---------------------------------------------------------------------------
   // Channel User
   // ---------------------------------------------------------------------------
 
-  createChannelUser(channelUser: LBBChannelUser): Promise<LBBChannelUser> {
-    return ChannelUserService.create(channelUser);
+  async createChannelUser(channelUser: ChannelUser): Promise<ChannelUser> {
+    return ChannelUserService
+      .create(convertChannelUserToLBB(channelUser))
+      .then(convertLBBToChannelUser);
   }
 
-  getChannelUser(id: number): Promise<LBBChannelUser> {
-    return ChannelUserService.get(id);
+  async getChannelUser(id: number): Promise<ChannelUser> {
+    return ChannelUserService.get(id).then(convertLBBToChannelUser);
   }
 
-  fetchChannelUsers(): Promise<LBBChannelUser[]> {
-    return ChannelUserService.fetch();
+  async fetchChannelUsers(): Promise<ChannelUser[]> {
+    return ChannelUserService.fetch()
+      .then((channelUsers) => channelUsers.map(convertLBBToChannelUser));
   }
 
-  updateChannelUser(
-    id: number, channelUser: LBBChannelUser,
-  ): Promise<LBBChannelUser> {
-    return ChannelUserService.update(id, channelUser);
+  async updateChannelUser(
+    id: number, channelUser: ChannelUser,
+  ): Promise<ChannelUser> {
+    return ChannelUserService
+      .update(id, convertChannelUserToLBB(channelUser))
+      .then(convertLBBToChannelUser);
   }
 
-  deleteChannelUser(id: number): Promise<boolean> {
+  async deleteChannelUser(id: number): Promise<boolean> {
     return ChannelUserService.delete(id);
   }
 
