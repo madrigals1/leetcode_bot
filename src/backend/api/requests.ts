@@ -40,7 +40,7 @@ export class Service<M> {
     this.url = url;
   }
 
-  async create(instance: M): Promise<M> {
+  async create(instance: unknown): Promise<M> {
     return Requests.post(`${this.url}/`, instance);
   }
 
@@ -52,7 +52,7 @@ export class Service<M> {
     return Requests.get(`${this.url}/`);
   }
 
-  async update(id: number, instance: M): Promise<M> {
+  async update(id: number, instance: unknown): Promise<M> {
     return Requests.patch(`${this.url}/${id}/`, instance);
   }
 

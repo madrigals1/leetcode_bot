@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { ChannelKey } from '../cache/models';
+import { Channel, ChannelKey } from '../cache/models';
 
 import {
   ChannelService, ChannelUserService, SubscriptionService, UserService,
@@ -18,7 +18,7 @@ class ApiService {
   // Channel
   // ---------------------------------------------------------------------------
 
-  createChannel(channel: LBBChannel): Promise<LBBChannel> {
+  createChannel(channel: Channel): Promise<LBBChannel> {
     return ChannelService.create(channel);
   }
 
@@ -30,7 +30,7 @@ class ApiService {
     return ChannelService.fetch();
   }
 
-  updateChannel(id: number, channel: LBBChannel): Promise<LBBChannel> {
+  updateChannel(id: number, channel: Channel): Promise<LBBChannel> {
     return ChannelService.update(id, channel);
   }
 
