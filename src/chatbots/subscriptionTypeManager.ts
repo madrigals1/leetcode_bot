@@ -1,11 +1,13 @@
 import { constants } from '../utils/constants';
+import { LBBSubscription } from '../backend/models';
 
-import { Subscription, SubscriptionType } from './models';
+import { SubscriptionType } from './models';
 
 export interface FullSubscriptionTypeModel {
   subscriptionType: SubscriptionType;
   key: string;
   humanName: string;
+  backendKey: string;
 }
 
 class SubscriptionTypeManager {
@@ -17,19 +19,28 @@ class SubscriptionTypeManager {
     new Map<string, FullSubscriptionTypeModel>()
   );
 
+  private subscriptionsByBackendKey = (
+    new Map<string, FullSubscriptionTypeModel>()
+  );
+
   constructor() {
     const dailyKey = 'daily';
     const contestKey = 'contest';
+
+    const backendDailyKey = '01_daily_stats';
+    const backendContestKey = '02_contest';
 
     const dailySubscription = {
       subscriptionType: SubscriptionType.DailyStats,
       key: dailyKey,
       humanName: 'Daily Stats',
+      backendKey: backendDailyKey,
     };
     const contestSubscription = {
       subscriptionType: SubscriptionType.Contest,
       key: contestKey,
       humanName: 'Contest',
+      backendKey: backendContestKey,
     };
 
     this.subscriptionsBySubscriptionType
@@ -39,6 +50,11 @@ class SubscriptionTypeManager {
 
     this.subscriptionsByKey.set(dailyKey, dailySubscription);
     this.subscriptionsByKey.set(contestKey, contestSubscription);
+
+    this.subscriptionsByBackendKey
+      .set(backendDailyKey, dailySubscription);
+    this.subscriptionsByBackendKey
+      .set(backendContestKey, contestSubscription);
   }
 
   getHumanName(key: SubscriptionType | string): string {
@@ -49,22 +65,26 @@ class SubscriptionTypeManager {
     return this.subscriptionsBySubscriptionType.get(key)?.humanName;
   }
 
-  getKey(subscriptionType: SubscriptionType): string {
-    return this.subscriptionsBySubscriptionType.get(subscriptionType)?.key;
+  getByType(subscriptionType: SubscriptionType): FullSubscriptionTypeModel {
+    return this.subscriptionsBySubscriptionType.get(subscriptionType);
   }
 
-  getType(key: string): SubscriptionType {
-    return this.subscriptionsByKey.get(key)?.subscriptionType;
+  getByKey(key: string): FullSubscriptionTypeModel {
+    return this.subscriptionsByKey.get(key);
+  }
+
+  getByBackendKey(key: string): FullSubscriptionTypeModel {
+    return this.subscriptionsByBackendKey.get(key);
   }
 
   getAll(): FullSubscriptionTypeModel[] {
     return [...this.subscriptionsBySubscriptionType.values()];
   }
 
-  getSubscriptionsText(subscriptions: Subscription[]): string {
+  getSubscriptionsText(subscriptions: LBBSubscription[]): string {
     const allSubscriptionTypes = this.getAll();
     const subscriptionTypesForSubscriptions = subscriptions
-      .map((subscription: Subscription) => subscription.subscriptionType);
+      .map((subscription: LBBSubscription) => subscription.type);
 
     return allSubscriptionTypes
       .map((fsub: FullSubscriptionTypeModel) => {
