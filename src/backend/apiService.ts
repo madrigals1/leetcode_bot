@@ -5,8 +5,6 @@ import {
   ChannelService, ChannelUserService, SubscriptionService, UserService,
 } from './api';
 import {
-  LBBChannel,
-  LBBChannelKey,
   LBBChannelUser,
   LBBSubscription,
   LBBUser,
@@ -18,32 +16,44 @@ class ApiService {
   // Channel
   // ---------------------------------------------------------------------------
 
-  createChannel(channel: Channel): Promise<LBBChannel> {
-    return ChannelService.create(channel);
+  createChannel(channel: Channel): Promise<Channel> {
+    return ChannelService
+      .create(channel)
+      .then((res) => res.toChannel());
   }
 
-  getChannel(id: number): Promise<LBBChannel> {
-    return ChannelService.get(id);
+  getChannel(id: number): Promise<Channel> {
+    return ChannelService
+      .get(id)
+      .then((res) => res.toChannel());
   }
 
-  fetchChannels(): Promise<LBBChannel[]> {
-    return ChannelService.fetch();
+  fetchChannels(): Promise<Channel[]> {
+    return ChannelService
+      .fetch()
+      .then((channels) => channels.map((res) => res.toChannel()));
   }
 
-  updateChannel(id: number, channel: Channel): Promise<LBBChannel> {
-    return ChannelService.update(id, channel);
+  updateChannel(id: number, channel: Channel): Promise<Channel> {
+    return ChannelService
+      .update(id, channel)
+      .then((res) => res.toChannel());
   }
 
   deleteChannel(id: number): Promise<boolean> {
     return ChannelService.delete(id);
   }
 
-  findChannelByKey(channelKey: ChannelKey): Promise<LBBChannel> {
-    return ChannelService.findChannelByKey(channelKey);
+  findChannelByKey(channelKey: ChannelKey): Promise<Channel> {
+    return ChannelService
+      .findChannelByKey(channelKey)
+      .then((res) => res.toChannel());
   }
 
-  fetchChannelsOnlyKeys(): Promise<LBBChannelKey[]> {
-    return ChannelService.fetchOnlyKeys();
+  fetchChannelsOnlyKeys(): Promise<ChannelKey[]> {
+    return ChannelService
+      .fetchOnlyKeys()
+      .then((keys) => keys.map((res) => res.toChannelKey()));
   }
 
   // ---------------------------------------------------------------------------
