@@ -18,12 +18,7 @@ class ChannelService extends Service<LBBChannel> {
   }
 
   findChannelByKey(channelKey: LBBChannelKey): Promise<LBBChannel> {
-    const backendProviderKey = this.providerMap.get(channelKey.provider);
-
-    return Requests.post(`${this.url}/find-channel/`, {
-      chat_id: channelKey.chat_id,
-      provider: backendProviderKey,
-    });
+    return Requests.post(`${this.url}/find-channel/`, channelKey);
   }
 
   async fetchOnlyKeys(): Promise<LBBChannelKey[]> {

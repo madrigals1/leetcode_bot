@@ -4,7 +4,7 @@ export interface LBBChannel {
   id?: number;
   url?: string;
   chat_id: string;
-  provider: number;
+  provider: string;
   subscriptions?: LBBSubscription[];
   user_limit?: number;
   created_at?: string;
@@ -23,5 +23,5 @@ export interface LBBChannelUser {
 export interface LBBChannelKey {
   id?: number;
   chat_id: string;
-  provider: number;
+  provider: string;
 }

@@ -7,6 +7,7 @@ import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import { LBBChannel } from '../../backend/models';
 import Cache from '../../backend/cache';
 import ApiService from '../../backend/apiService';
+import { log } from '../../utils/helper';
 
 import { Argument, ParsedArgument } from './models';
 
@@ -253,9 +254,14 @@ export async function getOrCreateChannel(
 
   if (existingChannelCache) return existingChannelCache;
 
-  const newChannelId = await ApiService
+  const newChannel = await ApiService
     .createChannel(channelKey)
-    .then((channel) => channel.id);
+    .catch((err) => log(err));
 
-  return newChannelId;
+  if (newChannel) {
+    Cache.addChannelId(channelKey, newChannel.id);
+    return newChannel.id;
+  }
+
+  return 0;
 }
