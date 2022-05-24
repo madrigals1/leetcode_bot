@@ -6,8 +6,8 @@ import {
   solvedProblemsChart,
   ratingGraph,
 } from '../vizapi';
-import { UserCache } from '../cache/userCache';
-import { getLanguageStats } from '../leetcode';
+import ApiService from '../backend/apiService';
+import { log } from '../utils/helper';
 
 import { action } from './decorators';
 import {
@@ -28,10 +28,6 @@ export const vizapiActions = {
   compareMenu,
   solvedProblemsChart,
   ratingGraph,
-};
-
-export const leetcodeActions = {
-  getLanguageStats,
 };
 
 export default class Actions {
@@ -63,22 +59,19 @@ export default class Actions {
     ],
   })
   static async add(context: Context): Promise<string> {
-    // Variable to store text to return back to chat
-    let message = '';
-
     // Get Usernames from arguments
     const usernames = context.args.get('username').values;
 
-    // Add all Users 1 by 1 and log into message
-    for (let i = 0; i < usernames.length; i++) {
-      // Get results of adding
-      // eslint-disable-next-line no-await-in-loop
-      const result = await context.channelCache.addUser(usernames[i]);
+    // Add users to Database and return response as string
+    const response = await ApiService
+      .bulkAddUsersToChannel(context.channelId, usernames)
+      .then((res) => res.join('\n'))
+      .catch((err) => {
+        log(err);
+        return 'Error on the server!';
+      });
 
-      message += result.detail;
-    }
-
-    return BM.USER_LIST(message);
+    return BM.USER_LIST(response);
   }
 
   @action({ name: 'refresh' })
@@ -86,9 +79,8 @@ export default class Actions {
     // Log that database started refresh
     await context.reply(BM.CACHE_STARTED_REFRESH, context);
 
-    // Refresh and return result
-    const result = await UserCache.refresh();
-    return result.detail;
+    await ApiService.refreshChannel(context.channelId);
+    return BM.CACHE_IS_REFRESHED;
   }
 
   @action({
@@ -112,7 +104,8 @@ export default class Actions {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'remove',
-          users: context.channelCache.users,
+          users: (await ApiService.fetchUsersForChannel(context.channelId))
+            .map((user) => user.data),
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -123,15 +116,17 @@ export default class Actions {
     }
 
     // Check if User exists
-    const user = context.channelCache.loadUser(username);
+    const user = await ApiService
+      .findUserInChannel(context.channelId, username);
     if (!user) return BM.USERNAME_NOT_FOUND(username);
 
     await context.reply(BM.USERNAME_WILL_BE_DELETED(username), context);
 
     // Remove User
-    const result = await context.channelCache.removeUser(username);
+    const result = await ApiService
+      .deleteUserFromChannelByUsername(context.channelId, username);
 
-    return result.detail;
+    return result ? 'User was deleted' : 'User was not deleted';
   }
 
   @action({ name: 'clear', isAdmin: true })
@@ -140,14 +135,15 @@ export default class Actions {
     await context.reply(BM.CHANNEL_WILL_BE_CLEARED, context);
 
     // Remove all Users and send the result (success or failure)
-    const result = await context.channelCache.clear();
+    const result = await ApiService.clearChannel(context.channelId);
 
-    return result.detail;
+    return result ? 'Channel was cleared' : 'Channel was not cleared';
   }
 
   @action({ name: 'stats', isAdmin: true })
   static async stats(context: Context): Promise<string> {
-    const { users } = context.channelCache;
+    const users = (await ApiService.fetchUsersForChannel(context.channelId))
+      .map((cacheUser) => cacheUser.data);
 
     // Send message with stats
     return BM.STATS_TEXT(context.provider, users);
@@ -166,7 +162,8 @@ export default class Actions {
   })
   static async rating(context: Context): Promise<string> {
     const type = context.args.get('type').value;
-    const users = context.channelCache?.users ?? [];
+    const users = (await ApiService.fetchUsersForChannel(context.channelId))
+      .map((user) => user.data);
 
     // Prepare buttons
     const cmlButton = {
@@ -259,7 +256,8 @@ export default class Actions {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'profile',
-          users: context.channelCache.users,
+          users: (await ApiService.fetchUsersForChannel(context.channelId))
+            .map((user) => user.data),
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -270,7 +268,8 @@ export default class Actions {
     }
 
     // Get User from username
-    const user = context.channelCache.loadUser(username);
+    const user = await ApiService
+      .findUserInChannel(context.channelId, username);
 
     if (!user) return BM.USERNAME_NOT_FOUND(username);
 
@@ -301,7 +300,7 @@ export default class Actions {
       type: ButtonContainerType.MultipleButtons,
     }];
 
-    return BM.USER_TEXT(user);
+    return BM.USER_TEXT(user.data);
   }
 
   @action({
@@ -320,11 +319,12 @@ export default class Actions {
 
     // If 1 User was sent
     if (username !== '') {
-      const user = context.channelCache.loadUser(username);
+      const user = await ApiService
+        .findUserInChannel(context.channelId, username);
 
       if (user) {
         // Add photo to context
-        context.photoUrl = user.profile.userAvatar;
+        context.photoUrl = user.data.profile.userAvatar;
         return BM.USER_AVATAR(user.username);
       }
 
@@ -335,7 +335,8 @@ export default class Actions {
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'avatar',
-        users: context.channelCache.users,
+        users: (await ApiService.fetchUsersForChannel(context.channelId))
+          .map((user) => user.data),
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -363,13 +364,14 @@ export default class Actions {
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user = context.channelCache.loadUser(username);
+      const user = await ApiService
+        .findUserInChannel(context.channelId, username);
 
       // If User does not exist, return error message
       if (!user) return BM.USERNAME_NOT_FOUND(username);
 
       // Create HTML image with Table
-      const response = await vizapiActions.tableForSubmissions(user);
+      const response = await vizapiActions.tableForSubmissions(user.data);
 
       // If image was created
       if (response.link) {
@@ -390,7 +392,8 @@ export default class Actions {
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'submissions',
-        users: context.channelCache.users,
+        users: (await ApiService.fetchUsersForChannel(context.channelId))
+          .map((user) => user.data),
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -418,13 +421,14 @@ export default class Actions {
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user = context.channelCache.loadUser(username);
+      const user = await ApiService
+        .findUserInChannel(context.channelId, username);
 
       // If User does not exist, return error message
       if (!user) return BM.USERNAME_NOT_FOUND(username);
 
       // Create HTML image with Table
-      const response = await vizapiActions.solvedProblemsChart(user);
+      const response = await vizapiActions.solvedProblemsChart(user.data);
 
       // If image was created
       if (response.link) {
@@ -442,7 +446,8 @@ export default class Actions {
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'problems',
-        users: context.channelCache.users,
+        users: (await ApiService.fetchUsersForChannel(context.channelId))
+          .map((user) => user.data),
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -479,7 +484,8 @@ export default class Actions {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'compare',
-          users: context.channelCache.users,
+          users: (await ApiService.fetchUsersForChannel(context.channelId))
+            .map((user) => user.data),
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -494,7 +500,8 @@ export default class Actions {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: `compare ${first}`,
-          users: context.channelCache.users,
+          users: (await ApiService.fetchUsersForChannel(context.channelId))
+            .map((user) => user.data),
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -505,8 +512,10 @@ export default class Actions {
     }
 
     // Get Users from args
-    const leftUser = context.channelCache.loadUser(first);
-    const rightUser = context.channelCache.loadUser(second);
+    const leftUser = await ApiService
+      .findUserInChannel(context.channelId, first);
+    const rightUser = await ApiService
+      .findUserInChannel(context.channelId, second);
 
     if (!leftUser) {
       return BM.USERNAME_NOT_FOUND(first);
@@ -516,7 +525,8 @@ export default class Actions {
       return BM.USERNAME_NOT_FOUND(second);
     }
 
-    const response = await vizapiActions.compareMenu(leftUser, rightUser);
+    const response = await vizapiActions
+      .compareMenu(leftUser.data, rightUser.data);
 
     // If image was created
     if (response.link) {
@@ -546,14 +556,14 @@ export default class Actions {
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user = context.channelCache.loadUser(username);
+      const user = await ApiService
+        .findUserInChannel(context.channelId, username);
 
       // If User does not exist, return error message
       if (!user) return BM.USERNAME_NOT_FOUND(username);
 
       // Get language stats from LeetCode
-      const response = await leetcodeActions.getLanguageStats(username);
-      const data = response?.matchedUser?.languageProblemCount ?? [];
+      const data = user.data.languageStats ?? [];
 
       return BM.LANGUAGE_STATS_TEXT(username, data);
     }
@@ -562,7 +572,9 @@ export default class Actions {
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'langstats',
-        users: context.channelCache.users,
+        users: (
+          await ApiService.fetchUsersForChannel(context.channelId)
+        ).map((user) => user.data),
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -587,15 +599,24 @@ export default class Actions {
   })
   static async subscribe(context: Context): Promise<string> {
     const subscriptionTypeKey = context.args.get('subscription_type').value;
-    const subscriptionType = SubscriptionTypeManager
-      .getType(subscriptionTypeKey);
+    const { subscriptionType } = SubscriptionTypeManager
+      .getByKey(subscriptionTypeKey);
 
     // If Subscription Type was sent
     if (subscriptionTypeKey !== '') {
       // Subscribe
-      const result = await context.channelCache.subscribe(subscriptionType);
+      const result = await ApiService
+        .createSubscription({
+          channel_id: context.channelId,
+          type: subscriptionType,
+        })
+        .then(() => 'Subscribed.')
+        .catch((err) => {
+          log(err);
+          return 'Error. Not subscribed.';
+        });
 
-      return result.detail;
+      return result;
     }
 
     // If Subscription Type was not sent, return buttons
@@ -627,15 +648,24 @@ export default class Actions {
   })
   static async unsubscribe(context: Context): Promise<string> {
     const subscriptionTypeKey = context.args.get('subscription_type').value;
-    const subscriptionType = SubscriptionTypeManager
-      .getType(subscriptionTypeKey);
+    const { subscriptionType } = SubscriptionTypeManager
+      .getByKey(subscriptionTypeKey);
 
     // If Subscription Type was sent
     if (subscriptionTypeKey !== '') {
       // Unsubscribe
-      const result = await context.channelCache.unsubscribe(subscriptionType);
+      const result = await ApiService
+        .createSubscription({
+          channel_id: context.channelId,
+          type: subscriptionType,
+        })
+        .then(() => 'Unsubscribed.')
+        .catch((err) => {
+          log(err);
+          return 'Error. Not unsubscribed.';
+        });
 
-      return result.detail;
+      return result;
     }
 
     // If Subscription Type was not sent, return buttons
@@ -655,9 +685,9 @@ export default class Actions {
 
   @action({ name: 'subscription', isAdmin: true })
   static async subscription(context: Context): Promise<string> {
-    const subscriptions = await context.channelCache
-      .getAllSubscriptions(context.channelKey);
+    const channel = await ApiService.getChannel(context.channelId);
 
-    return SubscriptionTypeManager.getSubscriptionsText(subscriptions);
+    return SubscriptionTypeManager
+      .getSubscriptionsText(channel.subscriptions);
   }
 }
