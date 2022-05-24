@@ -1,9 +1,7 @@
 import { LanguageProblemCount, User } from '../leetcode/models';
-import { getCmlFromUsers } from '../leetcode/utils';
-import { ChatbotProvider } from '../chatbots';
-import { ChannelKey } from '../cache/models';
-import { SubscriptionType } from '../chatbots/models';
+import { ChatbotProvider, SubscriptionType } from '../chatbots/models';
 import SubscriptionTypeManager from '../chatbots/subscriptionTypeManager';
+import { LBBChannelKey } from '../backend/models';
 
 import { constants } from './constants';
 
@@ -58,7 +56,7 @@ export const SERVER_MESSAGES = {
   NO_SUBMISSIONS: 'no_submissions',
 
   // Channel errors
-  CHANNEL_DOES_NOT_EXIST: (channelKey: ChannelKey): string =>
+  CHANNEL_DOES_NOT_EXIST: (channelKey: LBBChannelKey): string =>
     // eslint-disable-next-line implicit-arrow-linebreak
     `Channel does not exist - ${channelKey}`,
 
@@ -278,7 +276,9 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
       return NO_USERS;
     }
 
-    const rating = CML_HEADER + getCmlFromUsers(users);
+    const rating = CML_HEADER;
+    // TODO: Bring BACK
+    // + getCmlFromUsers(users);
     return rating;
   },
 
