@@ -61,6 +61,10 @@ class ChannelService extends Service<LBBChannel> {
       .then(() => true)
       .catch(() => false);
   }
+
+  async fetchUsers(channelId: number): Promise<LBBUser[]> {
+    return Requests.get(`${this.url}/${channelId}/fetch-users/`);
+  }
 }
 
 export default new ChannelService();

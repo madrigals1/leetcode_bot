@@ -1,5 +1,7 @@
 /* eslint-disable class-methods-use-this */
-import { Channel, ChannelKey, ChannelUser } from '../cache/models';
+import {
+  Channel, ChannelKey, ChannelUser, User,
+} from '../cache/models';
 
 import {
   ChannelService, ChannelUserService, SubscriptionService, UserService,
@@ -16,6 +18,7 @@ import {
   convertLBBToChannel,
   convertLBBToChannelKey,
   convertLBBToChannelUser,
+  convertLBBToUser,
 } from './converters';
 
 class ApiService {
@@ -87,6 +90,12 @@ class ApiService {
     channelId: number, username: string,
   ): Promise<boolean> {
     return ChannelService.deleteUser(channelId, username);
+  }
+
+  async fetchUsersForChannel(channelId: number): Promise<User[]> {
+    return ChannelService
+      .fetchUsers(channelId)
+      .then((res) => res.map(convertLBBToUser));
   }
 
   // ---------------------------------------------------------------------------
