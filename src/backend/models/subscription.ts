@@ -1,6 +1,6 @@
 export interface LBBSubscription {
   id?: number;
-  url: string;
+  url?: string;
   channel_id: number;
   type: number;
   created_at?: string;

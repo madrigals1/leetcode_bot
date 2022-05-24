@@ -2,7 +2,7 @@ import { User } from '../../leetcode/models';
 
 export interface LBBUser {
   id?: number;
-  url: string;
+  url?: string;
   username: string;
   data: User;
   created_at?: string;
