@@ -5,7 +5,12 @@ import {
   ChannelService, ChannelUserService, SubscriptionService, UserService,
 } from './api';
 import {
-  LBBChannel, LBBChannelUser, LBBSubscription, LBBUser, LBBUserOnlyUsername,
+  LBBChannel,
+  LBBChannelKey,
+  LBBChannelUser,
+  LBBSubscription,
+  LBBUser,
+  LBBUserOnlyUsername,
 } from './models';
 
 class ApiService {
@@ -35,6 +40,10 @@ class ApiService {
 
   findChannelByKey(channelKey: ChannelKey): Promise<LBBChannel> {
     return ChannelService.findChannelByKey(channelKey);
+  }
+
+  fetchChannelsOnlyKeys(): Promise<LBBChannelKey[]> {
+    return ChannelService.fetchOnlyKeys();
   }
 
   // ---------------------------------------------------------------------------

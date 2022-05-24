@@ -1,5 +1,5 @@
 import { ChannelKey } from '../../cache/models';
-import { LBBChannel } from '../models';
+import { LBBChannel, LBBChannelKey } from '../models';
 import { ChatbotProvider } from '../../chatbots';
 
 import { Service, Requests } from './requests';
@@ -23,6 +23,10 @@ class ChannelService extends Service<LBBChannel> {
       chat_id: channelKey.chatId,
       provider: backendProviderKey,
     });
+  }
+
+  async fetchOnlyKeys(): Promise<LBBChannelKey[]> {
+    return Requests.get(`${this.url}/only-keys/`);
   }
 }
 

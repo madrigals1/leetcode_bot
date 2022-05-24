@@ -16,3 +16,9 @@ export interface LBBChannelUser {
   created_at: string;
   updated_at: string;
 }
+
+export interface LBBChannelKey {
+  id: number;
+  chat_id: string;
+  provider: number;
+}
