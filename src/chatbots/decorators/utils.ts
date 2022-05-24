@@ -4,9 +4,9 @@ import ArgumentManager from '../argumentManager';
 import { Context } from '../models';
 import { ArgumentsError, InputError } from '../../utils/errors';
 import { BOT_MESSAGES as BM } from '../../utils/dictionary';
-import Cache from '../../cache';
-import { ChannelKey } from '../../cache/models';
-import { ChannelCache } from '../../cache/channel';
+import { LBBChannel } from '../../backend/models';
+import Cache from '../../backend/cache';
+import ApiService from '../../backend/apiService';
 
 import { Argument, ParsedArgument } from './models';
 
@@ -247,13 +247,15 @@ export function getPositionalParsedArguments(
 }
 
 export async function getOrCreateChannel(
-  channelKey: ChannelKey,
-): Promise<ChannelCache> {
-  const existingChannelCache = Cache.getChannel(channelKey);
+  channelKey: LBBChannel,
+): Promise<number> {
+  const existingChannelCache = Cache.getChannelId(channelKey);
 
   if (existingChannelCache) return existingChannelCache;
 
-  const newChannelCache = await Cache.registerChannel(channelKey);
+  const newChannelId = await ApiService
+    .createChannel(channelKey)
+    .then((channel) => channel.id);
 
-  return newChannelCache;
+  return newChannelId;
 }

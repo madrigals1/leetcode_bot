@@ -32,7 +32,11 @@ export function action(actionContext: ActionContext): (
       const replyHandler = new ReplyHandler(actionName, context);
 
       // Add Channel to Context
-      context.channelCache = await getOrCreateChannel(context.channelKey);
+      context.channelId = await getOrCreateChannel({
+        chat_id: context.channelKey.chat_id,
+        provider: context.channelKey.provider,
+        user_limit: 1000,
+      });
 
       // Create mutable argumentManager, so that we can apply try-catch on it
       let argumentManager: ArgumentManager;

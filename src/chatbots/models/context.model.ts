@@ -51,6 +51,7 @@ export interface Context {
   bot?: Client | TelegramBot | MockBotTelegram;
   photoUrl?: string;
   channelKey?: LBBChannelKey;
+  channelId?: number;
   isAdmin?: Promise<boolean>;
   // Discord
   discordProvidedArguments?: readonly CommandInteractionOption[];
