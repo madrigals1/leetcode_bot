@@ -72,9 +72,9 @@ class ApiService {
   }
 
   async bulkAddUsersToChannel(
-    id: number, usernames: string[],
+    channelId: number, usernames: string[],
   ): Promise<LBBUsernameResponse[]> {
-    return ChannelService.bulkAddUsers(id, usernames);
+    return ChannelService.bulkAddUsers(channelId, usernames);
   }
 
   // ---------------------------------------------------------------------------
