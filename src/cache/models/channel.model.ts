@@ -21,5 +21,5 @@ export interface User {
 export interface ChannelUser {
   id?: number;
   channelId: number;
-  username: string;
+  userId: number;
 }
