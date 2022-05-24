@@ -1,6 +1,7 @@
 import { ChatbotProvider } from '../../chatbots';
 
 export interface ChannelKey {
+  id?: number;
   chatId: string;
   provider: ChatbotProvider;
 }
