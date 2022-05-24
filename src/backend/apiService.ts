@@ -83,6 +83,12 @@ class ApiService {
     return ChannelService.findUser(channelId, username);
   }
 
+  async deleteUserFromChannelByUsername(
+    channelId: number, username: string,
+  ): Promise<boolean> {
+    return ChannelService.deleteUser(channelId, username);
+  }
+
   // ---------------------------------------------------------------------------
   // Channel User
   // ---------------------------------------------------------------------------

@@ -54,6 +54,13 @@ class ChannelService extends Service<LBBChannel> {
   async findUser(channelId: number, username: string): Promise<LBBUser> {
     return Requests.post(`${this.url}/${channelId}/find-user/`, { username });
   }
+
+  async deleteUser(channelId: number, username: string): Promise<boolean> {
+    return Requests
+      .post(`${this.url}/${channelId}/delete-user/`, { username })
+      .then(() => true)
+      .catch(() => false);
+  }
 }
 
 export default new ChannelService();
