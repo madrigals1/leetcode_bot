@@ -1,9 +1,5 @@
 /* eslint-disable class-methods-use-this */
 import {
-  Channel, ChannelKey, ChannelUser, User,
-} from '../cache/models';
-
-import {
   ChannelService, ChannelUserService, SubscriptionService, UserService,
 } from './api';
 import {
@@ -11,59 +7,42 @@ import {
   LBBUser,
   LBBUsernameResponse,
   LBBUserOnlyUsername,
+  LBBChannel,
+  LBBChannelKey,
+  LBBChannelUser,
 } from './models';
-import {
-  convertChannelToLBB,
-  convertChannelUserToLBB,
-  convertLBBToChannel,
-  convertLBBToChannelKey,
-  convertLBBToChannelUser,
-  convertLBBToUser,
-} from './converters';
 
 class ApiService {
   // ---------------------------------------------------------------------------
   // Channel
   // ---------------------------------------------------------------------------
 
-  async createChannel(channel: Channel): Promise<Channel> {
-    return ChannelService
-      .create(convertChannelToLBB(channel))
-      .then(convertLBBToChannel);
+  async createChannel(channel: LBBChannel): Promise<LBBChannel> {
+    return ChannelService.create(channel);
   }
 
-  async getChannel(id: number): Promise<Channel> {
-    return ChannelService
-      .get(id)
-      .then(convertLBBToChannel);
+  async getChannel(id: number): Promise<LBBChannel> {
+    return ChannelService.get(id);
   }
 
-  async fetchChannels(): Promise<Channel[]> {
-    return ChannelService
-      .fetch()
-      .then((channels) => channels?.map(convertLBBToChannel));
+  async fetchChannels(): Promise<LBBChannel[]> {
+    return ChannelService.fetch();
   }
 
-  async updateChannel(id: number, channel: Channel): Promise<Channel> {
-    return ChannelService
-      .update(id, convertChannelToLBB(channel))
-      .then(convertLBBToChannel);
+  async updateChannel(id: number, channel: LBBChannel): Promise<LBBChannel> {
+    return ChannelService.update(id, channel);
   }
 
   async deleteChannel(id: number): Promise<boolean> {
     return ChannelService.delete(id);
   }
 
-  async findChannelByKey(channelKey: ChannelKey): Promise<Channel> {
-    return ChannelService
-      .findChannelByKey(channelKey)
-      .then(convertLBBToChannel);
+  async findChannelByKey(channelKey: LBBChannelKey): Promise<LBBChannel> {
+    return ChannelService.findChannelByKey(channelKey);
   }
 
-  async fetchChannelsOnlyKeys(): Promise<ChannelKey[]> {
-    return ChannelService
-      .fetchOnlyKeys()
-      .then((keys) => keys?.map(convertLBBToChannelKey));
+  async fetchChannelsOnlyKeys(): Promise<LBBChannelKey[]> {
+    return ChannelService.fetchOnlyKeys();
   }
 
   async refreshChannel(id: number): Promise<boolean> {
@@ -92,37 +71,32 @@ class ApiService {
     return ChannelService.deleteUser(channelId, username);
   }
 
-  async fetchUsersForChannel(channelId: number): Promise<User[]> {
-    return ChannelService
-      .fetchUsers(channelId)
-      .then((res) => res.map(convertLBBToUser));
+  async fetchUsersForChannel(channelId: number): Promise<LBBUser[]> {
+    return ChannelService.fetchUsers(channelId);
   }
 
   // ---------------------------------------------------------------------------
   // Channel User
   // ---------------------------------------------------------------------------
 
-  async createChannelUser(channelUser: ChannelUser): Promise<ChannelUser> {
-    return ChannelUserService
-      .create(convertChannelUserToLBB(channelUser))
-      .then(convertLBBToChannelUser);
+  async createChannelUser(
+    channelUser: LBBChannelUser,
+  ): Promise<LBBChannelUser> {
+    return ChannelUserService.create(channelUser);
   }
 
-  async getChannelUser(id: number): Promise<ChannelUser> {
-    return ChannelUserService.get(id).then(convertLBBToChannelUser);
+  async getChannelUser(id: number): Promise<LBBChannelUser> {
+    return ChannelUserService.get(id);
   }
 
-  async fetchChannelUsers(): Promise<ChannelUser[]> {
-    return ChannelUserService.fetch()
-      .then((channelUsers) => channelUsers.map(convertLBBToChannelUser));
+  async fetchChannelUsers(): Promise<LBBChannelUser[]> {
+    return ChannelUserService.fetch();
   }
 
   async updateChannelUser(
-    id: number, channelUser: ChannelUser,
-  ): Promise<ChannelUser> {
-    return ChannelUserService
-      .update(id, convertChannelUserToLBB(channelUser))
-      .then(convertLBBToChannelUser);
+    id: number, channelUser: LBBChannelUser,
+  ): Promise<LBBChannelUser> {
+    return ChannelUserService.update(id, channelUser);
   }
 
   async deleteChannelUser(id: number): Promise<boolean> {

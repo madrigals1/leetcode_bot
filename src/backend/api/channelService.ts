@@ -1,4 +1,3 @@
-import { ChannelKey } from '../../cache/models';
 import {
   LBBChannel, LBBChannelKey, LBBUser, LBBUsernameResponse,
 } from '../models';
@@ -18,11 +17,11 @@ class ChannelService extends Service<LBBChannel> {
     this.providerMap.set(ChatbotProvider.Random, '05_random');
   }
 
-  findChannelByKey(channelKey: ChannelKey): Promise<LBBChannel> {
+  findChannelByKey(channelKey: LBBChannelKey): Promise<LBBChannel> {
     const backendProviderKey = this.providerMap.get(channelKey.provider);
 
     return Requests.post(`${this.url}/find-channel/`, {
-      chat_id: channelKey.chatId,
+      chat_id: channelKey.chat_id,
       provider: backendProviderKey,
     });
   }
