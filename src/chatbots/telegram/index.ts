@@ -58,7 +58,7 @@ export default class Telegram {
       prefix: constants.PROVIDERS.TELEGRAM.PREFIX,
       options: { parse_mode: 'HTML' },
       channelKey: {
-        chatId: message.chat.id.toString(),
+        chat_id: message.chat.id.toString(),
         provider: this.id,
       },
       isAdmin: new Promise((resolve) => {

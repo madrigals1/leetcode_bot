@@ -39,7 +39,7 @@ class Slack {
             send: say,
           },
           channelKey: {
-            chatId: command.channel_id,
+            chat_id: command.channel_id,
             provider: this.id,
           },
           provider: this.id,

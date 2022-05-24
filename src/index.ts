@@ -2,7 +2,6 @@ import { startRest } from './rest';
 import Telegram from './chatbots/telegram';
 import Discord from './chatbots/discord';
 import Slack from './chatbots/slack';
-import { refreshUsersCron } from './utils/scheduler';
 import Cache from './backend/cache';
 import { constants } from './utils/constants';
 import { log } from './utils/helper';
@@ -17,9 +16,6 @@ Cache.preload()
 
     // Run Slack BOT
     if (constants.PROVIDERS.SLACK.ENABLE) Slack.run();
-
-    // Starting the scheduler for Cache refresher
-    refreshUsersCron();
   })
   .catch((err) => {
     log(err);
