@@ -22,7 +22,7 @@ class ChannelService extends Service<LBBChannel> {
   }
 
   async fetchOnlyKeys(): Promise<LBBChannelKey[]> {
-    return Requests.get(`${this.url}/only-keys/`);
+    return Requests.get(`${this.url}/keys-only/`);
   }
 
   async refresh(id: number): Promise<boolean> {
