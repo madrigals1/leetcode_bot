@@ -1,7 +1,5 @@
-import { ChannelKey } from '../cache/models';
-
+import { LBBChannelKey, LBBUserOnlyUsername } from './models';
 import ApiService from './apiService';
-import { LBBUserOnlyUsername } from './models';
 
 class Cache {
   channelKeyIdMap = new Map<string, number>();
@@ -19,20 +17,20 @@ class Cache {
     });
 
     // Load Usernames and IDs
-    const channelKeys: ChannelKey[] = await ApiService
+    const channelKeys: LBBChannelKey[] = await ApiService
       .fetchChannelsOnlyKeys()
-      .catch(() => [] as ChannelKey[]);
+      .catch(() => [] as LBBChannelKey[]);
 
-    channelKeys.forEach((channelKey: ChannelKey) => {
+    channelKeys.forEach((channelKey: LBBChannelKey) => {
       this.addChannelId(channelKey, channelKey.id);
     });
   }
 
-  addChannelId(key: ChannelKey, id: number): void {
+  addChannelId(key: LBBChannelKey, id: number): void {
     this.channelKeyIdMap.set(JSON.stringify(key), id);
   }
 
-  getChannelId(key: ChannelKey): number {
+  getChannelId(key: LBBChannelKey): number {
     return this.channelKeyIdMap.get(JSON.stringify(key));
   }
 
