@@ -1,4 +1,6 @@
 import { LBBUsernameResponse } from '../backend/models';
+import { ChatbotProvider, getChatbotNameByKey } from '../chatbots/models';
+import { User } from '../leetcode/models';
 
 import { constants } from './constants';
 
@@ -108,8 +110,35 @@ class BigMessages {
 <b><i>${prefix}stats</i></b> - Show Stats for this Bot
 `;
   }
-}
 
+  static statsText(provider: ChatbotProvider, users: User[]): string {
+    const userNameList = users.map(
+      (user) => (`<b>- ${user.username}</b>`),
+    ).join('\n');
+
+    const providerName = getChatbotNameByKey(provider);
+    const providerKey = Object.keys(constants.PROVIDERS)
+      .find((key) => constants.PROVIDERS[key].NAME === providerName);
+
+    return `
+<b>PROVIDER RELATED</b>
+<b>Provider:</b> ${constants.PROVIDERS[providerKey].NAME}
+<b>Prefix:</b> ${constants.PROVIDERS[providerKey].PREFIX}
+<b>Discord enabled:</b> ${constants.PROVIDERS.DISCORD.ENABLE}
+<b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
+<b>Slack enabled:</b> ${constants.PROVIDERS.SLACK.ENABLE}
+
+<b>DATABASE RELATED</b>
+<b>User Count:</b> ${users.length}
+
+<b>SYSTEM RELATED</b>
+<b>Delay between calls:</b> ${constants.SYSTEM.USER_REQUEST_DELAY_MS}
+
+<b>USER LIST</b>
+${userNameList}
+    `;
+  }
+}
 class RefreshMessages {
   static cacheStartedRefresh = `${EMOJI.WAITING} Cache refresh was `
     + 'requested...';

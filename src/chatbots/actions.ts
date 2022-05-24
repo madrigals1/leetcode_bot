@@ -154,11 +154,11 @@ export default class Actions {
 
   @action({ name: 'stats', isAdmin: true })
   static async stats(context: Context): Promise<string> {
-    const users = (await ApiService.fetchUsersForChannel(context.channelId))
-      .map((cacheUser) => cacheUser.data);
+    const lbbUsers = await ApiService.fetchUsersForChannel(context.channelId);
+    const users = lbbUsers.map((lbbUser) => lbbUser.data);
 
     // Send message with stats
-    return BM.STATS_TEXT(context.provider, users);
+    return BigMessages.statsText(context.provider, users);
   }
 
   @action({
