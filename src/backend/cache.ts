@@ -34,12 +34,24 @@ class Cache {
     });
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  private getKeyWithoutId(key: LBBChannelKey): LBBChannelKey {
+    return {
+      chat_id: key.chat_id,
+      provider: key.provider,
+    };
+  }
+
   addChannelId(key: LBBChannelKey, id: number): void {
-    this.channelKeyIdMap.set(JSON.stringify(key), id);
+    this.channelKeyIdMap.set(
+      JSON.stringify(this.getKeyWithoutId(key)), id,
+    );
   }
 
   getChannelId(key: LBBChannelKey): number {
-    return this.channelKeyIdMap.get(JSON.stringify(key));
+    return this.channelKeyIdMap.get(
+      JSON.stringify(this.getKeyWithoutId(key)),
+    );
   }
 
   addUsernameId(username: string, id: number): void {
