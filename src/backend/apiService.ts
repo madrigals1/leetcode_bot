@@ -77,6 +77,12 @@ class ApiService {
     return ChannelService.bulkAddUsers(channelId, usernames);
   }
 
+  async findUserInChannel(
+    channelId: number, username: string,
+  ): Promise<LBBUser> {
+    return ChannelService.findUser(channelId, username);
+  }
+
   // ---------------------------------------------------------------------------
   // Channel User
   // ---------------------------------------------------------------------------
