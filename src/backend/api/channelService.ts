@@ -2,7 +2,7 @@ import { ChannelKey } from '../../cache/models';
 import {
   LBBChannel, LBBChannelKey, LBBUser, LBBUsernameResponse,
 } from '../models';
-import { ChatbotProvider } from '../../chatbots';
+import { ChatbotProvider } from '../../chatbots/models';
 
 import { Service, Requests } from './requests';
 
