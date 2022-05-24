@@ -4,8 +4,8 @@ export interface LBBChannel {
   chat_id: string;
   provider: number;
   user_limit: number;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface LBBChannelUser {
@@ -13,8 +13,8 @@ export interface LBBChannelUser {
   url: string;
   channel_id: number;
   user: number;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface LBBChannelKey {
