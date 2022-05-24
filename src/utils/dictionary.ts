@@ -1,9 +1,10 @@
 import { LanguageProblemCount, User } from '../leetcode/models';
 import { ChatbotProvider, SubscriptionType } from '../chatbots/models';
 import SubscriptionTypeManager from '../chatbots/subscriptionTypeManager';
-import { LBBChannelKey } from '../backend/models';
+import { LBBChannelKey, LBBUsernameResponse } from '../backend/models';
 
 import { constants } from './constants';
+import { UserAddingMessages } from './messageMaps';
 
 export const SERVER_MESSAGES = {
   // ERROR
@@ -113,8 +114,16 @@ export const BOT_MESSAGES = {
   CACHE_ALREADY_REFRESHED: `${constants.EMOJI.ERROR} Cache was refreshed less than 5 minutes ago`,
 
   // USER RELATED
-  USER_LIST(userList: string): string {
-    return `User List:\n${userList}`;
+  USER_LIST(responses: LBBUsernameResponse[]): string {
+    if (!responses) {
+      return UserAddingMessages.unknown_error;
+    }
+
+    const message = responses
+      .map((r) => `<b>${r.username}</b> - ${UserAddingMessages[r.detail]}`)
+      .join('\n');
+
+    return `User List:\n${message}`;
   },
   NO_USERS,
   CML_HEADER,

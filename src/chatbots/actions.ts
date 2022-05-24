@@ -65,10 +65,9 @@ export default class Actions {
     // Add users to Database and return response as string
     const response = await ApiService
       .bulkAddUsersToChannel(context.channelId, usernames)
-      .then((res) => res.join('\n'))
       .catch((err) => {
         log(err);
-        return 'Error on the server!';
+        return [];
       });
 
     return BM.USER_LIST(response);
