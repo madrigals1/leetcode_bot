@@ -8,7 +8,14 @@ import {
 } from '../vizapi';
 import ApiService from '../backend/apiService';
 import { log } from '../utils/helper';
-import { UserDeletingMessages } from '../utils/messageMaps';
+import {
+  UserAddMessages,
+  UserDeleteMessages,
+  BigMessages,
+  SmallMessages,
+  RefreshMessages,
+  ClearMessages,
+} from '../utils/messageMaps';
 
 import { action } from './decorators';
 import {
@@ -34,17 +41,17 @@ export const vizapiActions = {
 export default class Actions {
   @action({ name: 'ping' })
   static ping(): string {
-    return 'pong';
+    return SmallMessages.pong;
   }
 
   @action({ name: 'start' })
   static start(context: Context): string {
-    return BM.WELCOME_TEXT(context.prefix);
+    return BigMessages.welcomeText(context.prefix);
   }
 
   @action({ name: 'help' })
   static help(): string {
-    return BM.HELP_TEXT;
+    return SmallMessages.helpText;
   }
 
   @action({
@@ -71,16 +78,16 @@ export default class Actions {
         return [];
       });
 
-    return BM.USER_LIST(response);
+    return UserAddMessages.userList(response);
   }
 
   @action({ name: 'refresh' })
   static async refresh(context: Context): Promise<string> {
     // Log that database started refresh
-    await context.reply(BM.CACHE_STARTED_REFRESH, context);
+    await context.reply(RefreshMessages.cacheStartedRefresh, context);
 
     await ApiService.refreshChannel(context.channelId);
-    return BM.CACHE_IS_REFRESHED;
+    return RefreshMessages.cacheIsRefreshed;
   }
 
   @action({
@@ -113,34 +120,36 @@ export default class Actions {
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return UserDeletingMessages.user_list_remove;
+      return UserDeleteMessages.userListRemove;
     }
 
     // Check if User exists
     const user = await ApiService
       .findUserInChannel(context.channelId, username);
 
-    if (!user) return UserDeletingMessages.does_not_exist(username);
+    if (!user) return UserDeleteMessages.doesNotExist(username);
 
-    const message = UserDeletingMessages.will_be_deleted(username);
+    const message = UserDeleteMessages.willBeDeleted(username);
     await context.reply(message, context);
 
     // Remove User
     const result = await ApiService
       .deleteUserFromChannelByUsername(context.channelId, username);
 
-    return UserDeletingMessages[result.detail](username);
+    return UserDeleteMessages[result.detail](username);
   }
 
   @action({ name: 'clear', isAdmin: true })
   static async clear(context: Context): Promise<string> {
     // Send message, that Database will be cleared
-    await context.reply(BM.CHANNEL_WILL_BE_CLEARED, context);
+    await context.reply(ClearMessages.channelWillBeCleared, context);
 
     // Remove all Users and send the result (success or failure)
     const result = await ApiService.clearChannel(context.channelId);
 
-    return result ? 'Channel was cleared' : 'Channel was not cleared';
+    return result
+      ? ClearMessages.channelWasCleared
+      : ClearMessages.channelWasNotCleared;
   }
 
   @action({ name: 'stats', isAdmin: true })
