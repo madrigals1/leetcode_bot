@@ -4,7 +4,13 @@ import { User } from '../leetcode/models';
 
 import { constants } from './constants';
 
-const { EMOJI } = constants;
+const {
+  EMOJI, CML, PROVIDERS, SYSTEM,
+} = constants;
+
+class ErrorMessages {
+  static server = `${EMOJI.ERROR} Error on the server side`;
+}
 
 class UserAddMessages {
   static success(username: string): string {
@@ -32,11 +38,9 @@ class UserAddMessages {
     return `<b>${username}</b> - ${message}`;
   }
 
-  static unknownErrorOverall = `${EMOJI.ERROR} Error on the server side`;
-
   static userList(responses: LBBUsernameResponse[]): string {
     if (!responses) {
-      return this.unknownErrorOverall;
+      return ErrorMessages.server;
     }
 
     const message = responses
@@ -78,11 +82,13 @@ class SmallMessages {
   static helpText = (
     'Contact @madrigals1 in Telegram or madrigals1#9652 in Discord'
   );
+
+  static noUsers = `${EMOJI.ERROR} No users found in database`;
 }
 
 class BigMessages {
   static welcomeText(prefix: string): string {
-    return `Welcome! This is Leetcode Rating Bot Elite ${constants.EMOJI.COOL} Boys
+    return `Welcome! This is Leetcode Rating Bot Elite ${EMOJI.COOL} Boys
 
 <b>Main commands:</b>
 <b><i>${prefix}start</i></b> - Starting Page
@@ -117,26 +123,53 @@ class BigMessages {
     ).join('\n');
 
     const providerName = getChatbotNameByKey(provider);
-    const providerKey = Object.keys(constants.PROVIDERS)
-      .find((key) => constants.PROVIDERS[key].NAME === providerName);
+    const providerKey = Object.keys(PROVIDERS)
+      .find((key) => PROVIDERS[key].NAME === providerName);
 
     return `
 <b>PROVIDER RELATED</b>
-<b>Provider:</b> ${constants.PROVIDERS[providerKey].NAME}
-<b>Prefix:</b> ${constants.PROVIDERS[providerKey].PREFIX}
-<b>Discord enabled:</b> ${constants.PROVIDERS.DISCORD.ENABLE}
-<b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
-<b>Slack enabled:</b> ${constants.PROVIDERS.SLACK.ENABLE}
+<b>Provider:</b> ${PROVIDERS[providerKey].NAME}
+<b>Prefix:</b> ${PROVIDERS[providerKey].PREFIX}
+<b>Discord enabled:</b> ${PROVIDERS.DISCORD.ENABLE}
+<b>Telegram enabled:</b> ${PROVIDERS.TELEGRAM.ENABLE}
+<b>Slack enabled:</b> ${PROVIDERS.SLACK.ENABLE}
 
 <b>DATABASE RELATED</b>
 <b>User Count:</b> ${users.length}
 
 <b>SYSTEM RELATED</b>
-<b>Delay between calls:</b> ${constants.SYSTEM.USER_REQUEST_DELAY_MS}
+<b>Delay between calls:</b> ${SYSTEM.USER_REQUEST_DELAY_MS}
 
 <b>USER LIST</b>
 ${userNameList}
     `;
+  }
+
+  static cmlHeader = `Cumulative Rating:
+${EMOJI.GREEN_CIRCLE} Easy - <b>${CML.EASY_POINTS} points</b>
+${EMOJI.YELLOW_CIRCLE} Medium - <b>${CML.MEDIUM_POINTS} points</b>
+${EMOJI.RED_CIRCLE} Hard - <b>${CML.HARD_POINTS} points</b>
+  
+`;
+
+  static ratingText(users: User[]): string {
+    if (!users || users.length === 0) {
+      return SmallMessages.noUsers;
+    }
+    return users.map(
+      (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.solved}`),
+    ).join('\n');
+  }
+
+  static cmlRatingText(users: User[]): string {
+    if (!users || users.length === 0) {
+      return SmallMessages.noUsers;
+    }
+
+    const rating = this.cmlHeader;
+    // TODO: Bring BACK
+    // + getCmlFromUsers(users);
+    return rating;
   }
 }
 class RefreshMessages {
@@ -154,6 +187,16 @@ class ClearMessages {
   static channelWasNotCleared = `${EMOJI.ERROR} Channel was not cleared`;
 }
 
+class RatingMessages {
+  static cmlRating = `${EMOJI.ABACUS} Cumulative Rating`;
+
+  static regularRating = `${EMOJI.CLIPBOARD} Regular Rating`;
+
+  static graphRating = `${EMOJI.CHART} Graph Rating`;
+
+  static incorrectRatingType = `${EMOJI.ERROR} Incorrect rating type`;
+}
+
 export {
   UserAddMessages,
   UserDeleteMessages,
@@ -161,4 +204,6 @@ export {
   SmallMessages,
   RefreshMessages,
   ClearMessages,
+  RatingMessages,
+  ErrorMessages,
 };
