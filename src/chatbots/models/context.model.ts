@@ -11,8 +11,7 @@ import {
 } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
 
-import { ChannelCache } from '../../cache/channel';
-import { ChannelKey } from '../../cache/models';
+import { LBBChannelKey } from '../../backend/models';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
 import MockBotTelegram from '../../__tests__/__mocks__/chatbots/telegram.mock';
@@ -51,8 +50,7 @@ export interface Context {
   options?: Options;
   bot?: Client | TelegramBot | MockBotTelegram;
   photoUrl?: string;
-  channelKey?: ChannelKey;
-  channelCache?: ChannelCache;
+  channelKey?: LBBChannelKey;
   isAdmin?: Promise<boolean>;
   // Discord
   discordProvidedArguments?: readonly CommandInteractionOption[];
