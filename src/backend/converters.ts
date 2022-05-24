@@ -1,9 +1,12 @@
-import { Channel, ChannelKey, ChannelUser } from '../cache/models';
+import {
+  Channel, ChannelKey, ChannelUser, User,
+} from '../cache/models';
 
 import {
   LBBChannel,
   LBBChannelKey,
   LBBChannelUser,
+  LBBUser,
 } from './models';
 
 export function convertChannelToLBB(channel: Channel): LBBChannel {
@@ -59,5 +62,13 @@ export function convertLBBToChannelKey(
     id: lbbChannelKey.id,
     chatId: lbbChannelKey.chat_id,
     provider: lbbChannelKey.provider,
+  };
+}
+
+export function convertLBBToUser(lbbUser: LBBUser): User {
+  return {
+    id: lbbUser.id,
+    username: lbbUser.username,
+    data: lbbUser.data,
   };
 }
