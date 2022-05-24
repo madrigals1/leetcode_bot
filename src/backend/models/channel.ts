@@ -1,5 +1,5 @@
 export interface LBBChannel {
-  id: number;
+  id?: number;
   url: string;
   chat_id: string;
   provider: number;
@@ -9,7 +9,7 @@ export interface LBBChannel {
 }
 
 export interface LBBChannelUser {
-  id: number;
+  id?: number;
   url: string;
   channel_id: number;
   user: number;
@@ -18,7 +18,7 @@ export interface LBBChannelUser {
 }
 
 export interface LBBChannelKey {
-  id: number;
+  id?: number;
   chat_id: string;
   provider: number;
 }

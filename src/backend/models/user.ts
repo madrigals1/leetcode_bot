@@ -1,7 +1,7 @@
 import { User } from '../../leetcode/models';
 
 export interface LBBUser {
-  id: number;
+  id?: number;
   url: string;
   username: string;
   data: User;
@@ -10,6 +10,6 @@ export interface LBBUser {
 }
 
 export interface LBBUserOnlyUsername {
-  id: number;
+  id?: number;
   username: string;
 }
