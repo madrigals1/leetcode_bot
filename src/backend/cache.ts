@@ -1,3 +1,5 @@
+import { log } from '../utils/helper';
+
 import { LBBChannelKey, LBBUserOnlyUsername } from './models';
 import ApiService from './apiService';
 
@@ -10,7 +12,10 @@ class Cache {
     // Load Usernames and IDs
     const users: LBBUserOnlyUsername[] = await ApiService
       .fetchUsersOnlyUsernames()
-      .catch(() => [] as LBBUserOnlyUsername[]);
+      .catch((err) => {
+        log(err);
+        return [] as LBBUserOnlyUsername[];
+      });
 
     users.forEach((user: LBBUserOnlyUsername) => {
       this.addUsernameId(user.username, user.id);
@@ -19,7 +24,10 @@ class Cache {
     // Load Usernames and IDs
     const channelKeys: LBBChannelKey[] = await ApiService
       .fetchChannelsOnlyKeys()
-      .catch(() => [] as LBBChannelKey[]);
+      .catch((err) => {
+        log(err);
+        return [] as LBBChannelKey[];
+      });
 
     channelKeys.forEach((channelKey: LBBChannelKey) => {
       this.addChannelId(channelKey, channelKey.id);
