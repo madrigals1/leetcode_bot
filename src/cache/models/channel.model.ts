@@ -1,4 +1,5 @@
-import { ChatbotProvider } from '../../chatbots';
+import { ChatbotProvider } from '../../chatbots/models';
+import { User as LeetcodeUser } from '../../leetcode/models';
 
 export interface ChannelKey {
   id?: number;
@@ -15,7 +16,7 @@ export interface Channel {
 export interface User {
   id?: number;
   username: string;
-  data?: string;
+  data?: LeetcodeUser;
 }
 
 export interface ChannelUser {
