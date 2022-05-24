@@ -116,11 +116,11 @@ export const BOT_MESSAGES = {
   // USER RELATED
   USER_LIST(responses: LBBUsernameResponse[]): string {
     if (!responses) {
-      return UserAddingMessages.unknown_error;
+      return UserAddingMessages.unknown_error_overall;
     }
 
     const message = responses
-      .map((r) => `<b>${r.username}</b> - ${UserAddingMessages[r.detail]}`)
+      .map((res) => UserAddingMessages[res.detail](res.username))
       .join('\n');
 
     return `User List:\n${message}`;

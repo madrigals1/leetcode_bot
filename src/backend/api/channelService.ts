@@ -46,14 +46,15 @@ class ChannelService extends Service<LBBChannel> {
   }
 
   async findUser(channelId: number, username: string): Promise<LBBUser> {
-    return Requests.post(`${this.url}/${channelId}/find-user/`, { username });
+    return Requests
+      .post(`${this.url}/${channelId}/find-user/`, { username });
   }
 
-  async deleteUser(channelId: number, username: string): Promise<boolean> {
+  async deleteUser(
+    channelId: number, username: string,
+  ): Promise<LBBUsernameResponse> {
     return Requests
-      .post(`${this.url}/${channelId}/delete-user/`, { username })
-      .then(() => true)
-      .catch(() => false);
+      .post(`${this.url}/${channelId}/delete-user/`, { username });
   }
 
   async fetchUsers(channelId: number): Promise<LBBUser[]> {

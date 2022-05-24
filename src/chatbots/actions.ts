@@ -8,6 +8,7 @@ import {
 } from '../vizapi';
 import ApiService from '../backend/apiService';
 import { log } from '../utils/helper';
+import { UserDeletingMessages } from '../utils/messageMaps';
 
 import { action } from './decorators';
 import {
@@ -99,33 +100,36 @@ export default class Actions {
 
     // If Username is not provided, show buttons
     if (username === '') {
+      const lbbUsers = await ApiService.fetchUsersForChannel(context.channelId);
+
       // Add Buttons with User List
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'remove',
-          users: (await ApiService.fetchUsersForChannel(context.channelId))
-            .map((user) => user.data),
+          users: lbbUsers.map((user) => user.data),
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.USER_LIST_REMOVE;
+      return UserDeletingMessages.user_list_remove;
     }
 
     // Check if User exists
     const user = await ApiService
       .findUserInChannel(context.channelId, username);
-    if (!user) return BM.USERNAME_NOT_FOUND(username);
 
-    await context.reply(BM.USERNAME_WILL_BE_DELETED(username), context);
+    if (!user) return UserDeletingMessages.does_not_exist(username);
+
+    const message = UserDeletingMessages.will_be_deleted(username);
+    await context.reply(message, context);
 
     // Remove User
     const result = await ApiService
       .deleteUserFromChannelByUsername(context.channelId, username);
 
-    return result ? 'User was deleted' : 'User was not deleted';
+    return UserDeletingMessages[result.detail](username);
   }
 
   @action({ name: 'clear', isAdmin: true })
