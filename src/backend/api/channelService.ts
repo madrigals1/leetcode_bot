@@ -35,6 +35,13 @@ class ChannelService extends Service<LBBChannel> {
       .then(() => true)
       .catch(() => false);
   }
+
+  async clear(id: number): Promise<boolean> {
+    return Requests
+      .get(`${this.url}/${id}/clear/`)
+      .then(() => true)
+      .catch(() => false);
+  }
 }
 
 export default new ChannelService();

@@ -66,6 +66,10 @@ class ApiService {
     return ChannelService.refresh(id);
   }
 
+  async clearChannel(id: number): Promise<boolean> {
+    return ChannelService.clear(id);
+  }
+
   // ---------------------------------------------------------------------------
   // Channel User
   // ---------------------------------------------------------------------------
