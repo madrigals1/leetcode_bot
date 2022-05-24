@@ -9,6 +9,7 @@ import {
 import { TelegramTestCase, DiscordTestCase } from './testCase.model';
 import { RegisteredAction } from './registeredAction.model';
 import { Subscription, SubscriptionType } from './subscription.model';
+import { ChatbotProvider } from './chatbot.model';
 
 export {
   Context,
@@ -28,4 +29,5 @@ export {
   ComplexInteraction,
   Subscription,
   SubscriptionType,
+  ChatbotProvider,
 };
