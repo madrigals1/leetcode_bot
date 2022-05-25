@@ -1,10 +1,9 @@
-import { Context } from '../../../chatbots/models';
+import { Context, ChatbotProvider } from '../../../chatbots/models';
 import Actions, { registeredActions } from '../../../chatbots/actions';
-import { constants } from '../../../utils/constants';
+import { constants } from '../../../globals/constants';
 import {
   getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
-import { ChatbotProvider } from '../../../chatbots';
 
 export default class Mockbot {
   output: string[] = [];
@@ -16,7 +15,7 @@ export default class Mockbot {
   prefix = constants.PROVIDERS.MOCKBOT.PREFIX;
 
   channelKey = {
-    chatId: 'unique_chat_id',
+    chat_id: 'unique_chat_id',
     provider: ChatbotProvider.Mockbot,
   }
 

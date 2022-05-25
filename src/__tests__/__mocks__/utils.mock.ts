@@ -1,13 +1,14 @@
 import * as _ from 'lodash';
 
-import { ButtonOptions, Context } from '../../chatbots/models';
+import { ButtonOptions, Context, ChatbotProvider } from '../../chatbots/models';
 import { VizapiResponse } from '../../vizapi/models';
-import { LanguageStats, User } from '../../leetcode/models';
-import {
-  SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
-} from '../../utils/dictionary';
+import { LanguageProblemCount, User } from '../../leetcode/models';
 import { generateString } from '../../utils/helper';
-import { ChatbotProvider } from '../../chatbots';
+import {
+  ErrorMessages,
+  SmallMessages,
+  UserMessages,
+} from '../../globals/messages';
 
 import { users, user1, user2 } from './data.mock';
 
@@ -28,14 +29,14 @@ export async function mockTableForSubmissions(
 
     return {
       error,
-      reason: SM.ERROR_ON_THE_SERVER(error),
+      reason: ErrorMessages.server,
     };
   }
 
   if (user.submitStats.acSubmissionNum.length === 0) {
     return {
-      error: BM.USER_NO_SUBMISSIONS(user.username),
-      reason: SM.NO_SUBMISSIONS,
+      error: UserMessages.noSubmissions(user.username),
+      reason: SmallMessages.noSubmissionsKey,
     };
   }
 
@@ -132,44 +133,36 @@ export function generateMockContext(): Context {
 
 export async function mockLanguageStats(
   username: string,
-): Promise<LanguageStats> {
+): Promise<LanguageProblemCount[]> {
   return new Promise((resolve) => {
     if (username === user1.username) {
-      resolve({
-        matchedUser: {
-          languageProblemCount: [
-            {
-              languageName: 'C++',
-              problemsSolved: 421,
-            },
-            {
-              languageName: 'Python',
-              problemsSolved: 200,
-            },
-            {
-              languageName: 'JavaScript',
-              problemsSolved: 127,
-            },
-          ],
+      resolve([
+        {
+          languageName: 'C++',
+          problemsSolved: 421,
         },
-      });
+        {
+          languageName: 'Python',
+          problemsSolved: 200,
+        },
+        {
+          languageName: 'JavaScript',
+          problemsSolved: 127,
+        },
+      ]);
     }
 
     if (username === user2.username) {
-      resolve({
-        matchedUser: {
-          languageProblemCount: [
-            {
-              languageName: 'TypeScript',
-              problemsSolved: 10,
-            },
-            {
-              languageName: 'C#',
-              problemsSolved: 5,
-            },
-          ],
+      resolve([
+        {
+          languageName: 'TypeScript',
+          problemsSolved: 10,
         },
-      });
+        {
+          languageName: 'C#',
+          problemsSolved: 5,
+        },
+      ]);
     }
   });
 }
