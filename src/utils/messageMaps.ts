@@ -68,6 +68,10 @@ class UserMessages {
   static recentSubmissions(username: string): string {
     return `${username}'s recent submissions`;
   }
+
+  static solvedProblemsChart(username: string): string {
+    return `${username}'s solved problems chart`;
+  }
 }
 
 class UserDeleteMessages {

@@ -443,6 +443,9 @@ export default class Actions {
   })
   static async problems(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
+    const lbbUsers = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // If 1 User was sent
     if (username !== '') {
@@ -451,7 +454,7 @@ export default class Actions {
         .findUserInChannel(context.channelId, username);
 
       // If User does not exist, return error message
-      if (!user) return BM.USERNAME_NOT_FOUND(username);
+      if (!user) return UserMessages.doesNotExist(username);
 
       // Create HTML image with Table
       const response = await vizapiActions.solvedProblemsChart(user.data);
@@ -460,20 +463,18 @@ export default class Actions {
       if (response.link) {
         // Add image to context
         context.photoUrl = response.link;
-
-        return BM.USER_SOLVED_PROBLEMS_CHART(user.username);
+        return UserMessages.solvedProblemsChart(username);
       }
 
       // If image link was not achieved from VizAPI
-      return BM.ERROR_ON_THE_SERVER;
+      return ErrorMessages.server;
     }
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'problems',
-        users: (await ApiService.fetchUsersForChannel(context.channelId))
-          .map((user) => user.data),
+        users: await lbbUsers,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -481,7 +482,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_PROBLEMS;
+    return ListMessages.userListProblems;
   }
 
   @action({
