@@ -15,6 +15,8 @@ import {
   SmallMessages,
   RefreshMessages,
   ClearMessages,
+  RatingMessages,
+  ErrorMessages,
 } from '../utils/messageMaps';
 
 import { action } from './decorators';
@@ -174,13 +176,14 @@ export default class Actions {
   })
   static async rating(context: Context): Promise<string> {
     const type = context.args.get('type').value;
-    const users = (await ApiService.fetchUsersForChannel(context.channelId))
-      .map((user) => user.data);
+    const lbbUsersPromise = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // Prepare buttons
     const cmlButton = {
       buttons: [{
-        text: BM.CML_RATING,
+        text: RatingMessages.cmlRating,
         action: '/rating cml',
       }],
       buttonPerRow: 1,
@@ -189,7 +192,7 @@ export default class Actions {
     };
     const graphButton = {
       buttons: [{
-        text: BM.GRAPH_RATING,
+        text: RatingMessages.graphRating,
         action: '/rating graph',
       }],
       buttonPerRow: 1,
@@ -198,7 +201,7 @@ export default class Actions {
     };
     const regularButton = {
       buttons: [{
-        text: BM.REGULAR_RATING,
+        text: RatingMessages.regularRating,
         action: '/rating',
       }],
       buttonPerRow: 1,
@@ -210,8 +213,7 @@ export default class Actions {
     if (type === '') {
       // Add buttons
       context.options.buttons = [cmlButton, graphButton];
-
-      return BM.RATING_TEXT(users);
+      return BigMessages.ratingText(await lbbUsersPromise);
     }
 
     // Cumulative rating:
@@ -221,14 +223,20 @@ export default class Actions {
     if (type === 'cml') {
       // Add buttons
       context.options.buttons = [regularButton, graphButton];
-
-      return BM.CML_RATING_TEXT(users);
+      const cmlUsersPromise = ApiService
+        .fetchUsersForChannel(context.channelId, '-solved_cml')
+        .then((users) => users.map((user) => user.data))
+        .catch((err) => {
+          log(err);
+          return [];
+        });
+      return BigMessages.cmlRatingText(await cmlUsersPromise);
     }
 
     // Rating with graph
     if (type === 'graph') {
       // Create HTML image with Graph
-      const response = await vizapiActions.ratingGraph(users);
+      const response = await vizapiActions.ratingGraph(await lbbUsersPromise);
 
       // If image was created
       if (response.link) {
@@ -238,15 +246,15 @@ export default class Actions {
         // Add buttons
         context.options.buttons = [regularButton, cmlButton];
 
-        return BM.GRAPH_RATING;
+        return RatingMessages.graphRating;
       }
 
       // If image link was not achieved from VizAPI
-      return BM.ERROR_ON_THE_SERVER;
+      return ErrorMessages.server;
     }
 
     // If type is not recognized
-    return BM.INCORRECT_RATING_TYPE;
+    return RatingMessages.incorrectRatingType;
   }
 
   @action({
