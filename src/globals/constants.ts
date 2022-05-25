@@ -2,8 +2,7 @@ import * as dotenv from 'dotenv';
 import TelegramBot from 'node-telegram-bot-api';
 
 import { ChatbotProvider } from '../chatbots/models';
-
-import { isTrue } from './helper';
+import { isTrue } from '../utils/helper';
 
 dotenv.config();
 

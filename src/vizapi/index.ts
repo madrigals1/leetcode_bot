@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { constants } from '../utils/constants';
+import { constants } from '../globals/constants';
 import { log, error } from '../utils/helper';
 import { User } from '../leetcode/models';
 import {

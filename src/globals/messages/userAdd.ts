@@ -1,5 +1,5 @@
 import { LBBUsernameResponse } from '../../backend/models';
-import { constants } from '../../utils/constants';
+import { constants } from '../constants';
 
 import { ErrorMessages } from './error';
 

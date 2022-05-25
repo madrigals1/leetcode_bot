@@ -3,7 +3,7 @@ import Telegram from './chatbots/telegram';
 import Discord from './chatbots/discord';
 import Slack from './chatbots/slack';
 import Cache from './backend/cache';
-import { constants } from './utils/constants';
+import { constants } from './globals/constants';
 import { log } from './utils/helper';
 
 Cache.preload()

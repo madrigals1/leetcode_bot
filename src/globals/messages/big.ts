@@ -5,7 +5,7 @@ import {
   subscriptionTypeManager,
 } from '../../chatbots/subscriptionTypeManager';
 import { LanguageProblemCount, User } from '../../leetcode/models';
-import { constants } from '../../utils/constants';
+import { constants } from '../constants';
 
 import { SmallMessages } from './small';
 

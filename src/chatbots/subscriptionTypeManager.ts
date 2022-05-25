@@ -1,4 +1,4 @@
-import { constants } from '../utils/constants';
+import { constants } from '../globals/constants';
 import { LBBSubscription } from '../backend/models';
 
 import { SubscriptionType } from './models';
