@@ -6,11 +6,11 @@ import {
   compareMenu,
   tableForSubmissions,
 } from '../../vizapi';
-import {
-  SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
-} from '../../utils/dictionary';
 import { isValidHttpUrl } from '../../utils/helper';
-import { constants } from '../../utils/constants';
+import { constants } from '../../globals/constants';
+import {
+  ErrorMessages, ImageMessages, SmallMessages, UserMessages,
+} from '../../globals/messages';
 
 const { VIZAPI_LINK } = constants;
 
@@ -83,7 +83,7 @@ test('vizapi.utils.compareMenu action', async () => {
   // Valid
   const compareResponse = await compareMenu(user1, user2);
 
-  expect(console.log).toHaveBeenCalledWith(SM.IMAGE_WAS_CREATED);
+  expect(console.log).toHaveBeenCalledWith(ImageMessages.imageWasCreated);
   expect(isValidHttpUrl(compareResponse.link)).toBe(true);
   expect(compareResponse.error).toBe(undefined);
   expect(compareResponse.reason).toBe(undefined);
@@ -94,14 +94,14 @@ test('vizapi.utils.compareMenu action', async () => {
 
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure.error === undefined).toBe(false);
-  expect(compareResponseFailure.reason).toBe(SM.API_NOT_WORKING);
+  expect(compareResponseFailure.reason).toBe(SmallMessages.apiNotWorkingKey);
 });
 
 test('vizapi.utils.tableForSubmissions action', async () => {
   // Valid
   const tableForSubmissionsResponse = await tableForSubmissions(user1);
 
-  expect(console.log).toHaveBeenCalledWith(SM.IMAGE_WAS_CREATED);
+  expect(console.log).toHaveBeenCalledWith(ImageMessages.imageWasCreated);
   expect(isValidHttpUrl(tableForSubmissionsResponse.link)).toBe(true);
   expect(tableForSubmissionsResponse.error).toBe(undefined);
   expect(tableForSubmissionsResponse.reason).toBe(undefined);
@@ -112,8 +112,7 @@ test('vizapi.utils.tableForSubmissions action', async () => {
 
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure1.error).toBe(errorMessage);
-  expect(compareResponseFailure1.reason)
-    .toBe(SM.ERROR_ON_THE_SERVER(errorMessage));
+  expect(compareResponseFailure1.reason).toBe(ErrorMessages.server);
 
   // Invalid: User has no submissions
   const userWithoutSubmissions = {
@@ -127,12 +126,12 @@ test('vizapi.utils.tableForSubmissions action', async () => {
     await tableForSubmissions(userWithoutSubmissions)
   );
   const dictMessageWithoutSubmissions = (
-    BM.USER_NO_SUBMISSIONS(userWithoutSubmissions.username)
+    UserMessages.noSubmissions(userWithoutSubmissions.username)
   );
 
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure2.error).toBe(dictMessageWithoutSubmissions);
-  expect(compareResponseFailure2.reason).toBe(SM.NO_SUBMISSIONS);
+  expect(compareResponseFailure2.reason).toBe(SmallMessages.noSubmissionsKey);
 
   // Invalid: Incorrect URL
   constants.VIZAPI_LINK = 'incorrect_url';
@@ -140,5 +139,5 @@ test('vizapi.utils.tableForSubmissions action', async () => {
 
   expect(console.log).toHaveBeenCalled();
   expect(compareResponseFailure3.error === undefined).toBe(false);
-  expect(compareResponseFailure3.reason).toBe(SM.API_NOT_WORKING);
+  expect(compareResponseFailure3.reason).toBe(SmallMessages.apiNotWorkingKey);
 });
