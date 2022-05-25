@@ -72,6 +72,14 @@ class UserMessages {
   static solvedProblemsChart(username: string): string {
     return `${username}'s solved problems chart`;
   }
+
+  static selectLeftUser = `${EMOJI.PERSON} Select Left User`;
+
+  static selectRightUser = `${EMOJI.PERSON} Select Right User`;
+
+  static compare(leftUsername: string, rightUsername: string): string {
+    return `Comparing ${leftUsername} to ${rightUsername}`;
+  }
 }
 
 class UserDeleteMessages {

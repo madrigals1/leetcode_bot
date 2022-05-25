@@ -505,21 +505,23 @@ export default class Actions {
   static async compare(context: Context): Promise<string> {
     const first = context.args.get('first_username').value.toLowerCase();
     const second = context.args.get('second_username').value.toLowerCase();
+    const lbbUsers = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // Getting left User
     if (first === '') {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'compare',
-          users: (await ApiService.fetchUsersForChannel(context.channelId))
-            .map((user) => user.data),
+          users: await lbbUsers,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.SELECT_LEFT_USER;
+      return UserMessages.selectLeftUser;
     }
 
     // Getting right User
@@ -527,15 +529,14 @@ export default class Actions {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: `compare ${first}`,
-          users: (await ApiService.fetchUsersForChannel(context.channelId))
-            .map((user) => user.data),
+          users: await lbbUsers,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.SELECT_RIGHT_USER;
+      return UserMessages.selectRightUser;
     }
 
     // Get Users from args
@@ -545,11 +546,11 @@ export default class Actions {
       .findUserInChannel(context.channelId, second);
 
     if (!leftUser) {
-      return BM.USERNAME_NOT_FOUND(first);
+      return UserMessages.doesNotExist(first);
     }
 
     if (!rightUser) {
-      return BM.USERNAME_NOT_FOUND(second);
+      return UserMessages.doesNotExist(second);
     }
 
     const response = await vizapiActions
@@ -559,11 +560,11 @@ export default class Actions {
     if (response.link) {
       // Add image to context
       context.photoUrl = response.link;
-      return BM.USERS_COMPARE(first, second);
+      return UserMessages.compare(first, second);
     }
 
     // If image link was not achieved from VizAPI
-    return BM.ERROR_ON_THE_SERVER;
+    return ErrorMessages.server;
   }
 
   @action({
