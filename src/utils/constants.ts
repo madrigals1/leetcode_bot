@@ -102,6 +102,7 @@ const EMOJI = {
   FEAR: '😱',
   PROGRAMMER: '👨‍💻',
   BELL: '🔔',
+  CAMERA: '📷',
 };
 
 const SUBMISSION_STATUS_MAP = {
