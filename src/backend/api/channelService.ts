@@ -57,8 +57,12 @@ class ChannelService extends Service<LBBChannel> {
       .post(`${this.url}/${channelId}/delete-user/`, { username });
   }
 
-  async fetchUsers(channelId: number): Promise<LBBUser[]> {
-    return Requests.get(`${this.url}/${channelId}/fetch-users/`);
+  async fetchUsers(channelId: number, sortBy: string): Promise<LBBUser[]> {
+    const ordering = sortBy
+      ? `?ordering=${sortBy}`
+      : '';
+
+    return Requests.get(`${this.url}/${channelId}/fetch-users/${ordering}`);
   }
 }
 

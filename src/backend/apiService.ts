@@ -96,9 +96,11 @@ class ApiService {
       .catch(handleAPIError);
   }
 
-  async fetchUsersForChannel(channelId: number): Promise<LBBUser[]> {
+  async fetchUsersForChannel(
+    channelId: number, sortBy = '-solved',
+  ): Promise<LBBUser[]> {
     return ChannelService
-      .fetchUsers(channelId)
+      .fetchUsers(channelId, sortBy)
       .catch(handleAPIError);
   }
 
