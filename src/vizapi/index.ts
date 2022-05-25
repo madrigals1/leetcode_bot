@@ -5,7 +5,7 @@ import { log, error } from '../utils/helper';
 import { User } from '../leetcode/models';
 import {
   ErrorMessages, ImageMessages, SmallMessages, UserMessages,
-} from '../utils/messageMaps';
+} from '../globals/messages';
 
 import { VizapiResponse, CompareUser } from './models';
 

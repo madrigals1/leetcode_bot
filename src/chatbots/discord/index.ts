@@ -17,7 +17,7 @@ import { Context, ComplexInteraction } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
-import { ProviderMessages } from '../../utils/messageMaps';
+import { ProviderMessages } from '../../globals/messages';
 
 import createBot from './bot';
 import { getKeyBasedParsedArguments, reply } from './utils';

@@ -2,7 +2,7 @@ import { Context } from '../models';
 import { registeredActions } from '../actions';
 import ArgumentManager from '../argumentManager';
 import { ArgumentsError, InputError } from '../../utils/errors';
-import { ErrorMessages, UserMessages } from '../../utils/messageMaps';
+import { ErrorMessages, UserMessages } from '../../globals/messages';
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';

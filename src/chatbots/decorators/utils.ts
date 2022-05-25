@@ -7,7 +7,7 @@ import { LBBChannel, LBBChannelKey } from '../../backend/models';
 import Cache from '../../backend/cache';
 import ApiService from '../../backend/apiService';
 import { log } from '../../utils/helper';
-import { ArgumentMessages } from '../../utils/messageMaps';
+import { ArgumentMessages } from '../../globals/messages';
 
 import { Argument, ParsedArgument } from './models';
 

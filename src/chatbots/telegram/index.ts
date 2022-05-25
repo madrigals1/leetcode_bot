@@ -8,7 +8,7 @@ import Actions, { registeredActions } from '../actions';
 import { constants } from '../../utils/constants';
 import { Options, Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
-import { ProviderMessages } from '../../utils/messageMaps';
+import { ProviderMessages } from '../../globals/messages';
 
 import { reply } from './utils';
 

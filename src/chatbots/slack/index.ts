@@ -5,7 +5,7 @@ import { constants } from '../../utils/constants';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
-import { ProviderMessages } from '../../utils/messageMaps';
+import { ProviderMessages } from '../../globals/messages';
 
 import { reply } from './utils';
 import createBot from './bot';

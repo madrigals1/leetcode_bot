@@ -18,7 +18,7 @@ import {
   ErrorMessages,
   ListMessages,
   SubscriptionMessages,
-} from '../utils/messageMaps';
+} from '../globals/messages';
 
 import { action } from './decorators';
 import {

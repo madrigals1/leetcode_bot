@@ -10,7 +10,7 @@ import ArgumentManager from '../argumentManager';
 import { Argument, ParsedArgument } from '../decorators/models';
 import { Context, ButtonContainer, ButtonContainerType } from '../models';
 import { log } from '../../utils/helper';
-import { ArgumentMessages } from '../../utils/messageMaps';
+import { ArgumentMessages } from '../../globals/messages';
 
 import buttonIndexer from './buttonIndexer';
 
