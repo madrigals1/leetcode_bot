@@ -1,4 +1,4 @@
 export enum SubscriptionType {
-  DailyStats = 1,
-  Contest,
+  DailyStats = '01_daily_stats',
+  Contest = '02_contest',
 }

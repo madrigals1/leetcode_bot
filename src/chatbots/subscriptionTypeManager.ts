@@ -99,4 +99,4 @@ class SubscriptionTypeManager {
   }
 }
 
-export default new SubscriptionTypeManager();
+export const subscriptionTypeManager = new SubscriptionTypeManager();

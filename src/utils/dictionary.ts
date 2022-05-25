@@ -1,6 +1,6 @@
 import { LanguageProblemCount, User } from '../leetcode/models';
 import { ChatbotProvider, SubscriptionType } from '../chatbots/models';
-import SubscriptionTypeManager from '../chatbots/subscriptionTypeManager';
+import { subscriptionTypeManager } from '../chatbots/subscriptionTypeManager';
 import { LBBChannelKey } from '../backend/models';
 
 import { constants } from './constants';
@@ -171,37 +171,37 @@ export const BOT_MESSAGES = {
 
   // SUBSCRIPTION
   SUBSCRIBED: (subscriptionType: SubscriptionType): string => {
-    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    const humanName = subscriptionTypeManager.getHumanName(subscriptionType);
     return `${constants.EMOJI.BELL} Subscribed to <b>${humanName}</b>`;
   },
   UNSUBSCRIBED: (subscriptionType: SubscriptionType): string => {
-    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    const humanName = subscriptionTypeManager.getHumanName(subscriptionType);
     return `${constants.EMOJI.BELL} Unsubscribed from <b>${humanName}</b>`;
   },
   SUBSCRIPTION_WAS_NOT_MADE: (
     subscriptionType: SubscriptionType,
   ): string => {
-    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    const humanName = subscriptionTypeManager.getHumanName(subscriptionType);
     const message = `Internal error while subscribing to <b>${humanName}</b>`;
     return `${constants.EMOJI.ERROR} ${message}`;
   },
   UNSUBSCRIPTION_WAS_NOT_MADE: (
     subscriptionType: SubscriptionType,
   ): string => {
-    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    const humanName = subscriptionTypeManager.getHumanName(subscriptionType);
     const message = `Internal error while unsubscribing from <b>${humanName}</b>`;
     return `${constants.EMOJI.ERROR} ${message}`;
   },
   SUBSCRIPTION_DOES_NOT_EXIST: (
     subscriptionType: SubscriptionType,
   ): string => {
-    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    const humanName = subscriptionTypeManager.getHumanName(subscriptionType);
     return `${constants.EMOJI.ERROR} You are not subscribed to <b>${humanName}</b>`;
   },
   SUBSCRIPTION_ALREADY_EXISTS: (
     subscriptionType: SubscriptionType,
   ): string => {
-    const humanName = SubscriptionTypeManager.getHumanName(subscriptionType);
+    const humanName = subscriptionTypeManager.getHumanName(subscriptionType);
     return `${constants.EMOJI.ERROR} You are already subscribed to <b>${humanName}</b>`;
   },
   SUBSCRIPTION_LIST: `${constants.EMOJI.BELL} Subscribe`,

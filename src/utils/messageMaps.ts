@@ -1,5 +1,9 @@
-import { LBBUsernameResponse } from '../backend/models';
+import { LBBSubscription, LBBUsernameResponse } from '../backend/models';
 import { ChatbotProvider, getChatbotNameByKey } from '../chatbots/models';
+import {
+  subscriptionTypeManager,
+  FullSubscriptionTypeModel,
+} from '../chatbots/subscriptionTypeManager';
 import { LanguageProblemCount, User } from '../leetcode/models';
 
 import { constants } from './constants';
@@ -235,6 +239,23 @@ ${EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 
     return prefix + lpcText;
   }
+
+  static subscriptionsText(subscriptions: LBBSubscription[]): string {
+    const allSubscriptionTypes = subscriptionTypeManager.getAll();
+    const subscriptionTypesForSubscriptions = subscriptions
+      .map((subscription: LBBSubscription) => subscription.type);
+
+    return allSubscriptionTypes
+      .map((fsub: FullSubscriptionTypeModel) => {
+        const contains = (
+          subscriptionTypesForSubscriptions.includes(fsub.subscriptionType)
+        );
+
+        return contains
+          ? `${fsub.humanName} - ${constants.EMOJI.SUCCESS}`
+          : `${fsub.humanName} - ${constants.EMOJI.CROSS_MARK}`;
+      }).join('\n');
+  }
 }
 class RefreshMessages {
   static cacheStartedRefresh = `${EMOJI.WAITING} Cache refresh was `
@@ -274,7 +295,29 @@ class ListMessages {
 
   static userListRemove = `${EMOJI.WASTEBASKET} Remove User`;
 
-  static backToProfiles = `${constants.EMOJI.BACK_ARROW} Back to Profiles`
+  static backToProfiles = `${EMOJI.BACK_ARROW} Back to Profiles`;
+
+  static userListSubscription = `${EMOJI.BELL} Subscribe`;
+
+  static userListUnsubscription = `${EMOJI.BELL} Unsubscribe`;
+}
+
+class SubscriptionMessages {
+  static subscriptionSuccess(name: string): string {
+    return `${EMOJI.SUCCESS} Subscribed to ${name}`;
+  }
+
+  static subscriptionError(name: string): string {
+    return `${EMOJI.ERROR} Not subscribed to ${name}`;
+  }
+
+  static unsubscriptionSuccess(name: string): string {
+    return `${EMOJI.SUCCESS} Unsubscribed from ${name}`;
+  }
+
+  static unsubscriptionError(name: string): string {
+    return `${EMOJI.ERROR} Not unsubscribed from ${name}`;
+  }
 }
 
 export {
@@ -288,4 +331,5 @@ export {
   ErrorMessages,
   ListMessages,
   UserMessages,
+  SubscriptionMessages,
 };

@@ -1,4 +1,3 @@
-import { BOT_MESSAGES as BM } from '../utils/dictionary';
 import {
   tableForSubmissions,
   compareMenu,
@@ -18,6 +17,7 @@ import {
   RatingMessages,
   ErrorMessages,
   ListMessages,
+  SubscriptionMessages,
 } from '../utils/messageMaps';
 
 import { action } from './decorators';
@@ -28,8 +28,9 @@ import {
   ButtonContainerType,
 } from './models';
 import { createButtonsFromUsers, getCloseButton } from './utils';
-import SubscriptionTypeManager, {
+import {
   FullSubscriptionTypeModel,
+  subscriptionTypeManager,
 } from './subscriptionTypeManager';
 
 export const registeredActions: RegisteredAction[] = [];
@@ -628,39 +629,46 @@ export default class Actions {
   })
   static async subscribe(context: Context): Promise<string> {
     const subscriptionTypeKey = context.args.get('subscription_type').value;
-    const { subscriptionType } = SubscriptionTypeManager
-      .getByKey(subscriptionTypeKey);
 
-    // If Subscription Type was sent
-    if (subscriptionTypeKey !== '') {
-      // Subscribe
-      const result = await ApiService
-        .createSubscription({
-          channel_id: context.channelId,
-          type: subscriptionType,
-        })
-        .then(() => 'Subscribed.')
-        .catch((err) => {
-          log(err);
-          return 'Error. Not subscribed.';
-        });
+    if (subscriptionTypeKey === '') {
+      // If Subscription Type was not sent, return buttons
+      context.options.buttons = [{
+        buttons: subscriptionTypeManager.getAll()
+          .map((subscriptionTypeModel: FullSubscriptionTypeModel) => ({
+            text: subscriptionTypeModel.humanName,
+            action: `/subscribe ${subscriptionTypeModel.key}`,
+          })),
+        buttonPerRow: 3,
+        placeholder: 'Subscription Type',
+        type: ButtonContainerType.MultipleButtons,
+      }, getCloseButton()];
 
-      return result;
+      return ListMessages.userListSubscription;
     }
 
-    // If Subscription Type was not sent, return buttons
-    context.options.buttons = [{
-      buttons: SubscriptionTypeManager.getAll()
-        .map((subscriptionTypeModel: FullSubscriptionTypeModel) => ({
-          text: subscriptionTypeModel.humanName,
-          action: `/subscribe ${subscriptionTypeModel.key}`,
-        })),
-      buttonPerRow: 3,
-      placeholder: 'Subscription Type',
-      type: ButtonContainerType.MultipleButtons,
-    }, getCloseButton()];
+    const subscriptionTypeModel = subscriptionTypeManager
+      .getByKey(subscriptionTypeKey);
 
-    return BM.SUBSCRIPTION_LIST;
+    if (!subscriptionTypeModel) {
+      return 'Invalid subscription type';
+    }
+
+    const { subscriptionType, humanName } = subscriptionTypeModel;
+
+    // Subscribe
+    const result = await ApiService
+      .createSubscription({
+        channel: context.channelId,
+        type: subscriptionType,
+      })
+      .catch((err) => {
+        log(err);
+        return null;
+      });
+
+    return result
+      ? SubscriptionMessages.subscriptionSuccess(humanName)
+      : SubscriptionMessages.subscriptionError(humanName);
   }
 
   @action({
@@ -677,46 +685,44 @@ export default class Actions {
   })
   static async unsubscribe(context: Context): Promise<string> {
     const subscriptionTypeKey = context.args.get('subscription_type').value;
-    const { subscriptionType } = SubscriptionTypeManager
-      .getByKey(subscriptionTypeKey);
 
-    // If Subscription Type was sent
-    if (subscriptionTypeKey !== '') {
-      // Unsubscribe
-      const result = await ApiService
-        .createSubscription({
-          channel_id: context.channelId,
-          type: subscriptionType,
-        })
-        .then(() => 'Unsubscribed.')
-        .catch((err) => {
-          log(err);
-          return 'Error. Not unsubscribed.';
-        });
+    if (subscriptionTypeKey === '') {
+      // If Subscription Type was not sent, return buttons
+      context.options.buttons = [{
+        buttons: subscriptionTypeManager.getAll()
+          .map((subscriptionTypeModel: FullSubscriptionTypeModel) => ({
+            text: subscriptionTypeModel.humanName,
+            action: `/unsubscribe ${subscriptionTypeModel.key}`,
+          })),
+        buttonPerRow: 3,
+        placeholder: 'Subscription Type',
+        type: ButtonContainerType.MultipleButtons,
+      }, getCloseButton()];
 
-      return result;
+      return ListMessages.userListUnsubscription;
     }
 
-    // If Subscription Type was not sent, return buttons
-    context.options.buttons = [{
-      buttons: SubscriptionTypeManager.getAll()
-        .map((subscriptionTypeModel: FullSubscriptionTypeModel) => ({
-          text: subscriptionTypeModel.humanName,
-          action: `/unsubscribe ${subscriptionTypeModel.key}`,
-        })),
-      buttonPerRow: 3,
-      placeholder: 'Subscription Type',
-      type: ButtonContainerType.MultipleButtons,
-    }, getCloseButton()];
+    const subscriptionTypeModel = subscriptionTypeManager
+      .getByKey(subscriptionTypeKey);
 
-    return BM.UNSUBSCRIPTION_LIST;
+    if (!subscriptionTypeModel) {
+      return 'Invalid subscription type';
+    }
+
+    const { subscriptionType, humanName } = subscriptionTypeModel;
+
+    // Unsubscribe
+    const result = await ApiService
+      .deleteSubscriptionByType(subscriptionType, context.channelId);
+
+    return result
+      ? SubscriptionMessages.unsubscriptionSuccess(humanName)
+      : SubscriptionMessages.unsubscriptionError(humanName);
   }
 
-  @action({ name: 'subscription', isAdmin: true })
-  static async subscription(context: Context): Promise<string> {
+  @action({ name: 'subscriptions', isAdmin: true })
+  static async subscriptions(context: Context): Promise<string> {
     const channel = await ApiService.getChannel(context.channelId);
-
-    return SubscriptionTypeManager
-      .getSubscriptionsText(channel.subscriptions);
+    return BigMessages.subscriptionsText(channel.subscriptions);
   }
 }
