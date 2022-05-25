@@ -51,18 +51,20 @@ class UserAddMessages {
   }
 }
 
+class UserMessages {
+  static doesNotExist(username: string): string {
+    const emoji = EMOJI.ERROR;
+    const user = `User <b>${username}</b>`;
+    const message = 'does not exist in this channel';
+    return `${emoji} ${user} ${message}`;
+  }
+}
+
 class UserDeleteMessages {
   static success(username: string): string {
     const emoji = EMOJI.SUCCESS;
     const user = `User <b>${username}</b>`;
     const message = 'was successfully deleted';
-    return `${emoji} ${user} ${message}`;
-  }
-
-  static doesNotExist(username: string): string {
-    const emoji = EMOJI.ERROR;
-    const user = `User <b>${username}</b>`;
-    const message = 'does not exist in this channel';
     return `${emoji} ${user} ${message}`;
   }
 
@@ -72,8 +74,6 @@ class UserDeleteMessages {
     const message = 'will be deleted';
     return `${emoji} ${user} ${message}`;
   }
-
-  static userListRemove = `${EMOJI.WASTEBASKET} Remove User`;
 }
 
 class SmallMessages {
@@ -177,6 +177,21 @@ ${EMOJI.RED_CIRCLE} Hard - <b>${CML.HARD_POINTS} points</b>
 
     return rating + cmlText;
   }
+
+  static userText(user: User): string {
+    const {
+      easy, medium, hard, all, cumulative,
+    } = user.computed.problemsSolved;
+
+    return `<b>${user.name || 'No name'}</b> - <b>${user.link}</b>
+
+Solved Problems:
+${EMOJI.GREEN_CIRCLE} Easy - <b>${easy}</b>
+${EMOJI.YELLOW_CIRCLE} Medium - <b>${medium}</b>
+${EMOJI.RED_CIRCLE} Hard - <b>${hard}</b>
+${EMOJI.BLUE_CIRCLE} All - <b>${all} / ${user.all}</b>
+${EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
+  }
 }
 class RefreshMessages {
   static cacheStartedRefresh = `${EMOJI.WAITING} Cache refresh was `
@@ -203,6 +218,22 @@ class RatingMessages {
   static incorrectRatingType = `${EMOJI.ERROR} Incorrect rating type`;
 }
 
+class ListMessages {
+  static userListProfiles = `${EMOJI.PERSON} Profiles`;
+
+  static userListSubmissions = `${EMOJI.CLIPBOARD} Submissions`;
+
+  static userListProblems = `${EMOJI.CHART} Problems`;
+
+  static userListAvatars = `${EMOJI.CAMERA} Avatars`;
+
+  static userListLangstats = `${EMOJI.PROGRAMMER} Language stats`;
+
+  static userListRemove = `${EMOJI.WASTEBASKET} Remove User`;
+
+  static backToProfiles = `${constants.EMOJI.BACK_ARROW} Back to Profiles`
+}
+
 export {
   UserAddMessages,
   UserDeleteMessages,
@@ -212,4 +243,6 @@ export {
   ClearMessages,
   RatingMessages,
   ErrorMessages,
+  ListMessages,
+  UserMessages,
 };
