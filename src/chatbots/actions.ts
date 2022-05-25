@@ -1,4 +1,4 @@
-import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
+import { BOT_MESSAGES as BM } from '../utils/dictionary';
 import {
   tableForSubmissions,
   compareMenu,
@@ -339,27 +339,27 @@ export default class Actions {
   })
   static async avatar(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
+    const lbbUsers = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // If 1 User was sent
     if (username !== '') {
       const user = await ApiService
         .findUserInChannel(context.channelId, username);
 
-      if (user) {
-        // Add photo to context
-        context.photoUrl = user.data.profile.userAvatar;
-        return BM.USER_AVATAR(user.username);
-      }
+      if (!user) return UserMessages.doesNotExist(username);
 
-      return BM.USERNAME_NOT_FOUND(username);
+      // Add photo to context
+      context.photoUrl = user.data.profile.userAvatar;
+      return UserMessages.usernamesAvatar(username);
     }
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'avatar',
-        users: (await ApiService.fetchUsersForChannel(context.channelId))
-          .map((user) => user.data),
+        users: await lbbUsers,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -367,7 +367,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_AVATARS;
+    return ListMessages.userListAvatars;
   }
 
   @action({
@@ -383,6 +383,9 @@ export default class Actions {
   })
   static async submissions(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
+    const lbbUsers = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // If 1 User was sent
     if (username !== '') {
@@ -391,7 +394,7 @@ export default class Actions {
         .findUserInChannel(context.channelId, username);
 
       // If User does not exist, return error message
-      if (!user) return BM.USERNAME_NOT_FOUND(username);
+      if (!user) return UserMessages.doesNotExist(username);
 
       // Create HTML image with Table
       const response = await vizapiActions.tableForSubmissions(user.data);
@@ -400,23 +403,23 @@ export default class Actions {
       if (response.link) {
         // Add image to context
         context.photoUrl = response.link;
-
-        return BM.USER_RECENT_SUBMISSIONS(user.username);
+        return UserMessages.recentSubmissions(username);
       }
 
       // If error is because of User not having any submissions
-      if (response.reason === SM.NO_SUBMISSIONS) return response.error;
+      if (response.reason === SmallMessages.noSubmissionsKey) {
+        return response.error;
+      }
 
       // If image link was not achieved from VizAPI
-      return BM.ERROR_ON_THE_SERVER;
+      return ErrorMessages.server;
     }
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'submissions',
-        users: (await ApiService.fetchUsersForChannel(context.channelId))
-          .map((user) => user.data),
+        users: await lbbUsers,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -424,7 +427,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_SUBMISSIONS;
+    return ListMessages.userListSubmissions;
   }
 
   @action({
