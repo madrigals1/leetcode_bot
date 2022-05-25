@@ -580,6 +580,9 @@ export default class Actions {
   })
   static async langstats(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
+    const lbbUsers = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // If 1 User was sent
     if (username !== '') {
@@ -588,21 +591,19 @@ export default class Actions {
         .findUserInChannel(context.channelId, username);
 
       // If User does not exist, return error message
-      if (!user) return BM.USERNAME_NOT_FOUND(username);
+      if (!user) return UserMessages.doesNotExist(username);
 
       // Get language stats from LeetCode
       const data = user.data.languageStats ?? [];
 
-      return BM.LANGUAGE_STATS_TEXT(username, data);
+      return BigMessages.languageStatsText(username, data);
     }
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'langstats',
-        users: (
-          await ApiService.fetchUsersForChannel(context.channelId)
-        ).map((user) => user.data),
+        users: await lbbUsers,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -610,7 +611,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_LANGSTATS;
+    return ListMessages.userListLangstats;
   }
 
   @action({

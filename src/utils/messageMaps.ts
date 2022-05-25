@@ -1,6 +1,6 @@
 import { LBBUsernameResponse } from '../backend/models';
 import { ChatbotProvider, getChatbotNameByKey } from '../chatbots/models';
-import { User } from '../leetcode/models';
+import { LanguageProblemCount, User } from '../leetcode/models';
 
 import { constants } from './constants';
 
@@ -215,6 +215,25 @@ ${EMOJI.YELLOW_CIRCLE} Medium - <b>${medium}</b>
 ${EMOJI.RED_CIRCLE} Hard - <b>${hard}</b>
 ${EMOJI.BLUE_CIRCLE} All - <b>${all} / ${user.all}</b>
 ${EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
+  }
+
+  static languageStatsText(
+    username: string, lpc: LanguageProblemCount[],
+  ): string {
+    // Sort by amount of solved problems
+    const lpcSorted = lpc
+      .sort((value1, value2) => value2.problemsSolved - value1.problemsSolved);
+
+    const lpcText = lpcSorted
+      .map(({ languageName, problemsSolved }) => {
+        const name = `- <b>${languageName}</b>`;
+        return `${name} ${problemsSolved}`;
+      })
+      .join('\n');
+    const emoji = constants.EMOJI.PROGRAMMER;
+    const prefix = `${emoji} Problems solved by <b>${username}</b> in:\n`;
+
+    return prefix + lpcText;
   }
 }
 class RefreshMessages {
