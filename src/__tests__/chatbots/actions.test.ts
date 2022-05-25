@@ -1,30 +1,20 @@
 import * as _ from 'lodash';
 
 import Mockbot from '../__mocks__/chatbots/mockbot';
-import { BOT_MESSAGES as BM } from '../../utils/dictionary';
-import Cache from '../../cache';
 import {
-  mockGetLeetcodeDataFromUsername,
   mockTableForSubmissions,
   mockCompareMenu,
   mockProblemsChart,
   mockRatingGraph,
   mockLanguageStats,
 } from '../__mocks__/utils.mock';
-import MockDatabaseProvider from '../__mocks__/database.mock';
-import { constants } from '../../utils/constants';
-import { vizapiActions, leetcodeActions } from '../../chatbots/actions';
+import { constants } from '../../globals/constants';
+import { vizapiActions } from '../../chatbots/actions';
 import { tableForSubmissions, compareMenu, ratingGraph } from '../../vizapi';
 import { users } from '../__mocks__/data.mock';
-import { UserCache } from '../../cache/userCache';
 import { User } from '../../leetcode/models';
-import { getLanguageStats } from '../../leetcode';
 
 const mockbot = new Mockbot();
-const mockDatabaseProvider = new MockDatabaseProvider();
-Cache.database = mockDatabaseProvider;
-UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
-UserCache.delayTime = 0;
 
 const realUsername1 = users[0].username;
 const realUsername2 = users[1].username;
@@ -32,18 +22,13 @@ const fakeUsername = 'fake_username';
 
 beforeEach(async () => {
   mockbot.clear();
-  UserCache.clear();
-  Cache.clearChannel(mockbot.channelKey);
   vizapiActions.tableForSubmissions = tableForSubmissions;
   vizapiActions.compareMenu = compareMenu;
   vizapiActions.ratingGraph = ratingGraph;
-  leetcodeActions.getLanguageStats = getLanguageStats;
 });
 
 afterEach(async () => {
   mockbot.clear();
-  UserCache.clear();
-  Cache.clearChannel(mockbot.channelKey);
 });
 
 describe('chatbots.actions - ping action', () => {

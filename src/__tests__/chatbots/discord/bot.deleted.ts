@@ -2,9 +2,9 @@ import * as DiscordBot from 'discord.js';
 import { jest } from '@jest/globals';
 
 import createBot from '../../../chatbots/discord/bot';
-import { constants } from '../../../utils/constants';
-import { SERVER_MESSAGES as SM } from '../../../utils/dictionary';
+import { constants } from '../../../globals/constants';
 import DiscordBotInstance from '../../../chatbots/discord';
+import { ProviderMessages } from '../../../globals/messages';
 
 jest.setTimeout(30000);
 
@@ -24,13 +24,13 @@ test('chatbots.discord.bot.createBot function', async () => {
 
   // eslint-disable-next-line no-console
   expect(console.log).toHaveBeenCalledWith(
-    SM.DISCORD_BOT_IS_CONNECTED,
+    ProviderMessages.discordBotIsConnected,
   );
 
   await DiscordBotInstance.run();
 
   // eslint-disable-next-line no-console
   expect(console.log).toHaveBeenCalledWith(
-    SM.DISCORD_BOT_IS_RUNNING,
+    ProviderMessages.discordBotIsRunning,
   );
 });
