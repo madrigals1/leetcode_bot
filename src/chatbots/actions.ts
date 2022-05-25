@@ -1,5 +1,4 @@
 import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
-import { constants } from '../utils/constants';
 import {
   tableForSubmissions,
   compareMenu,
@@ -11,12 +10,14 @@ import { log } from '../utils/helper';
 import {
   UserAddMessages,
   UserDeleteMessages,
+  UserMessages,
   BigMessages,
   SmallMessages,
   RefreshMessages,
   ClearMessages,
   RatingMessages,
   ErrorMessages,
+  ListMessages,
 } from '../utils/messageMaps';
 
 import { action } from './decorators';
@@ -122,14 +123,14 @@ export default class Actions {
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return UserDeleteMessages.userListRemove;
+      return ListMessages.userListRemove;
     }
 
     // Check if User exists
     const user = await ApiService
       .findUserInChannel(context.channelId, username);
 
-    if (!user) return UserDeleteMessages.doesNotExist(username);
+    if (!user) return UserMessages.doesNotExist(username);
 
     const message = UserDeleteMessages.willBeDeleted(username);
     await context.reply(message, context);
@@ -270,46 +271,48 @@ export default class Actions {
   })
   static async profile(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
+    const lbbUsersPromise = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     if (username === '') {
       // Add user buttons
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'profile',
-          users: (await ApiService.fetchUsersForChannel(context.channelId))
-            .map((user) => user.data),
+          users: await lbbUsersPromise,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.USER_LIST_PROFILES;
+      return ListMessages.userListProfiles;
     }
 
     // Get User from username
     const user = await ApiService
       .findUserInChannel(context.channelId, username);
 
-    if (!user) return BM.USERNAME_NOT_FOUND(username);
+    if (!user) return UserMessages.doesNotExist(username);
 
     const submissionsButtion: Button = {
-      text: `${constants.EMOJI.CLIPBOARD} Submissions`,
+      text: ListMessages.userListSubmissions,
       action: `/submissions ${username}`,
     };
 
     const avatarButton: Button = {
-      text: `${constants.EMOJI.PERSON} Avatar`,
+      text: UserMessages.avatar,
       action: `/avatar ${username}`,
     };
 
     const problemsButton: Button = {
-      text: `${constants.EMOJI.CHART} Problems`,
+      text: ListMessages.userListProblems,
       action: `/problems ${username}`,
     };
 
     const ratingButton: Button = {
-      text: `${constants.EMOJI.BACK_ARROW} Back to Profiles`,
+      text: ListMessages.backToProfiles,
       action: '/profile',
     };
 
@@ -320,7 +323,7 @@ export default class Actions {
       type: ButtonContainerType.MultipleButtons,
     }];
 
-    return BM.USER_TEXT(user.data);
+    return BigMessages.userText(user.data);
   }
 
   @action({
