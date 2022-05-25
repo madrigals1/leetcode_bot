@@ -167,9 +167,15 @@ ${EMOJI.RED_CIRCLE} Hard - <b>${CML.HARD_POINTS} points</b>
     }
 
     const rating = this.cmlHeader;
-    // TODO: Bring BACK
-    // + getCmlFromUsers(users);
-    return rating;
+    const cmlText = users.map(
+      (user, index) => {
+        const cmlForUser = user.computed.problemsSolved.cumulative;
+        const cmlTextForUser = `<b>${user.username}</b> ${cmlForUser}`;
+        return `${index + 1}. ${cmlTextForUser}`;
+      },
+    ).join('\n');
+
+    return rating + cmlText;
   }
 }
 class RefreshMessages {
