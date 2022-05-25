@@ -60,6 +60,14 @@ class UserMessages {
   }
 
   static avatar = `${EMOJI.CAMERA} Avatar`;
+
+  static usernamesAvatar(username: string): string {
+    return `${username}'s avatar`;
+  }
+
+  static recentSubmissions(username: string): string {
+    return `${username}'s recent submissions`;
+  }
 }
 
 class UserDeleteMessages {
@@ -86,6 +94,8 @@ class SmallMessages {
   );
 
   static noUsers = `${EMOJI.ERROR} No users found in database`;
+
+  static noSubmissionsKey = 'no_submissions';
 }
 
 class BigMessages {
