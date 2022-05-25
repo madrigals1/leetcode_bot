@@ -1,8 +1,7 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 
-import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import { log } from '../../utils/helper';
-import { SmallMessages } from '../../utils/messageMaps';
+import { ErrorMessages, SmallMessages } from '../../utils/messageMaps';
 import MockBotTelegram from '../../__tests__/__mocks__/chatbots/telegram.mock';
 import { Context, ButtonContainer } from '../models';
 
@@ -45,7 +44,7 @@ export async function reply(
 
   if (!(bot instanceof TelegramBot) && !(bot instanceof MockBotTelegram)) {
     log(SmallMessages.incorrectBotType);
-    return BM.ERROR_ON_THE_SERVER;
+    return ErrorMessages.server;
   }
 
   const replyMarkupOptions = options.buttons
@@ -60,7 +59,7 @@ export async function reply(
       .then((res) => res.text)
       .catch((err) => {
         log(err);
-        return BM.ERROR_ON_THE_SERVER;
+        return ErrorMessages.server;
       });
   }
 
@@ -68,6 +67,6 @@ export async function reply(
     .then((res) => res.text)
     .catch((err) => {
       log(err);
-      return BM.ERROR_ON_THE_SERVER;
+      return ErrorMessages.server;
     });
 }

@@ -2,10 +2,9 @@ import axios from 'axios';
 
 import { constants } from '../utils/constants';
 import { log, error } from '../utils/helper';
-import { BOT_MESSAGES as BM } from '../utils/dictionary';
 import { User } from '../leetcode/models';
 import {
-  ErrorMessages, ImageMessages, SmallMessages,
+  ErrorMessages, ImageMessages, SmallMessages, UserMessages,
 } from '../utils/messageMaps';
 
 import { VizapiResponse, CompareUser } from './models';
@@ -94,7 +93,7 @@ export async function tableForSubmissions(user: User): Promise<VizapiResponse> {
       const errorMsg = 'Please, provide non-empty \'table\' in request body';
       if (res.data.failure === errorMsg) {
         return {
-          error: BM.USER_NO_SUBMISSIONS(user.username),
+          error: UserMessages.noSubmissions(user.username),
           reason: SmallMessages.noSubmissionsKey,
         };
       }

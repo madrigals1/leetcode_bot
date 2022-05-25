@@ -1,8 +1,8 @@
-import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import { Context } from '../models';
 import { registeredActions } from '../actions';
 import ArgumentManager from '../argumentManager';
 import { ArgumentsError, InputError } from '../../utils/errors';
+import { ErrorMessages, UserMessages } from '../../utils/messageMaps';
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
@@ -52,7 +52,7 @@ export function action(actionContext: ActionContext): (
 
         // If error is caused by codebase issues, throw generic Error
         if (e instanceof ArgumentsError) {
-          return replyHandler.handleError(BM.ERROR_ON_THE_SERVER);
+          return replyHandler.handleError(ErrorMessages.server);
         }
 
         // If error is not known, throw it
@@ -67,7 +67,7 @@ export function action(actionContext: ActionContext): (
         const isMessageFromAdmin = await context.isAdmin;
 
         if (!isMessageFromAdmin) {
-          return replyHandler.handleError(BM.NO_ADMIN_RIGHTS);
+          return replyHandler.handleError(UserMessages.noAdminRights);
         }
       }
 
