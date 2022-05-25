@@ -58,6 +58,8 @@ class UserMessages {
     const message = 'does not exist in this channel';
     return `${emoji} ${user} ${message}`;
   }
+
+  static avatar = `${EMOJI.CAMERA} Avatar`;
 }
 
 class UserDeleteMessages {
