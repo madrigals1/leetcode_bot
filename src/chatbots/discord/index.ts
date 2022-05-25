@@ -11,13 +11,13 @@ import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 
 import { constants } from '../../utils/constants';
-import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { Context, ComplexInteraction } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
+import { ProviderMessages } from '../../utils/messageMaps';
 
 import createBot from './bot';
 import { getKeyBasedParsedArguments, reply } from './utils';
@@ -156,7 +156,7 @@ class Discord {
       return null;
     });
 
-    log(SM.DISCORD_BOT_IS_RUNNING);
+    log(ProviderMessages.discordBotIsRunning);
   }
 }
 

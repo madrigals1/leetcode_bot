@@ -112,6 +112,10 @@ class SmallMessages {
   static noUsers = `${EMOJI.ERROR} No users found in database`;
 
   static noSubmissionsKey = 'no_submissions';
+
+  static apiNotWorkingKey = 'api_not_working';
+
+  static incorrectBotType = 'Incorrect bot type';
 }
 
 class BigMessages {
@@ -320,6 +324,28 @@ class SubscriptionMessages {
   }
 }
 
+class ProviderMessages {
+  static discordBotIsConnected = '>>> Discord BOT is connected!';
+
+  static discordBotIsRunning = '>>> Discord BOT is running!';
+
+  static telegramBotIsConnected = '>>> Telegram BOT is connected!';
+
+  static telegramBotIsRunning = '>>> Telegram BOT is running!';
+
+  static slackBotIsConnected = '>>> Slack BOT is connected!';
+
+  static slackBotIsRunning = '>>> Slack BOT is running!';
+}
+
+class ImageMessages {
+  static imageWasCreated = 'The image was created';
+
+  static imageWasNotCreated(err: Error | string): string {
+    return `The image was NOT created: ${err}`;
+  }
+}
+
 export {
   UserAddMessages,
   UserDeleteMessages,
@@ -332,4 +358,6 @@ export {
   ListMessages,
   UserMessages,
   SubscriptionMessages,
+  ProviderMessages,
+  ImageMessages,
 };

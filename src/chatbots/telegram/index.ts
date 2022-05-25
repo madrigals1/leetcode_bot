@@ -6,9 +6,9 @@ import * as TelegramBot from 'node-telegram-bot-api';
 import { log } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { constants } from '../../utils/constants';
-import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { Options, Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
+import { ProviderMessages } from '../../utils/messageMaps';
 
 import { reply } from './utils';
 
@@ -82,7 +82,7 @@ export default class Telegram {
     this.bot = new TelegramBot(this.token, this.options);
 
     // Log that Telegram BOT is connected
-    log(SM.TELEGRAM_BOT_IS_CONNECTED);
+    log(ProviderMessages.telegramBotIsConnected);
 
     // Add regular actions
     registeredActions.forEach(({ name, property }) => {
@@ -140,6 +140,6 @@ export default class Telegram {
       return null;
     });
 
-    log(SM.TELEGRAM_BOT_IS_RUNNING);
+    log(ProviderMessages.telegramBotIsRunning);
   }
 }

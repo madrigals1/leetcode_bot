@@ -1,9 +1,8 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 
-import {
-  BOT_MESSAGES as BM, SERVER_MESSAGES as SM,
-} from '../../utils/dictionary';
+import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import { log } from '../../utils/helper';
+import { SmallMessages } from '../../utils/messageMaps';
 import MockBotTelegram from '../../__tests__/__mocks__/chatbots/telegram.mock';
 import { Context, ButtonContainer } from '../models';
 
@@ -45,7 +44,7 @@ export async function reply(
   } = context;
 
   if (!(bot instanceof TelegramBot) && !(bot instanceof MockBotTelegram)) {
-    log(SM.INCORRECT_BOT_TYPE);
+    log(SmallMessages.incorrectBotType);
     return BM.ERROR_ON_THE_SERVER;
   }
 
