@@ -1,4 +1,6 @@
 /* eslint-disable class-methods-use-this */
+import { SubscriptionType } from '../chatbots/models';
+
 import {
   ChannelService, ChannelUserService, SubscriptionService, UserService,
 } from './api';
@@ -166,6 +168,12 @@ class ApiService {
 
   deleteSubscription(id: number): Promise<boolean> {
     return SubscriptionService.delete(id);
+  }
+
+  deleteSubscriptionByType(
+    type: SubscriptionType, channelId: number,
+  ): Promise<boolean> {
+    return SubscriptionService.deleteByType(type, channelId);
   }
 
   // ---------------------------------------------------------------------------
