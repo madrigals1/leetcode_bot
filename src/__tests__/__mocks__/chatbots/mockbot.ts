@@ -90,4 +90,8 @@ export default class Mockbot {
     this.output = [];
     this.context = null;
   }
+
+  get channelId(): number {
+    return this.context?.channelId;
+  }
 }
