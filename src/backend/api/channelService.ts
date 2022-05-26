@@ -64,6 +64,12 @@ class ChannelService extends Service<LBBChannel> {
 
     return Requests.get(`${this.url}/${channelId}/fetch-users/${ordering}`);
   }
+
+  async userCount(channelId: number): Promise<number> {
+    return Requests
+      .get(`${this.url}/${channelId}/user-count/`)
+      .then((res) => res.user_count);
+  }
 }
 
 export default new ChannelService();

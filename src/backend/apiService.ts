@@ -106,6 +106,12 @@ class ApiService {
       .catch(handleAPIError);
   }
 
+  async userCountForChannel(channelId: number): Promise<number> {
+    return ChannelService
+      .userCount(channelId)
+      .catch(handleAPIError);
+  }
+
   // ---------------------------------------------------------------------------
   // Channel User
   // ---------------------------------------------------------------------------
