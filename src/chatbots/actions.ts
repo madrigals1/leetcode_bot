@@ -88,10 +88,10 @@ export default class Actions {
   @action({ name: 'refresh' })
   static async refresh(context: Context): Promise<string> {
     // Log that database started refresh
-    await context.reply(RefreshMessages.cacheStartedRefresh, context);
+    await context.reply(RefreshMessages.startedRefresh, context);
 
     await ApiService.refreshChannel(context.channelId);
-    return RefreshMessages.cacheIsRefreshed;
+    return RefreshMessages.isRefreshed;
   }
 
   @action({

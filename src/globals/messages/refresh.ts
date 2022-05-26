@@ -3,8 +3,7 @@ import { constants } from '../constants';
 const { EMOJI } = constants;
 
 export class RefreshMessages {
-  static cacheStartedRefresh = `${EMOJI.WAITING} Cache refresh was `
-    + 'requested...';
+  static startedRefresh = `${EMOJI.WAITING} Refresh was requested...`;
 
-  static cacheIsRefreshed = `${EMOJI.SUCCESS} Cache is refreshed`;
+  static isRefreshed = `${EMOJI.SUCCESS} Refresh is finished`;
 }
