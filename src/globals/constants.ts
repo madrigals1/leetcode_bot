@@ -211,7 +211,7 @@ const SYSTEM = {
 };
 
 const LBB = {
-  URL: LBB_URL,
+  URL: LBB_URL || 'https://lbb.madrigal.pro',
   USERNAME: LBB_USERNAME,
   PASSWORD: LBB_PASSWORD,
 };
