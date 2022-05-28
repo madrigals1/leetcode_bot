@@ -50,6 +50,7 @@
     "jest": "^27.5.1",
     "jsdoc": "^3.6.10",
     "mongodb-memory-server": "^8.1.0",
+    "nock": "^13.2.4",
     "telegram-test": "^0.1.8",
     "ts-jest": "^27.0.5"
   }
