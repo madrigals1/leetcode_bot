@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { log } from '../../utils/helper';
 import { authAxios } from '../axios/authAxios';
 
 import { convertResponseBody, convertResponseError } from './utils';
@@ -49,7 +50,13 @@ export class Service<M> {
   }
 
   async fetch(): Promise<M[]> {
-    return Requests.get(`${this.url}/`);
+    return Requests
+      .get(`${this.url}/`)
+      .then((res) => res.results)
+      .catch((err) => {
+        log(err);
+        return [];
+      });
   }
 
   async update(id: number, instance: M): Promise<M> {

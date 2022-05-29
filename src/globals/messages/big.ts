@@ -9,9 +9,7 @@ import { constants } from '../constants';
 
 import { SmallMessages } from './small';
 
-const {
-  EMOJI, PROVIDERS, SYSTEM, CML,
-} = constants;
+const { EMOJI, PROVIDERS, CML } = constants;
 
 export class BigMessages {
   static welcomeText(prefix: string): string {
@@ -63,9 +61,6 @@ export class BigMessages {
 
 <b>DATABASE RELATED</b>
 <b>User Count:</b> ${users.length}
-
-<b>SYSTEM RELATED</b>
-<b>Delay between calls:</b> ${SYSTEM.USER_REQUEST_DELAY_MS}
 
 <b>USER LIST</b>
 ${userNameList}
