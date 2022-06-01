@@ -26,8 +26,10 @@ class ChannelService extends Service<LBBChannel> {
   }
 
   async refresh(id: number): Promise<boolean> {
+    const minutes10 = 10 * 60 * 1000;
+
     return Requests
-      .get(`${this.url}/${id}/refresh/`)
+      .get(`${this.url}/${id}/refresh/`, { timeout: minutes10 })
       .then(() => true)
       .catch(() => false);
   }
