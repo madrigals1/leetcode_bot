@@ -1,34 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { AxiosRequestConfig } from 'axios';
+
 import { log } from '../../utils/helper';
 import { authAxios } from '../axios/authAxios';
 
 import { convertResponseBody, convertResponseError } from './utils';
 
 export class Requests {
-  static async get(url: string): Promise<any> {
+  static async get(url: string, config?: AxiosRequestConfig): Promise<any> {
     return authAxios
-      .get(url)
+      .get(url, config)
       .then(convertResponseBody)
       .catch(convertResponseError);
   }
 
-  static async post(url: string, body: unknown): Promise<any> {
+  static async post(
+    url: string, body: unknown, config?: AxiosRequestConfig,
+  ): Promise<any> {
     return authAxios
-      .post(url, body)
+      .post(url, body, config)
       .then(convertResponseBody)
       .catch(convertResponseError);
   }
 
-  static async delete(url: string): Promise<any> {
+  static async delete(url: string, config?: AxiosRequestConfig): Promise<any> {
     return authAxios
-      .delete(url)
+      .delete(url, config)
       .then(convertResponseBody)
       .catch(convertResponseError);
   }
 
-  static async patch(url: string, body: unknown): Promise<any> {
+  static async patch(
+    url: string, body: unknown, config?: AxiosRequestConfig,
+  ): Promise<any> {
     return authAxios
-      .patch(url, body)
+      .patch(url, body, config)
       .then(convertResponseBody)
       .catch(convertResponseError);
   }
@@ -41,17 +47,19 @@ export class Service<M> {
     this.url = url;
   }
 
-  async create(instance: M): Promise<M> {
-    return Requests.post(`${this.url}/`, instance);
-  }
-
-  async get(id: number): Promise<M> {
-    return Requests.get(`${this.url}/${id}/`);
-  }
-
-  async fetch(): Promise<M[]> {
+  async create(instance: M, config?: AxiosRequestConfig): Promise<M> {
     return Requests
-      .get(`${this.url}/`)
+      .post(`${this.url}/`, instance, config);
+  }
+
+  async get(id: number, config?: AxiosRequestConfig): Promise<M> {
+    return Requests
+      .get(`${this.url}/${id}/`, config);
+  }
+
+  async fetch(config?: AxiosRequestConfig): Promise<M[]> {
+    return Requests
+      .get(`${this.url}/`, config)
       .then((res) => res.results)
       .catch((err) => {
         log(err);
@@ -59,11 +67,16 @@ export class Service<M> {
       });
   }
 
-  async update(id: number, instance: M): Promise<M> {
-    return Requests.patch(`${this.url}/${id}/`, instance);
+  async update(
+    id: number, instance: M, config?: AxiosRequestConfig,
+  ): Promise<M> {
+    return Requests
+      .patch(`${this.url}/${id}/`, instance, config);
   }
 
-  async delete(id: number): Promise<boolean> {
-    return Requests.delete(`${this.url}/${id}/`).then(() => true);
+  async delete(id: number, config?: AxiosRequestConfig): Promise<boolean> {
+    return Requests
+      .delete(`${this.url}/${id}/`, config)
+      .then(() => true);
   }
 }
