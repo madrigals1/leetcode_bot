@@ -7,9 +7,9 @@
     "start": "npm run build && node dist/index.js",
     "fix": "eslint --fix src/*",
     "test": "jest --forceExit",
-    "test:debug": "jest --watch",
-    "test:leaks": "jest --runInBand --detectOpenHandles",
     "test:coverage": "jest --forceExit --coverage",
+    "test:ci": "jest --forceExit --ci",
+    "test:ci:coverage": "jest --forceExit --coverage --ci",
     "lint": "eslint ./src --ext .js,.ts"
   },
   "keywords": [],
