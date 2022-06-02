@@ -8,7 +8,7 @@
     "fix": "eslint --fix src/*",
     "test": "jest --forceExit",
     "test:coverage": "jest --forceExit --coverage",
-    "test:ci": "jest --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false",
+    "test:ci": "jest --ci --reporters=default --reporters=jest-junit",
     "lint": "eslint ./src --ext .js,.ts"
   },
   "keywords": [],

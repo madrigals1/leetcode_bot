@@ -23,6 +23,11 @@ test:
   needs: ['install-node-dependencies']
   script:
    - npm run test:ci
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - junit.xml
 
 lint:
   image: node:16.11.0
