@@ -16,3 +16,4 @@ mongo-volume
 
 # Test Coverage
 coverage
+junit.xml

@@ -1,0 +1,64 @@
+stages:
+  - build
+  - test
+
+install-node-dependencies:
+  image: node:16.11.0
+  stage: build
+  script:
+    - npm ci
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  artifacts:
+    expire_in: 1 days
+    when: on_success
+    paths:
+      - node_modules/
+
+test:
+  image: node:16.11.0
+  stage: test
+  needs: ['install-node-dependencies']
+  script:
+   - npm run test:ci
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - junit.xml
+
+lint:
+  image: node:16.11.0
+  stage: test
+  needs: ['install-node-dependencies']
+  script:
+   - npm run lint
+
+build-docker:
+  services:
+  - name: docker:dind
+    alias: dind
+  image: docker:20.10.12
+  stage: build
+  script:
+    - docker build -f ./deployment/Dockerfile -t leetcode_bot .
+    - mkdir image
+    - docker save leetcode_bot > image/leetcode_bot.tar
+  artifacts:
+    paths:
+      - image
+
+test-inside-docker:
+  services:
+  - name: docker:dind
+    alias: dind
+  image: docker:20.10.12
+  stage: test
+  needs: ['build-docker']
+  script:
+    - docker load -i image/leetcode_bot.tar
+    - docker image ls
+    - docker build -f ./deployment/Dockerfile.test -t leetcode_bot_test .
+    - docker run leetcode_bot_test

@@ -7,9 +7,8 @@
     "start": "npm run build && node dist/index.js",
     "fix": "eslint --fix src/*",
     "test": "jest --forceExit",
-    "test:debug": "jest --watch",
-    "test:leaks": "jest --runInBand --detectOpenHandles",
     "test:coverage": "jest --forceExit --coverage",
+    "test:ci": "jest --ci --coverage",
     "lint": "eslint ./src --ext .js,.ts"
   },
   "keywords": [],
@@ -48,6 +47,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.2",
     "jest": "^27.5.1",
+    "jest-junit": "^13.2.0",
     "jsdoc": "^3.6.10",
     "mongodb-memory-server": "^8.1.0",
     "nock": "^13.2.4",

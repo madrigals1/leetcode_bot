@@ -1,6 +1,7 @@
 const filesToIgnore = ['__mocks__', 'setup.ts', 'deleted'];
 
 module.exports = {
+  reporters: ['default', 'jest-junit'],
   verbose: true,
   setupFilesAfterEnv: ['./src/__tests__/setup.ts'],
   modulePathIgnorePatterns: filesToIgnore,
