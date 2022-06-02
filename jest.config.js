@@ -1,6 +1,9 @@
 const filesToIgnore = ['__mocks__', 'setup.ts', 'deleted'];
 
 module.exports = {
+  collectCoverageFrom: ['src/**/*.js', 'src/**/*.ts', '!**/node_modules/**'],
+  coverageReporters: ['html', 'text', 'text-summary', 'cobertura'],
+  testMatch: ['**/*.test.js', '**/*.test.ts'],
   verbose: true,
   setupFilesAfterEnv: ['./src/__tests__/setup.ts'],
   modulePathIgnorePatterns: filesToIgnore,

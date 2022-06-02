@@ -24,13 +24,6 @@ test:
   script:
    - npm run test:ci
 
-test-coverage:
-  image: node:16.11.0
-  stage: test
-  needs: ['install-node-dependencies']
-  script:
-   - npm run test:ci:coverage
-
 lint:
   image: node:16.11.0
   stage: test
