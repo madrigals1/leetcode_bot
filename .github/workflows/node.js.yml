@@ -26,11 +26,35 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
+    - name: Install NPM Packages
+      run: npm ci
     - name: Test Coverage
       env:
         LBB_URL: ${{ secrets.LBB_URL }}
         LBB_USERNAME: ${{ secrets.LBB_USERNAME }}
         LBB_PASSWORD: ${{ secrets.LBB_PASSWORD }}
       run: npm run test:ci
+
+  lint:
+    name: Lint
+
+    runs-on: ubuntu-latest
+
+    env:
+      CI: true
+
+    strategy:
+      matrix:
+        node-version: [ v16.11.0 ]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: Install NPM Packages
+      run: npm ci
+    - name: Lint
+      run: npm run lint
