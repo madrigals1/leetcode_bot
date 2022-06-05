@@ -28,16 +28,16 @@ const notExistingUsername = 'not-existing-username';
 beforeAll(async () => {
   await Cache.preload();
 
-  // let channelId = await ApiService
-  //   .findChannelByKey(mockbot.channelKey)
-  //   .then((channel) => channel.id)
-  //   .catch(() => null);
+  let channelId = await ApiService
+    .findChannelByKey(mockbot.channelKey)
+    .then((channel) => channel?.id)
+    .catch(() => null);
 
-  // if (!channelId) {
-  //   channelId = await ApiService.createChannel(mockbot.channelKey);
-  // }
+  if (!channelId) {
+    channelId = await ApiService.createChannel(mockbot.channelKey);
+  }
 
-  // mockbot.context.channelId = channelId;
+  mockbot.context.channelId = channelId;
 });
 
 beforeEach(async () => {
