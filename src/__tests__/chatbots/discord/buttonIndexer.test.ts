@@ -1,14 +1,4 @@
-import { jest } from '@jest/globals';
-
 import buttonIndexer from '../../../chatbots/discord/buttonIndexer';
-
-beforeAll(async () => {
-  jest.setTimeout(30000);
-});
-
-afterAll(async () => {
-  jest.setTimeout(5000);
-});
 
 test('chatbots.discord.buttonIndexer function', async () => {
   let currentId = buttonIndexer.id;
