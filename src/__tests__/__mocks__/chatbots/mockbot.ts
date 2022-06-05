@@ -19,6 +19,8 @@ export default class Mockbot {
     provider: ChatbotProvider.Mockbot,
   }
 
+  channelId: number;
+
   async send(message: string, isAdmin = false): Promise<void> {
     // If message is not command, ignore it
     if (!message.startsWith(this.prefix)) return;
@@ -54,6 +56,7 @@ export default class Mockbot {
           chatId: 123123123,
           prefix: this.prefix,
           channelKey: this.channelKey,
+          channelId: this.channelId,
           options: {},
         };
 
@@ -89,9 +92,5 @@ export default class Mockbot {
   clear(): void {
     this.output = [];
     this.context = null;
-  }
-
-  get channelId(): number {
-    return this.context?.channelId;
   }
 }
