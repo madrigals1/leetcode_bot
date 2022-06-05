@@ -30,4 +30,4 @@ jobs:
       run: docker build -t leetcode_bot_test --file deployment/Dockerfile.test .
 
     - name: Run tests
-      run: docker run --rm leetcode_bot_test --env-file env.custom
+      run: docker run --rm --env-file env.custom leetcode_bot_test
