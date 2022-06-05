@@ -43,9 +43,6 @@ const {
   CML_EASY_POINTS,
   CML_MEDIUM_POINTS,
   CML_HARD_POINTS,
-
-  // System settings
-  LEETCODE_URL,
 } = process.env;
 
 const EMOJI = {
@@ -141,7 +138,6 @@ const CML = {
 };
 
 const SYSTEM = {
-  LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',
   DATE_FORMAT: 'YYYY-MM-DD hh:mm a',
 };
 
