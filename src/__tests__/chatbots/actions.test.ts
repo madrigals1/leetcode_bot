@@ -39,6 +39,7 @@ beforeAll(async () => {
       .then((channel) => channel?.id);
   }
 
+  Cache.addChannelId(mockbot.channelKey, channelId);
   mockbot.channelId = channelId;
 }, 30000);
 
@@ -62,6 +63,19 @@ beforeEach(async () => {
 
 afterEach(async () => {
   mockbot.clear();
+});
+
+afterAll(async () => {
+  const channelId = await ApiService
+    .findChannelByKey(mockbot.channelKey)
+    .then((channel) => channel?.id)
+    .catch(() => null);
+
+  if (channelId) {
+    await ApiService
+      .deleteChannel(channelId)
+      .catch(() => null);
+  }
 });
 
 describe('chatbots.actions - ping action', () => {

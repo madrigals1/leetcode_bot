@@ -4,6 +4,7 @@ import { constants } from '../../../globals/constants';
 import {
   getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
+import { randomString } from '../randomUtils.mock';
 
 export default class Mockbot {
   output: string[] = [];
@@ -15,7 +16,7 @@ export default class Mockbot {
   prefix = constants.PROVIDERS.MOCKBOT.PREFIX;
 
   channelKey = {
-    chat_id: 'unique_chat_id',
+    chat_id: randomString(15),
     provider: ChatbotProvider.Mockbot,
   }
 
