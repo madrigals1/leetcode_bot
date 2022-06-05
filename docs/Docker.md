@@ -33,12 +33,6 @@ SLACK_SIGNING_SECRET=
 SLACK_APP_TOKEN=
 ```
 
-Delay time after loading each User is set to 4s, depends on LeetCode RPM.
-
-```bash
-USER_REQUEST_DELAY_MS=4000
-```
-
 Create database network with name inside **DATABASE_NETWORK** variable.
 
 ```bash

@@ -84,13 +84,7 @@ Make sure you have installed these:
     SLACK_APP_TOKEN=
     ```
 
-4. Delay time after loading each User is set to 4s, depends on LeetCode RPM
-
-    ```bash
-    USER_REQUEST_DELAY_MS=4000
-    ```
-
-5. Install npm packages
+3. Install npm packages
 
     ```bash
     npm ci
