@@ -10,20 +10,19 @@ jobs:
   docker:
     name: Test
 
+    env:
+      LBB_URL: ${{ secrets.LBB_URL }}
+      LBB_USERNAME: ${{ secrets.LBB_USERNAME }}
+      LBB_PASSWORD: ${{ secrets.LBB_PASSWORD }}
+
     timeout-minutes: 10
     runs-on: ubuntu-latest
-
-    environment: testing_environment
 
     steps:
     - name: Checkout
       uses: actions/checkout@v1
 
     - name: Build original image
-      env:
-        LBB_URL: ${{ secrets.LBB_URL }}
-        LBB_USERNAME: ${{ secrets.LBB_USERNAME }}
-        LBB_PASSWORD: ${{ secrets.LBB_PASSWORD }}
       run: docker build -t leetcode_bot --file deployment/Dockerfile .
 
     - name: Build test image
