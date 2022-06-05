@@ -142,7 +142,7 @@ const SYSTEM = {
 };
 
 const LBB = {
-  URL: LBB_URL || 'https://lbb.madrigal.pro',
+  URL: LBB_URL,
   USERNAME: LBB_USERNAME,
   PASSWORD: LBB_PASSWORD,
 };
@@ -153,7 +153,7 @@ export const constants = {
   PORT,
   CML,
   SYSTEM,
-  VIZAPI_LINK: VIZAPI_LINK || 'https://vizapi.madrigal.pro',
+  VIZAPI_LINK,
   SUBMISSION_STATUS_MAP,
   EMOJI,
   CHAT_STATUS,

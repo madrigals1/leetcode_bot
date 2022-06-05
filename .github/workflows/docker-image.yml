@@ -22,6 +22,7 @@ jobs:
         echo "LBB_URL=${{ secrets.LBB_URL }}" > env.custom
         echo "LBB_USERNAME=${{ secrets.LBB_USERNAME }}" >> env.custom
         echo "LBB_PASSWORD=${{ secrets.LBB_PASSWORD }}" >> env.custom
+        echo "VIZAPI_LINK=${{ secrets.VIZAPI_LINK }}" >> env.custom
 
     - name: Build original image
       run: docker build -t leetcode_bot --file deployment/Dockerfile .

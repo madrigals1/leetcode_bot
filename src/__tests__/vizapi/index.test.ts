@@ -76,7 +76,6 @@ test('vizapi.utils.getCompareDataFromUser action', async () => {
 
 test('vizapi.utils.* confirm URL', async () => {
   expect(constants.VIZAPI_LINK).not.toBe('');
-  expect(constants.VIZAPI_LINK).toBe('https://vizapi.madrigal.pro');
 });
 
 test('vizapi.utils.compareMenu action', async () => {

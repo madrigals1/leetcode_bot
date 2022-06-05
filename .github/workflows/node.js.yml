@@ -33,6 +33,7 @@ jobs:
         LBB_URL: ${{ secrets.LBB_URL }}
         LBB_USERNAME: ${{ secrets.LBB_USERNAME }}
         LBB_PASSWORD: ${{ secrets.LBB_PASSWORD }}
+        VIZAPI_LINK: ${{ secrets.VIZAPI_LINK }}
       run: npm run test:ci
 
   lint:
