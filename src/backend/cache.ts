@@ -6,6 +6,8 @@ import ApiService from './apiService';
 class Cache {
   channelKeyIdMap = new Map<string, number>();
 
+  channelIdKeyMap = new Map<number, LBBChannelKey>();
+
   usernameIdMap = new Map<string, number>();
 
   async preload(): Promise<void> {
@@ -45,12 +47,17 @@ class Cache {
     this.channelKeyIdMap.set(
       JSON.stringify(Cache.getKeyWithoutId(key)), id,
     );
+    this.channelIdKeyMap.set(id, key);
   }
 
   getChannelId(key: LBBChannelKey): number {
     return this.channelKeyIdMap.get(
       JSON.stringify(Cache.getKeyWithoutId(key)),
     );
+  }
+
+  getChannelKey(id: number): LBBChannelKey {
+    return this.channelIdKeyMap.get(id);
   }
 
   addUsernameId(username: string, id: number): void {
