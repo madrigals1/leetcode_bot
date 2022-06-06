@@ -12,7 +12,7 @@ import { ProviderMessages } from '../../globals/messages';
 
 import { reply } from './utils';
 
-export default class Telegram {
+class Telegram {
   token: string = constants.PROVIDERS.TELEGRAM.TOKEN;
 
   options: Options = { polling: true };
@@ -143,3 +143,5 @@ export default class Telegram {
     log(ProviderMessages.telegramBotIsRunning);
   }
 }
+
+export default new Telegram();

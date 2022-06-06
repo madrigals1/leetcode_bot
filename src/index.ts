@@ -9,7 +9,7 @@ import { log } from './utils/helper';
 Cache.preload()
   .then(() => {
     // Run Telegram BOT
-    if (constants.PROVIDERS.TELEGRAM.ENABLE) new Telegram().run();
+    if (constants.PROVIDERS.TELEGRAM.ENABLE) Telegram.run();
 
     // Run Discord BOT
     if (constants.PROVIDERS.DISCORD.ENABLE) Discord.run();
