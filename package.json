@@ -20,7 +20,6 @@
     "@discordjs/rest": "^0.5.0",
     "@slack/bolt": "^3.7.0",
     "axios": "^0.21.4",
-    "dayjs": "^1.10.7",
     "discord-api-types": "^0.33.4",
     "discord.js": "^13.2.0",
     "dotenv": "^10.0.0",
@@ -36,7 +35,6 @@
     "@jest/globals": "^27.2.4",
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.175",
-    "@types/node": "^16.10.2",
     "@types/node-telegram-bot-api": "^0.56.0",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
@@ -45,7 +43,6 @@
     "eslint-plugin-import": "^2.24.2",
     "jest": "^27.5.1",
     "jest-junit": "^13.2.0",
-    "jsdoc": "^3.6.10",
     "ts-jest": "^27.0.5"
   }
 }
