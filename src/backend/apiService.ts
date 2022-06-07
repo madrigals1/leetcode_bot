@@ -1,8 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import { SubscriptionType } from '../chatbots/models';
+import { KontestContest } from '../scheduler/kontest/models';
 
 import {
-  ChannelService, ChannelUserService, SubscriptionService, UserService,
+  ChannelService,
+  ChannelUserService,
+  SubscriptionService,
+  UserService,
+  ContestService,
 } from './api';
 import { handleAPIError } from './api/errors';
 import {
@@ -212,6 +217,14 @@ class ApiService {
 
   fetchUsersOnlyUsernames(): Promise<LBBUserOnlyUsername[]> {
     return UserService.fetchOnlyUsernames();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Contest
+  // ---------------------------------------------------------------------------
+
+  fetchClosestContests(): Promise<KontestContest[]> {
+    return ContestService.fetchClosest();
   }
 }
 
