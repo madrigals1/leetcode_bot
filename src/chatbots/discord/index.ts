@@ -10,14 +10,14 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 
-import { constants } from '../../utils/constants';
-import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
+import { constants } from '../../globals/constants';
 import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { Context, ComplexInteraction } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
+import { ProviderMessages } from '../../globals/messages';
 
 import createBot from './bot';
 import { getKeyBasedParsedArguments, reply } from './utils';
@@ -57,7 +57,7 @@ class Discord {
           provider: id,
           prefix: constants.PROVIDERS.DISCORD.PREFIX,
           channelKey: {
-            chatId: interaction.channelId,
+            chat_id: interaction.channelId,
             provider: id,
           },
           isAdmin: new Promise((resolve) => {
@@ -156,7 +156,7 @@ class Discord {
       return null;
     });
 
-    log(SM.DISCORD_BOT_IS_RUNNING);
+    log(ProviderMessages.discordBotIsRunning);
   }
 }
 

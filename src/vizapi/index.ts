@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-import { constants } from '../utils/constants';
+import { constants } from '../globals/constants';
 import { log, error } from '../utils/helper';
-import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { User } from '../leetcode/models';
+import {
+  ErrorMessages, ImageMessages, SmallMessages, UserMessages,
+} from '../globals/messages';
 
 import { VizapiResponse, CompareUser } from './models';
 
@@ -58,21 +60,20 @@ export async function compareMenu(
       right: getCompareDataFromUser(rightUser),
     })
     .then((res) => {
-      log(SM.IMAGE_WAS_CREATED);
+      log(ImageMessages.imageWasCreated);
       return { link: res.data.link };
     })
     .catch((err) => {
-      error(SM.IMAGE_WAS_NOT_CREATED(err));
-      return { error: err, reason: SM.API_NOT_WORKING };
+      error(ImageMessages.imageWasNotCreated(err));
+      return { error: err, reason: SmallMessages.apiNotWorkingKey };
     });
 }
 
 export async function tableForSubmissions(user: User): Promise<VizapiResponse> {
   if (!user) {
-    const errorMessage = 'Username not found';
     return new Promise((resolve) => resolve({
-      error: errorMessage,
-      reason: SM.ERROR_ON_THE_SERVER(errorMessage),
+      error: 'Username not found',
+      reason: ErrorMessages.server,
     }));
   }
 
@@ -88,19 +89,19 @@ export async function tableForSubmissions(user: User): Promise<VizapiResponse> {
   return axios
     .post(`${constants.VIZAPI_LINK}/table`, { table: userSubmissionData })
     .then((res) => {
-      log(SM.IMAGE_WAS_CREATED);
+      log(ImageMessages.imageWasCreated);
       const errorMsg = 'Please, provide non-empty \'table\' in request body';
       if (res.data.failure === errorMsg) {
         return {
-          error: BM.USER_NO_SUBMISSIONS(user.username),
-          reason: SM.NO_SUBMISSIONS,
+          error: UserMessages.noSubmissions(user.username),
+          reason: SmallMessages.noSubmissionsKey,
         };
       }
       return { link: res.data.link };
     })
     .catch((err) => {
-      error(SM.IMAGE_WAS_NOT_CREATED(err));
-      return { error: err, reason: SM.API_NOT_WORKING };
+      error(ImageMessages.imageWasNotCreated(err));
+      return { error: err, reason: SmallMessages.apiNotWorkingKey };
     });
 }
 
@@ -141,12 +142,12 @@ export async function solvedProblemsChart(user: User): Promise<VizapiResponse> {
       ],
     })
     .then((res) => {
-      log(SM.IMAGE_WAS_CREATED);
+      log(ImageMessages.imageWasCreated);
       return { link: res.data.link };
     })
     .catch((err) => {
-      error(SM.IMAGE_WAS_NOT_CREATED(err));
-      return { error: err, reason: SM.API_NOT_WORKING };
+      error(ImageMessages.imageWasNotCreated(err));
+      return { error: err, reason: SmallMessages.apiNotWorkingKey };
     });
 }
 
@@ -208,11 +209,11 @@ export async function ratingGraph(users: User[]): Promise<VizapiResponse> {
       },
     })
     .then((res) => {
-      log(SM.IMAGE_WAS_CREATED);
+      log(ImageMessages.imageWasCreated);
       return { link: res.data.link };
     })
     .catch((err) => {
-      error(SM.IMAGE_WAS_NOT_CREATED(err));
-      return { error: err, reason: SM.API_NOT_WORKING };
+      error(ImageMessages.imageWasNotCreated(err));
+      return { error: err, reason: SmallMessages.apiNotWorkingKey };
     });
 }

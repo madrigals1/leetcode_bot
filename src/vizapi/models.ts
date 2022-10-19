@@ -11,8 +11,6 @@ export interface CompareField {
 
 export interface CompareUser {
   image: string;
-  // eslint-disable-next-line camelcase
   bio_fields: CompareField[];
-  // eslint-disable-next-line camelcase
   compare_fields: CompareField[];
 }

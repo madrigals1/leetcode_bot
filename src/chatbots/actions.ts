@@ -1,19 +1,37 @@
-import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
-import { constants } from '../utils/constants';
 import {
   tableForSubmissions,
   compareMenu,
   solvedProblemsChart,
   ratingGraph,
 } from '../vizapi';
-import { UserCache } from '../cache/userCache';
-import { getLanguageStats } from '../leetcode';
+import ApiService from '../backend/apiService';
+import { log } from '../utils/helper';
+import {
+  UserAddMessages,
+  UserDeleteMessages,
+  UserMessages,
+  BigMessages,
+  SmallMessages,
+  RefreshMessages,
+  ClearMessages,
+  RatingMessages,
+  ErrorMessages,
+  ListMessages,
+  SubscriptionMessages,
+} from '../globals/messages';
 
 import { action } from './decorators';
 import {
-  Context, Button, RegisteredAction, ButtonContainerType,
+  Context,
+  Button,
+  RegisteredAction,
+  ButtonContainerType,
 } from './models';
 import { createButtonsFromUsers, getCloseButton } from './utils';
+import {
+  FullSubscriptionTypeModel,
+  subscriptionTypeManager,
+} from './subscriptionTypeManager';
 
 export const registeredActions: RegisteredAction[] = [];
 
@@ -24,24 +42,20 @@ export const vizapiActions = {
   ratingGraph,
 };
 
-export const leetcodeActions = {
-  getLanguageStats,
-};
-
 export default class Actions {
   @action({ name: 'ping' })
   static ping(): string {
-    return 'pong';
+    return SmallMessages.pong;
   }
 
   @action({ name: 'start' })
   static start(context: Context): string {
-    return BM.WELCOME_TEXT(context.prefix);
+    return BigMessages.welcomeText(context.prefix);
   }
 
   @action({ name: 'help' })
   static help(): string {
-    return BM.HELP_TEXT;
+    return SmallMessages.helpText;
   }
 
   @action({
@@ -57,32 +71,27 @@ export default class Actions {
     ],
   })
   static async add(context: Context): Promise<string> {
-    // Variable to store text to return back to chat
-    let message = '';
-
     // Get Usernames from arguments
     const usernames = context.args.get('username').values;
 
-    // Add all Users 1 by 1 and log into message
-    for (let i = 0; i < usernames.length; i++) {
-      // Get results of adding
-      // eslint-disable-next-line no-await-in-loop
-      const result = await context.channelCache.addUser(usernames[i]);
+    // Add users to Database and return response as string
+    const response = await ApiService
+      .bulkAddUsersToChannel(context.channelId, usernames)
+      .catch((err) => {
+        log(err);
+        return [];
+      });
 
-      message += result.detail;
-    }
-
-    return BM.USER_LIST(message);
+    return UserAddMessages.userList(response);
   }
 
   @action({ name: 'refresh' })
   static async refresh(context: Context): Promise<string> {
     // Log that database started refresh
-    await context.reply(BM.CACHE_STARTED_REFRESH, context);
+    await context.reply(RefreshMessages.startedRefresh, context);
 
-    // Refresh and return result
-    const result = await UserCache.refresh();
-    return result.detail;
+    await ApiService.refreshChannel(context.channelId);
+    return RefreshMessages.isRefreshed;
   }
 
   @action({
@@ -102,49 +111,58 @@ export default class Actions {
 
     // If Username is not provided, show buttons
     if (username === '') {
+      const lbbUsers = await ApiService.fetchUsersForChannel(context.channelId);
+
       // Add Buttons with User List
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'remove',
-          users: context.channelCache.users,
+          users: lbbUsers.map((user) => user.data),
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.USER_LIST_REMOVE;
+      return ListMessages.userListRemove;
     }
 
     // Check if User exists
-    const user = context.channelCache.loadUser(username);
-    if (!user) return BM.USERNAME_NOT_FOUND(username);
+    const user = await ApiService
+      .findUserInChannel(context.channelId, username);
 
-    await context.reply(BM.USERNAME_WILL_BE_DELETED(username), context);
+    if (!user) return UserMessages.doesNotExist(username);
+
+    const message = UserDeleteMessages.willBeDeleted(username);
+    await context.reply(message, context);
 
     // Remove User
-    const result = await context.channelCache.removeUser(username);
+    const result = await ApiService
+      .deleteUserFromChannelByUsername(context.channelId, username);
 
-    return result.detail;
+    return UserDeleteMessages[result.detail](username);
   }
 
   @action({ name: 'clear', isAdmin: true })
   static async clear(context: Context): Promise<string> {
     // Send message, that Database will be cleared
-    await context.reply(BM.CHANNEL_WILL_BE_CLEARED, context);
+    await context.reply(ClearMessages.channelWillBeCleared, context);
 
     // Remove all Users and send the result (success or failure)
-    const result = await context.channelCache.clear();
+    const result = await ApiService.clearChannel(context.channelId);
 
-    return result.detail;
+    return result
+      ? ClearMessages.channelWasCleared
+      : ClearMessages.channelWasNotCleared;
   }
 
   @action({ name: 'stats', isAdmin: true })
   static async stats(context: Context): Promise<string> {
-    const { users } = context.channelCache;
+    const lbbUsers = await ApiService.fetchUsersForChannel(context.channelId);
+    const users = lbbUsers.map((lbbUser) => lbbUser.data);
 
     // Send message with stats
-    return BM.STATS_TEXT(context.provider, users);
+    return BigMessages.statsText(context.provider, users);
   }
 
   @action({
@@ -160,12 +178,14 @@ export default class Actions {
   })
   static async rating(context: Context): Promise<string> {
     const type = context.args.get('type').value;
-    const users = context.channelCache?.users ?? [];
+    const lbbUsersPromise = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // Prepare buttons
     const cmlButton = {
       buttons: [{
-        text: BM.CML_RATING,
+        text: RatingMessages.cmlRating,
         action: '/rating cml',
       }],
       buttonPerRow: 1,
@@ -174,7 +194,7 @@ export default class Actions {
     };
     const graphButton = {
       buttons: [{
-        text: BM.GRAPH_RATING,
+        text: RatingMessages.graphRating,
         action: '/rating graph',
       }],
       buttonPerRow: 1,
@@ -183,7 +203,7 @@ export default class Actions {
     };
     const regularButton = {
       buttons: [{
-        text: BM.REGULAR_RATING,
+        text: RatingMessages.regularRating,
         action: '/rating',
       }],
       buttonPerRow: 1,
@@ -195,8 +215,7 @@ export default class Actions {
     if (type === '') {
       // Add buttons
       context.options.buttons = [cmlButton, graphButton];
-
-      return BM.RATING_TEXT(users);
+      return BigMessages.ratingText(await lbbUsersPromise);
     }
 
     // Cumulative rating:
@@ -206,14 +225,20 @@ export default class Actions {
     if (type === 'cml') {
       // Add buttons
       context.options.buttons = [regularButton, graphButton];
-
-      return BM.CML_RATING_TEXT(users);
+      const cmlUsersPromise = ApiService
+        .fetchUsersForChannel(context.channelId, '-solved_cml')
+        .then((users) => users.map((user) => user.data))
+        .catch((err) => {
+          log(err);
+          return [];
+        });
+      return BigMessages.cmlRatingText(await cmlUsersPromise);
     }
 
     // Rating with graph
     if (type === 'graph') {
       // Create HTML image with Graph
-      const response = await vizapiActions.ratingGraph(users);
+      const response = await vizapiActions.ratingGraph(await lbbUsersPromise);
 
       // If image was created
       if (response.link) {
@@ -223,15 +248,15 @@ export default class Actions {
         // Add buttons
         context.options.buttons = [regularButton, cmlButton];
 
-        return BM.GRAPH_RATING;
+        return RatingMessages.graphRating;
       }
 
       // If image link was not achieved from VizAPI
-      return BM.ERROR_ON_THE_SERVER;
+      return ErrorMessages.server;
     }
 
     // If type is not recognized
-    return BM.INCORRECT_RATING_TYPE;
+    return RatingMessages.incorrectRatingType;
   }
 
   @action({
@@ -247,44 +272,48 @@ export default class Actions {
   })
   static async profile(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
+    const lbbUsersPromise = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     if (username === '') {
       // Add user buttons
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'profile',
-          users: context.channelCache.users,
+          users: await lbbUsersPromise,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.USER_LIST_PROFILES;
+      return ListMessages.userListProfiles;
     }
 
     // Get User from username
-    const user = context.channelCache.loadUser(username);
+    const user = await ApiService
+      .findUserInChannel(context.channelId, username);
 
-    if (!user) return BM.USERNAME_NOT_FOUND(username);
+    if (!user) return UserMessages.doesNotExist(username);
 
     const submissionsButtion: Button = {
-      text: `${constants.EMOJI.CLIPBOARD} Submissions`,
+      text: ListMessages.userListSubmissions,
       action: `/submissions ${username}`,
     };
 
     const avatarButton: Button = {
-      text: `${constants.EMOJI.PERSON} Avatar`,
+      text: UserMessages.avatar,
       action: `/avatar ${username}`,
     };
 
     const problemsButton: Button = {
-      text: `${constants.EMOJI.CHART} Problems`,
+      text: ListMessages.userListProblems,
       action: `/problems ${username}`,
     };
 
     const ratingButton: Button = {
-      text: `${constants.EMOJI.BACK_ARROW} Back to Profiles`,
+      text: ListMessages.backToProfiles,
       action: '/profile',
     };
 
@@ -295,7 +324,7 @@ export default class Actions {
       type: ButtonContainerType.MultipleButtons,
     }];
 
-    return BM.USER_TEXT(user);
+    return BigMessages.userText(user.data);
   }
 
   @action({
@@ -311,25 +340,27 @@ export default class Actions {
   })
   static async avatar(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
+    const lbbUsers = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // If 1 User was sent
     if (username !== '') {
-      const user = context.channelCache.loadUser(username);
+      const user = await ApiService
+        .findUserInChannel(context.channelId, username);
 
-      if (user) {
-        // Add photo to context
-        context.photoUrl = user.profile.userAvatar;
-        return BM.USER_AVATAR(user.username);
-      }
+      if (!user) return UserMessages.doesNotExist(username);
 
-      return BM.USERNAME_NOT_FOUND(username);
+      // Add photo to context
+      context.photoUrl = user.data.profile.userAvatar;
+      return UserMessages.usernamesAvatar(username);
     }
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'avatar',
-        users: context.channelCache.users,
+        users: await lbbUsers,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -337,7 +368,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_AVATARS;
+    return ListMessages.userListAvatars;
   }
 
   @action({
@@ -353,38 +384,43 @@ export default class Actions {
   })
   static async submissions(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
+    const lbbUsers = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user = context.channelCache.loadUser(username);
+      const user = await ApiService
+        .findUserInChannel(context.channelId, username);
 
       // If User does not exist, return error message
-      if (!user) return BM.USERNAME_NOT_FOUND(username);
+      if (!user) return UserMessages.doesNotExist(username);
 
       // Create HTML image with Table
-      const response = await vizapiActions.tableForSubmissions(user);
+      const response = await vizapiActions.tableForSubmissions(user.data);
 
       // If image was created
       if (response.link) {
         // Add image to context
         context.photoUrl = response.link;
-
-        return BM.USER_RECENT_SUBMISSIONS(user.username);
+        return UserMessages.recentSubmissions(username);
       }
 
       // If error is because of User not having any submissions
-      if (response.reason === SM.NO_SUBMISSIONS) return response.error;
+      if (response.reason === SmallMessages.noSubmissionsKey) {
+        return response.error;
+      }
 
       // If image link was not achieved from VizAPI
-      return BM.ERROR_ON_THE_SERVER;
+      return ErrorMessages.server;
     }
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'submissions',
-        users: context.channelCache.users,
+        users: await lbbUsers,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -392,7 +428,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_SUBMISSIONS;
+    return ListMessages.userListSubmissions;
   }
 
   @action({
@@ -408,35 +444,38 @@ export default class Actions {
   })
   static async problems(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
+    const lbbUsers = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user = context.channelCache.loadUser(username);
+      const user = await ApiService
+        .findUserInChannel(context.channelId, username);
 
       // If User does not exist, return error message
-      if (!user) return BM.USERNAME_NOT_FOUND(username);
+      if (!user) return UserMessages.doesNotExist(username);
 
       // Create HTML image with Table
-      const response = await vizapiActions.solvedProblemsChart(user);
+      const response = await vizapiActions.solvedProblemsChart(user.data);
 
       // If image was created
       if (response.link) {
         // Add image to context
         context.photoUrl = response.link;
-
-        return BM.USER_SOLVED_PROBLEMS_CHART(user.username);
+        return UserMessages.solvedProblemsChart(username);
       }
 
       // If image link was not achieved from VizAPI
-      return BM.ERROR_ON_THE_SERVER;
+      return ErrorMessages.server;
     }
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'problems',
-        users: context.channelCache.users,
+        users: await lbbUsers,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -444,7 +483,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_PROBLEMS;
+    return ListMessages.userListProblems;
   }
 
   @action({
@@ -467,20 +506,23 @@ export default class Actions {
   static async compare(context: Context): Promise<string> {
     const first = context.args.get('first_username').value.toLowerCase();
     const second = context.args.get('second_username').value.toLowerCase();
+    const lbbUsers = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // Getting left User
     if (first === '') {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'compare',
-          users: context.channelCache.users,
+          users: await lbbUsers,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.SELECT_LEFT_USER;
+      return UserMessages.selectLeftUser;
     }
 
     // Getting right User
@@ -488,39 +530,42 @@ export default class Actions {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: `compare ${first}`,
-          users: context.channelCache.users,
+          users: await lbbUsers,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.SELECT_RIGHT_USER;
+      return UserMessages.selectRightUser;
     }
 
     // Get Users from args
-    const leftUser = context.channelCache.loadUser(first);
-    const rightUser = context.channelCache.loadUser(second);
+    const leftUser = await ApiService
+      .findUserInChannel(context.channelId, first);
+    const rightUser = await ApiService
+      .findUserInChannel(context.channelId, second);
 
     if (!leftUser) {
-      return BM.USERNAME_NOT_FOUND(first);
+      return UserMessages.doesNotExist(first);
     }
 
     if (!rightUser) {
-      return BM.USERNAME_NOT_FOUND(second);
+      return UserMessages.doesNotExist(second);
     }
 
-    const response = await vizapiActions.compareMenu(leftUser, rightUser);
+    const response = await vizapiActions
+      .compareMenu(leftUser.data, rightUser.data);
 
     // If image was created
     if (response.link) {
       // Add image to context
       context.photoUrl = response.link;
-      return BM.USERS_COMPARE(first, second);
+      return UserMessages.compare(first, second);
     }
 
     // If image link was not achieved from VizAPI
-    return BM.ERROR_ON_THE_SERVER;
+    return ErrorMessages.server;
   }
 
   @action({
@@ -536,27 +581,30 @@ export default class Actions {
   })
   static async langstats(context: Context): Promise<string> {
     const username = context.args.get('username').value.toLowerCase();
+    const lbbUsers = ApiService
+      .fetchUsersForChannel(context.channelId)
+      .then((users) => users.map((user) => user.data));
 
     // If 1 User was sent
     if (username !== '') {
       // Get User from args
-      const user = context.channelCache.loadUser(username);
+      const user = await ApiService
+        .findUserInChannel(context.channelId, username);
 
       // If User does not exist, return error message
-      if (!user) return BM.USERNAME_NOT_FOUND(username);
+      if (!user) return UserMessages.doesNotExist(username);
 
       // Get language stats from LeetCode
-      const response = await leetcodeActions.getLanguageStats(username);
-      const data = response?.matchedUser?.languageProblemCount ?? [];
+      const data = user.data.languageStats ?? [];
 
-      return BM.LANGUAGE_STATS_TEXT(username, data);
+      return BigMessages.languageStatsText(username, data);
     }
 
     // If 0 User was sent, add reply markup context for User
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'langstats',
-        users: context.channelCache.users,
+        users: await lbbUsers,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -564,6 +612,117 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_LANGSTATS;
+    return ListMessages.userListLangstats;
+  }
+
+  @action({
+    name: 'subscribe',
+    args: [
+      {
+        key: 'subscription_type',
+        name: 'Subscription Type',
+        index: 0,
+        isRequired: false,
+      },
+    ],
+    isAdmin: true,
+  })
+  static async subscribe(context: Context): Promise<string> {
+    const subscriptionTypeKey = context.args.get('subscription_type').value;
+
+    if (subscriptionTypeKey === '') {
+      // If Subscription Type was not sent, return buttons
+      context.options.buttons = [{
+        buttons: subscriptionTypeManager.getAll()
+          .map((subscriptionTypeModel: FullSubscriptionTypeModel) => ({
+            text: subscriptionTypeModel.humanName,
+            action: `/subscribe ${subscriptionTypeModel.key}`,
+          })),
+        buttonPerRow: 3,
+        placeholder: 'Subscription Type',
+        type: ButtonContainerType.MultipleButtons,
+      }, getCloseButton()];
+
+      return ListMessages.userListSubscription;
+    }
+
+    const subscriptionTypeModel = subscriptionTypeManager
+      .getByKey(subscriptionTypeKey);
+
+    if (!subscriptionTypeModel) {
+      return 'Invalid subscription type';
+    }
+
+    const { subscriptionType, humanName } = subscriptionTypeModel;
+
+    // Subscribe
+    const result = await ApiService
+      .createSubscription({
+        channel: context.channelId,
+        type: subscriptionType,
+      })
+      .catch((err) => {
+        log(err);
+        return null;
+      });
+
+    return result
+      ? SubscriptionMessages.subscriptionSuccess(humanName)
+      : SubscriptionMessages.subscriptionError(humanName);
+  }
+
+  @action({
+    name: 'unsubscribe',
+    args: [
+      {
+        key: 'subscription_type',
+        name: 'Subscription Type',
+        index: 0,
+        isRequired: false,
+      },
+    ],
+    isAdmin: true,
+  })
+  static async unsubscribe(context: Context): Promise<string> {
+    const subscriptionTypeKey = context.args.get('subscription_type').value;
+
+    if (subscriptionTypeKey === '') {
+      // If Subscription Type was not sent, return buttons
+      context.options.buttons = [{
+        buttons: subscriptionTypeManager.getAll()
+          .map((subscriptionTypeModel: FullSubscriptionTypeModel) => ({
+            text: subscriptionTypeModel.humanName,
+            action: `/unsubscribe ${subscriptionTypeModel.key}`,
+          })),
+        buttonPerRow: 3,
+        placeholder: 'Subscription Type',
+        type: ButtonContainerType.MultipleButtons,
+      }, getCloseButton()];
+
+      return ListMessages.userListUnsubscription;
+    }
+
+    const subscriptionTypeModel = subscriptionTypeManager
+      .getByKey(subscriptionTypeKey);
+
+    if (!subscriptionTypeModel) {
+      return 'Invalid subscription type';
+    }
+
+    const { subscriptionType, humanName } = subscriptionTypeModel;
+
+    // Unsubscribe
+    const result = await ApiService
+      .deleteSubscriptionByType(subscriptionType, context.channelId);
+
+    return result
+      ? SubscriptionMessages.unsubscriptionSuccess(humanName)
+      : SubscriptionMessages.unsubscriptionError(humanName);
+  }
+
+  @action({ name: 'subscriptions', isAdmin: true })
+  static async subscriptions(context: Context): Promise<string> {
+    const channel = await ApiService.getChannel(context.channelId);
+    return BigMessages.subscriptionsText(channel.subscriptions);
   }
 }

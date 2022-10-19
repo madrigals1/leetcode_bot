@@ -1,126 +1,161 @@
-import * as _ from 'lodash';
-
 import Mockbot from '../__mocks__/chatbots/mockbot';
-import { BOT_MESSAGES as BM } from '../../utils/dictionary';
-import Cache from '../../cache';
-import {
-  mockGetLeetcodeDataFromUsername,
-  mockTableForSubmissions,
-  mockCompareMenu,
-  mockProblemsChart,
-  mockRatingGraph,
-  mockLanguageStats,
-} from '../__mocks__/utils.mock';
-import MockDatabaseProvider from '../__mocks__/database.mock';
-import { constants } from '../../utils/constants';
-import { vizapiActions, leetcodeActions } from '../../chatbots/actions';
+import { mockTableForSubmissions } from '../__mocks__/utils.mock';
+import { constants } from '../../globals/constants';
+import { vizapiActions } from '../../chatbots/actions';
 import { tableForSubmissions, compareMenu, ratingGraph } from '../../vizapi';
-import { users } from '../__mocks__/data.mock';
-import { UserCache } from '../../cache/userCache';
-import { User } from '../../leetcode/models';
-import { getLanguageStats } from '../../leetcode';
+import {
+  ArgumentMessages,
+  BigMessages,
+  ClearMessages,
+  ErrorMessages,
+  ListMessages,
+  RatingMessages,
+  RefreshMessages,
+  SmallMessages,
+  UserAddMessages,
+  UserDeleteMessages,
+  UserMessages,
+} from '../../globals/messages';
+import ApiService from '../../backend/apiService';
+import Cache from '../../backend/cache';
 
 const mockbot = new Mockbot();
-const mockDatabaseProvider = new MockDatabaseProvider();
-Cache.database = mockDatabaseProvider;
-UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
-UserCache.delayTime = 0;
 
-const realUsername1 = users[0].username;
-const realUsername2 = users[1].username;
-const fakeUsername = 'fake_username';
+const leetcodeUsername1 = 'hello';
+const leetcodeUsername2 = 'jesus';
+const notExistingUsername = 'not-existing-username';
+
+beforeAll(async () => {
+  await Cache.preload();
+
+  let channelId: number = await ApiService
+    .findChannelByKey(mockbot.channelKey)
+    .then((channel) => channel?.id)
+    .catch(() => null);
+
+  if (!channelId) {
+    channelId = await ApiService
+      .createChannel(mockbot.channelKey)
+      .then((channel) => channel?.id);
+  }
+
+  Cache.addChannelId(mockbot.channelKey, channelId);
+  mockbot.channelId = channelId;
+}, 30000);
 
 beforeEach(async () => {
   mockbot.clear();
-  UserCache.clear();
-  Cache.clearChannel(mockbot.channelKey);
+
+  const fakeChannelId = mockbot.channelId
+    ? mockbot.channelId
+    : await ApiService
+      .findChannelByKey(mockbot.channelKey)
+      .then((channel) => channel.id);
+
+  if (fakeChannelId) {
+    await ApiService.clearChannel(fakeChannelId);
+  }
+
   vizapiActions.tableForSubmissions = tableForSubmissions;
   vizapiActions.compareMenu = compareMenu;
   vizapiActions.ratingGraph = ratingGraph;
-  leetcodeActions.getLanguageStats = getLanguageStats;
 });
 
 afterEach(async () => {
   mockbot.clear();
-  UserCache.clear();
-  Cache.clearChannel(mockbot.channelKey);
+});
+
+afterAll(async () => {
+  const channelId = await ApiService
+    .findChannelByKey(mockbot.channelKey)
+    .then((channel) => channel?.id)
+    .catch(() => null);
+
+  if (channelId) {
+    await ApiService
+      .deleteChannel(channelId)
+      .catch(() => null);
+  }
 });
 
 describe('chatbots.actions - ping action', () => {
   test('Correct case', async () => {
     await mockbot.send('/ping');
-    expect(mockbot.lastMessage()).toEqual('pong');
+    expect(mockbot.lastMessage()).toEqual(SmallMessages.pong);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/ping excess_arg');
-    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+    expect(mockbot.lastMessage())
+      .toEqual(ArgumentMessages.messageShouldHaveNoArgs);
   });
 });
 
 describe('chatbots.actions - start action', () => {
   test('Correct case', async () => {
     await mockbot.send('/start');
-    expect(mockbot.lastMessage()).toEqual(BM.WELCOME_TEXT(mockbot.prefix));
+    expect(mockbot.lastMessage())
+      .toEqual(BigMessages.welcomeText(mockbot.prefix));
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/start excess_arg');
-    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+    expect(mockbot.lastMessage())
+      .toEqual(ArgumentMessages.messageShouldHaveNoArgs);
   });
 });
 
 describe('chatbots.actions - help action', () => {
   test('Correct case', async () => {
     await mockbot.send('/help');
-    expect(mockbot.lastMessage()).toEqual(BM.HELP_TEXT);
+    expect(mockbot.lastMessage()).toEqual(SmallMessages.helpText);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/help excess_arg');
-    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+    expect(mockbot.lastMessage())
+      .toEqual(ArgumentMessages.messageShouldHaveNoArgs);
   });
 });
 
 describe('chatbots.actions - add action', () => {
   test('Correct case', async () => {
     // Add 2 users
-    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
+    await mockbot.send(`/add ${leetcodeUsername1} ${leetcodeUsername2}`);
 
     // Cache should have 2 users
-    expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(2);
+    const userCount = await ApiService.userCountForChannel(mockbot.channelId);
+    expect(userCount).toBe(2);
 
     // Both usernames should be added
-    const msg1 = BM.USERNAME_WAS_ADDED(realUsername1);
-    const msg2 = BM.USERNAME_WAS_ADDED(realUsername2);
-    expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}${msg2}`);
+    const msg1 = UserAddMessages.success(leetcodeUsername1);
+    const msg2 = UserAddMessages.success(leetcodeUsername2);
+    expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}\n${msg2}`);
   });
 
   test('Incorrect case - Existing username', async () => {
-    // Clear channel
-    await Cache.clearChannel(mockbot.channelKey);
-
     // Add username
-    await mockbot.send(`/add ${realUsername1}`);
+    await mockbot.send(`/add ${leetcodeUsername1}`);
 
     // Username should be added
-    const msg1 = BM.USERNAME_WAS_ADDED(realUsername1);
+    const msg1 = UserAddMessages.success(leetcodeUsername1);
     expect(mockbot.lastMessage()).toEqual(`User List:\n${msg1}`);
 
     // Add same username again
-    await mockbot.send(`/add ${realUsername1}`);
+    await mockbot.send(`/add ${leetcodeUsername1}`);
 
     // Username should already exist
-    const msg2 = BM.USERNAME_ALREADY_EXISTS(realUsername1);
+    const msg2 = UserAddMessages.alreadyExists(leetcodeUsername1);
     expect(mockbot.lastMessage()).toEqual(`User List:\n${msg2}`);
   });
 
   test('Incorrect case - User not found in Leetcode', async () => {
     // Add incorrect username
-    await mockbot.send(`/add ${fakeUsername}`);
+    await mockbot.send(`/add ${notExistingUsername}`);
 
     // Generate message
-    const message = BM.USERNAME_NOT_FOUND_ON_LEETCODE(fakeUsername);
+    const message = UserAddMessages
+      .leetcodeNotFoundUsername(notExistingUsername);
 
     // Should receive correct message
     expect(mockbot.lastMessage()).toEqual(`User List:\n${message}`);
@@ -131,7 +166,8 @@ describe('chatbots.actions - add action', () => {
     await mockbot.send('/add');
 
     // Receive correct message
-    expect(mockbot.lastMessage()).toEqual(BM.INSUFFICIENT_ARGS_IN_MESSAGE);
+    expect(mockbot.lastMessage())
+      .toEqual(ArgumentMessages.insufficientArgsInMessage);
   });
 });
 
@@ -139,168 +175,181 @@ describe('chatbots.actions - refresh action', () => {
   test('Correct case', async () => {
     await mockbot.send('/refresh');
     const messages = mockbot.messages();
-    expect(messages[0]).toBe(BM.CACHE_STARTED_REFRESH);
-    expect(messages[1]).toBe(BM.CACHE_IS_REFRESHED);
+    expect(messages[0]).toBe(RefreshMessages.startedRefresh);
+    expect(messages[1]).toBe(RefreshMessages.isRefreshed);
   });
 
   test('Incorrect case - Invalid arguments', async () => {
     await mockbot.send('/refresh excess_arg');
-    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+    expect(mockbot.lastMessage())
+      .toEqual(ArgumentMessages.messageShouldHaveNoArgs);
   });
 });
 
 describe('chatbots.actions - remove action', () => {
   test('Correct case - Without username', async () => {
     await mockbot.send('/remove', true);
-    expect(mockbot.lastMessage()).toBe(BM.USER_LIST_REMOVE);
+    expect(mockbot.lastMessage()).toBe(ListMessages.userListRemove);
   });
 
   // TODO: Check buttons
 
   test('Correct case - With username', async () => {
-    await mockbot.send(`/add ${realUsername1}`);
+    await mockbot.send(`/add ${leetcodeUsername1}`);
 
-    await mockbot.send(`/remove ${realUsername1}`, true);
+    await mockbot.send(`/remove ${leetcodeUsername1}`, true);
     const messages = mockbot.messages(2);
 
-    expect(messages[0]).toBe(BM.USERNAME_WILL_BE_DELETED(realUsername1));
-    expect(messages[1]).toBe(BM.USERNAME_WAS_DELETED(realUsername1));
+    expect(messages[0]).toBe(UserDeleteMessages.willBeDeleted('hello'));
+    expect(messages[1]).toBe(UserDeleteMessages.success('hello'));
   });
 
   test('Incorrect case - Username does not exist', async () => {
-    await mockbot.send(`/remove ${fakeUsername}`, true);
+    await mockbot.send(`/remove ${leetcodeUsername1}`, true);
     expect(mockbot.lastMessage())
-      .toBe(BM.USERNAME_NOT_FOUND(fakeUsername));
+      .toBe(UserMessages.doesNotExist(leetcodeUsername1));
   });
 
   test('Incorrect case - Not admin', async () => {
-    await mockbot.send(`/remove ${fakeUsername}`, false);
-    expect(mockbot.lastMessage()).toBe(BM.NO_ADMIN_RIGHTS);
+    await mockbot.send(`/remove ${leetcodeUsername1}`, false);
+    expect(mockbot.lastMessage()).toBe(UserMessages.noAdminRights);
     await mockbot.send('/remove', false);
-    expect(mockbot.lastMessage()).toBe(BM.NO_ADMIN_RIGHTS);
+    expect(mockbot.lastMessage()).toBe(UserMessages.noAdminRights);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/remove 123 123 123');
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    expect(mockbot.lastMessage()).toEqual(ErrorMessages.server);
   });
 });
 
 describe('chatbots.actions - clear action', () => {
   test('Correct case', async () => {
-    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
+    await mockbot.send(`/add ${leetcodeUsername1} ${leetcodeUsername2}`);
 
-    expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(2);
+    const userCountBeforeClear = await ApiService
+      .userCountForChannel(mockbot.channelId);
+    expect(userCountBeforeClear).toBe(2);
 
     await mockbot.send('/clear', true);
 
     const messages = mockbot.messages(2);
 
-    expect(messages[0]).toEqual(BM.CHANNEL_WILL_BE_CLEARED);
-    expect(messages[1]).toEqual(BM.CHANNEL_WAS_CLEARED);
+    expect(messages[0]).toEqual(ClearMessages.channelWillBeCleared);
+    expect(messages[1]).toEqual(ClearMessages.channelWasCleared);
 
-    expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(0);
+    const userCountAfterClear = await ApiService
+      .userCountForChannel(mockbot.channelId);
+    expect(userCountAfterClear).toBe(0);
   });
 
   test('Incorrect case - Not admin', async () => {
     await mockbot.send('/clear');
-    expect(mockbot.lastMessage()).toBe(BM.NO_ADMIN_RIGHTS);
+    expect(mockbot.lastMessage()).toBe(UserMessages.noAdminRights);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/clear asd asd');
-    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+    expect(mockbot.lastMessage())
+      .toEqual(ArgumentMessages.messageShouldHaveNoArgs);
   });
 });
 
 describe('chatbots.actions - stats action', () => {
   test('Correct case', async () => {
     // Add 2 Users
-    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
+    await mockbot.send(`/add ${leetcodeUsername1} ${leetcodeUsername2}`);
 
     await mockbot.send('/stats', true);
 
-    const sortedUsers = [users[1], users[0]];
+    const sortedUsers = await ApiService
+      .fetchUsersForChannel(mockbot.channelId)
+      .then((lbbUsers) => lbbUsers.map((user) => user.data));
 
-    expect(mockbot.lastMessage())
-      .toEqual(BM.STATS_TEXT(constants.PROVIDERS.MOCKBOT.ID, sortedUsers));
+    const message = BigMessages
+      .statsText(constants.PROVIDERS.MOCKBOT.ID, sortedUsers);
+    expect(mockbot.lastMessage()).toEqual(message);
   });
 
   test('Incorrect case - Not admin', async () => {
     await mockbot.send('/stats', false);
-    expect(mockbot.lastMessage()).toBe(BM.NO_ADMIN_RIGHTS);
+    expect(mockbot.lastMessage()).toBe(UserMessages.noAdminRights);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/stats asd asd');
-    expect(mockbot.lastMessage()).toEqual(BM.MESSAGE_SHOULD_HAVE_NO_ARGS);
+    expect(mockbot.lastMessage())
+      .toEqual(ArgumentMessages.messageShouldHaveNoArgs);
   });
 });
 
 describe('chatbots.actions - rating action', () => {
   test('Correct case - Regular rating', async () => {
     // Confirm that 2 users exist in Database
-    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
-    expect(Cache.getChannel(mockbot.channelKey).userAmount).toBe(2);
+    await mockbot.send(`/add ${leetcodeUsername1} ${leetcodeUsername2}`);
+
+    const userCount = await ApiService
+      .userCountForChannel(mockbot.channelId);
+    expect(userCount).toBe(2);
 
     // Test regular rating with correct arguments
     await mockbot.send('/rating');
 
-    expect(mockbot.lastMessage())
-      .toEqual(BM.RATING_TEXT(Cache.getChannel(mockbot.channelKey).users));
+    const sortedUsers = await ApiService
+      .fetchUsersForChannel(mockbot.channelId)
+      .then((lbbUsers) => lbbUsers.map((user) => user.data));
+
+    // TODO: Re-add this
+    const message = BigMessages.ratingText(sortedUsers);
+    expect(mockbot.lastMessage()).toEqual(message);
   });
 
   test('Correct case - Cumulative rating', async () => {
     await mockbot.send('/rating cml');
 
-    // Predefined data
-    const cmlRating = UserCache.getAllUsers().sort((user1, user2) => {
-      const cml1 = user1.computed.problemsSolved.cumulative;
-      const cml2 = user2.computed.problemsSolved.cumulative;
-      return cml2 - cml1;
-    });
+    const cmlUsers = await ApiService
+      .fetchUsersForChannel(mockbot.channelId, '-solved_cml')
+      .then((lbbUsers) => lbbUsers.map((user) => user.data));
 
-    expect(mockbot.lastMessage()).toEqual(BM.CML_RATING_TEXT(cmlRating));
+    expect(mockbot.lastMessage())
+      .toEqual(BigMessages.cmlRatingText(cmlUsers));
   });
 
   test('Correct case - Graph rating', async () => {
-    vizapiActions.ratingGraph = mockRatingGraph;
+    vizapiActions.ratingGraph = async () => ({ link: 'some_random_link' });
 
     await mockbot.send('/rating graph');
-    expect(mockbot.lastMessage()).toEqual(BM.GRAPH_RATING);
+    expect(mockbot.lastMessage()).toEqual(RatingMessages.graphRating);
     // TODO: Test buttons
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vizapiActions.ratingGraph = (u: User[]) => new Promise((resolve) => {
-      resolve({ link: null });
-    });
+    vizapiActions.ratingGraph = async () => ({ link: null });
 
     await mockbot.send('/rating graph');
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    expect(mockbot.lastMessage()).toEqual(ErrorMessages.server);
   });
 
   // TODO: Test with 10 users
 
   test('Incorrect case - Incorrect rating type', async () => {
     await mockbot.send('/rating asd');
-    expect(mockbot.lastMessage()).toEqual(BM.INCORRECT_RATING_TYPE);
+    expect(mockbot.lastMessage()).toEqual(RatingMessages.incorrectRatingType);
   });
 
   test('Incorrect case - No users', async () => {
-    vizapiActions.ratingGraph = mockRatingGraph;
-    await UserCache.clear();
+    vizapiActions.ratingGraph = async () => ({ link: 'some_random_link' });
 
     // Regular Rating with 0 users
     await mockbot.send('/rating');
-    expect(mockbot.lastMessage()).toEqual(BM.RATING_TEXT([]));
+    expect(mockbot.lastMessage()).toEqual(BigMessages.ratingText([]));
 
     // CML Rating with 0 users
     await mockbot.send('/rating cml');
-    expect(mockbot.lastMessage()).toEqual(BM.CML_RATING_TEXT([]));
+    expect(mockbot.lastMessage()).toEqual(BigMessages.cmlRatingText([]));
 
     // CML Rating with 0 users
     await mockbot.send('/rating graph');
-    expect(mockbot.lastMessage()).toEqual(BM.GRAPH_RATING);
+    expect(mockbot.lastMessage()).toEqual(RatingMessages.graphRating);
 
     vizapiActions.ratingGraph = ratingGraph;
   });
@@ -309,63 +358,70 @@ describe('chatbots.actions - rating action', () => {
 describe('chatbots.actions - profile action', () => {
   test('Correct case - All users', async () => {
     await mockbot.send('/profile');
-    expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_PROFILES);
+    expect(mockbot.lastMessage()).toEqual(ListMessages.userListProfiles);
   });
 
   /* TODO: Test buttons */
 
   test('Correct case - Single user', async () => {
-    await mockbot.send(`/add ${realUsername1}`);
-    await mockbot.send(`/profile ${realUsername1}`);
-    const user = UserCache.getUser(realUsername1);
-    expect(mockbot.lastMessage()).toEqual(BM.USER_TEXT(user));
+    await mockbot.send(`/add ${leetcodeUsername1}`);
+    await mockbot.send(`/profile ${leetcodeUsername1}`);
+
+    const user = await ApiService
+      .findUserInChannel(mockbot.channelId, leetcodeUsername1)
+      .then((lbbUser) => lbbUser.data);
+    expect(mockbot.lastMessage()).toEqual(BigMessages.userText(user));
   });
 
   test('Incorrect case - Username not found', async () => {
-    await mockbot.send(`/profile ${fakeUsername}`);
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
+    await mockbot.send(`/profile ${notExistingUsername}`);
+    expect(mockbot.lastMessage())
+      .toEqual(UserMessages.doesNotExist(notExistingUsername));
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/profile asd asd');
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    expect(mockbot.lastMessage()).toEqual(ErrorMessages.server);
   });
 });
 
 describe('chatbots.actions - avatar action', () => {
   test('Correct case - All users', async () => {
     await mockbot.send('/avatar');
-    expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_AVATARS);
+    expect(mockbot.lastMessage()).toEqual(ListMessages.userListAvatars);
   });
 
   /* TODO: Test buttons */
 
   test('Correct case - Single user', async () => {
-    await mockbot.send(`/add ${realUsername1}`);
-    await mockbot.send(`/avatar ${realUsername1}`);
+    await mockbot.send(`/add ${leetcodeUsername1}`);
+    await mockbot.send(`/avatar ${leetcodeUsername1}`);
 
-    const user = UserCache.getUser(realUsername1);
-    const context = mockbot.getContext();
+    const user = await ApiService
+      .findUserInChannel(mockbot.channelId, leetcodeUsername1)
+      .then((lbbUser) => lbbUser.data);
 
-    expect(context.photoUrl).toEqual(user.profile.userAvatar);
-    expect(mockbot.lastMessage()).toEqual(BM.USER_AVATAR(realUsername1));
+    expect(mockbot.context.photoUrl).toEqual(user.profile.userAvatar);
+    expect(mockbot.lastMessage())
+      .toEqual(UserMessages.usernamesAvatar(leetcodeUsername1));
   });
 
   test('Incorrect case - Username not found', async () => {
-    await mockbot.send(`/avatar ${fakeUsername}`);
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
+    await mockbot.send(`/avatar ${notExistingUsername}`);
+    expect(mockbot.lastMessage())
+      .toEqual(UserMessages.doesNotExist(notExistingUsername));
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/avatar asd asd');
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    expect(mockbot.lastMessage()).toEqual(ErrorMessages.server);
   });
 });
 
 describe('chatbots.actions - submissions action', () => {
   test('Correct case - All users', async () => {
     await mockbot.send('/submissions');
-    expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_SUBMISSIONS);
+    expect(mockbot.lastMessage()).toEqual(ListMessages.userListSubmissions);
   });
 
   /* TODO: Test buttons */
@@ -373,213 +429,188 @@ describe('chatbots.actions - submissions action', () => {
   test('Correct case - Single user', async () => {
     vizapiActions.tableForSubmissions = mockTableForSubmissions;
 
-    await mockbot.send(`/add ${realUsername1}`);
-    await mockbot.send(`/submissions ${realUsername1}`);
+    await mockbot.send(`/add ${leetcodeUsername2}`);
+    await mockbot.send(`/submissions ${leetcodeUsername2}`);
 
-    const context = mockbot.getContext();
-
-    expect(context.photoUrl).toEqual('http://random_link');
+    expect(mockbot.context.photoUrl).toEqual('http://random_link');
     expect(mockbot.lastMessage())
-      .toEqual(BM.USER_RECENT_SUBMISSIONS(realUsername1));
+      .toEqual(UserMessages.recentSubmissions(leetcodeUsername2));
   });
 
   test('Incorrect case - Username not found', async () => {
-    await mockbot.send(`/submissions ${fakeUsername}`);
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
+    await mockbot.send(`/submissions ${notExistingUsername}`);
+    expect(mockbot.lastMessage())
+      .toEqual(UserMessages.doesNotExist(notExistingUsername));
   });
 
   test('Incorrect case - User has no submissions', async () => {
-    const username = 'clone_username';
-    const newUser = _.cloneDeep(users[0]);
-    newUser.username = username;
-    newUser.submitStats.acSubmissionNum = [];
-    users.push(newUser);
-
+    await mockbot.send(`/add ${leetcodeUsername1}`);
     vizapiActions.tableForSubmissions = mockTableForSubmissions;
 
-    await mockbot.send(`/add ${username}`);
-    await mockbot.send(`/submissions ${username}`);
+    const user = await ApiService
+      .findUserInChannel(mockbot.channelId, leetcodeUsername1);
+    user.data.submitStats.acSubmissionNum = [];
 
-    expect(mockbot.lastMessage()).toEqual(BM.USER_NO_SUBMISSIONS(username));
-    users.pop();
+    // Save original method
+    const { findUserInChannel } = ApiService;
+
+    ApiService.findUserInChannel = async () => (user);
+
+    await mockbot.send(`/add ${leetcodeUsername1}`);
+    await mockbot.send(`/submissions ${leetcodeUsername1}`);
+
+    expect(mockbot.lastMessage())
+      .toEqual(UserMessages.noSubmissions(leetcodeUsername1));
+
+    // Bring back original method
+    ApiService.findUserInChannel = findUserInChannel;
   });
 
   test('Incorrect case - Error on the server', async () => {
-    const username = 'clone_username_2';
-    const newUser2 = _.cloneDeep(users[0]);
-    newUser2.username = username;
-    newUser2.submitStats = null;
-    users.push(newUser2);
+    vizapiActions.tableForSubmissions = async () => ({
+      error: 'placeholder',
+      reason: ErrorMessages.server,
+    });
 
-    vizapiActions.tableForSubmissions = mockTableForSubmissions;
+    await mockbot.send(`/add ${leetcodeUsername1}`);
+    await mockbot.send(`/submissions ${leetcodeUsername1}`);
 
-    await mockbot.send(`/add ${username}`);
-    await mockbot.send(`/submissions ${username}`);
-
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
-    users.pop();
+    expect(mockbot.lastMessage()).toEqual(ErrorMessages.server);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/submissions asd asd');
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    expect(mockbot.lastMessage()).toEqual(ErrorMessages.server);
   });
 });
 
 describe('chatbots.actions - problems action', () => {
   test('Correct case - All users', async () => {
     await mockbot.send('/problems');
-    expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_PROBLEMS);
+    expect(mockbot.lastMessage()).toEqual(ListMessages.userListProblems);
   });
 
   test('Correct case - Single user', async () => {
-    await mockbot.send(`/add ${realUsername1}`);
-    await mockbot.send(`/problems ${realUsername1}`);
+    await mockbot.send(`/add ${leetcodeUsername1}`);
+    await mockbot.send(`/problems ${leetcodeUsername1}`);
     expect(mockbot.lastMessage())
-      .toEqual(BM.USER_SOLVED_PROBLEMS_CHART(realUsername1));
+      .toEqual(UserMessages.solvedProblemsChart(leetcodeUsername1));
   });
 
   test('Incorrect case - Username not found', async () => {
-    await mockbot.send(`/problems ${fakeUsername}`);
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
+    await mockbot.send(`/problems ${notExistingUsername}`);
+    expect(mockbot.lastMessage())
+      .toEqual(UserMessages.doesNotExist(notExistingUsername));
   });
 
   test('Incorrect case - Error on the server', async () => {
-    vizapiActions.solvedProblemsChart = mockProblemsChart;
-    const user = _.clone(users[0]);
-    const username = 'new_username';
-    user.username = username;
-    user.name = undefined;
-    users.push(user);
+    vizapiActions.solvedProblemsChart = async () => ({
+      error: 'placeholder',
+      reason: ErrorMessages.server,
+    });
 
-    await mockbot.send(`/add ${username}`);
-    await mockbot.send(`/problems ${username}`);
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
-    users.pop();
+    await mockbot.send(`/add ${leetcodeUsername1}`);
+    await mockbot.send(`/problems ${leetcodeUsername1}`);
+    expect(mockbot.lastMessage()).toEqual(ErrorMessages.server);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/problems asd asd asd');
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    expect(mockbot.lastMessage()).toEqual(ErrorMessages.server);
   });
 });
 
 describe('chatbots.actions - compare action', () => {
   test('Correct case - Select left user', async () => {
     await mockbot.send('/compare');
-    expect(mockbot.lastMessage()).toEqual(BM.SELECT_LEFT_USER);
+    expect(mockbot.lastMessage()).toEqual(UserMessages.selectLeftUser);
   });
 
   /* TODO: Test buttons */
 
   test('Correct case - Select right user', async () => {
-    await mockbot.send(`/compare ${realUsername1}`);
-    expect(mockbot.lastMessage()).toEqual(BM.SELECT_RIGHT_USER);
+    await mockbot.send(`/compare ${leetcodeUsername1}`);
+    expect(mockbot.lastMessage()).toEqual(UserMessages.selectRightUser);
   });
 
   test('Correct case - Both users picked', async () => {
-    vizapiActions.compareMenu = mockCompareMenu;
+    vizapiActions.compareMenu = async () => (
+      { link: 'http://random_link_compare' }
+    );
 
-    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
-    await mockbot.send(`/compare ${realUsername1} ${realUsername2}`);
+    await mockbot.send(`/add ${leetcodeUsername1} ${leetcodeUsername2}`);
+    await mockbot.send(`/compare ${leetcodeUsername1} ${leetcodeUsername2}`);
 
-    const context = mockbot.getContext();
-
-    expect(context.photoUrl).toEqual('http://random_link_compare');
-    const expectedMessage = BM.USERS_COMPARE(realUsername1, realUsername2);
+    expect(mockbot.context.photoUrl).toEqual('http://random_link_compare');
+    const expectedMessage = UserMessages
+      .compare(leetcodeUsername1, leetcodeUsername2);
     expect(mockbot.lastMessage()).toEqual(expectedMessage);
   });
 
   test('Incorrect case - Right user not found', async () => {
-    await mockbot.send(`/add ${realUsername1}`);
-    await mockbot.send(`/compare ${realUsername1} ${fakeUsername}`);
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
+    await mockbot.send(`/add ${leetcodeUsername1}`);
+    await mockbot.send(`/compare ${leetcodeUsername1} ${notExistingUsername}`);
+    expect(mockbot.lastMessage())
+      .toEqual(UserMessages.doesNotExist(notExistingUsername));
   });
 
   test('Incorrect case - Left user not found', async () => {
-    await mockbot.send(`/add ${realUsername1}`);
-    await mockbot.send(`/compare ${fakeUsername} ${realUsername1}`);
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
+    await mockbot.send(`/add ${leetcodeUsername1}`);
+    await mockbot.send(`/compare ${notExistingUsername} ${leetcodeUsername1}`);
+    expect(mockbot.lastMessage())
+      .toEqual(UserMessages.doesNotExist(notExistingUsername));
   });
 
   test('Incorrect case - Error on the server', async () => {
-    vizapiActions.compareMenu = mockCompareMenu;
+    vizapiActions.compareMenu = async () => ({
+      error: 'placeholder',
+      reason: ErrorMessages.server,
+    });
 
-    const thirdUsername = 'clone_username';
+    await mockbot.send(`/add ${leetcodeUsername1} ${leetcodeUsername2}`);
+    await mockbot.send(`/compare ${leetcodeUsername1} ${leetcodeUsername2}`);
 
-    const newUser = _.cloneDeep(users[0]);
-    newUser.username = thirdUsername;
-    newUser.name = null;
-    users.push(newUser);
-
-    await mockbot.send(`/add ${realUsername1} ${thirdUsername}`);
-    await mockbot.send(`/compare ${realUsername1} ${thirdUsername}`);
-
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
-    users.pop();
+    expect(mockbot.lastMessage()).toEqual(ErrorMessages.server);
   });
 
   test('Incorrect case - Too many args', async () => {
     await mockbot.send('/compare asd asd asd');
-    expect(mockbot.lastMessage()).toEqual(BM.ERROR_ON_THE_SERVER);
+    expect(mockbot.lastMessage()).toEqual(ErrorMessages.server);
   });
 });
 
 describe('chatbots.actions - langstats action', () => {
   test('Correct case - All users', async () => {
-    leetcodeActions.getLanguageStats = mockLanguageStats;
-
     await mockbot.send('/langstats');
-    expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_LANGSTATS);
+    expect(mockbot.lastMessage()).toEqual(ListMessages.userListLangstats);
   });
 
   /* TODO: Test buttons */
 
   test('Correct case - Single user', async () => {
-    leetcodeActions.getLanguageStats = mockLanguageStats;
+    await mockbot.send(`/add ${leetcodeUsername1} ${leetcodeUsername2}`);
+    await mockbot.send(`/langstats ${leetcodeUsername1}`);
 
-    await mockbot.send(`/add ${realUsername1} ${realUsername2}`);
-    await mockbot.send(`/langstats ${realUsername1}`);
-
-    const lpc1 = [
-      {
-        languageName: 'C++',
-        problemsSolved: 421,
-      },
-      {
-        languageName: 'Python',
-        problemsSolved: 200,
-      },
-      {
-        languageName: 'JavaScript',
-        problemsSolved: 127,
-      },
-    ];
+    const lpc1 = await ApiService
+      .findUserInChannel(mockbot.channelId, leetcodeUsername1)
+      .then((lbbUser) => lbbUser.data.languageStats);
 
     expect(mockbot.lastMessage())
-      .toEqual(BM.LANGUAGE_STATS_TEXT(realUsername1, lpc1));
+      .toEqual(BigMessages.languageStatsText(leetcodeUsername1, lpc1));
 
-    await mockbot.send(`/langstats ${realUsername2}`);
+    await mockbot.send(`/langstats ${leetcodeUsername2}`);
 
-    const lpc2 = [
-      {
-        languageName: 'TypeScript',
-        problemsSolved: 10,
-      },
-      {
-        languageName: 'C#',
-        problemsSolved: 5,
-      },
-    ];
+    const lpc2 = await ApiService
+      .findUserInChannel(mockbot.channelId, leetcodeUsername2)
+      .then((lbbUser) => lbbUser.data.languageStats);
 
     expect(mockbot.lastMessage())
-      .toEqual(BM.LANGUAGE_STATS_TEXT(realUsername2, lpc2));
+      .toEqual(BigMessages.languageStatsText(leetcodeUsername2, lpc2));
   });
 
   test('Incorrect case - Username not found', async () => {
-    leetcodeActions.getLanguageStats = mockLanguageStats;
-
-    await mockbot.send(`/langstats ${fakeUsername}`);
-    expect(mockbot.lastMessage()).toEqual(BM.USERNAME_NOT_FOUND(fakeUsername));
+    await mockbot.send(`/langstats ${notExistingUsername}`);
+    expect(mockbot.lastMessage())
+      .toEqual(UserMessages.doesNotExist(notExistingUsername));
   });
 });

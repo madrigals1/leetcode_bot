@@ -1,7 +1,6 @@
 import { formatMessage, reply } from '../../../chatbots/discord/utils';
 import { MockBotDiscord } from '../../__mocks__/chatbots/discord.mock';
-import { DiscordTestCase } from '../../../chatbots/models';
-import { ChatbotProvider } from '../../../chatbots';
+import { DiscordTestCase, ChatbotProvider } from '../../../chatbots/models';
 
 test('chatbots.discord.utils.formatMessage function', async () => {
   const testCases: string[][] = [

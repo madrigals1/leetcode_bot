@@ -4,14 +4,12 @@ import { reply } from '../../../chatbots/telegram/utils';
 import MockBotTelegram from '../../__mocks__/chatbots/telegram.mock';
 import {
   TelegramTestCase, ButtonContainerType, Context,
+  ChatbotProvider,
 } from '../../../chatbots/models';
 import {
   getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
-import { ChatbotProvider } from '../../../chatbots';
-import {
-  SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
-} from '../../../utils/dictionary';
+import { ErrorMessages, SmallMessages } from '../../../globals/messages';
 
 const bot = new MockBotTelegram();
 
@@ -323,8 +321,8 @@ describe('chatbots.telegram.utils - reply function', () => {
     const result = await reply('', context);
 
     // eslint-disable-next-line no-console
-    expect(console.log).toHaveBeenCalledWith(SM.INCORRECT_BOT_TYPE);
-    expect(result).toBe(BM.ERROR_ON_THE_SERVER);
+    expect(console.log).toHaveBeenCalledWith(SmallMessages.incorrectBotType);
+    expect(result).toBe(ErrorMessages.server);
 
     bot.nullify();
   });
@@ -353,7 +351,7 @@ describe('chatbots.telegram.utils - reply function', () => {
 
     // eslint-disable-next-line no-console
     expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
-    expect(result).toBe(BM.ERROR_ON_THE_SERVER);
+    expect(result).toBe(ErrorMessages.server);
 
     bot.nullify();
     bot.sendMessage = sendMessage;
@@ -384,7 +382,7 @@ describe('chatbots.telegram.utils - reply function', () => {
 
     // eslint-disable-next-line no-console
     expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
-    expect(result).toBe(BM.ERROR_ON_THE_SERVER);
+    expect(result).toBe(ErrorMessages.server);
 
     bot.nullify();
     bot.sendPhoto = sendPhoto;

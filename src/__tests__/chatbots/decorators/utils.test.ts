@@ -2,10 +2,10 @@
 import {
   getArgs, getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
+import { ArgumentMessages } from '../../../globals/messages';
 import { ArgumentsError, InputError } from '../../../utils/errors';
 import { ArgumentTestCase } from '../../__mocks__/models';
 import { generateMockContext } from '../../__mocks__/utils.mock';
-import { BOT_MESSAGES as BM } from '../../../utils/dictionary';
 
 describe('chatbots.decorators.utils - getArgs function', () => {
   test('Correct case - Only command with no arguments', async () => {
@@ -1385,7 +1385,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byIndex: {},
     },
     error: new ArgumentsError(
-      BM.DUPLICATE_KEYS_IN_ARGS(['tc21_argument1']),
+      ArgumentMessages.duplicateKeysInArgs(['tc21_argument1']),
     ),
   };
 
@@ -1450,7 +1450,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
     },
     error: new ArgumentsError(
       // eslint-disable-next-line max-len
-      BM.DUPLICATE_KEYS_IN_ARGS(['tc22_argument1', 'tc22_argument2', 'tc22_argument3']),
+      ArgumentMessages.duplicateKeysInArgs(['tc22_argument1', 'tc22_argument2', 'tc22_argument3']),
     ),
   };
 
@@ -1478,7 +1478,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byIndex: {},
     },
     error: new ArgumentsError(
-      BM.DUPLICATE_INDEXES_IN_ARGS([0]),
+      ArgumentMessages.duplicateIndexesInArgs([0]),
     ),
   };
 
@@ -1542,7 +1542,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byIndex: {},
     },
     error: new ArgumentsError(
-      BM.DUPLICATE_INDEXES_IN_ARGS([0, 1, 2]),
+      ArgumentMessages.duplicateIndexesInArgs([0, 1, 2]),
     ),
   };
 
@@ -1563,7 +1563,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(BM.INSUFFICIENT_ARGS_IN_MESSAGE),
+    error: Error(ArgumentMessages.insufficientArgsInMessage),
   };
 
   const test26: ArgumentTestCase = {
@@ -1583,7 +1583,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError(BM.SHOULD_NOT_REQUEST_MORE_THAN_100_ARGS),
+    error: new ArgumentsError(ArgumentMessages.shouldNotRequestMoreThan100Args),
   };
 
   const test27: ArgumentTestCase = {
@@ -1603,7 +1603,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: new InputError(BM.SHOULD_NOT_PROVIDE_MORE_THAN_100_ARGS),
+    error: new InputError(ArgumentMessages.shouldNotProvideMoreThan100Args),
   };
 
   const test28: ArgumentTestCase = {
@@ -1636,7 +1636,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byIndex: {},
     },
     error: new ArgumentsError(
-      BM.SHOULD_NOT_HAVE_REQUIRED_ARGS_AFTER_OPTIONAL,
+      ArgumentMessages.shouldNotHaveRequiredArgsAfterOptional,
     ),
   };
 
@@ -1650,7 +1650,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: new InputError(BM.MESSAGE_SHOULD_HAVE_NO_ARGS),
+    error: new InputError(ArgumentMessages.messageShouldHaveNoArgs),
   };
 
   const test30: ArgumentTestCase = {
@@ -1676,7 +1676,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError(BM.INDEX_SHOULD_BE_PRESENT_IN_ARGS(1)),
+    error: new ArgumentsError(ArgumentMessages.indexShouldBePresentInArgs(1)),
   };
 
   const test31: ArgumentTestCase = {
@@ -1714,7 +1714,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError(BM.ARG_IS_NOT_PROVIDED(3)),
+    error: new ArgumentsError(ArgumentMessages.argIsNotProvided(3)),
   };
 
   const test32: ArgumentTestCase = {

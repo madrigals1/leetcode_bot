@@ -5,14 +5,14 @@ import * as TelegramBot from 'node-telegram-bot-api';
 
 import { log } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
-import { constants } from '../../utils/constants';
-import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
+import { constants } from '../../globals/constants';
 import { Options, Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
+import { ProviderMessages } from '../../globals/messages';
 
 import { reply } from './utils';
 
-export default class Telegram {
+class Telegram {
   token: string = constants.PROVIDERS.TELEGRAM.TOKEN;
 
   options: Options = { polling: true };
@@ -58,7 +58,7 @@ export default class Telegram {
       prefix: constants.PROVIDERS.TELEGRAM.PREFIX,
       options: { parse_mode: 'HTML' },
       channelKey: {
-        chatId: message.chat.id.toString(),
+        chat_id: message.chat.id.toString(),
         provider: this.id,
       },
       isAdmin: new Promise((resolve) => {
@@ -82,7 +82,7 @@ export default class Telegram {
     this.bot = new TelegramBot(this.token, this.options);
 
     // Log that Telegram BOT is connected
-    log(SM.TELEGRAM_BOT_IS_CONNECTED);
+    log(ProviderMessages.telegramBotIsConnected);
 
     // Add regular actions
     registeredActions.forEach(({ name, property }) => {
@@ -140,6 +140,8 @@ export default class Telegram {
       return null;
     });
 
-    log(SM.TELEGRAM_BOT_IS_RUNNING);
+    log(ProviderMessages.telegramBotIsRunning);
   }
 }
+
+export default new Telegram();

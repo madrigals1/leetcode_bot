@@ -1,11 +1,11 @@
 import { App } from '@slack/bolt';
 
 import Actions, { registeredActions } from '../actions';
-import { constants } from '../../utils/constants';
-import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
+import { constants } from '../../globals/constants';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
+import { ProviderMessages } from '../../globals/messages';
 
 import { reply } from './utils';
 import createBot from './bot';
@@ -39,7 +39,7 @@ class Slack {
             send: say,
           },
           channelKey: {
-            chatId: command.channel_id,
+            chat_id: command.channel_id,
             provider: this.id,
           },
           provider: this.id,
@@ -77,7 +77,7 @@ class Slack {
       }
     });
 
-    log(SM.SLACK_BOT_IS_RUNNING);
+    log(ProviderMessages.slackBotIsRunning);
   }
 }
 

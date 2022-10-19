@@ -1,14 +1,4 @@
-import { Channel, ChannelUser } from '../../../cache/models';
 import { Argument, IParsedArgument } from '../../../chatbots/decorators/models';
-import { User } from '../../../leetcode/models';
-
-export interface MockDatabaseInterface {
-  users: string[];
-  channels: Channel[];
-  channelUsers: ChannelUser[];
-  mockUser1: () => User;
-  savedUsers: () => User[];
-}
 
 export interface OtherModel {
   field: string;

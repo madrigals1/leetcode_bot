@@ -4,3 +4,5 @@ import { jest } from '@jest/globals';
 console.log = jest.fn();
 console.error = jest.fn();
 console.warn = jest.fn();
+
+jest.setTimeout(30000);

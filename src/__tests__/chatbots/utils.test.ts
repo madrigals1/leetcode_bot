@@ -4,14 +4,6 @@ import { user1, user2 } from '../__mocks__/data.mock';
 import { mockButtonOptions } from '../__mocks__/utils.mock';
 import { createButtonsFromUsers } from '../../chatbots/utils';
 
-beforeAll(async () => {
-  jest.setTimeout(30000);
-});
-
-afterAll(async () => {
-  jest.setTimeout(5000);
-});
-
 describe('chatbots.utils.createButtonsFromUsers action', () => {
   test('Correct case - 2 users', () => {
     const action1 = 'action1';
