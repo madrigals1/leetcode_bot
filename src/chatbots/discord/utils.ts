@@ -1,9 +1,12 @@
+import { InteractionReplyOptions } from 'discord.js';
 import {
-  MessageActionRow,
-  MessageButton,
-  MessageOptions,
-  MessageSelectMenu,
-} from 'discord.js';
+  ActionRowBuilder,
+  SelectMenuBuilder,
+  ButtonBuilder,
+  MessageActionRowComponentBuilder,
+  AnyComponentBuilder,
+} from '@discordjs/builders';
+import { ButtonStyle } from 'discord-api-types/v9';
 
 import { ArgumentsError, InputError } from '../../utils/errors';
 import ArgumentManager from '../argumentManager';
@@ -16,35 +19,35 @@ import buttonIndexer from './buttonIndexer';
 
 export function getButtonComponents(
   buttonContainers: ButtonContainer[],
-): MessageActionRow[] {
-  const rows: MessageActionRow[] = [];
+): ActionRowBuilder<MessageActionRowComponentBuilder>[] {
+  const rows: ActionRowBuilder<MessageActionRowComponentBuilder>[] = [];
 
   buttonContainers?.forEach((buttonContainer) => {
     const { buttons, placeholder, type } = buttonContainer;
 
-    const components = [];
+    const components: AnyComponentBuilder[] = [];
 
     switch (type) {
       case ButtonContainerType.SingleButton:
         components.push(
-          new MessageButton()
-            .setCustomId(buttonIndexer.addButton(buttons[0]))
-            .setLabel(buttons[0].text)
-            .setStyle('PRIMARY'),
+          new ButtonBuilder({
+            custom_id: buttonIndexer.addButton(buttons[0]),
+            label: buttons[0].text,
+            style: ButtonStyle.Primary,
+          }),
         );
         break;
       case ButtonContainerType.MultipleButtons:
         components.push(
-          new MessageSelectMenu()
-            .setCustomId(buttonIndexer.addSelect())
-            .setPlaceholder(placeholder)
-            .addOptions(
-              buttons.map((button) => ({
-                label: button.text,
-                description: button.text,
-                value: button.action,
-              })),
-            ),
+          new SelectMenuBuilder({
+            custom_id: buttonIndexer.addSelect(),
+            placeholder,
+            options: buttons.map((button) => ({
+              label: button.text,
+              description: button.text,
+              value: button.action,
+            })),
+          }),
         );
         break;
       case ButtonContainerType.CloseButton:
@@ -54,7 +57,9 @@ export function getButtonComponents(
     }
 
     if (components.length !== 0) {
-      rows.push(new MessageActionRow().addComponents(components));
+      rows.push(new ActionRowBuilder({
+        components: components.map((component) => component.toJSON()),
+      }));
     }
   });
 
@@ -70,7 +75,8 @@ export function formatMessage(message: string): string {
 }
 
 export async function discordIReply(
-  message: string, context: Context,
+  message: string,
+  context: Context,
 ): Promise<void> {
   const { interaction, photoUrl, options } = context;
 
@@ -78,10 +84,11 @@ export async function discordIReply(
   const components = getButtonComponents(options.buttons);
 
   // Compose message options for Discord
-  const messageOptions: MessageOptions = {
+  const messageOptions: InteractionReplyOptions = {
     content: message,
     files: photoUrl ? [photoUrl] : undefined,
     components,
+    ephemeral: true,
   };
 
   // Send message
@@ -100,7 +107,8 @@ export function reply(message: string, context: Context): Promise<string> {
 }
 
 export function getKeyBasedParsedArguments(
-  context: Context, requestedArgs: Argument[],
+  context: Context,
+  requestedArgs: Argument[],
 ): ArgumentManager {
   const argumentManager = new ArgumentManager();
   const { discordProvidedArguments: providedArguments } = context;

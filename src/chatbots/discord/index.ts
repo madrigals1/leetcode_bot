@@ -3,7 +3,7 @@ import {
   Client,
   CommandInteraction,
   Interaction,
-  Permissions,
+  PermissionFlagsBits,
   SelectMenuInteraction,
 } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
@@ -61,7 +61,7 @@ class Discord {
             provider: id,
           },
           isAdmin: new Promise((resolve) => {
-            const adminPerm = Permissions.FLAGS.ADMINISTRATOR;
+            const adminPerm = PermissionFlagsBits.Administrator;
             const userIsAdmin = interaction.memberPermissions.has(adminPerm);
             resolve(userIsAdmin);
           }),
