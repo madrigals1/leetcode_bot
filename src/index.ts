@@ -1,4 +1,5 @@
 import { startRest } from './rest';
+import { startScheduler } from './scheduler';
 import Telegram from './chatbots/telegram';
 import Discord from './chatbots/discord';
 import Slack from './chatbots/slack';
@@ -22,3 +23,5 @@ Cache.preload()
   });
 
 startRest();
+
+// startScheduler();
