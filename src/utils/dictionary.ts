@@ -126,6 +126,7 @@ export const BOT_MESSAGES = {
   CML_RATING: `${constants.EMOJI.ABACUS} Cumulative Rating`,
   REGULAR_RATING: `${constants.EMOJI.CLIPBOARD} Regular Rating`,
   GRAPH_RATING: `${constants.EMOJI.CHART} Graph Rating`,
+  CONTEST_RATING: `${constants.EMOJI.CUP} Contest Rating`,
 
   // USERNAME RELATED
   USERNAME_NOT_FOUND(username: string): string {
@@ -240,6 +241,23 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 
     const rating = CML_HEADER + getCmlFromUsers(users);
     return rating;
+  },
+
+  CONTEST_RATING_TEXT(users: User[]): string {
+    if (!users || users.length === 0) {
+      return NO_USERS;
+    }
+
+    const sortedContestRating = users
+      .map((user) => ({
+        username: user.username,
+        rating: Math.round(user.contestData?.userContestRanking?.rating ?? 0),
+      }))
+      .sort((user1, user2) => user2.rating - user1.rating);
+
+    return `${this.CONTEST_RATING} \n\n${sortedContestRating.map(
+      (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.rating}`),
+    ).join('\n')}`;
   },
 
   STATS_TEXT(provider: ChatbotProvider, users: User[]): string {

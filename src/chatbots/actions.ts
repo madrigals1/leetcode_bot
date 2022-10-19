@@ -188,6 +188,15 @@ export default class Actions {
       placeholder: 'Username',
       type: ButtonContainerType.SingleButton,
     };
+    const contestButton = {
+      buttons: [{
+        text: BM.CONTEST_RATING,
+        action: '/rating contest',
+      }],
+      buttonPerRow: 1,
+      placeholder: 'Username',
+      type: ButtonContainerType.SingleButton,
+    };
     const regularButton = {
       buttons: [{
         text: BM.REGULAR_RATING,
@@ -201,7 +210,7 @@ export default class Actions {
     // Regular rating with "Problem Solved" count
     if (type === '') {
       // Add buttons
-      context.options.buttons = [cmlButton, graphButton];
+      context.options.buttons = [cmlButton, graphButton, contestButton];
 
       return BM.RATING_TEXT(users);
     }
@@ -212,7 +221,7 @@ export default class Actions {
     // - Hard - 5 points
     if (type === 'cml') {
       // Add buttons
-      context.options.buttons = [regularButton, graphButton];
+      context.options.buttons = [regularButton, graphButton, contestButton];
 
       return BM.CML_RATING_TEXT(users);
     }
@@ -228,13 +237,21 @@ export default class Actions {
         context.photoUrl = response.link;
 
         // Add buttons
-        context.options.buttons = [regularButton, cmlButton];
+        context.options.buttons = [regularButton, cmlButton, contestButton];
 
         return BM.GRAPH_RATING;
       }
 
       // If image link was not achieved from VizAPI
       return BM.ERROR_ON_THE_SERVER;
+    }
+
+    // Contest Rating
+    if (type === 'contest') {
+      // Add buttons
+      context.options.buttons = [regularButton, cmlButton, graphButton];
+
+      return BM.CONTEST_RATING_TEXT(users);
     }
 
     // If type is not recognized

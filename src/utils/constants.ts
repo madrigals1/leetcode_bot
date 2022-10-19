@@ -96,6 +96,7 @@ const EMOJI = {
   THINK: '🤔',
   FEAR: '😱',
   PROGRAMMER: '👨‍💻',
+  CUP: '🏆',
 };
 
 const SUBMISSION_STATUS_MAP = {
