@@ -102,11 +102,18 @@ export default class Actions {
 
     // If Username is not provided, show buttons
     if (username === '') {
-      // Add Buttons with User List
+      const { users } = context.channelCache;
+
+      if (users.length === 0) {
+        return BM.NO_USERS;
+      }
+
+      // If no username was sent, show buttons for each username in channel
+      // to pick from
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'remove',
-          users: context.channelCache.users,
+          users,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -249,11 +256,18 @@ export default class Actions {
     const username = context.args.get('username').value.toLowerCase();
 
     if (username === '') {
-      // Add user buttons
+      const { users } = context.channelCache;
+
+      if (users.length === 0) {
+        return BM.NO_USERS;
+      }
+
+      // If no username was sent, show buttons for each username in channel
+      // to pick from
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'profile',
-          users: context.channelCache.users,
+          users,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -325,11 +339,18 @@ export default class Actions {
       return BM.USERNAME_NOT_FOUND(username);
     }
 
-    // If 0 User was sent, add reply markup context for User
+    const { users } = context.channelCache;
+
+    if (users.length === 0) {
+      return BM.NO_USERS;
+    }
+
+    // If no username was sent, show buttons for each username in channel
+    // to pick from
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'avatar',
-        users: context.channelCache.users,
+        users,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -380,11 +401,18 @@ export default class Actions {
       return BM.ERROR_ON_THE_SERVER;
     }
 
-    // If 0 User was sent, add reply markup context for User
+    const { users } = context.channelCache;
+
+    if (users.length === 0) {
+      return BM.NO_USERS;
+    }
+
+    // If no username was sent, show buttons for each username in channel
+    // to pick from
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'submissions',
-        users: context.channelCache.users,
+        users,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -432,11 +460,18 @@ export default class Actions {
       return BM.ERROR_ON_THE_SERVER;
     }
 
-    // If 0 User was sent, add reply markup context for User
+    const { users } = context.channelCache;
+
+    if (users.length === 0) {
+      return BM.NO_USERS;
+    }
+
+    // If no username was sent, show buttons for each username in channel
+    // to pick from
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'problems',
-        users: context.channelCache.users,
+        users,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
@@ -468,12 +503,19 @@ export default class Actions {
     const first = context.args.get('first_username').value.toLowerCase();
     const second = context.args.get('second_username').value.toLowerCase();
 
-    // Getting left User
+    const { users } = context.channelCache;
+
+    if (users.length === 0) {
+      return BM.NO_USERS;
+    }
+
+    // If no username was sent, show buttons for each username in channel
+    // to pick from
     if (first === '') {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: 'compare',
-          users: context.channelCache.users,
+          users,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -488,7 +530,7 @@ export default class Actions {
       context.options.buttons = [{
         buttons: createButtonsFromUsers({
           action: `compare ${first}`,
-          users: context.channelCache.users,
+          users,
         }),
         buttonPerRow: 3,
         placeholder: 'Username',
@@ -552,11 +594,18 @@ export default class Actions {
       return BM.LANGUAGE_STATS_TEXT(username, data);
     }
 
-    // If 0 User was sent, add reply markup context for User
+    const { users } = context.channelCache;
+
+    if (users.length === 0) {
+      return BM.NO_USERS;
+    }
+
+    // If no username was sent, show buttons for each username in channel
+    // to pick from
     context.options.buttons = [{
       buttons: createButtonsFromUsers({
         action: 'langstats',
-        users: context.channelCache.users,
+        users,
       }),
       buttonPerRow: 3,
       placeholder: 'Username',
