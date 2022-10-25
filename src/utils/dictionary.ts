@@ -253,7 +253,8 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
         username: user.username,
         rating: Math.round(user.contestData?.userContestRanking?.rating ?? 0),
       }))
-      .sort((user1, user2) => user2.rating - user1.rating);
+      .sort((user1, user2) => user2.rating - user1.rating)
+      .filter((user) => !!user.rating);
 
     return `${this.CONTEST_RATING} \n\n${sortedContestRating.map(
       (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.rating}`),
