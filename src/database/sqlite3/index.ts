@@ -16,7 +16,7 @@ class SQLite extends DatabaseProvider {
 
   sequelize: Sequelize;
 
-  filename: string = constants.DATABASE.SQLITE3.FILENAME;
+  filename: string = constants.SQLITE3_FILENAME;
 
   User: typeof DatabaseUser = DatabaseUser;
 

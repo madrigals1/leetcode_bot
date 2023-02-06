@@ -278,7 +278,7 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 <b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
 
 <b>DATABASE RELATED</b>
-<b>Database:</b> ${constants.DATABASE.PROVIDER}
+<b>Database:</b> SQLite
 <b>User Count:</b> ${users.length}
 
 <b>SYSTEM RELATED</b>

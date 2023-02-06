@@ -3,8 +3,6 @@ import TelegramBot from 'node-telegram-bot-api';
 
 import { ChatbotProvider } from '../chatbots';
 
-import { isTrue } from './helper';
-
 dotenv.config();
 
 const {
@@ -33,26 +31,8 @@ const {
   // Database settings
   // ---------------------------------------------------------------------------
 
-  // Database provider (sqlite3, mongo or postgres)
-  DB_PROVIDER,
-
   // SQLite3
   SQLITE3_FILENAME,
-
-  // MongoDB
-  MONGO_DB_URL,
-  MONGO_DB_NAME,
-  MONGO_DB_USER,
-  MONGO_DB_PASSWORD,
-  MONGO_DB_PORT,
-  MONGO_DB_AUTHENTICATION_ENABLED,
-
-  // Postgres
-  POSTGRES_DB_URL,
-  POSTGRES_DB_NAME,
-  POSTGRES_DB_USER,
-  POSTGRES_DB_PASSWORD,
-  POSTGRES_DB_PORT,
 
   // ---------------------------------------------------------------------------
   // MISC
@@ -162,34 +142,6 @@ const PROVIDERS = {
   MOCKBOT,
 };
 
-const SQLITE3 = {
-  FILENAME: SQLITE3_FILENAME,
-};
-
-const MONGO = {
-  URL: MONGO_DB_URL || 'localhost',
-  NAME: MONGO_DB_NAME || 'leetbot_db',
-  AUTHENTICATION_ENABLED: isTrue(MONGO_DB_AUTHENTICATION_ENABLED) || true,
-  USER: MONGO_DB_USER || 'admin',
-  PASSWORD: MONGO_DB_PASSWORD || 'password',
-  PORT: MONGO_DB_PORT || '27017',
-};
-
-const POSTGRES = {
-  URL: POSTGRES_DB_URL || 'localhost',
-  NAME: POSTGRES_DB_NAME || 'leetbot_db',
-  USER: POSTGRES_DB_USER || 'admin',
-  PASSWORD: POSTGRES_DB_PASSWORD || 'password',
-  PORT: POSTGRES_DB_PORT || '5432',
-};
-
-const DATABASE = {
-  SQLITE3,
-  MONGO,
-  POSTGRES,
-  PROVIDER: DB_PROVIDER || 'sqlite3',
-};
-
 const CML = {
   EASY_POINTS: Number(CML_EASY_POINTS || 1),
   MEDIUM_POINTS: Number(CML_MEDIUM_POINTS || 2),
@@ -207,7 +159,7 @@ const SYSTEM = {
 
 export const constants = {
   PROVIDERS,
-  DATABASE,
+  SQLITE3_FILENAME,
   PORT,
   CML,
   SYSTEM,
