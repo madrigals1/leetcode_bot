@@ -8,16 +8,21 @@ on:
 
 jobs:
   docker:
-    name: Test inside Container
+    name: Test
 
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
-    environment: testing_environment
-
     steps:
     - name: Checkout
       uses: actions/checkout@v1
+
+    - name: Create custom env file
+      run: |
+        echo "LBB_URL=${{ secrets.LBB_URL }}" > env.custom
+        echo "LBB_USERNAME=${{ secrets.LBB_USERNAME }}" >> env.custom
+        echo "LBB_PASSWORD=${{ secrets.LBB_PASSWORD }}" >> env.custom
+        echo "VIZAPI_LINK=${{ secrets.VIZAPI_LINK }}" >> env.custom
 
     - name: Build original image
       run: docker build -t leetcode_bot --file deployment/Dockerfile .
@@ -26,4 +31,4 @@ jobs:
       run: docker build -t leetcode_bot_test --file deployment/Dockerfile.test .
 
     - name: Run tests
-      run: docker run --rm leetcode_bot_test
+      run: docker run --rm --env-file env.custom leetcode_bot_test
