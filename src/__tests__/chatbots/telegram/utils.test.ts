@@ -1,4 +1,4 @@
-import { Client, Intents } from 'discord.js';
+import { Client } from 'discord.js';
 
 import { reply } from '../../../chatbots/telegram/utils';
 import MockBotTelegram from '../../__mocks__/chatbots/telegram.mock';
@@ -312,7 +312,7 @@ describe('chatbots.telegram.utils - reply function', () => {
   test('Incorrect bot type', async () => {
     const context: Context = {
       text: '',
-      bot: new Client({ intents: [Intents.FLAGS.GUILDS] }),
+      bot: new Client({ intents: [] }),
       options: {},
       reply: () => new Promise(() => ''),
       argumentParser: getPositionalParsedArguments,
