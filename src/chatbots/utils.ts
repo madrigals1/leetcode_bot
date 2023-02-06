@@ -7,6 +7,7 @@ import {
   ButtonContainer,
   ButtonContainerType,
 } from './models';
+import { ChatbotProvider } from './models/chatbot.model';
 
 export function createButtonsFromUsers(options: ButtonOptions): Button[] {
   const { action, users } = options;
@@ -30,4 +31,13 @@ export function getCloseButton(): ButtonContainer {
     placeholder: '',
     type: ButtonContainerType.CloseButton,
   };
+}
+
+export function getChatbotNameByKey(value: string): string {
+  const indexOfS = Object.values(ChatbotProvider)
+    .indexOf(value as unknown as ChatbotProvider);
+
+  const key = Object.keys(ChatbotProvider)[indexOfS];
+
+  return key;
 }
