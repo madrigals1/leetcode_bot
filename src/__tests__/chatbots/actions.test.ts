@@ -150,7 +150,13 @@ describe('chatbots.actions - refresh action', () => {
 });
 
 describe('chatbots.actions - remove action', () => {
+  test('with no users present in database', async () => {
+    await mockbot.send('/remove', true);
+    expect(mockbot.lastMessage()).toBe(BM.NO_USERS);
+  });
+
   test('Correct case - Without username', async () => {
+    await Cache.getChannel(mockbot.channelKey).addUser(realUsername1);
     await mockbot.send('/remove', true);
     expect(mockbot.lastMessage()).toBe(BM.USER_LIST_REMOVE);
   });
@@ -307,7 +313,13 @@ describe('chatbots.actions - rating action', () => {
 });
 
 describe('chatbots.actions - profile action', () => {
+  test('with no users present in database', async () => {
+    await mockbot.send('/profile');
+    expect(mockbot.lastMessage()).toEqual(BM.NO_USERS);
+  });
+
   test('Correct case - All users', async () => {
+    await Cache.getChannel(mockbot.channelKey).addUser(realUsername1);
     await mockbot.send('/profile');
     expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_PROFILES);
   });
@@ -333,7 +345,13 @@ describe('chatbots.actions - profile action', () => {
 });
 
 describe('chatbots.actions - avatar action', () => {
+  test('with no users present in database', async () => {
+    await mockbot.send('/avatar');
+    expect(mockbot.lastMessage()).toEqual(BM.NO_USERS);
+  });
+
   test('Correct case - All users', async () => {
+    await Cache.getChannel(mockbot.channelKey).addUser(realUsername1);
     await mockbot.send('/avatar');
     expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_AVATARS);
   });
@@ -363,7 +381,13 @@ describe('chatbots.actions - avatar action', () => {
 });
 
 describe('chatbots.actions - submissions action', () => {
+  test('with no users present in database', async () => {
+    await mockbot.send('/submissions');
+    expect(mockbot.lastMessage()).toEqual(BM.NO_USERS);
+  });
+
   test('Correct case - All users', async () => {
+    await Cache.getChannel(mockbot.channelKey).addUser(realUsername1);
     await mockbot.send('/submissions');
     expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_SUBMISSIONS);
   });
@@ -427,7 +451,13 @@ describe('chatbots.actions - submissions action', () => {
 });
 
 describe('chatbots.actions - problems action', () => {
+  test('with no users present in database', async () => {
+    await mockbot.send('/problems');
+    expect(mockbot.lastMessage()).toEqual(BM.NO_USERS);
+  });
+
   test('Correct case - All users', async () => {
+    await Cache.getChannel(mockbot.channelKey).addUser(realUsername1);
     await mockbot.send('/problems');
     expect(mockbot.lastMessage()).toEqual(BM.USER_LIST_PROBLEMS);
   });
@@ -465,7 +495,14 @@ describe('chatbots.actions - problems action', () => {
 });
 
 describe('chatbots.actions - compare action', () => {
+  test('with no users present in database', async () => {
+    await mockbot.send('/compare');
+    expect(mockbot.lastMessage()).toEqual(BM.NO_USERS);
+  });
+
   test('Correct case - Select left user', async () => {
+    await Cache.getChannel(mockbot.channelKey).addUser(realUsername1);
+    await Cache.getChannel(mockbot.channelKey).addUser(realUsername2);
     await mockbot.send('/compare');
     expect(mockbot.lastMessage()).toEqual(BM.SELECT_LEFT_USER);
   });
@@ -473,6 +510,8 @@ describe('chatbots.actions - compare action', () => {
   /* TODO: Test buttons */
 
   test('Correct case - Select right user', async () => {
+    await Cache.getChannel(mockbot.channelKey).addUser(realUsername1);
+    await Cache.getChannel(mockbot.channelKey).addUser(realUsername2);
     await mockbot.send(`/compare ${realUsername1}`);
     expect(mockbot.lastMessage()).toEqual(BM.SELECT_RIGHT_USER);
   });
@@ -526,7 +565,13 @@ describe('chatbots.actions - compare action', () => {
 });
 
 describe('chatbots.actions - langstats action', () => {
+  test('with no users present in database', async () => {
+    await mockbot.send('/langstats');
+    expect(mockbot.lastMessage()).toEqual(BM.NO_USERS);
+  });
+
   test('Correct case - All users', async () => {
+    await Cache.getChannel(mockbot.channelKey).addUser(realUsername1);
     leetcodeActions.getLanguageStats = mockLanguageStats;
 
     await mockbot.send('/langstats');
