@@ -24,7 +24,6 @@
     "discord.js": "^14.6.0",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
-    "mongoose": "^6.6.5",
     "node-schedule": "^2.1.0",
     "node-telegram-bot-api": "^0.59.0",
     "pg": "^8.8.0",
