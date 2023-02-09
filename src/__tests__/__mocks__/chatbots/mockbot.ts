@@ -9,7 +9,7 @@ import { ChatbotProvider } from '../../../chatbots';
 export default class Mockbot {
   output: string[] = [];
 
-  context: Context;
+  context?: Context;
 
   id = constants.PROVIDERS.MOCKBOT.ID;
 
@@ -18,7 +18,7 @@ export default class Mockbot {
   channelKey = {
     chatId: 'unique_chat_id',
     provider: ChatbotProvider.Mockbot,
-  }
+  };
 
   async send(message: string, isAdmin = false): Promise<void> {
     // If message is not command, ignore it
@@ -40,17 +40,13 @@ export default class Mockbot {
       if (name === command) {
         const context: Context = {
           text: message,
-          reply: (msg: string, ctx: Context): Promise<string> => {
-            const promise: Promise<string> = new Promise((resolve) => {
-              this.setOutput(msg);
-              this.setContext(ctx);
-              return resolve('');
-            });
-
-            return promise;
+          reply: async (msg: string, ctx: Context): Promise<string> => {
+            this.setOutput(msg);
+            this.setContext(ctx);
+            return '';
           },
           argumentParser: getPositionalParsedArguments,
-          isAdmin: new Promise((resolve) => resolve(isAdmin)),
+          isAdmin: Promise.resolve(isAdmin),
           provider: this.id,
           chatId: 123123123,
           prefix: this.prefix,
@@ -83,12 +79,12 @@ export default class Mockbot {
     this.context = context;
   }
 
-  getContext(): Context {
+  getContext(): Context|undefined {
     return this.context;
   }
 
   clear(): void {
     this.output = [];
-    this.context = null;
+    this.context = undefined;
   }
 }

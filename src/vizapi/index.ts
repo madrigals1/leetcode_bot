@@ -50,7 +50,8 @@ export function getCompareDataFromUser(user: User): CompareUser {
 }
 
 export async function compareMenu(
-  leftUser: User, rightUser: User,
+  leftUser: User,
+  rightUser: User,
 ): Promise<VizapiResponse> {
   return axios
     .post(`${constants.VIZAPI_LINK}/compare`, {
@@ -67,13 +68,17 @@ export async function compareMenu(
     });
 }
 
-export async function tableForSubmissions(user: User): Promise<VizapiResponse> {
+export async function tableForSubmissions(
+  user?: User,
+): Promise<VizapiResponse> {
   if (!user) {
     const errorMessage = 'Username not found';
-    return new Promise((resolve) => resolve({
-      error: errorMessage,
-      reason: SM.ERROR_ON_THE_SERVER(errorMessage),
-    }));
+    return new Promise((resolve) => {
+      resolve({
+        error: errorMessage,
+        reason: SM.ERROR_ON_THE_SERVER(errorMessage),
+      });
+    });
   }
 
   const userSubmissionData = user.computed.submissions.map((submission) => ({

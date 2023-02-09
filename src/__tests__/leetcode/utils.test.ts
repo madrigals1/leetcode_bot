@@ -22,15 +22,17 @@ beforeEach(() => {
 });
 
 function updateCmlAndUsername(
-  user: User, username: string, cumulative: number,
-) {
+  user: User,
+  username: string,
+  cumulative: number,
+): User {
   return {
     ...user,
     username,
     computed: {
-      ...user.computed,
+      ...user.computed!,
       problemsSolved: {
-        ...user.computed.problemsSolved,
+        ...user.computed!.problemsSolved,
         cumulative,
       },
     },
@@ -112,49 +114,50 @@ test('leetcode.utils.calculateCml action', async () => {
   expect(cml2).toBe(820);
 });
 
-test('leetcode.utils.getProblemsSolved action', async () => {
-  // Valid: Check with regular values
-  constants.CML = {
-    EASY_POINTS: 1,
-    MEDIUM_POINTS: 2,
-    HARD_POINTS: 3,
-  };
-  const cmlForUser1 = getProblemsSolved(user1.submitStats.acSubmissionNum);
-  // Default value for user1
-  // Easy: 12312
-  // Medium: 2321
-  // Hard: 2231
-  const calculatedCml1 = calculateCml(12312, 2321, 2231);
+describe('leetcode.utils.getProblemsSolved action', () => {
+  describe('returns cumulative value', () => {
+    it('given default values', () => {
+      expect(getProblemsSolved(user1.submitStats!.acSubmissionNum).cumulative)
+        .toBe(20792.5);
+    });
 
-  expect(cmlForUser1.cumulative).toBe(calculatedCml1);
+    it('given updated values', () => {
+      constants.CML = {
+        EASY_POINTS: 5,
+        MEDIUM_POINTS: 15,
+        HARD_POINTS: 50,
+      };
 
-  // Valid: Check with updated CML values
-  constants.CML = {
-    EASY_POINTS: 5,
-    MEDIUM_POINTS: 15,
-    HARD_POINTS: 50,
-  };
-  const cml2 = getProblemsSolved(user1.submitStats.acSubmissionNum);
-  const calculatedCml2 = calculateCml(12312, 2321, 2231);
+      expect(getProblemsSolved(user1.submitStats!.acSubmissionNum).cumulative)
+        .toBe(207925);
+    });
 
-  expect(cml2.cumulative).toBe(calculatedCml2);
+    it('given different problems solved values', () => {
+      const easySolved = 100;
+      const mediumSolved = 200;
+      const hardSolved = 300;
+      const updatedUser1 = mockUserWithSolved(
+        easySolved,
+        mediumSolved,
+        hardSolved,
+      );
 
-  // Valid: Check with updated Problem values
-  constants.CML = {
-    EASY_POINTS: 1,
-    MEDIUM_POINTS: 2,
-    HARD_POINTS: 3,
-  };
+      expect(
+        getProblemsSolved(updatedUser1.submitStats!.acSubmissionNum)
+          .cumulative,
+      ).toBe(1850);
+    });
+  });
 
-  const easySolved = 100;
-  const mediumSolved = 200;
-  const hardSolved = 300;
-  const updatedUser1 = mockUserWithSolved(easySolved, mediumSolved, hardSolved);
-
-  const cml3 = getProblemsSolved(updatedUser1.submitStats.acSubmissionNum);
-  const calculatedCml3 = calculateCml(easySolved, mediumSolved, hardSolved);
-
-  expect(cml3.cumulative).toBe(calculatedCml3);
+  it('returns other values', () => {
+    expect(getProblemsSolved(user1.submitStats!.acSubmissionNum))
+      .toEqual(expect.objectContaining({
+        easy: 12312,
+        medium: 2321,
+        hard: 2231,
+        all: 16864,
+      }));
+  });
 });
 
 test('leetcode.utils.getRecentSubmissions action', async () => {
@@ -246,13 +249,13 @@ test('leetcode.utils.getRecentSubmissions action', async () => {
 test('leetcode.utils.getCmlFromUser action', async () => {
   // Check first cml
   const cml1 = 1400;
-  const userUpdated1 = updateCmlAndUsername(user1, user1.username, cml1);
+  const userUpdated1 = updateCmlAndUsername(user1, user1.username!, cml1);
   const cmlText1 = getCmlFromUser(userUpdated1);
   expect(cmlText1).toBe(`<b>${user1.username}</b> ${cml1}`);
 
   // Check second cml
   const cml2 = 7454265;
-  const userUpdated2 = updateCmlAndUsername(user1, user1.username, cml2);
+  const userUpdated2 = updateCmlAndUsername(user1, user1.username!, cml2);
   const cmlText2 = getCmlFromUser(userUpdated2);
   expect(cmlText2).toBe(`<b>${user1.username}</b> ${cml2}`);
 });

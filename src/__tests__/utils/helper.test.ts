@@ -66,7 +66,7 @@ test('utils.helper.error function', () => {
 });
 
 test('utils.helper.isPromise function', () => {
-  const promise: Promise<boolean> = new Promise((resolve) => resolve(true));
+  const promise = Promise.resolve(true);
 
   expect(isPromise(promise)).toBe(true);
 });

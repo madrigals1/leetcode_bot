@@ -16,7 +16,9 @@ class MockBotTelegram {
   }
 
   async sendPhoto(
-    chatId: number, photoUrl: string, options: Options,
+    chatId: number,
+    photoUrl: string,
+    options: Options,
   ): Promise<TelegramBot.Message> {
     this.chatId = chatId;
     this.photoUrl = photoUrl;
@@ -34,7 +36,9 @@ class MockBotTelegram {
   }
 
   async sendMessage(
-    chatId: number, message: string, options: Options,
+    chatId: number,
+    message: string,
+    options: Options,
   ): Promise<TelegramBot.Message> {
     this.chatId = chatId;
     this.message = message;

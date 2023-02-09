@@ -2,6 +2,7 @@ import { formatMessage, reply } from '../../../chatbots/discord/utils';
 import { MockBotDiscord } from '../../__mocks__/chatbots/discord.mock';
 import { DiscordTestCase } from '../../../chatbots/models';
 import { ChatbotProvider } from '../../../chatbots';
+import ArgumentManager from '../../../chatbots/argumentManager';
 
 test('chatbots.discord.utils.formatMessage function', async () => {
   const testCases: string[][] = [
@@ -33,11 +34,11 @@ test('chatbots.discord.utils.reply function', async () => {
       message: '<b>Message 1</b>',
       context: {
         text: 'asd asd asd',
-        argumentParser: () => undefined,
+        argumentParser: () => new ArgumentManager(),
         photoUrl: 'random_url',
-        reply: () => new Promise(() => 'asd'),
+        reply: () => Promise.resolve('asd'),
         provider: ChatbotProvider.Random,
-        interaction: null,
+        interaction: undefined,
         prefix: '!',
       },
       expected: 'Success',
@@ -48,10 +49,10 @@ test('chatbots.discord.utils.reply function', async () => {
       message: '<i>Message 2</i>',
       context: {
         text: 'asd asd asd',
-        reply: () => new Promise(() => 'asd'),
-        argumentParser: () => undefined,
+        reply: () => Promise.resolve('asd'),
+        argumentParser: () => new ArgumentManager(),
         provider: ChatbotProvider.Random,
-        interaction: null,
+        interaction: undefined,
         prefix: '!',
       },
       expected: 'Success',
@@ -63,14 +64,14 @@ test('chatbots.discord.utils.reply function', async () => {
       context: {
         text: 'asd asd asd',
         photoUrl: 'random_url_3',
-        reply: () => new Promise(() => 'asd'),
-        argumentParser: () => undefined,
+        reply: () => Promise.resolve('asd'),
+        argumentParser: () => new ArgumentManager(),
         provider: ChatbotProvider.Random,
-        interaction: null,
+        interaction: undefined,
         prefix: '!',
       },
       expected: Error('Channel is not provided in context'),
-      expectedMessage: null,
+      expectedMessage: '',
       expectedOptions: {},
     },
   ];

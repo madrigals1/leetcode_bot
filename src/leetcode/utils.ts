@@ -67,7 +67,9 @@ export function getProblemsSolved(
   // Get overall value for ratings
   const allSolvedCount = easySolvedCount + mediumSolvedCount + hardSolvedCount;
   const cumulativeSolvedCount = calculateCml(
-    easySolvedCount, mediumSolvedCount, hardSolvedCount,
+    easySolvedCount,
+    mediumSolvedCount,
+    hardSolvedCount,
   );
 
   return {

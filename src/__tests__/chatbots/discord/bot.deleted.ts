@@ -17,7 +17,7 @@ test('chatbots.discord.bot.createBot function', async () => {
 
   // Create a test bot with test token
   const bot: DiscordBot.Client = (
-    await createBot(constants.PROVIDERS.DISCORD.TOKEN)
+    await createBot(constants.PROVIDERS.DISCORD.TOKEN!)
   );
 
   expect(bot instanceof DiscordBot.Client).toBe(true);

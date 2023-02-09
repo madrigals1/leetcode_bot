@@ -28,7 +28,10 @@ export class ParsedArgument implements IParsedArgument {
   private _value: string | string[];
 
   constructor(
-    index: number, key: string, name: string, value: string | string[],
+    index: number,
+    key: string,
+    name: string,
+    value: string | string[],
   ) {
     this.index = index;
     this.key = key;

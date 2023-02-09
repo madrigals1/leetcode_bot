@@ -28,7 +28,7 @@ test('vizapi.utils.getCompareDataFromUser action', async () => {
   const compareData = getCompareDataFromUser(user1);
 
   // Compare fields
-  expect(compareData.image).toBe(user1.profile.userAvatar);
+  expect(compareData.image).toBe(user1.profile!.userAvatar);
 
   compareData.bio_fields.forEach(({ name, value }) => {
     switch (name) {
@@ -39,10 +39,10 @@ test('vizapi.utils.getCompareDataFromUser action', async () => {
         expect(value).toBe(user1.username);
         break;
       case 'Location':
-        expect(value).toBe(user1.profile.countryName);
+        expect(value).toBe(user1.profile!.countryName);
         break;
       case 'Company':
-        expect(value).toBe(user1.profile.company);
+        expect(value).toBe(user1.profile!.company);
         break;
 
       default:
@@ -57,13 +57,14 @@ test('vizapi.utils.getCompareDataFromUser action', async () => {
         break;
       case 'Contest Rating':
         expect(value)
-          .toBe(Math.round(user1.contestData.userContestRanking?.rating));
+          .toBe(Math.round(user1.contestData!.userContestRanking?.rating));
         break;
       case 'Location':
-        expect(value).toBe(user1.submitStats.totalSubmissionNum[0].submissions);
+        expect(value)
+          .toBe(user1.submitStats!.totalSubmissionNum[0].submissions);
         break;
       case 'Company':
-        expect(value).toBe(user1.contributions.points);
+        expect(value).toBe(user1.contributions!.points);
         break;
 
       default:
@@ -71,7 +72,7 @@ test('vizapi.utils.getCompareDataFromUser action', async () => {
     }
   });
 
-  expect(compareData.image).toBe(user1.profile.userAvatar);
+  expect(compareData.image).toBe(user1.profile!.userAvatar);
 });
 
 test('vizapi.utils.* confirm URL', async () => {
@@ -84,7 +85,8 @@ test('vizapi.utils.compareMenu action', async () => {
   const compareResponse = await compareMenu(user1, user2);
 
   expect(console.log).toHaveBeenCalledWith(SM.IMAGE_WAS_CREATED);
-  expect(isValidHttpUrl(compareResponse.link)).toBe(true);
+  expect(compareResponse.link).toBeDefined();
+  expect(isValidHttpUrl(compareResponse.link!)).toBe(true);
   expect(compareResponse.error).toBe(undefined);
   expect(compareResponse.reason).toBe(undefined);
 
@@ -102,7 +104,8 @@ test('vizapi.utils.tableForSubmissions action', async () => {
   const tableForSubmissionsResponse = await tableForSubmissions(user1);
 
   expect(console.log).toHaveBeenCalledWith(SM.IMAGE_WAS_CREATED);
-  expect(isValidHttpUrl(tableForSubmissionsResponse.link)).toBe(true);
+  expect(tableForSubmissionsResponse.link).toBeDefined();
+  expect(isValidHttpUrl(tableForSubmissionsResponse.link!)).toBe(true);
   expect(tableForSubmissionsResponse.error).toBe(undefined);
   expect(tableForSubmissionsResponse.reason).toBe(undefined);
 
@@ -120,14 +123,14 @@ test('vizapi.utils.tableForSubmissions action', async () => {
     ...user1,
     computed: {
       submissions: [],
-      problemsSolved: user1.computed.problemsSolved,
+      problemsSolved: user1.computed!.problemsSolved,
     },
   };
   const compareResponseFailure2 = (
     await tableForSubmissions(userWithoutSubmissions)
   );
   const dictMessageWithoutSubmissions = (
-    BM.USER_NO_SUBMISSIONS(userWithoutSubmissions.username)
+    BM.USER_NO_SUBMISSIONS(userWithoutSubmissions.username!)
   );
 
   expect(console.log).toHaveBeenCalled();

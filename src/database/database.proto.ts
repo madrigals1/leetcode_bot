@@ -42,7 +42,7 @@ class DatabaseProvider {
    * Add a user to the database.
    * @param {string} username - The username of the user to add.
    */
-  async addUser(username: string, user: LeetCodeUser): Promise<User> {
+  async addUser(username: string, user: LeetCodeUser): Promise<User|undefined> {
     throw new Error('Not Implemented');
   }
 
@@ -89,7 +89,7 @@ class DatabaseProvider {
    * It returns a channel.
    * @param {ChannelKey} channelKey - The key of the channel to get.
    */
-  async getChannel(channelKey: ChannelKey): Promise<Channel> {
+  async getChannel(channelKey: ChannelKey): Promise<Channel|undefined> {
     throw new Error('Not Implemented');
   }
 
@@ -123,8 +123,9 @@ class DatabaseProvider {
    * @param {string} username - The username of the user to add to the channel.
    */
   async addUserToChannel(
-    channelKey: ChannelKey, username: string,
-  ): Promise<ChannelUser> {
+    channelKey: ChannelKey,
+    username: string,
+  ): Promise<ChannelUser|undefined> {
     throw new Error('Not Implemented');
   }
 
@@ -136,7 +137,8 @@ class DatabaseProvider {
    * channel.
    */
   async removeUserFromChannel(
-    channelKey: ChannelKey, username: string,
+    channelKey: ChannelKey,
+    username: string,
   ): Promise<boolean> {
     throw new Error('Not Implemented');
   }

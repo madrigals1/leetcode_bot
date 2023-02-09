@@ -32,7 +32,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
     name: 'Requested empty args, provided empty args',
     input: {
       providedArgs: [],
-      requestedArgs: undefined,
+      requestedArgs: [],
     },
     output: {
       byKey: {},
@@ -1721,7 +1721,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
     name: 'Branches: requestedArgs can be null',
     input: {
       providedArgs: [],
-      requestedArgs: null,
+      requestedArgs: [],
     },
     output: {
       byKey: {},

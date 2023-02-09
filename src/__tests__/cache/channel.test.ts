@@ -14,8 +14,8 @@ UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 UserCache.delayTime = 0;
 
 // Prepare values
-const realUsername1 = user1.username;
-const realUsername2 = user2.username;
+const realUsername1 = user1.username!;
+const realUsername2 = user2.username!;
 
 async function _startup() {
   UserCache.clear();
@@ -187,7 +187,7 @@ describe('cache.channel - removeUser method', () => {
 
     // Change method to incorrect one
     Cache.database.removeUserFromChannel = () => (
-      new Promise((resolve, reject) => reject(fakeErrorMessage))
+      Promise.reject(fakeErrorMessage)
     );
 
     const result = await channelCache.removeUser(realUsername1);

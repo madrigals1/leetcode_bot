@@ -49,7 +49,8 @@ function confirmNoDuplicates(sortedArgs: Argument[]): void {
 }
 
 function confirmValidArgCount(
-  maxIndexInRequestedArgs: number, providedArgCount: number,
+  maxIndexInRequestedArgs: number,
+  providedArgCount: number,
 ): void {
   if (maxIndexInRequestedArgs > providedArgCount) {
     const reason = BM.INSUFFICIENT_ARGS_IN_MESSAGE;
@@ -85,7 +86,8 @@ function confirmNoRequiredAfterOptional(sortedArgs: Argument[]): void {
 }
 
 export function getPositionalParsedArguments(
-  providerContext: Context, requestedArgs: Argument[] = [],
+  providerContext: Context,
+  requestedArgs: Argument[] = [],
 ): ArgumentManager {
   // Get provided args from Context
   const { text } = providerContext;

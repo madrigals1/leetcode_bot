@@ -21,7 +21,7 @@ class MockDatabaseProvider extends DatabaseProvider {
 
   // Connect to Database
   async connect(): Promise<boolean> {
-    return new Promise((resolve) => resolve(true));
+    return Promise.resolve(true);
   }
 
   private getIdForChannel(): number {
@@ -57,21 +57,23 @@ class MockDatabaseProvider extends DatabaseProvider {
 
   // Find all Users
   async findAllUsers(): Promise<User[]> {
-    return mockDatabaseData.users
-      .map((username) => {
+    const users: User[] = [];
+
+    mockDatabaseData.users
+      .forEach((username) => {
         const foundUser = leetcodeUsers
           .find((user) => user.username === username);
 
         if (foundUser) {
-          return {
+          users.push({
             id: this.getIdForUser(username),
-            username: foundUser.username,
+            username: foundUser.username!,
             data: JSON.stringify(foundUser),
-          };
+          });
         }
-
-        return null;
       });
+
+    return users;
   }
 
   // Load User by `username`
@@ -80,20 +82,25 @@ class MockDatabaseProvider extends DatabaseProvider {
   }
 
   // Add User to Database
-  async addUser(username: string): Promise<User> {
-    const foundUserInCache = leetcodeUsers
+  async addUser(username: string): Promise<User|undefined> {
+    const userFoundInLeetcode: User|undefined = leetcodeUsers
       .map((user, index) => ({
         id: index,
-        username: user.username,
+        username: user.username!,
         data: JSON.stringify(user),
       }))
       .find((user) => user.username === username);
 
-    if (mockDatabaseData.users.includes(username)) {
-      return foundUserInCache;
+    if (!userFoundInLeetcode) {
+      return undefined;
     }
+
+    if (mockDatabaseData.users.includes(username)) {
+      return userFoundInLeetcode;
+    }
+
     mockDatabaseData.users.push(username);
-    return foundUserInCache;
+    return userFoundInLeetcode;
   }
 
   // Add User to Database
@@ -132,7 +139,7 @@ class MockDatabaseProvider extends DatabaseProvider {
     return mockDatabaseData.channels;
   }
 
-  async getChannel(channelKey: ChannelKey): Promise<Channel> {
+  async getChannel(channelKey: ChannelKey): Promise<Channel|undefined> {
     return mockDatabaseData.channels
       .find((channel) => channel.key === channelKey);
   }
@@ -141,7 +148,7 @@ class MockDatabaseProvider extends DatabaseProvider {
     const channel = await this.getChannel(channelKey);
 
     return mockDatabaseData.channelUsers
-      .filter((channelUser) => channelUser.channelId === channel.id)
+      .filter((channelUser) => channelUser.channelId === channel?.id)
       .map((channelUser) => channelUser.username);
   }
 
@@ -165,12 +172,19 @@ class MockDatabaseProvider extends DatabaseProvider {
   }
 
   async addUserToChannel(
-    channelKey: ChannelKey, username: string,
-  ): Promise<ChannelUser> {
+    channelKey: ChannelKey,
+    username: string,
+  ): Promise<ChannelUser|undefined> {
     // Add User
     await this.addUser(username);
 
     const channel = await this.getChannel(channelKey);
+
+    // If channel does NOT exist
+    if (!channel || !channel.id) {
+      return undefined;
+    }
+
     const channelUser = {
       id: this.getIdForChannelUser(channel.id),
       channelId: channel.id,
@@ -179,7 +193,7 @@ class MockDatabaseProvider extends DatabaseProvider {
 
     // If User already exists, return false
     if (this.existsChannelUser(channelUser)) {
-      return null;
+      return undefined;
     }
 
     mockDatabaseData.channelUsers.push(channelUser);
@@ -187,9 +201,16 @@ class MockDatabaseProvider extends DatabaseProvider {
   }
 
   async removeUserFromChannel(
-    channelKey: ChannelKey, username: string,
+    channelKey: ChannelKey,
+    username: string,
   ): Promise<boolean> {
     const channel = await this.getChannel(channelKey);
+
+    // If channel does NOT exist
+    if (!channel || !channel.id) {
+      return false;
+    }
+
     const existsChannelUser = mockDatabaseData.channelUsers
       .find((cu) => cu.username === username && cu.channelId === channel.id);
 
@@ -207,10 +228,17 @@ class MockDatabaseProvider extends DatabaseProvider {
 
   async clearChannel(channelKey: ChannelKey): Promise<boolean> {
     const channel = await this.getChannel(channelKey);
+
+    // If channel does NOT exist
+    if (!channel || !channel.id) {
+      return false;
+    }
+
     _.remove(
       mockDatabaseData.channelUsers,
       { channelId: channel.id },
     );
+
     return true;
   }
 }

@@ -286,7 +286,8 @@ class SQLite extends DatabaseProvider {
   }
 
   async addUserToChannel(
-    channelKey: ChannelKey, username: string,
+    channelKey: ChannelKey,
+    username: string,
   ): Promise<ChannelUser> {
     const channel = await this.getChannel(channelKey);
 
@@ -313,7 +314,8 @@ class SQLite extends DatabaseProvider {
   }
 
   async removeUserFromChannel(
-    channelKey: ChannelKey, username: string,
+    channelKey: ChannelKey,
+    username: string,
   ): Promise<boolean> {
     const channel = await this.getChannel(channelKey);
 

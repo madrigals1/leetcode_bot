@@ -12,7 +12,8 @@ function generateArgument(): ParsedArgument {
 }
 
 function addArgument(
-  argumentManager: ArgumentManager, argument: ParsedArgument,
+  argumentManager: ArgumentManager,
+  argument: ParsedArgument,
 ): void {
   argumentManager.keyMap.set(argument.key, argument);
   argumentManager.indexMap.set(argument.index, argument);

@@ -12,8 +12,8 @@ import { randomString } from '../__mocks__/randomUtils.test';
 Cache.database = new MockDatabaseProvider();
 UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 
-const realUsername1 = users[0].username;
-const realUsername2 = users[1].username;
+const realUsername1 = users[0].username!;
+const realUsername2 = users[1].username!;
 
 function _startup() {
   Cache.removeAllChannels();

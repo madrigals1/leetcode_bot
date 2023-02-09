@@ -44,9 +44,7 @@ class Cache {
   }
 
   addChannelId(key: LBBChannelKey, id: number): void {
-    this.channelKeyIdMap.set(
-      JSON.stringify(Cache.getKeyWithoutId(key)), id,
-    );
+    this.channelKeyIdMap.set(JSON.stringify(Cache.getKeyWithoutId(key)), id);
     this.channelIdKeyMap.set(id, key);
   }
 

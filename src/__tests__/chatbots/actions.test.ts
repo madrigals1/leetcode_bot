@@ -26,8 +26,8 @@ Cache.database = mockDatabaseProvider;
 UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 UserCache.delayTime = 0;
 
-const realUsername1 = users[0].username;
-const realUsername2 = users[1].username;
+const realUsername1 = users[0].username!;
+const realUsername2 = users[1].username!;
 const fakeUsername = 'fake_username';
 
 beforeEach(async () => {
@@ -261,8 +261,8 @@ describe('chatbots.actions - rating action', () => {
 
     // Predefined data
     const cmlRating = UserCache.getAllUsers().sort((user1, user2) => {
-      const cml1 = user1.computed.problemsSolved.cumulative;
-      const cml2 = user2.computed.problemsSolved.cumulative;
+      const cml1 = user1?.computed?.problemsSolved.cumulative ?? 0;
+      const cml2 = user2?.computed?.problemsSolved.cumulative ?? 0;
       return cml2 - cml1;
     });
 
@@ -278,7 +278,7 @@ describe('chatbots.actions - rating action', () => {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     vizapiActions.ratingGraph = (u: User[]) => new Promise((resolve) => {
-      resolve({ link: null });
+      resolve({ link: undefined });
     });
 
     await mockbot.send('/rating graph');
@@ -365,7 +365,8 @@ describe('chatbots.actions - avatar action', () => {
     const user = UserCache.getUser(realUsername1);
     const context = mockbot.getContext();
 
-    expect(context.photoUrl).toEqual(user.profile.userAvatar);
+    expect(context?.photoUrl).toBeDefined();
+    expect(context!.photoUrl).toEqual(user?.profile?.userAvatar);
     expect(mockbot.lastMessage()).toEqual(BM.USER_AVATAR(realUsername1));
   });
 
@@ -402,7 +403,8 @@ describe('chatbots.actions - submissions action', () => {
 
     const context = mockbot.getContext();
 
-    expect(context.photoUrl).toEqual('http://random_link');
+    expect(context?.photoUrl).toBeDefined();
+    expect(context!.photoUrl).toEqual('http://random_link');
     expect(mockbot.lastMessage())
       .toEqual(BM.USER_RECENT_SUBMISSIONS(realUsername1));
   });
@@ -416,7 +418,7 @@ describe('chatbots.actions - submissions action', () => {
     const username = 'clone_username';
     const newUser = _.cloneDeep(users[0]);
     newUser.username = username;
-    newUser.submitStats.acSubmissionNum = [];
+    newUser.submitStats!.acSubmissionNum = [];
     users.push(newUser);
 
     vizapiActions.tableForSubmissions = mockTableForSubmissions;
@@ -432,7 +434,7 @@ describe('chatbots.actions - submissions action', () => {
     const username = 'clone_username_2';
     const newUser2 = _.cloneDeep(users[0]);
     newUser2.username = username;
-    newUser2.submitStats = null;
+    newUser2.submitStats = undefined;
     users.push(newUser2);
 
     vizapiActions.tableForSubmissions = mockTableForSubmissions;
@@ -524,7 +526,8 @@ describe('chatbots.actions - compare action', () => {
 
     const context = mockbot.getContext();
 
-    expect(context.photoUrl).toEqual('http://random_link_compare');
+    expect(context?.photoUrl).toBeDefined();
+    expect(context!.photoUrl).toEqual('http://random_link_compare');
     const expectedMessage = BM.USERS_COMPARE(realUsername1, realUsername2);
     expect(mockbot.lastMessage()).toEqual(expectedMessage);
   });
@@ -548,7 +551,7 @@ describe('chatbots.actions - compare action', () => {
 
     const newUser = _.cloneDeep(users[0]);
     newUser.username = thirdUsername;
-    newUser.name = null;
+    newUser.name = undefined;
     users.push(newUser);
 
     await mockbot.send(`/add ${realUsername1} ${thirdUsername}`);

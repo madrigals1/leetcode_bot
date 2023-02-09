@@ -22,13 +22,13 @@ export class UserCache {
 
   static getLeetcodeDataFromUsername: (username: string) => Promise<User> = (
     getLeetcodeDataFromUsername
-  )
+  );
 
   static delayTime: number = constants.SYSTEM.USER_REQUEST_DELAY_MS;
 
   static delay: (msTime: number) => Promise<void> = delay;
 
-  static lastRefreshedAt: dayjs.Dayjs = null;
+  static lastRefreshedAt?: dayjs.Dayjs;
 
   /**
    * Get the number of users in the database.

@@ -9,8 +9,8 @@ export interface TelegramTestCase {
   context: Context;
   expected: {
     chatId: number;
-    photoUrl: string;
-    message: string;
+    photoUrl: string | undefined;
+    message: string | undefined;
     options: {
       captions?: string;
       reply_markup?: TelegramBot.InlineKeyboardMarkup;

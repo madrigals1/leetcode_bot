@@ -13,7 +13,5 @@ test('chatbots.discord.index.run function', async () => {
   await DiscordBotInstance.run();
 
   // eslint-disable-next-line no-console
-  expect(console.log).toHaveBeenCalledWith(
-    SM.DISCORD_BOT_IS_RUNNING,
-  );
+  expect(console.log).toHaveBeenCalledWith(SM.DISCORD_BOT_IS_RUNNING);
 });

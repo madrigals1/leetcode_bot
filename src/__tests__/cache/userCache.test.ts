@@ -20,8 +20,8 @@ UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
 UserCache.delayTime = 0;
 
 // Prepare values
-const realUsername1 = user1.username;
-const realUsername2 = user2.username;
+const realUsername1 = user1.username!;
+const realUsername2 = user2.username!;
 const fakeUsername = 'fake_username';
 
 // Create setup and teardown functions
@@ -119,8 +119,8 @@ describe('cache.UserCache - addUser method', () => {
 
   test('Incorrect case - Error when getting User from LeetCode', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const actionWithError = (username: string): Promise<User> => new Promise(
-      (resolve, reject) => reject(new Error('fake error message')),
+    const actionWithError = (username: string): Promise<User> => (
+      Promise.reject(new Error('fake error message'))
     );
     UserCache.getLeetcodeDataFromUsername = actionWithError;
 
@@ -239,7 +239,7 @@ describe('cache.UserCache - refresh method', () => {
   beforeEach(_startup);
 
   test('Correct case - Data on LeetCode is updated', async () => {
-    UserCache.lastRefreshedAt = null;
+    UserCache.lastRefreshedAt = undefined;
 
     // Save original array
     const usersClone = _.cloneDeep(users);
@@ -463,7 +463,7 @@ describe('cache.UserCache.removeUser method', () => {
 
     // Change method to incorrect one
     Cache.database.removeUser = () => (
-      new Promise((resolve, reject) => reject(fakeErrorMessage))
+      Promise.reject(fakeErrorMessage)
     );
 
     const result = await UserCache.removeUser(realUsername1);

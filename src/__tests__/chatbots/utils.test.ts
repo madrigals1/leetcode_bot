@@ -34,7 +34,8 @@ describe('chatbots.utils.createButtonsFromUsers action', () => {
     const action2 = 'action2';
     const otherUsername = 'other_username';
     const mockOptions2 = mockButtonOptions(
-      action2, [user1, user2, { ...user1, username: otherUsername }],
+      action2,
+      [user1, user2, { ...user1, username: otherUsername }],
     );
     const buttonsResponse2 = createButtonsFromUsers(mockOptions2);
 

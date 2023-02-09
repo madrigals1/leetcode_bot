@@ -50,7 +50,7 @@ export interface Context {
   chatId?: number;
   options?: Options;
   bot?: Client | TelegramBot | MockBotTelegram;
-  photoUrl?: string;
+  photoUrl?: string | undefined;
   channelKey?: ChannelKey;
   channelCache?: ChannelCache;
   isAdmin?: Promise<boolean>;

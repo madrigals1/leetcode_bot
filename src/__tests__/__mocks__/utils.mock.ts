@@ -7,6 +7,7 @@ import {
   SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
 } from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
+import ArgumentManager from '../../chatbots/argumentManager';
 import { ChatbotProvider } from '../../chatbots';
 
 import { users, user1, user2 } from './data.mock';
@@ -34,7 +35,7 @@ export async function mockTableForSubmissions(
 
   if (user.submitStats.acSubmissionNum.length === 0) {
     return {
-      error: BM.USER_NO_SUBMISSIONS(user.username),
+      error: BM.USER_NO_SUBMISSIONS(user.username!),
       reason: SM.NO_SUBMISSIONS,
     };
   }
@@ -45,7 +46,8 @@ export async function mockTableForSubmissions(
 }
 
 export async function mockCompareMenu(
-  leftUser: User, rightUser: User,
+  leftUser: User,
+  rightUser: User,
 ): Promise<VizapiResponse> {
   if (!leftUser.name || !rightUser.name) {
     return {
@@ -80,7 +82,8 @@ export async function mockRatingGraph(u: User[]): Promise<VizapiResponse> {
 }
 
 export function mockButtonOptions(
-  action: string, _users: User[],
+  action: string,
+  _users: User[],
 ): ButtonOptions {
   return { action, users: _users };
 }
@@ -94,7 +97,8 @@ export function mockUserWithSolved(
   const newUser = _.cloneDeep(user1);
 
   newUser.username = username;
-  newUser.submitStats.acSubmissionNum = [
+
+  const acSubmissionNum = [
     {
       count: easySolved,
       difficulty: 'Easy',
@@ -111,11 +115,20 @@ export function mockUserWithSolved(
       submissions: 300,
     },
     {
-      count: 600,
+      count: easySolved + mediumSolved + hardSolved,
       difficulty: 'All',
       submissions: 600,
     },
   ];
+
+  if (!newUser.submitStats) {
+    newUser.submitStats = {
+      totalSubmissionNum: [],
+      acSubmissionNum,
+    };
+  } else {
+    newUser.submitStats.acSubmissionNum = acSubmissionNum;
+  }
 
   return newUser;
 }
@@ -123,8 +136,8 @@ export function mockUserWithSolved(
 export function generateMockContext(): Context {
   return {
     text: 'random_text',
-    reply: () => new Promise(() => ('asd')),
-    argumentParser: () => undefined,
+    reply: () => Promise.resolve('asd'),
+    argumentParser: () => new ArgumentManager(),
     provider: ChatbotProvider.Mockbot,
     prefix: '/',
   };

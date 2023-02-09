@@ -38,7 +38,8 @@ export function getReplyMarkupFromButtons(
 }
 
 export async function reply(
-  message: string, context: Context,
+  message: string,
+  context: Context,
 ): Promise<string> {
   const {
     chatId, options, bot, photoUrl,
@@ -49,12 +50,13 @@ export async function reply(
     return BM.ERROR_ON_THE_SERVER;
   }
 
-  const replyMarkupOptions = options.buttons
+  const replyMarkupOptions = options?.buttons
     ? { reply_markup: getReplyMarkupFromButtons(options.buttons) }
     : {};
 
   // Update options with Telegram specific data
   const updatedOptions = { ...options, ...replyMarkupOptions };
+  updatedOptions.buttons = undefined;
 
   if (photoUrl) {
     return bot.sendPhoto(chatId, photoUrl, { caption: message })

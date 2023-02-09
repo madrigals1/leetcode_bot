@@ -44,7 +44,9 @@ export default class Telegram {
   }
 
   getContext(
-    message: TelegramBot.Message, userId: number, text: string = null,
+    message: TelegramBot.Message,
+    userId: number,
+    text: string = null,
   ): Context {
     const textCorrect = text || message.text;
     const chatId = message.chat.id;
