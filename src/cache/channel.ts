@@ -3,7 +3,13 @@ import * as _ from 'lodash';
 import { User } from '../leetcode/models';
 import { log } from '../utils/helper';
 import { constants } from '../utils/constants';
-import { BOT_MESSAGES as BM } from '../utils/dictionary';
+import {
+  ErrorMessages,
+  UserAddMessages,
+  UserDeleteMessages,
+  UserMessages,
+  ClearMessages,
+} from '../global/messages';
 
 import { Channel, CacheResponse, UserCacheResponse } from './models';
 import { UserCache } from './userCache';
@@ -112,7 +118,7 @@ export class ChannelCache {
         if (!addedToDB) {
           return {
             status: constants.STATUS.ERROR,
-            detail: BM.USERNAME_ALREADY_EXISTS(username),
+            detail: UserAddMessages.alreadyExists(username),
           };
         }
 
@@ -124,7 +130,7 @@ export class ChannelCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: BM.USERNAME_WAS_ADDED(username),
+          detail: UserAddMessages.success(username),
         };
       })
       .catch((err) => {
@@ -133,7 +139,7 @@ export class ChannelCache {
         // Send message as Internal Server Error
         return {
           status: constants.STATUS.ERROR,
-          detail: BM.ERROR_ON_THE_SERVER,
+          detail: ErrorMessages.server,
         };
       });
   }
@@ -152,7 +158,7 @@ export class ChannelCache {
         if (!deletedFromDB) {
           return {
             status: constants.STATUS.ERROR,
-            detail: BM.USERNAME_DOES_NOT_EXIST_IN_CHANNEL(username),
+            detail: UserMessages.doesNotExist(username),
           };
         }
 
@@ -164,7 +170,7 @@ export class ChannelCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: BM.USERNAME_WAS_DELETED(username),
+          detail: UserDeleteMessages.success(username),
         };
       })
       .catch((err) => {
@@ -173,7 +179,7 @@ export class ChannelCache {
         // Send message as Internal Server Error
         return {
           status: constants.STATUS.ERROR,
-          detail: BM.ERROR_ON_THE_SERVER,
+          detail: ErrorMessages.server,
         };
       });
   }
@@ -220,7 +226,7 @@ export class ChannelCache {
         if (!cleared) {
           return {
             status: constants.STATUS.ERROR,
-            detail: BM.CHANNEL_WAS_NOT_CLEARED,
+            detail: ClearMessages.channelWasNotCleared,
           };
         }
 
@@ -229,7 +235,7 @@ export class ChannelCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: BM.CHANNEL_WAS_CLEARED,
+          detail: ClearMessages.channelWasCleared,
         };
       })
       .catch((err) => {
@@ -238,7 +244,7 @@ export class ChannelCache {
         // Send message as Internal Server Error
         return {
           status: constants.STATUS.ERROR,
-          detail: BM.ERROR_ON_THE_SERVER,
+          detail: ErrorMessages.server,
         };
       });
   }
