@@ -11,9 +11,9 @@ export class SmallMessages {
 
   static noUsers = `${EMOJI.ERROR} No users found in database`;
 
-  static noSubmissionsKey = 'no_submissions';
+  static noSubmissions = 'no_submissions';
 
-  static apiNotWorkingKey = 'api_not_working';
+  static apiNotWorking = 'api_not_working';
 
   static incorrectBotType = 'Incorrect bot type';
 }
