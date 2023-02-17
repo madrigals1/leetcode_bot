@@ -4,8 +4,14 @@ import * as dayjs from 'dayjs';
 import { User } from '../leetcode/models';
 import { getLeetcodeDataFromUsername } from '../leetcode';
 import { log, delay } from '../utils/helper';
-import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { constants } from '../utils/constants';
+import {
+  UserAddMessages,
+  RefreshMessages,
+  UserMessages,
+  UserDeleteMessages,
+  ErrorMessages,
+} from '../global/messages';
 
 import { CacheResponse, UserCacheResponse } from './models';
 
@@ -51,7 +57,7 @@ export class UserCache {
     if (userExists) {
       return {
         status: constants.STATUS.ERROR,
-        detail: BM.USERNAME_ALREADY_EXISTS(username),
+        detail: UserAddMessages.alreadyExists(username),
         user: null,
       };
     }
@@ -63,7 +69,7 @@ export class UserCache {
         if (!user.exists) {
           return {
             status: constants.STATUS.ERROR,
-            detail: BM.USERNAME_NOT_FOUND_ON_LEETCODE(username),
+            detail: UserAddMessages.leetcodeNotFoundUsername(username),
             user: null,
           };
         }
@@ -76,7 +82,7 @@ export class UserCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: BM.USERNAME_WAS_ADDED(username),
+          detail: UserAddMessages.success(username),
           user,
         };
       })
@@ -84,7 +90,7 @@ export class UserCache {
         log(err);
         return {
           status: constants.STATUS.ERROR,
-          detail: BM.USERNAME_ADDING_ERROR(username),
+          detail: UserAddMessages.unknownError(username),
           user: null,
         };
       });
@@ -162,10 +168,10 @@ export class UserCache {
 
     // If database was refreshed less than 15 minutes ago
     if (lastRefreshedAt && now.diff(lastRefreshedAt, 'minutes') < 5) {
-      log(SM.CACHE_ALREADY_REFRESHED);
+      log(RefreshMessages.cacheAlreadyRefreshed);
       return {
         status: constants.STATUS.ERROR,
-        detail: BM.CACHE_ALREADY_REFRESHED,
+        detail: RefreshMessages.cacheAlreadyRefreshed,
       };
     }
 
@@ -173,7 +179,7 @@ export class UserCache {
     this.lastRefreshedAt = now;
 
     // Log when refresh started
-    log(SM.DATABASE_STARTED_REFRESH(now.format(DATE_FORMAT)));
+    log(RefreshMessages.startedRefresh);
 
     try {
       // Load all Users from Database
@@ -191,9 +197,9 @@ export class UserCache {
         // If User Data was returned from LeetCode, replace User in Cache
         if (userData.exists) {
           this.addOrReplaceUser(username, userData);
-          log(SM.USERNAME_WAS_REFRESHED(username));
+          log(RefreshMessages.usernameWasRefreshed(username));
         } else {
-          log(SM.USERNAME_WAS_NOT_REFRESHED(username));
+          log(RefreshMessages.usernameWasNotRefreshed(username));
         }
 
         // Wait X seconds until loading next User, X is set in .env
@@ -208,14 +214,14 @@ export class UserCache {
     allChannels.forEach((channel) => channel.sortUsers());
 
     // Log when refresh ended
-    log(SM.DATABASE_FINISHED_REFRESH(dayjs().format(DATE_FORMAT)));
+    log(RefreshMessages.databaseRequestedRefresh(dayjs().format(DATE_FORMAT)));
 
     // Set database refresh time
     this.lastRefreshedAt = now;
 
     return {
       status: constants.STATUS.SUCCESS,
-      detail: BM.CACHE_IS_REFRESHED,
+      detail: RefreshMessages.cacheIsRefreshed,
     };
   }
 
@@ -234,13 +240,13 @@ export class UserCache {
         if (!isDeleted) {
           return {
             status: constants.STATUS.ERROR,
-            detail: BM.USERNAME_NOT_FOUND(username),
+            detail: UserMessages.doesNotExist(username),
           };
         }
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: BM.USERNAME_WAS_DELETED(username),
+          detail: UserDeleteMessages.success(username),
         };
       })
       .catch((err) => {
@@ -248,7 +254,7 @@ export class UserCache {
 
         return {
           status: constants.STATUS.ERROR,
-          detail: BM.ERROR_ON_THE_SERVER,
+          detail: ErrorMessages.server,
         };
       });
   }
