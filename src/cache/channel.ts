@@ -6,7 +6,7 @@ import { constants } from '../utils/constants';
 import {
   ErrorMessages,
   UserMessages,
-  ClearMessages,
+  ChannelMessages,
 } from '../global/messages';
 
 import { Channel, CacheResponse, UserCacheResponse } from './models';
@@ -224,7 +224,7 @@ export class ChannelCache {
         if (!cleared) {
           return {
             status: constants.STATUS.ERROR,
-            detail: ClearMessages.channelWasNotCleared,
+            detail: ChannelMessages.channelWasNotCleared,
           };
         }
 
@@ -233,7 +233,7 @@ export class ChannelCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: ClearMessages.channelWasCleared,
+          detail: ChannelMessages.channelWasCleared,
         };
       })
       .catch((err) => {

@@ -1,7 +1,7 @@
 import { ArgumentMessages } from './argument';
 import { BigMessages } from './big';
 import { ListMessages } from './list';
-import { ClearMessages } from './clear';
+import { ChannelMessages } from './channel';
 import { ErrorMessages } from './error';
 import { ImageMessages } from './image';
 import { ProviderMessages } from './provider';
@@ -15,7 +15,7 @@ export {
   ArgumentMessages,
   BigMessages,
   ListMessages,
-  ClearMessages,
+  ChannelMessages,
   ErrorMessages,
   ImageMessages,
   ProviderMessages,

@@ -13,7 +13,7 @@ import {
   SmallMessages,
   ListMessages,
   UserMessages,
-  ClearMessages,
+  ChannelMessages,
   RatingMessages,
   ErrorMessages,
 } from '../global/messages';
@@ -147,7 +147,7 @@ export default class Actions {
   @action({ name: 'clear', isAdmin: true })
   static async clear(context: Context): Promise<string> {
     // Send message, that Database will be cleared
-    await context.reply(ClearMessages.channelWillBeCleared, context);
+    await context.reply(ChannelMessages.channelWillBeCleared, context);
 
     // Remove all Users and send the result (success or failure)
     const result = await context.channelCache.clear();
