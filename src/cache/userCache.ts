@@ -4,7 +4,7 @@ import * as dayjs from 'dayjs';
 import { User } from '../leetcode/models';
 import { getLeetcodeDataFromUsername } from '../leetcode';
 import { log, delay } from '../utils/helper';
-import { constants } from '../utils/constants';
+import { constants } from '../global/constants';
 import {
   RefreshMessages,
   UserMessages,

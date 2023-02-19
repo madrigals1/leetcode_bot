@@ -1,6 +1,6 @@
 import { Context } from '../../../chatbots/models';
 import Actions, { registeredActions } from '../../../chatbots/actions';
-import { constants } from '../../../utils/constants';
+import { constants } from '../../../global/constants';
 import {
   getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';

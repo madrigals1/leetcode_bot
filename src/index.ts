@@ -5,7 +5,7 @@ import Slack from './chatbots/slack';
 import refreshUsersCron from './utils/scheduler';
 import Database from './database';
 import Cache from './cache';
-import { constants } from './utils/constants';
+import { constants } from './global/constants';
 import { delay, log } from './utils/helper';
 
 // Connecting to Database

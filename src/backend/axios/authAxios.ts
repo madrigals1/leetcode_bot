@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { log } from '../../utils/helper';
-import { constants } from '../../utils/constants';
+import { constants } from '../../global/constants';
 
 const { LBB } = constants;
 

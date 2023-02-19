@@ -8,7 +8,7 @@ import {
 } from '@discordjs/builders';
 import { ButtonStyle } from 'discord-api-types/v9';
 
-import { ArgumentsError, InputError } from '../../utils/errors';
+import { ArgumentsError, InputError } from '../../global/errors';
 import ArgumentManager from '../argumentManager';
 import { Argument, ParsedArgument } from '../decorators/models';
 import { Context, ButtonContainer, ButtonContainerType } from '../models';

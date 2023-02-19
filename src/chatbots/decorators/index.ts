@@ -1,7 +1,7 @@
 import { Context } from '../models';
 import { registeredActions } from '../actions';
 import ArgumentManager from '../argumentManager';
-import { ArgumentsError, InputError } from '../../utils/errors';
+import { ArgumentsError, InputError } from '../../global/errors';
 import { ErrorMessages } from '../../global/messages';
 
 import { ReplyHandler } from './replyHandler';

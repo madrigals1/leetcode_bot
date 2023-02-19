@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 
 import ArgumentManager from '../argumentManager';
 import { Context } from '../models';
-import { ArgumentsError, InputError } from '../../utils/errors';
+import { ArgumentsError, InputError } from '../../global/errors';
 import Cache from '../../cache';
 import { ChannelKey } from '../../cache/models';
 import { ChannelCache } from '../../cache/channel';

@@ -4,7 +4,7 @@ import MockDatabaseProvider from '../__mocks__/database.mock';
 import { UserCache } from '../../cache/userCache';
 import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
 import { user2, user1 } from '../__mocks__/data.mock';
-import { constants } from '../../utils/constants';
+import { constants } from '../../global/constants';
 import { generateChannelCache } from '../__mocks__/generators';
 
 // Change mock values

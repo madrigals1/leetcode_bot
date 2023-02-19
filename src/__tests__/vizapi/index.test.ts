@@ -7,7 +7,7 @@ import {
   tableForSubmissions,
 } from '../../vizapi';
 import { isValidHttpUrl } from '../../utils/helper';
-import { constants } from '../../utils/constants';
+import { constants } from '../../global/constants';
 
 const { VIZAPI_LINK } = constants;
 

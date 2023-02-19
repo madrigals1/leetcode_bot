@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 
 import { User } from '../leetcode/models';
 import { log } from '../utils/helper';
-import { constants } from '../utils/constants';
+import { constants } from '../global/constants';
 import {
   ErrorMessages,
   UserMessages,

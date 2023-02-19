@@ -2,7 +2,7 @@ import * as DiscordBot from 'discord.js';
 import { jest } from '@jest/globals';
 
 import createBot from '../../../chatbots/discord/bot';
-import { constants } from '../../../utils/constants';
+import { constants } from '../../../global/constants';
 import DiscordBotInstance from '../../../chatbots/discord';
 
 jest.setTimeout(30000);

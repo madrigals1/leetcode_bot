@@ -6,7 +6,7 @@ import { DatabaseUser, DatabaseChannelUser, DatabaseChannel } from '../models';
 import {
   ChannelKey, User, Channel, ChannelUser,
 } from '../../cache/models';
-import { constants } from '../../utils/constants';
+import { constants } from '../../global/constants';
 import { usernameFindOptions, usernameUpdateOptions } from '../utils';
 import { User as LeetCodeUser } from '../../leetcode/models';
 import { ErrorMessages, ProviderMessages } from '../../global/messages';

@@ -2,7 +2,7 @@
 import {
   getArgs, getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
-import { ArgumentsError, InputError } from '../../../utils/errors';
+import { ArgumentsError, InputError } from '../../../global/errors';
 import { ArgumentTestCase } from '../../__mocks__/models';
 import { generateMockContext } from '../../__mocks__/utils.mock';
 

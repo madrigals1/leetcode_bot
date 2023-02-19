@@ -1,5 +1,5 @@
 import { ChannelKey } from '../../cache/models';
-import { constants } from '../../utils/constants';
+import { constants } from '../constants';
 
 const { EMOJI } = constants;
 

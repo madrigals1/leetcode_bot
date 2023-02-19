@@ -4,7 +4,7 @@ import * as dayjs from 'dayjs';
 import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import { users, user2, user1 } from '../__mocks__/data.mock';
-import { constants } from '../../utils/constants';
+import { constants } from '../../global/constants';
 import { User } from '../../leetcode/models';
 import { delay } from '../../utils/helper';
 import { UserCache } from '../../cache/userCache';

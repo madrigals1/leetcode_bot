@@ -1,4 +1,4 @@
-import { constants } from '../utils/constants';
+import { constants } from '../global/constants';
 import { User } from '../leetcode/models';
 
 import {

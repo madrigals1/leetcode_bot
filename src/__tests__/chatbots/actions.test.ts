@@ -11,7 +11,6 @@ import {
   mockLanguageStats,
 } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
-import { constants } from '../../utils/constants';
 import { vizapiActions, leetcodeActions } from '../../chatbots/actions';
 import { tableForSubmissions, compareMenu, ratingGraph } from '../../vizapi';
 import { users } from '../__mocks__/data.mock';
