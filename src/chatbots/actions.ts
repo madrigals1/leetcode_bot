@@ -11,7 +11,6 @@ import {
   BigMessages,
   RefreshMessages,
   SmallMessages,
-  UserAddMessages,
   ListMessages,
   UserMessages,
   UserDeleteMessages,
@@ -83,7 +82,7 @@ export default class Actions {
       message += result.detail;
     }
 
-    return UserAddMessages.userList(message);
+    return UserMessages.userListText(message);
   }
 
   @action({ name: 'refresh' })

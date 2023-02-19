@@ -6,7 +6,6 @@ import { getLeetcodeDataFromUsername } from '../leetcode';
 import { log, delay } from '../utils/helper';
 import { constants } from '../utils/constants';
 import {
-  UserAddMessages,
   RefreshMessages,
   UserMessages,
   UserDeleteMessages,
@@ -57,7 +56,7 @@ export class UserCache {
     if (userExists) {
       return {
         status: constants.STATUS.ERROR,
-        detail: UserAddMessages.alreadyExists(username),
+        detail: UserMessages.alreadyExistsInThisChannel(username),
         user: null,
       };
     }
@@ -69,7 +68,7 @@ export class UserCache {
         if (!user.exists) {
           return {
             status: constants.STATUS.ERROR,
-            detail: UserAddMessages.leetcodeNotFoundUsername(username),
+            detail: UserMessages.notFoundInLeetcode(username),
             user: null,
           };
         }
@@ -82,7 +81,7 @@ export class UserCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: UserAddMessages.success(username),
+          detail: UserMessages.isSuccessfullyAdded(username),
           user,
         };
       })
@@ -90,7 +89,7 @@ export class UserCache {
         log(err);
         return {
           status: constants.STATUS.ERROR,
-          detail: UserAddMessages.unknownError(username),
+          detail: UserMessages.unknownError(username),
           user: null,
         };
       });

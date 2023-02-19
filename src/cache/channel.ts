@@ -5,7 +5,6 @@ import { log } from '../utils/helper';
 import { constants } from '../utils/constants';
 import {
   ErrorMessages,
-  UserAddMessages,
   UserDeleteMessages,
   UserMessages,
   ClearMessages,
@@ -118,7 +117,7 @@ export class ChannelCache {
         if (!addedToDB) {
           return {
             status: constants.STATUS.ERROR,
-            detail: UserAddMessages.alreadyExists(username),
+            detail: UserMessages.alreadyExistsInThisChannel(username),
           };
         }
 
@@ -130,7 +129,7 @@ export class ChannelCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: UserAddMessages.success(username),
+          detail: UserMessages.isSuccessfullyAdded(username),
         };
       })
       .catch((err) => {

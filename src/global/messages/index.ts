@@ -3,7 +3,6 @@ import { BigMessages } from './big';
 import { ListMessages } from './list';
 import { ClearMessages } from './clear';
 import { UserDeleteMessages } from './userDelete';
-import { UserAddMessages } from './userAdd';
 import { ErrorMessages } from './error';
 import { ImageMessages } from './image';
 import { ProviderMessages } from './provider';
@@ -19,7 +18,6 @@ export {
   ListMessages,
   ClearMessages,
   UserDeleteMessages,
-  UserAddMessages,
   ErrorMessages,
   ImageMessages,
   ProviderMessages,
