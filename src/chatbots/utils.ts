@@ -7,7 +7,6 @@ import {
   ButtonContainer,
   ButtonContainerType,
 } from './models';
-import { ChatbotProvider } from './models/chatbot.model';
 
 export function createButtonsFromUsers(options: ButtonOptions): Button[] {
   const { action, users } = options;
