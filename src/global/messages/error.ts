@@ -17,4 +17,6 @@ export class ErrorMessages {
 
   static youNeedAdminRights = `${EMOJI.ERROR} You need administrator priveleges to `
     + 'execute this action';
+
+  static incorrectRatingType = `${EMOJI.ERROR} Incorrect rating type`;
 }

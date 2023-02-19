@@ -263,7 +263,7 @@ export default class Actions {
     }
 
     // If type is not recognized
-    return RatingMessages.incorrectRatingType;
+    return ErrorMessages.incorrectRatingType;
   }
 
   @action({
