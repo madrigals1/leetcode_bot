@@ -47,7 +47,7 @@ export function action(actionContext: ActionContext): (
 
         // If error is caused by codebase issues, throw generic Error
         if (e instanceof ArgumentsError) {
-          return replyHandler.handleError(ErrorMessages.server());
+          return replyHandler.handleError(ErrorMessages.errorOnTheServer());
         }
 
         // If error is not known, throw it

@@ -113,7 +113,7 @@ ${EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
     }
 
     if (!data) {
-      return ErrorMessages.server();
+      return ErrorMessages.errorOnTheServer();
     }
 
     const message = data

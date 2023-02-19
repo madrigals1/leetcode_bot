@@ -137,7 +137,7 @@ export class ChannelCache {
         // Send message as Internal Server Error
         return {
           status: constants.STATUS.ERROR,
-          detail: ErrorMessages.server(),
+          detail: ErrorMessages.errorOnTheServer(),
         };
       });
   }
@@ -177,7 +177,7 @@ export class ChannelCache {
         // Send message as Internal Server Error
         return {
           status: constants.STATUS.ERROR,
-          detail: ErrorMessages.server(),
+          detail: ErrorMessages.errorOnTheServer(),
         };
       });
   }
@@ -242,7 +242,7 @@ export class ChannelCache {
         // Send message as Internal Server Error
         return {
           status: constants.STATUS.ERROR,
-          detail: ErrorMessages.server(),
+          detail: ErrorMessages.errorOnTheServer(),
         };
       });
   }

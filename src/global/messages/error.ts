@@ -4,7 +4,7 @@ import { constants } from '../constants';
 const { EMOJI } = constants;
 
 export class ErrorMessages {
-  static server(error?: Error | string) {
+  static errorOnTheServer(error?: Error | string) {
     if (error) {
       return `${EMOJI.ERROR} Error on the server: ${error}`;
     }
