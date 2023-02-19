@@ -15,7 +15,6 @@ export interface Argument {
 export interface ActionContext {
   name: string;
   args?: Argument[];
-  isAdmin?: boolean;
 }
 
 export class ParsedArgument implements IParsedArgument {

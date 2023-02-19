@@ -16,7 +16,7 @@ import {
   ErrorMessages,
 } from '../global/messages';
 
-import { action } from './decorators';
+import { action, admin } from './decorators';
 import {
   Context, Button, RegisteredAction, ButtonContainerType,
 } from './models';
@@ -92,6 +92,7 @@ export default class Actions {
     return result.detail;
   }
 
+  @admin()
   @action({
     name: 'remove',
     args: [
@@ -102,7 +103,6 @@ export default class Actions {
         isRequired: false,
       },
     ],
-    isAdmin: true,
   })
   static async remove(context: Context): Promise<string> {
     const username = context.args.get('username').value;
@@ -142,7 +142,8 @@ export default class Actions {
     return result.detail;
   }
 
-  @action({ name: 'clear', isAdmin: true })
+  @admin()
+  @action({ name: 'clear' })
   static async clear(context: Context): Promise<string> {
     // Send message, that Database will be cleared
     await context.reply(ChannelMessages.channelWillBeCleared, context);
@@ -153,7 +154,8 @@ export default class Actions {
     return result.detail;
   }
 
-  @action({ name: 'stats', isAdmin: true })
+  @admin()
+  @action({ name: 'stats' })
   static async stats(context: Context): Promise<string> {
     const { users } = context.channelCache;
 

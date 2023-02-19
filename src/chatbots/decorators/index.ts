@@ -21,7 +21,6 @@ export function action(actionContext: ActionContext): (
     const {
       name: actionName,
       args: requestedArgs,
-      isAdmin: isAdminAction,
     } = actionContext;
 
     const originalMethod = descriptor.value;
@@ -58,15 +57,6 @@ export function action(actionContext: ActionContext): (
       // Add args to the context
       const updatedContext = { ...context, args: argumentManager };
 
-      // Check admin rights if action is Admin Action
-      if (isAdminAction) {
-        const isMessageFromAdmin = await context.isAdmin;
-
-        if (!isMessageFromAdmin) {
-          return replyHandler.handleError(ErrorMessages.youNeedAdminRights);
-        }
-      }
-
       // Run action to get message
       const message = await originalMethod(
         updatedContext,
@@ -84,6 +74,35 @@ export function action(actionContext: ActionContext): (
       args: requestedArgs,
       property: propertyKey,
     });
+
+    return descriptor;
+  };
+}
+
+export function admin(): (
+  target: unknown,
+  propertyKey: string,
+  descriptor: PropertyDescriptor,
+) => PropertyDescriptor {
+  return (
+    target: unknown,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) => {
+    const originalMethod = descriptor.value;
+
+    // eslint-disable-next-line no-param-reassign
+    descriptor.value = async (context: Context) => {
+      // Check admin rights if action is Admin Action
+      const isMessageFromAdmin = await context.isAdmin;
+
+      if (!isMessageFromAdmin) {
+        return context.reply(ErrorMessages.youNeedAdminRights, context);
+      }
+
+      // Run original method
+      return originalMethod(context);
+    };
 
     return descriptor;
   };

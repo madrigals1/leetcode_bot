@@ -221,7 +221,8 @@ describe('chatbots.actions - remove action', () => {
   });
 
   test('Incorrect case - Too many args', async () => {
-    await mockbot.send('/remove 123 123 123');
+    await mockbot.send('/remove 123 123 123', true);
+    // TODO: Fix this error message to be too many args
     expect(mockbot.lastMessage()).toEqual('❗ Error on the server');
   });
 });
@@ -249,7 +250,7 @@ describe('chatbots.actions - clear action', () => {
   });
 
   test('Incorrect case - Too many args', async () => {
-    await mockbot.send('/clear asd asd');
+    await mockbot.send('/clear asd asd', true);
     expect(mockbot.lastMessage())
       .toEqual('❗ Message should not have any arguments');
   });
@@ -286,7 +287,7 @@ describe('chatbots.actions - stats action', () => {
   });
 
   test('Incorrect case - Too many args', async () => {
-    await mockbot.send('/stats asd asd');
+    await mockbot.send('/stats asd asd', true);
     expect(mockbot.lastMessage())
       .toEqual('❗ Message should not have any arguments');
   });
