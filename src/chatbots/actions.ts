@@ -81,7 +81,7 @@ export default class Actions {
       message += result.detail;
     }
 
-    return UserMessages.userListText(message);
+    return BigMessages.userListText(message);
   }
 
   @action({ name: 'refresh' })

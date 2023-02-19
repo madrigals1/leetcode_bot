@@ -1,7 +1,4 @@
-import { LBBUsernameResponse } from '../../backend/models';
 import { constants } from '../../utils/constants';
-
-import { ErrorMessages } from './error';
 
 const { EMOJI } = constants;
 
@@ -50,22 +47,6 @@ export class UserMessages {
 
   static userNotFoundInLeetcode(username: string): string {
     return `<b>${username}</b> - ${EMOJI.ERROR} User not found in Leetcode`;
-  }
-
-  static userListText(data: LBBUsernameResponse[]|string): string {
-    if (typeof data === 'string') {
-      return `User List:\n${data}`;
-    }
-
-    if (!data) {
-      return ErrorMessages.server();
-    }
-
-    const message = data
-      .map((res) => this[res.detail](res.username))
-      .join('\n');
-
-    return `User List:\n${message}`;
   }
 
   // ---------------------------------------------------------------------------

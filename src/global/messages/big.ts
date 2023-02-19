@@ -1,7 +1,9 @@
+import { LBBUsernameResponse } from '../../backend/models';
 import { ChatbotProvider } from '../../chatbots/models';
 import { LanguageProblemCount, User } from '../../leetcode/models';
 import { constants } from '../../utils/constants';
 
+import { ErrorMessages } from './error';
 import { SmallMessages } from './small';
 
 const { EMOJI, PROVIDERS, CML } = constants;
@@ -106,6 +108,22 @@ ${EMOJI.YELLOW_CIRCLE} Medium - <b>${medium}</b>
 ${EMOJI.RED_CIRCLE} Hard - <b>${hard}</b>
 ${EMOJI.BLUE_CIRCLE} All - <b>${all} / ${user.all}</b>
 ${EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
+  }
+
+  static userListText(data: LBBUsernameResponse[]|string): string {
+    if (typeof data === 'string') {
+      return `User List:\n${data}`;
+    }
+
+    if (!data) {
+      return ErrorMessages.server();
+    }
+
+    const message = data
+      .map((res) => this[res.detail](res.username))
+      .join('\n');
+
+    return `User List:\n${message}`;
   }
 
   static languageStatsText(
