@@ -254,7 +254,7 @@ export class UserCache {
 
         return {
           status: constants.STATUS.ERROR,
-          detail: ErrorMessages.server,
+          detail: ErrorMessages.server(),
         };
       });
   }

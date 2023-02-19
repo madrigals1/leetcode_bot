@@ -81,7 +81,7 @@ export async function tableForSubmissions(
     return new Promise((resolve) => {
       resolve({
         error: errorMessage,
-        reason: ErrorMessages.server,
+        reason: ErrorMessages.server(errorMessage),
       });
     });
   }
