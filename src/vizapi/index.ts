@@ -102,7 +102,7 @@ export async function tableForSubmissions(
       const errorMsg = 'Please, provide non-empty \'table\' in request body';
       if (res.data.failure === errorMsg) {
         return {
-          error: UserMessages.noSubmissions(user.username),
+          error: UserMessages.userHasNoSubmissions(user.username),
           reason: SmallMessages.noSubmissions,
         };
       }

@@ -56,7 +56,7 @@ export class UserCache {
     if (userExists) {
       return {
         status: constants.STATUS.ERROR,
-        detail: UserMessages.alreadyExistsInThisChannel(username),
+        detail: UserMessages.userAlreadyExistsInThisChannel(username),
         user: null,
       };
     }
@@ -68,7 +68,7 @@ export class UserCache {
         if (!user.exists) {
           return {
             status: constants.STATUS.ERROR,
-            detail: UserMessages.notFoundInLeetcode(username),
+            detail: UserMessages.userNotFoundInLeetcode(username),
             user: null,
           };
         }
@@ -81,7 +81,7 @@ export class UserCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: UserMessages.isSuccessfullyAdded(username),
+          detail: UserMessages.userIsSuccessfullyAdded(username),
           user,
         };
       })
@@ -89,7 +89,7 @@ export class UserCache {
         log(err);
         return {
           status: constants.STATUS.ERROR,
-          detail: UserMessages.unknownError(username),
+          detail: ErrorMessages.unknownError(username),
           user: null,
         };
       });
@@ -239,7 +239,7 @@ export class UserCache {
         if (!isDeleted) {
           return {
             status: constants.STATUS.ERROR,
-            detail: UserMessages.doesNotExist(username),
+            detail: UserMessages.userDoesNotExistInThisChannel(username),
           };
         }
 

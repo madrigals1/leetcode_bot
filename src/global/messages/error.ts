@@ -10,4 +10,11 @@ export class ErrorMessages {
 
     return `${EMOJI.ERROR} Error on the server`;
   }
+
+  static unknownError(username: string): string {
+    return `<b>${username}</b> - ${EMOJI.ERROR} Error on the server`;
+  }
+
+  static youNeedAdminRights = `${EMOJI.ERROR} You need administrator priveleges to `
+    + 'execute this action';
 }

@@ -2,7 +2,7 @@ import { Context } from '../models';
 import { registeredActions } from '../actions';
 import ArgumentManager from '../argumentManager';
 import { ArgumentsError, InputError } from '../../utils/errors';
-import { ErrorMessages, UserMessages } from '../../global/messages';
+import { ErrorMessages } from '../../global/messages';
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
@@ -63,7 +63,7 @@ export function action(actionContext: ActionContext): (
         const isMessageFromAdmin = await context.isAdmin;
 
         if (!isMessageFromAdmin) {
-          return replyHandler.handleError(UserMessages.noAdminRights);
+          return replyHandler.handleError(ErrorMessages.youNeedAdminRights);
         }
       }
 

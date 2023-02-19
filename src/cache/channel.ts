@@ -117,7 +117,7 @@ export class ChannelCache {
         if (!addedToDB) {
           return {
             status: constants.STATUS.ERROR,
-            detail: UserMessages.alreadyExistsInThisChannel(username),
+            detail: UserMessages.userAlreadyExistsInThisChannel(username),
           };
         }
 
@@ -129,7 +129,7 @@ export class ChannelCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: UserMessages.isSuccessfullyAdded(username),
+          detail: UserMessages.userIsSuccessfullyAdded(username),
         };
       })
       .catch((err) => {
@@ -157,7 +157,7 @@ export class ChannelCache {
         if (!deletedFromDB) {
           return {
             status: constants.STATUS.ERROR,
-            detail: UserMessages.doesNotExist(username),
+            detail: UserMessages.userDoesNotExistInThisChannel(username),
           };
         }
 

@@ -135,7 +135,7 @@ export default class Actions {
 
     // Check if User exists
     const user = context.channelCache.loadUser(username);
-    if (!user) return UserMessages.doesNotExist(username);
+    if (!user) return UserMessages.userDoesNotExistInThisChannel(username);
 
     await context.reply(UserDeleteMessages.willBeDeleted(username), context);
 
@@ -307,7 +307,7 @@ export default class Actions {
     // Get User from username
     const user = context.channelCache.loadUser(username);
 
-    if (!user) return UserMessages.doesNotExist(username);
+    if (!user) return UserMessages.userDoesNotExistInThisChannel(username);
 
     const submissionsButtion: Button = {
       text: `${constants.EMOJI.CLIPBOARD} Submissions`,
@@ -360,10 +360,10 @@ export default class Actions {
       if (user) {
         // Add photo to context
         context.photoUrl = user.profile.userAvatar;
-        return UserMessages.usernamesAvatar(user.username);
+        return UserMessages.usersAvatar(user.username);
       }
 
-      return UserMessages.doesNotExist(username);
+      return UserMessages.userDoesNotExistInThisChannel(username);
     }
 
     const { users } = context.channelCache;
@@ -408,7 +408,7 @@ export default class Actions {
       const user = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
-      if (!user) return UserMessages.doesNotExist(username);
+      if (!user) return UserMessages.userDoesNotExistInThisChannel(username);
 
       // Create HTML image with Table
       const response = await vizapiActions.tableForSubmissions(user);
@@ -418,7 +418,7 @@ export default class Actions {
         // Add image to context
         context.photoUrl = response.link;
 
-        return UserMessages.recentSubmissions(user.username);
+        return UserMessages.usersRecentSubmissions(user.username);
       }
 
       // If error is because of User not having any submissions
@@ -472,7 +472,7 @@ export default class Actions {
       const user = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
-      if (!user) return UserMessages.doesNotExist(username);
+      if (!user) return UserMessages.userDoesNotExistInThisChannel(username);
 
       // Create HTML image with Table
       const response = await vizapiActions.solvedProblemsChart(user);
@@ -482,7 +482,7 @@ export default class Actions {
         // Add image to context
         context.photoUrl = response.link;
 
-        return UserMessages.solvedProblemsChart(user.username);
+        return UserMessages.usersSolvedProblemsChart(user.username);
       }
 
       // If image link was not achieved from VizAPI
@@ -574,11 +574,11 @@ export default class Actions {
     const rightUser = context.channelCache.loadUser(second);
 
     if (!leftUser) {
-      return UserMessages.doesNotExist(first);
+      return UserMessages.userDoesNotExistInThisChannel(first);
     }
 
     if (!rightUser) {
-      return UserMessages.doesNotExist(second);
+      return UserMessages.userDoesNotExistInThisChannel(second);
     }
 
     const response = await vizapiActions.compareMenu(leftUser, rightUser);
@@ -587,7 +587,7 @@ export default class Actions {
     if (response.link) {
       // Add image to context
       context.photoUrl = response.link;
-      return UserMessages.compare(first, second);
+      return UserMessages.compareUsers(first, second);
     }
 
     // If image link was not achieved from VizAPI
@@ -614,7 +614,7 @@ export default class Actions {
       const user = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
-      if (!user) return UserMessages.doesNotExist(username);
+      if (!user) return UserMessages.userDoesNotExistInThisChannel(username);
 
       // Get language stats from LeetCode
       const response = await leetcodeActions.getLanguageStats(username);

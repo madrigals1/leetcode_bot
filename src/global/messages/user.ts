@@ -6,24 +6,20 @@ import { ErrorMessages } from './error';
 const { EMOJI } = constants;
 
 export class UserMessages {
-  static doesNotExist(username: string): string {
-    const emoji = EMOJI.ERROR;
-    const user = `User <b>${username}</b>`;
-    const message = 'does not exist in this channel';
-    return `${emoji} ${user} ${message}`;
+  static userDoesNotExistInThisChannel(username: string): string {
+    return `${EMOJI.ERROR} User <b>${username}</b> `
+      + 'does not exist in this channel';
   }
 
-  static avatar = `${EMOJI.CAMERA} Avatar`;
-
-  static usernamesAvatar(username: string): string {
+  static usersAvatar(username: string): string {
     return `${username}'s avatar`;
   }
 
-  static recentSubmissions(username: string): string {
+  static usersRecentSubmissions(username: string): string {
     return `${username}'s recent submissions`;
   }
 
-  static solvedProblemsChart(username: string): string {
+  static usersSolvedProblemsChart(username: string): string {
     return `${username}'s solved problems chart`;
   }
 
@@ -31,39 +27,29 @@ export class UserMessages {
 
   static selectRightUser = `${EMOJI.PERSON} Select Right User`;
 
-  static compare(leftUsername: string, rightUsername: string): string {
+  static compareUsers(leftUsername: string, rightUsername: string): string {
     return `Comparing ${leftUsername} to ${rightUsername}`;
   }
 
-  static noAdminRights = `${EMOJI.ERROR} You need administrator priveleges to `
-    + 'execute this action';
-
-  static noSubmissions(username: string): string {
-    const emoji = EMOJI.ERROR;
-    const user = `User <b>${username}</b>`;
-    const message = 'does not have any submissions';
-
-    return `${emoji} ${user} ${message}`;
+  static userHasNoSubmissions(username: string): string {
+    return `${EMOJI.ERROR} User <b>${username}</b> `
+      + 'does not have any submissions';
   }
 
-  static isSuccessfullyAdded(username: string): string {
-    const message = `${EMOJI.SUCCESS} User is successfully added`;
-    return `<b>${username}</b> - ${message}\n`;
+  // ---------------------------------------------------------------------------
+  // ADD
+  // ---------------------------------------------------------------------------
+  static userIsSuccessfullyAdded(username: string): string {
+    return `<b>${username}</b> - ${EMOJI.SUCCESS} User is successfully added\n`;
   }
 
-  static alreadyExistsInThisChannel(username: string): string {
-    const message = `${EMOJI.ERROR} User already exists in this channel`;
-    return `<b>${username}</b> - ${message}\n`;
+  static userAlreadyExistsInThisChannel(username: string): string {
+    return `<b>${username}</b> - ${EMOJI.ERROR} `
+      + 'User already exists in this channel\n';
   }
 
-  static notFoundInLeetcode(username: string): string {
-    const message = `${EMOJI.ERROR} User not found in Leetcode`;
-    return `<b>${username}</b> - ${message}`;
-  }
-
-  static unknownError(username: string): string {
-    const message = `${EMOJI.ERROR} Error on the server`;
-    return `<b>${username}</b> - ${message}`;
+  static userNotFoundInLeetcode(username: string): string {
+    return `<b>${username}</b> - ${EMOJI.ERROR} User not found in Leetcode`;
   }
 
   static userListText(data: LBBUsernameResponse[]|string): string {
