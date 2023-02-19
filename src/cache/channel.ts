@@ -5,7 +5,6 @@ import { log } from '../utils/helper';
 import { constants } from '../utils/constants';
 import {
   ErrorMessages,
-  UserDeleteMessages,
   UserMessages,
   ClearMessages,
 } from '../global/messages';
@@ -169,7 +168,7 @@ export class ChannelCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: UserDeleteMessages.success(username),
+          detail: UserMessages.userIsSuccessfullyDeleted(username),
         };
       })
       .catch((err) => {

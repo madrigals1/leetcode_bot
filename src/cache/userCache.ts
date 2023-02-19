@@ -8,7 +8,6 @@ import { constants } from '../utils/constants';
 import {
   RefreshMessages,
   UserMessages,
-  UserDeleteMessages,
   ErrorMessages,
 } from '../global/messages';
 
@@ -245,7 +244,7 @@ export class UserCache {
 
         return {
           status: constants.STATUS.SUCCESS,
-          detail: UserDeleteMessages.success(username),
+          detail: UserMessages.userIsSuccessfullyDeleted(username),
         };
       })
       .catch((err) => {

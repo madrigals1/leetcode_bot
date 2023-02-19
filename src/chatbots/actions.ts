@@ -13,7 +13,6 @@ import {
   SmallMessages,
   ListMessages,
   UserMessages,
-  UserDeleteMessages,
   ClearMessages,
   RatingMessages,
   ErrorMessages,
@@ -137,7 +136,7 @@ export default class Actions {
     const user = context.channelCache.loadUser(username);
     if (!user) return UserMessages.userDoesNotExistInThisChannel(username);
 
-    await context.reply(UserDeleteMessages.willBeDeleted(username), context);
+    await context.reply(UserMessages.userWillBeDeleted(username), context);
 
     // Remove User
     const result = await context.channelCache.removeUser(username);

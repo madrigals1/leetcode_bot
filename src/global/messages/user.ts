@@ -67,4 +67,15 @@ export class UserMessages {
 
     return `User List:\n${message}`;
   }
+
+  // ---------------------------------------------------------------------------
+  // DELETE
+  // ---------------------------------------------------------------------------
+  static userIsSuccessfullyDeleted(username: string): string {
+    return `${EMOJI.SUCCESS} User <b>${username}</b> was successfully deleted`;
+  }
+
+  static userWillBeDeleted(username: string): string {
+    return `${EMOJI.WAITING} User <b>${username}</b> will be deleted`;
+  }
 }
