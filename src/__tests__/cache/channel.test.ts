@@ -5,7 +5,6 @@ import { UserCache } from '../../cache/userCache';
 import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
 import { user2, user1 } from '../__mocks__/data.mock';
 import { constants } from '../../utils/constants';
-import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import { generateChannelCache } from '../__mocks__/generators';
 
 // Change mock values
@@ -91,7 +90,8 @@ describe('cache.channel - addUser method', () => {
     const result = await channelCache.addUser(realUsername1);
 
     expect(result.status).toBe(constants.STATUS.SUCCESS);
-    expect(result.detail).toBe(BM.USERNAME_WAS_ADDED(realUsername1));
+    expect(result.detail)
+      .toBe(`<b>${realUsername1}</b> - ✅ User is successfully added\n`);
     expect(UserCache.userAmount).toBe(1);
   });
 
@@ -104,7 +104,8 @@ describe('cache.channel - addUser method', () => {
     const result = await channelCache.addUser(realUsername1);
 
     expect(result.status).toBe(constants.STATUS.SUCCESS);
-    expect(result.detail).toBe(BM.USERNAME_WAS_ADDED(realUsername1));
+    expect(result.detail)
+      .toBe(`<b>${realUsername1}</b> - ✅ User is successfully added\n`);
     expect(UserCache.userAmount).toBe(1);
   });
 
@@ -114,13 +115,15 @@ describe('cache.channel - addUser method', () => {
     // Add User to Channel
     const result1 = await channelCache.addUser(realUsername1);
     expect(result1.status).toBe(constants.STATUS.SUCCESS);
-    expect(result1.detail).toBe(BM.USERNAME_WAS_ADDED(realUsername1));
+    expect(result1.detail)
+      .toBe(`<b>${realUsername1}</b> - ✅ User is successfully added\n`);
     expect(channelCache.userAmount).toBe(1);
 
     // Re-add User to Channel
     const result2 = await channelCache.addUser(realUsername1);
     expect(result2.status).toBe(constants.STATUS.ERROR);
-    expect(result2.detail).toBe(BM.USERNAME_ALREADY_EXISTS(realUsername1));
+    expect(result2.detail)
+      .toBe(`<b>${realUsername1}</b> - ❗ User already exists in this channel\n`);
     expect(channelCache.userAmount).toBe(1);
   });
 
@@ -138,7 +141,7 @@ describe('cache.channel - addUser method', () => {
 
     // Check result
     expect(result.status).toBe(constants.STATUS.ERROR);
-    expect(result.detail).toBe(BM.ERROR_ON_THE_SERVER);
+    expect(result.detail).toBe('❗ Error on the server');
 
     // Check error being logged
     expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
@@ -164,7 +167,8 @@ describe('cache.channel - removeUser method', () => {
     const result = await channelCache.removeUser(realUsername1);
 
     expect(result.status).toBe(constants.STATUS.SUCCESS);
-    expect(result.detail).toBe(BM.USERNAME_WAS_DELETED(realUsername1));
+    expect(result.detail)
+      .toBe(`✅ User <b>${realUsername1}</b> was successfully deleted`);
     expect(UserCache.userAmount).toBe(1);
     expect(channelCache.userAmount).toBe(0);
   });
@@ -177,7 +181,7 @@ describe('cache.channel - removeUser method', () => {
 
     expect(result.status).toBe(constants.STATUS.ERROR);
     expect(result.detail)
-      .toBe(BM.USERNAME_DOES_NOT_EXIST_IN_CHANNEL(realUsername1));
+      .toBe(`❗ User <b>${realUsername1}</b> does not exist in this channel`);
   });
 
   test('Incorrect case - Error when removing User from Channel', async () => {
@@ -194,7 +198,7 @@ describe('cache.channel - removeUser method', () => {
 
     // Check result
     expect(result.status).toBe(constants.STATUS.ERROR);
-    expect(result.detail).toBe(BM.ERROR_ON_THE_SERVER);
+    expect(result.detail).toBe('❗ Error on the server');
 
     // Check error being logged
     expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
@@ -244,7 +248,7 @@ describe('cache.channel - clear method', () => {
     const result = await channelCache.clear();
 
     expect(result.status).toBe(constants.STATUS.SUCCESS);
-    expect(result.detail).toBe(BM.CHANNEL_WAS_CLEARED);
+    expect(result.detail).toBe('✅ Channel was cleared');
     expect(channelCache.userAmount).toBe(0);
   });
 
@@ -257,7 +261,7 @@ describe('cache.channel - clear method', () => {
     const result = await channelCache.clear();
 
     expect(result.status).toBe(constants.STATUS.SUCCESS);
-    expect(result.detail).toBe(BM.CHANNEL_WAS_CLEARED);
+    expect(result.detail).toBe('✅ Channel was cleared');
     expect(channelCache.userAmount).toBe(0);
   });
 
@@ -273,7 +277,7 @@ describe('cache.channel - clear method', () => {
     const result = await channelCache.clear();
 
     expect(result.status).toBe(constants.STATUS.ERROR);
-    expect(result.detail).toBe(BM.CHANNEL_WAS_NOT_CLEARED);
+    expect(result.detail).toBe('❗ Channel was not cleared');
 
     // Bring back original method
     Cache.database.clearChannel = clearChannel;
@@ -292,7 +296,7 @@ describe('cache.channel - clear method', () => {
     const result = await channelCache.clear();
 
     expect(result.status).toBe(constants.STATUS.ERROR);
-    expect(result.detail).toBe(BM.ERROR_ON_THE_SERVER);
+    expect(result.detail).toBe('❗ Error on the server');
     expect(console.log).toHaveBeenCalledWith(fakeErrorMessage);
 
     // Bring back original method
