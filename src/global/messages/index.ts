@@ -1,6 +1,5 @@
 import { ArgumentMessages } from './argument';
 import { BigMessages } from './big';
-import { ListMessages } from './list';
 import { ChannelMessages } from './channel';
 import { ErrorMessages } from './error';
 import { ImageMessages } from './image';
@@ -14,7 +13,6 @@ import { UserMessages } from './user';
 export {
   ArgumentMessages,
   BigMessages,
-  ListMessages,
   ChannelMessages,
   ErrorMessages,
   ImageMessages,

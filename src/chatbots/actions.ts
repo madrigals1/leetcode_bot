@@ -11,7 +11,6 @@ import {
   BigMessages,
   RefreshMessages,
   SmallMessages,
-  ListMessages,
   UserMessages,
   ChannelMessages,
   RatingMessages,
@@ -129,7 +128,7 @@ export default class Actions {
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return ListMessages.userListRemove;
+      return UserMessages.userListRemove;
     }
 
     // Check if User exists
@@ -300,7 +299,7 @@ export default class Actions {
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return ListMessages.userListProfiles;
+      return UserMessages.userListProfiles;
     }
 
     // Get User from username
@@ -384,7 +383,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return ListMessages.userListAvatars;
+    return UserMessages.userListAvatars;
   }
 
   @action({
@@ -448,7 +447,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return ListMessages.userListSubmissions;
+    return UserMessages.userListSubmissions;
   }
 
   @action({
@@ -507,7 +506,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return ListMessages.userListProblems;
+    return UserMessages.userListProblems;
   }
 
   @action({
@@ -641,6 +640,6 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return ListMessages.userListLangstats;
+    return UserMessages.userListLangstats;
   }
 }
