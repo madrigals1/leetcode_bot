@@ -9,7 +9,7 @@ const CML_HEADER = `Cumulative Rating:
 ${constants.EMOJI.GREEN_CIRCLE} Easy - <b>${constants.CML.EASY_POINTS} points</b>
 ${constants.EMOJI.YELLOW_CIRCLE} Medium - <b>${constants.CML.MEDIUM_POINTS} points</b>
 ${constants.EMOJI.RED_CIRCLE} Hard - <b>${constants.CML.HARD_POINTS} points</b>
-  
+
 `;
 
 export const BOT_MESSAGES = {
@@ -222,8 +222,7 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 <b>User Count:</b> ${users.length}
 
 <b>USER LIST</b>
-${userNameList}
-    `;
+${userNameList}`;
   },
 
   LANGUAGE_STATS_TEXT(username: string, lpc: LanguageProblemCount[]): string {

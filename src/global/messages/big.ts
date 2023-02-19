@@ -57,15 +57,14 @@ export class BigMessages {
 <b>User Count:</b> ${users.length}
 
 <b>USER LIST</b>
-${userNameList}
-    `;
+${userNameList}`;
   }
 
   static cmlHeader = `Cumulative Rating:
 ${EMOJI.GREEN_CIRCLE} Easy - <b>${CML.EASY_POINTS} points</b>
 ${EMOJI.YELLOW_CIRCLE} Medium - <b>${CML.MEDIUM_POINTS} points</b>
 ${EMOJI.RED_CIRCLE} Hard - <b>${CML.HARD_POINTS} points</b>
-  
+
 `;
 
   static ratingText(users: User[]): string {
