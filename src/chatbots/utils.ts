@@ -32,12 +32,3 @@ export function getCloseButton(): ButtonContainer {
     type: ButtonContainerType.CloseButton,
   };
 }
-
-export function getChatbotNameByKey(value: string): string {
-  const indexOfS = Object.values(ChatbotProvider)
-    .indexOf(value as unknown as ChatbotProvider);
-
-  const key = Object.keys(ChatbotProvider)[indexOfS];
-
-  return key;
-}

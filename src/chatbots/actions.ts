@@ -1,4 +1,3 @@
-import { SERVER_MESSAGES as SM, BOT_MESSAGES as BM } from '../utils/dictionary';
 import { constants } from '../utils/constants';
 import {
   tableForSubmissions,
@@ -8,6 +7,18 @@ import {
 } from '../vizapi';
 import { UserCache } from '../cache/userCache';
 import { getLanguageStats } from '../leetcode';
+import {
+  BigMessages,
+  RefreshMessages,
+  SmallMessages,
+  UserAddMessages,
+  ListMessages,
+  UserMessages,
+  UserDeleteMessages,
+  ClearMessages,
+  RatingMessages,
+  ErrorMessages,
+} from '../global/messages';
 
 import { action } from './decorators';
 import {
@@ -36,12 +47,12 @@ export default class Actions {
 
   @action({ name: 'start' })
   static start(context: Context): string {
-    return BM.WELCOME_TEXT(context.prefix);
+    return BigMessages.welcomeText(context.prefix);
   }
 
   @action({ name: 'help' })
   static help(): string {
-    return BM.HELP_TEXT;
+    return SmallMessages.helpText;
   }
 
   @action({
@@ -72,13 +83,13 @@ export default class Actions {
       message += result.detail;
     }
 
-    return BM.USER_LIST(message);
+    return UserAddMessages.userList(message);
   }
 
   @action({ name: 'refresh' })
   static async refresh(context: Context): Promise<string> {
     // Log that database started refresh
-    await context.reply(BM.CACHE_STARTED_REFRESH, context);
+    await context.reply(RefreshMessages.cacheRefreshWasRequested, context);
 
     // Refresh and return result
     const result = await UserCache.refresh();
@@ -105,7 +116,7 @@ export default class Actions {
       const { users } = context.channelCache;
 
       if (users.length === 0) {
-        return BM.NO_USERS;
+        return SmallMessages.noUsers;
       }
 
       // If no username was sent, show buttons for each username in channel
@@ -120,14 +131,14 @@ export default class Actions {
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.USER_LIST_REMOVE;
+      return ListMessages.userListRemove;
     }
 
     // Check if User exists
     const user = context.channelCache.loadUser(username);
-    if (!user) return BM.USERNAME_NOT_FOUND(username);
+    if (!user) return UserMessages.doesNotExist(username);
 
-    await context.reply(BM.USERNAME_WILL_BE_DELETED(username), context);
+    await context.reply(UserDeleteMessages.willBeDeleted(username), context);
 
     // Remove User
     const result = await context.channelCache.removeUser(username);
@@ -138,7 +149,7 @@ export default class Actions {
   @action({ name: 'clear', isAdmin: true })
   static async clear(context: Context): Promise<string> {
     // Send message, that Database will be cleared
-    await context.reply(BM.CHANNEL_WILL_BE_CLEARED, context);
+    await context.reply(ClearMessages.channelWillBeCleared, context);
 
     // Remove all Users and send the result (success or failure)
     const result = await context.channelCache.clear();
@@ -151,7 +162,7 @@ export default class Actions {
     const { users } = context.channelCache;
 
     // Send message with stats
-    return BM.STATS_TEXT(context.provider, users);
+    return BigMessages.statsText(context.provider, users);
   }
 
   @action({
@@ -172,7 +183,7 @@ export default class Actions {
     // Prepare buttons
     const cmlButton = {
       buttons: [{
-        text: BM.CML_RATING,
+        text: RatingMessages.cmlRating,
         action: '/rating cml',
       }],
       buttonPerRow: 1,
@@ -181,7 +192,7 @@ export default class Actions {
     };
     const graphButton = {
       buttons: [{
-        text: BM.GRAPH_RATING,
+        text: RatingMessages.graphRating,
         action: '/rating graph',
       }],
       buttonPerRow: 1,
@@ -190,7 +201,7 @@ export default class Actions {
     };
     const contestButton = {
       buttons: [{
-        text: BM.CONTEST_RATING,
+        text: RatingMessages.contestRating,
         action: '/rating contest',
       }],
       buttonPerRow: 1,
@@ -199,7 +210,7 @@ export default class Actions {
     };
     const regularButton = {
       buttons: [{
-        text: BM.REGULAR_RATING,
+        text: RatingMessages.regularRating,
         action: '/rating',
       }],
       buttonPerRow: 1,
@@ -212,7 +223,7 @@ export default class Actions {
       // Add buttons
       context.options.buttons = [cmlButton, graphButton, contestButton];
 
-      return BM.RATING_TEXT(users);
+      return BigMessages.ratingText(users);
     }
 
     // Cumulative rating:
@@ -223,7 +234,7 @@ export default class Actions {
       // Add buttons
       context.options.buttons = [regularButton, graphButton, contestButton];
 
-      return BM.CML_RATING_TEXT(users);
+      return BigMessages.cmlRatingText(users);
     }
 
     // Rating with graph
@@ -239,11 +250,11 @@ export default class Actions {
         // Add buttons
         context.options.buttons = [regularButton, cmlButton, contestButton];
 
-        return BM.GRAPH_RATING;
+        return RatingMessages.graphRating;
       }
 
       // If image link was not achieved from VizAPI
-      return BM.ERROR_ON_THE_SERVER;
+      return ErrorMessages.server();
     }
 
     // Contest Rating
@@ -251,11 +262,11 @@ export default class Actions {
       // Add buttons
       context.options.buttons = [regularButton, cmlButton, graphButton];
 
-      return BM.CONTEST_RATING_TEXT(users);
+      return BigMessages.contestRatingText(users);
     }
 
     // If type is not recognized
-    return BM.INCORRECT_RATING_TYPE;
+    return RatingMessages.incorrectRatingType;
   }
 
   @action({
@@ -276,7 +287,7 @@ export default class Actions {
       const { users } = context.channelCache;
 
       if (users.length === 0) {
-        return BM.NO_USERS;
+        return SmallMessages.noUsers;
       }
 
       // If no username was sent, show buttons for each username in channel
@@ -291,13 +302,13 @@ export default class Actions {
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.USER_LIST_PROFILES;
+      return ListMessages.userListProfiles;
     }
 
     // Get User from username
     const user = context.channelCache.loadUser(username);
 
-    if (!user) return BM.USERNAME_NOT_FOUND(username);
+    if (!user) return UserMessages.doesNotExist(username);
 
     const submissionsButtion: Button = {
       text: `${constants.EMOJI.CLIPBOARD} Submissions`,
@@ -326,7 +337,7 @@ export default class Actions {
       type: ButtonContainerType.MultipleButtons,
     }];
 
-    return BM.USER_TEXT(user);
+    return BigMessages.userText(user);
   }
 
   @action({
@@ -350,16 +361,16 @@ export default class Actions {
       if (user) {
         // Add photo to context
         context.photoUrl = user.profile.userAvatar;
-        return BM.USER_AVATAR(user.username);
+        return UserMessages.usernamesAvatar(user.username);
       }
 
-      return BM.USERNAME_NOT_FOUND(username);
+      return UserMessages.doesNotExist(username);
     }
 
     const { users } = context.channelCache;
 
     if (users.length === 0) {
-      return BM.NO_USERS;
+      return SmallMessages.noUsers;
     }
 
     // If no username was sent, show buttons for each username in channel
@@ -375,7 +386,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_AVATARS;
+    return ListMessages.userListAvatars;
   }
 
   @action({
@@ -398,7 +409,7 @@ export default class Actions {
       const user = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
-      if (!user) return BM.USERNAME_NOT_FOUND(username);
+      if (!user) return UserMessages.doesNotExist(username);
 
       // Create HTML image with Table
       const response = await vizapiActions.tableForSubmissions(user);
@@ -408,20 +419,22 @@ export default class Actions {
         // Add image to context
         context.photoUrl = response.link;
 
-        return BM.USER_RECENT_SUBMISSIONS(user.username);
+        return UserMessages.recentSubmissions(user.username);
       }
 
       // If error is because of User not having any submissions
-      if (response.reason === SM.NO_SUBMISSIONS) return response.error;
+      if (response.reason === SmallMessages.noSubmissions) {
+        return response.error;
+      }
 
       // If image link was not achieved from VizAPI
-      return BM.ERROR_ON_THE_SERVER;
+      return ErrorMessages.server();
     }
 
     const { users } = context.channelCache;
 
     if (users.length === 0) {
-      return BM.NO_USERS;
+      return SmallMessages.noUsers;
     }
 
     // If no username was sent, show buttons for each username in channel
@@ -437,7 +450,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_SUBMISSIONS;
+    return ListMessages.userListSubmissions;
   }
 
   @action({
@@ -460,7 +473,7 @@ export default class Actions {
       const user = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
-      if (!user) return BM.USERNAME_NOT_FOUND(username);
+      if (!user) return UserMessages.doesNotExist(username);
 
       // Create HTML image with Table
       const response = await vizapiActions.solvedProblemsChart(user);
@@ -470,17 +483,17 @@ export default class Actions {
         // Add image to context
         context.photoUrl = response.link;
 
-        return BM.USER_SOLVED_PROBLEMS_CHART(user.username);
+        return UserMessages.solvedProblemsChart(user.username);
       }
 
       // If image link was not achieved from VizAPI
-      return BM.ERROR_ON_THE_SERVER;
+      return ErrorMessages.server();
     }
 
     const { users } = context.channelCache;
 
     if (users.length === 0) {
-      return BM.NO_USERS;
+      return SmallMessages.noUsers;
     }
 
     // If no username was sent, show buttons for each username in channel
@@ -496,7 +509,7 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_PROBLEMS;
+    return ListMessages.userListProblems;
   }
 
   @action({
@@ -523,7 +536,7 @@ export default class Actions {
     const { users } = context.channelCache;
 
     if (users.length === 0) {
-      return BM.NO_USERS;
+      return SmallMessages.noUsers;
     }
 
     // If no username was sent, show buttons for each username in channel
@@ -539,7 +552,7 @@ export default class Actions {
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.SELECT_LEFT_USER;
+      return UserMessages.selectLeftUser;
     }
 
     // Getting right User
@@ -554,7 +567,7 @@ export default class Actions {
         type: ButtonContainerType.MultipleButtons,
       }, getCloseButton()];
 
-      return BM.SELECT_RIGHT_USER;
+      return UserMessages.selectRightUser;
     }
 
     // Get Users from args
@@ -562,11 +575,11 @@ export default class Actions {
     const rightUser = context.channelCache.loadUser(second);
 
     if (!leftUser) {
-      return BM.USERNAME_NOT_FOUND(first);
+      return UserMessages.doesNotExist(first);
     }
 
     if (!rightUser) {
-      return BM.USERNAME_NOT_FOUND(second);
+      return UserMessages.doesNotExist(second);
     }
 
     const response = await vizapiActions.compareMenu(leftUser, rightUser);
@@ -575,11 +588,11 @@ export default class Actions {
     if (response.link) {
       // Add image to context
       context.photoUrl = response.link;
-      return BM.USERS_COMPARE(first, second);
+      return UserMessages.compare(first, second);
     }
 
     // If image link was not achieved from VizAPI
-    return BM.ERROR_ON_THE_SERVER;
+    return ErrorMessages.server();
   }
 
   @action({
@@ -602,19 +615,19 @@ export default class Actions {
       const user = context.channelCache.loadUser(username);
 
       // If User does not exist, return error message
-      if (!user) return BM.USERNAME_NOT_FOUND(username);
+      if (!user) return UserMessages.doesNotExist(username);
 
       // Get language stats from LeetCode
       const response = await leetcodeActions.getLanguageStats(username);
       const data = response?.matchedUser?.languageProblemCount ?? [];
 
-      return BM.LANGUAGE_STATS_TEXT(username, data);
+      return BigMessages.languageStatsText(username, data);
     }
 
     const { users } = context.channelCache;
 
     if (users.length === 0) {
-      return BM.NO_USERS;
+      return SmallMessages.noUsers;
     }
 
     // If no username was sent, show buttons for each username in channel
@@ -630,6 +643,6 @@ export default class Actions {
     }, getCloseButton()];
 
     // If 0 User was sent
-    return BM.USER_LIST_LANGSTATS;
+    return ListMessages.userListLangstats;
   }
 }

@@ -1,7 +1,7 @@
 import { App } from '@slack/bolt';
 
+import { ProviderMessages } from '../../global/messages';
 import { log } from '../../utils/helper';
-import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 
 const createBot = async (
   token: string,
@@ -12,7 +12,7 @@ const createBot = async (
     token, appToken, signingSecret, socketMode: true,
   });
 
-  log(SM.SLACK_BOT_IS_CONNECTED);
+  log(ProviderMessages.slackBotIsRunning);
 
   return bot;
 };

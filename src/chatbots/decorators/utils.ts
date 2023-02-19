@@ -3,10 +3,10 @@ import * as _ from 'lodash';
 import ArgumentManager from '../argumentManager';
 import { Context } from '../models';
 import { ArgumentsError, InputError } from '../../utils/errors';
-import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import Cache from '../../cache';
 import { ChannelKey } from '../../cache/models';
 import { ChannelCache } from '../../cache/channel';
+import { ArgumentMessages } from '../../global/messages';
 
 import { Argument, ParsedArgument } from './models';
 
@@ -30,7 +30,7 @@ function confirmNoDuplicates(sortedArgs: Argument[]): void {
   }
 
   if (!_.isEmpty(dupKeys)) {
-    const reason = BM.DUPLICATE_KEYS_IN_ARGS(Array.from(dupKeys));
+    const reason = ArgumentMessages.duplicateKeysInArgs(Array.from(dupKeys));
     throw new ArgumentsError(reason);
   }
 
@@ -43,7 +43,8 @@ function confirmNoDuplicates(sortedArgs: Argument[]): void {
   }
 
   if (!_.isEmpty(dupIndexes)) {
-    const reason = BM.DUPLICATE_INDEXES_IN_ARGS(Array.from(dupIndexes));
+    const reason = ArgumentMessages
+      .duplicateIndexesInArgs(Array.from(dupIndexes));
     throw new ArgumentsError(reason);
   }
 }
@@ -53,17 +54,17 @@ function confirmValidArgCount(
   providedArgCount: number,
 ): void {
   if (maxIndexInRequestedArgs > providedArgCount) {
-    const reason = BM.INSUFFICIENT_ARGS_IN_MESSAGE;
+    const reason = ArgumentMessages.insufficientArgsInMessage;
     throw new InputError(reason);
   }
 
   if (maxIndexInRequestedArgs > 100) {
-    const reason = BM.SHOULD_NOT_REQUEST_MORE_THAN_100_ARGS;
+    const reason = ArgumentMessages.shouldNotRequestMoreThan100Args;
     throw new ArgumentsError(reason);
   }
 
   if (providedArgCount > 100) {
-    const reason = BM.SHOULD_NOT_PROVIDE_MORE_THAN_100_ARGS;
+    const reason = ArgumentMessages.shouldNotProvideMoreThan100Args;
     throw new InputError(reason);
   }
 }
@@ -78,7 +79,7 @@ function confirmNoRequiredAfterOptional(sortedArgs: Argument[]): void {
     } else {
       // If already started consuming optional arguments
       if (optionalStarted) {
-        const reason = BM.SHOULD_NOT_HAVE_REQUIRED_ARGS_AFTER_OPTIONAL;
+        const reason = ArgumentMessages.shouldNotHaveRequiredArgsAfterOptional;
         throw new ArgumentsError(reason);
       }
     }
@@ -104,7 +105,7 @@ export function getPositionalParsedArguments(
   if (_.isEmpty(requestedArgs)) {
     // If no args are requested, no args should be provided
     if (!_.isEmpty(providedArgs)) {
-      const reason = BM.MESSAGE_SHOULD_HAVE_NO_ARGS;
+      const reason = ArgumentMessages.messageShouldHaveNoArgs;
       throw new InputError(reason);
     }
 
@@ -144,7 +145,7 @@ export function getPositionalParsedArguments(
     // If current index doesn't exist in arguments
     if (!foundArgument) {
       if (_.isEmpty(curMultiArg.holder)) {
-        const reason = BM.INDEX_SHOULD_BE_PRESENT_IN_ARGS(i);
+        const reason = ArgumentMessages.indexShouldBePresentInArgs(i);
         throw new ArgumentsError(reason);
       }
 
@@ -228,7 +229,7 @@ export function getPositionalParsedArguments(
     if (nextIndex !== argument.index) {
       if (!lastProseccedArgument.isMultiple) {
         const notFoundIndex = lastProseccedArgument.index + 1;
-        const reason = BM.ARG_IS_NOT_PROVIDED(notFoundIndex);
+        const reason = ArgumentMessages.argIsNotProvided(notFoundIndex);
         throw new ArgumentsError(reason);
       }
     }

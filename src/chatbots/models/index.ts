@@ -8,7 +8,7 @@ import {
 } from './buttons.model';
 import { TelegramTestCase, DiscordTestCase } from './testCase.model';
 import { RegisteredAction } from './registeredAction.model';
-import { ChatbotProvider, getChatbotNameByKey } from './chatbot.model';
+import { ChatbotProvider } from './chatbot.model';
 
 export {
   Context,
@@ -27,5 +27,4 @@ export {
   RegisteredAction,
   ComplexInteraction,
   ChatbotProvider,
-  getChatbotNameByKey,
 };

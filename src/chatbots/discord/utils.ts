@@ -12,8 +12,8 @@ import { ArgumentsError, InputError } from '../../utils/errors';
 import ArgumentManager from '../argumentManager';
 import { Argument, ParsedArgument } from '../decorators/models';
 import { Context, ButtonContainer, ButtonContainerType } from '../models';
-import { BOT_MESSAGES as BM } from '../../utils/dictionary';
 import { log } from '../../utils/helper';
+import { ArgumentMessages } from '../../global/messages';
 
 import buttonIndexer from './buttonIndexer';
 
@@ -123,7 +123,8 @@ export function getKeyBasedParsedArguments(
     if (!foundArgument) {
       // If argument was required, throw an error
       if (argument.isRequired) {
-        const reason = BM.REQUIRED_ARG_X_WAS_NOT_PROVIDED(argument.key);
+        const reason = ArgumentMessages
+          .requiredArgXWasNotProvided(argument.key);
         throw new InputError(reason);
       }
 
@@ -148,7 +149,7 @@ export function getKeyBasedParsedArguments(
             return isMultiple ? [`${value}`] : `${value}`;
           default:
             throw new ArgumentsError(
-              BM.INVALID_ARG_TYPE_PROVIDED_FROM_DISCORD(value),
+              ArgumentMessages.invalidArgTypeProvidedFromDiscord(value),
             );
         }
       };
