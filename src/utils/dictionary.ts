@@ -8,7 +8,7 @@ import { constants } from './constants';
 export const SERVER_MESSAGES = {
   // ERROR
   ERROR_ON_THE_SERVER(error: Error | string): string {
-    return `Error on the server: ${error}`;
+    return `${constants.EMOJI.ERROR} Error on the server: ${error}`;
   },
 
   // REFRESHING
@@ -24,7 +24,7 @@ export const SERVER_MESSAGES = {
   USERNAME_WAS_NOT_REFRESHED(username: string): string {
     return `${username} was not refreshed`;
   },
-  CACHE_ALREADY_REFRESHED: 'Cache was refreshed less than 5 minutes ago',
+  CACHE_ALREADY_REFRESHED: `${constants.EMOJI.ERROR} Cache was refreshed less than 5 minutes ago`,
 
   // CONNECTION TO DB
   CONNECTION_STATUS: {
@@ -119,7 +119,7 @@ export const BOT_MESSAGES = {
   NO_USERS,
   CML_HEADER,
   USER_NO_SUBMISSIONS(username: string): string {
-    return `${constants.EMOJI.ERROR} User < b > ${username} </b> does not have any submissions`;
+    return `${constants.EMOJI.ERROR} User <b>${username}</b> does not have any submissions`;
   },
 
   // RATING RELATED
@@ -130,32 +130,32 @@ export const BOT_MESSAGES = {
 
   // USERNAME RELATED
   USERNAME_NOT_FOUND(username: string): string {
-    return `${constants.EMOJI.ERROR} Username <b>${username}</b> was not found in database`;
+    return `${constants.EMOJI.ERROR} User <b>${username}</b> does not exist in this channel`;
   },
   USERNAME_NOT_FOUND_ON_LEETCODE(username: string): string {
-    return `${constants.EMOJI.ERROR} User <b>${username}</b> was not found on <b>LeetCode</b>\n`;
+    return `<b>${username}</b> - ${constants.EMOJI.ERROR} User not found in Leetcode`;
   },
   USERNAME_ALREADY_EXISTS(username: string): string {
-    return `${constants.EMOJI.ERROR} User <b>${username}</b> already exists in database\n`;
+    return `<b>${username}</b> - ${constants.EMOJI.ERROR} User already exists in this channel\n`;
   },
   USERNAME_WAS_ADDED(username: string): string {
-    return `${constants.EMOJI.SUCCESS} <b>${username}</b> was added\n`;
+    return `<b>${username}</b> - ${constants.EMOJI.SUCCESS} User is successfully added\n`;
   },
   USERNAME_WILL_BE_DELETED(username: string): string {
     return `${constants.EMOJI.WAITING} User <b>${username}</b> will be deleted`;
   },
   USERNAME_WAS_DELETED(username: string): string {
-    return `${constants.EMOJI.SUCCESS} User <b>${username}</b> was deleted`;
+    return `${constants.EMOJI.SUCCESS} User <b>${username}</b> was successfully deleted`;
   },
   USERNAME_ADDING_ERROR(username: string): string {
-    return `${constants.EMOJI.ERROR} <b>${username}</b> was not added due to internal error`;
+    return `<b>${username}</b> - ${constants.EMOJI.ERROR} Error on the server`;
   },
   USERNAME_DOES_NOT_EXIST_IN_CHANNEL(username: string): string {
-    return `${constants.EMOJI.ERROR} <b>${username}</b> does not exist`;
+    return `${constants.EMOJI.ERROR} User <b>${username}</b> does not exist in this channel`;
   },
   USER_LIST_SUBMISSIONS: `${constants.EMOJI.CLIPBOARD} Submissions`,
   USER_LIST_PROBLEMS: `${constants.EMOJI.CHART} Problems`,
-  USER_LIST_AVATARS: `${constants.EMOJI.PERSON} Avatars`,
+  USER_LIST_AVATARS: `${constants.EMOJI.CAMERA} Avatars`,
   USER_LIST_LANGSTATS: `${constants.EMOJI.PROGRAMMER} Language stats`,
   USER_LIST_REMOVE: `${constants.EMOJI.WASTEBASKET} Remove User`,
   USER_LIST_PROFILES: `${constants.EMOJI.PERSON} Profiles`,
@@ -223,7 +223,7 @@ ${constants.EMOJI.BLUE_CIRCLE} All - <b>${all} / ${user.all}</b>
 ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
   },
 
-  HELP_TEXT: 'Contact @madrigals1 in Telegram or madrigals1#9652 in Discord ',
+  HELP_TEXT: 'Contact @madrigals1 in Telegram or madrigals1#9652 in Discord',
 
   RATING_TEXT(users: User[]): string {
     if (!users || users.length === 0) {
@@ -272,17 +272,14 @@ ${constants.EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 
     return `
 <b>PROVIDER RELATED</b>
-<b>Provider:</b> ${constants.PROVIDERS[providerKey].NAME}
-<b>Prefix:</b> ${constants.PROVIDERS[providerKey].PREFIX}
+<b>Provider:</b> ${constants.PROVIDERS[providerKey]?.NAME}
+<b>Prefix:</b> ${constants.PROVIDERS[providerKey]?.PREFIX}
 <b>Discord enabled:</b> ${constants.PROVIDERS.DISCORD.ENABLE}
 <b>Telegram enabled:</b> ${constants.PROVIDERS.TELEGRAM.ENABLE}
+<b>Slack enabled:</b> ${constants.PROVIDERS.SLACK.ENABLE}
 
 <b>DATABASE RELATED</b>
-<b>Database:</b> SQLite
 <b>User Count:</b> ${users.length}
-
-<b>SYSTEM RELATED</b>
-<b>Delay between calls:</b> ${constants.SYSTEM.USER_REQUEST_DELAY_MS}
 
 <b>USER LIST</b>
 ${userNameList}
