@@ -6,7 +6,6 @@ import { ImageMessages } from './image';
 import { ProviderMessages } from './provider';
 import { RatingMessages } from './rating';
 import { RefreshMessages } from './refresh';
-import { SmallMessages } from './small';
 import { SubscriptionMessages } from './subscription';
 import { UserMessages } from './user';
 
@@ -19,7 +18,6 @@ export {
   ProviderMessages,
   RatingMessages,
   RefreshMessages,
-  SmallMessages,
   SubscriptionMessages,
   UserMessages,
 };

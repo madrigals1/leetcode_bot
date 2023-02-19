@@ -1,3 +1,4 @@
+import { ChannelKey } from '../../cache/models';
 import { constants } from '../../utils/constants';
 
 const { EMOJI } = constants;
@@ -19,4 +20,10 @@ export class ErrorMessages {
     + 'execute this action';
 
   static incorrectRatingType = `${EMOJI.ERROR} Incorrect rating type`;
+
+  static noUsersFoundInDatabase = `${EMOJI.ERROR} No users found in database`;
+
+  static channelDoesNotExist(channelKey: ChannelKey) {
+    return `Channel does not exist - ${channelKey}`;
+  }
 }

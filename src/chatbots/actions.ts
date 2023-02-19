@@ -10,7 +10,6 @@ import { getLanguageStats } from '../leetcode';
 import {
   BigMessages,
   RefreshMessages,
-  SmallMessages,
   UserMessages,
   ChannelMessages,
   RatingMessages,
@@ -49,7 +48,7 @@ export default class Actions {
 
   @action({ name: 'help' })
   static help(): string {
-    return SmallMessages.helpText;
+    return BigMessages.helpText;
   }
 
   @action({
@@ -113,7 +112,7 @@ export default class Actions {
       const { users } = context.channelCache;
 
       if (users.length === 0) {
-        return SmallMessages.noUsers;
+        return ErrorMessages.noUsersFoundInDatabase;
       }
 
       // If no username was sent, show buttons for each username in channel
@@ -284,7 +283,7 @@ export default class Actions {
       const { users } = context.channelCache;
 
       if (users.length === 0) {
-        return SmallMessages.noUsers;
+        return ErrorMessages.noUsersFoundInDatabase;
       }
 
       // If no username was sent, show buttons for each username in channel
@@ -367,7 +366,7 @@ export default class Actions {
     const { users } = context.channelCache;
 
     if (users.length === 0) {
-      return SmallMessages.noUsers;
+      return ErrorMessages.noUsersFoundInDatabase;
     }
 
     // If no username was sent, show buttons for each username in channel
@@ -420,7 +419,7 @@ export default class Actions {
       }
 
       // If error is because of User not having any submissions
-      if (response.reason === SmallMessages.noSubmissions) {
+      if (response.reason === 'no_submissions') {
         return response.error;
       }
 
@@ -431,7 +430,7 @@ export default class Actions {
     const { users } = context.channelCache;
 
     if (users.length === 0) {
-      return SmallMessages.noUsers;
+      return ErrorMessages.noUsersFoundInDatabase;
     }
 
     // If no username was sent, show buttons for each username in channel
@@ -490,7 +489,7 @@ export default class Actions {
     const { users } = context.channelCache;
 
     if (users.length === 0) {
-      return SmallMessages.noUsers;
+      return ErrorMessages.noUsersFoundInDatabase;
     }
 
     // If no username was sent, show buttons for each username in channel
@@ -533,7 +532,7 @@ export default class Actions {
     const { users } = context.channelCache;
 
     if (users.length === 0) {
-      return SmallMessages.noUsers;
+      return ErrorMessages.noUsersFoundInDatabase;
     }
 
     // If no username was sent, show buttons for each username in channel
@@ -624,7 +623,7 @@ export default class Actions {
     const { users } = context.channelCache;
 
     if (users.length === 0) {
-      return SmallMessages.noUsers;
+      return ErrorMessages.noUsersFoundInDatabase;
     }
 
     // If no username was sent, show buttons for each username in channel

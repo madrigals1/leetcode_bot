@@ -6,7 +6,6 @@ import { User } from '../leetcode/models';
 import {
   ErrorMessages,
   ImageMessages,
-  SmallMessages,
   UserMessages,
 } from '../global/messages';
 
@@ -69,7 +68,7 @@ export async function compareMenu(
     })
     .catch((err) => {
       error(ImageMessages.imageWasNotCreated(err));
-      return { error: err, reason: SmallMessages.apiNotWorking };
+      return { error: err, reason: 'api_not_working' };
     });
 }
 
@@ -103,14 +102,14 @@ export async function tableForSubmissions(
       if (res.data.failure === errorMsg) {
         return {
           error: UserMessages.userHasNoSubmissions(user.username),
-          reason: SmallMessages.noSubmissions,
+          reason: 'no_submissions',
         };
       }
       return { link: res.data.link };
     })
     .catch((err) => {
       error(ImageMessages.imageWasNotCreated(err));
-      return { error: err, reason: SmallMessages.apiNotWorking };
+      return { error: err, reason: 'api_not_working' };
     });
 }
 
@@ -156,7 +155,7 @@ export async function solvedProblemsChart(user: User): Promise<VizapiResponse> {
     })
     .catch((err) => {
       error(ImageMessages.imageWasNotCreated(err));
-      return { error: err, reason: SmallMessages.apiNotWorking };
+      return { error: err, reason: 'api_not_working' };
     });
 }
 
@@ -223,6 +222,6 @@ export async function ratingGraph(users: User[]): Promise<VizapiResponse> {
     })
     .catch((err) => {
       error(ImageMessages.imageWasNotCreated(err));
-      return { error: err, reason: SmallMessages.apiNotWorking };
+      return { error: err, reason: 'api_not_working' };
     });
 }

@@ -10,4 +10,8 @@ export class ProviderMessages {
   static slackBotIsConnected = '>>> Slack BOT is connected!';
 
   static slackBotIsRunning = '>>> Slack BOT is running!';
+
+  static isConnectingTo(providerName: string): string {
+    return `>>> Connecting to ${providerName}`;
+  }
 }

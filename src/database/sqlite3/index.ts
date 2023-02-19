@@ -9,7 +9,7 @@ import {
 import { constants } from '../../utils/constants';
 import { usernameFindOptions, usernameUpdateOptions } from '../utils';
 import { User as LeetCodeUser } from '../../leetcode/models';
-import { SmallMessages } from '../../global/messages';
+import { ErrorMessages, ProviderMessages } from '../../global/messages';
 
 class SQLite extends DatabaseProvider {
   providerName = 'SQLite';
@@ -82,7 +82,7 @@ class SQLite extends DatabaseProvider {
       },
     }, { sequelize: this.sequelize, modelName: 'channel_users' });
 
-    log(SmallMessages.isConnectingTo(this.providerName));
+    log(ProviderMessages.isConnectingTo(this.providerName));
   }
 
   // Connect to Database
@@ -292,7 +292,7 @@ class SQLite extends DatabaseProvider {
     const channel = await this.getChannel(channelKey);
 
     if (!channel) {
-      throw new Error(SmallMessages.channelDoesNotExist(channelKey));
+      throw new Error(ErrorMessages.channelDoesNotExist(channelKey));
     }
 
     const usersInChannel = await this.getUsersForChannel(channelKey);

@@ -4,7 +4,6 @@ import { LanguageProblemCount, User } from '../../leetcode/models';
 import { constants } from '../../utils/constants';
 
 import { ErrorMessages } from './error';
-import { SmallMessages } from './small';
 
 const { EMOJI, PROVIDERS, CML } = constants;
 
@@ -64,7 +63,7 @@ ${userNameList}`;
 
   static ratingText(users: User[]): string {
     if (!users || users.length === 0) {
-      return SmallMessages.noUsers;
+      return ErrorMessages.noUsersFoundInDatabase;
     }
     return users.map(
       (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.solved}`),
@@ -73,7 +72,7 @@ ${userNameList}`;
 
   static cmlRatingText(users: User[]): string {
     if (!users || users.length === 0) {
-      return SmallMessages.noUsers;
+      return ErrorMessages.noUsersFoundInDatabase;
     }
 
     const rating = `Cumulative Rating:
@@ -146,7 +145,7 @@ ${EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
 
   static contestRatingText(users: User[]): string {
     if (!users || users.length === 0) {
-      return SmallMessages.noUsers;
+      return ErrorMessages.noUsersFoundInDatabase;
     }
 
     const sortedContestRating = users
@@ -161,6 +160,10 @@ ${EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
       (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.rating}`),
     ).join('\n')}`;
   }
+
+  static helpText = (
+    'Contact @madrigals1 in Telegram or madrigals1#9652 in Discord'
+  );
 
   // static subscriptionsText(subscriptions: LBBSubscription[]): string {
   //   const allSubscriptionTypes = subscriptionTypeManager.getAll();
