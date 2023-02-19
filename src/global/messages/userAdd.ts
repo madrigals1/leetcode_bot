@@ -8,12 +8,12 @@ const { EMOJI } = constants;
 export class UserAddMessages {
   static success(username: string): string {
     const message = `${EMOJI.SUCCESS} User is successfully added`;
-    return `<b>${username}</b> - ${message}`;
+    return `<b>${username}</b> - ${message}\n`;
   }
 
   static alreadyExists(username: string): string {
     const message = `${EMOJI.ERROR} User already exists in this channel`;
-    return `<b>${username}</b> - ${message}`;
+    return `<b>${username}</b> - ${message}\n`;
   }
 
   static leetcodeNotFoundUsername(username: string): string {
@@ -27,16 +27,20 @@ export class UserAddMessages {
   }
 
   static unknownError(username: string): string {
-    const message = `${EMOJI.ERROR} Error on the server side`;
+    const message = `${EMOJI.ERROR} Error on the server`;
     return `<b>${username}</b> - ${message}`;
   }
 
-  static userList(responses: LBBUsernameResponse[]): string {
-    if (!responses) {
-      return ErrorMessages.server;
+  static userList(data: LBBUsernameResponse[]|string): string {
+    if (typeof data === 'string') {
+      return `User List:\n${data}`;
     }
 
-    const message = responses
+    if (!data) {
+      return ErrorMessages.server();
+    }
+
+    const message = data
       .map((res) => this[res.detail](res.username))
       .join('\n');
 

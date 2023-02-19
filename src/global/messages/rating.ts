@@ -9,5 +9,7 @@ export class RatingMessages {
 
   static graphRating = `${EMOJI.CHART} Graph Rating`;
 
+  static contestRating = `${EMOJI.CUP} Contest Rating`;
+
   static incorrectRatingType = `${EMOJI.ERROR} Incorrect rating type`;
 }

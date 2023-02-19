@@ -7,11 +7,14 @@ export class RefreshMessages {
 
   static isRefreshed = `${EMOJI.SUCCESS} Refresh is finished`;
 
+  static cacheRefreshWasRequested = `${EMOJI.WAITING
+  } Cache refresh was requested...`;
+
   static cacheAlreadyRefreshed = `${EMOJI.ERROR
   } Cache was refreshed less than 5 minutes ago`;
 
   static cacheIsRefreshed = `${EMOJI.SUCCESS
-  } Cache was refreshed less than 5 minutes ago`;
+  } Cache is refreshed`;
 
   static usernameWasRefreshed(username: string) {
     return `${username} was refreshed`;

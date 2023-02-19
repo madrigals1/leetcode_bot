@@ -1,4 +1,4 @@
-import { ChatbotProvider, getChatbotNameByKey } from '../../chatbots/models';
+import { ChatbotProvider } from '../../chatbots/models';
 import { LanguageProblemCount, User } from '../../leetcode/models';
 import { constants } from '../../utils/constants';
 
@@ -9,6 +9,7 @@ const { EMOJI, PROVIDERS, CML } = constants;
 export class BigMessages {
   static welcomeText(prefix: string): string {
     return `Welcome! This is Leetcode Rating Bot Elite ${EMOJI.COOL} Boys
+
 <b>Main commands:</b>
 <b><i>${prefix}start</i></b> - Starting Page
 <b><i>${prefix}help</i></b> - FAQ
@@ -19,6 +20,7 @@ export class BigMessages {
 <b><i>${prefix}avatar</i></b> - Avatars for Users
 <b><i>${prefix}problems</i></b> - Chart with Solved Problems for Users
 <b><i>${prefix}langstats</i></b> - Amount of Solved Problems in each language for Users
+
 <b>User related commands:</b>
 <b><i>${prefix}add username1 username2</i></b> ... - adding Users
 <b><i>${prefix}profile username</i></b> - Profile for separate User
@@ -27,6 +29,7 @@ export class BigMessages {
 <b><i>${prefix}compare username1 username2</i></b> - Compare 2 Users' stats
 <b><i>${prefix}problems username</i></b> - Chart with Solved Problems for specific User
 <b><i>${prefix}langstats username</i></b> - Amount of Solved Problems in each language given User
+
 <b>Admin commands (Only admin or local chat):</b>
 <b><i>${prefix}remove username</i></b> - Remove User
 <b><i>${prefix}clear</i></b> - Clear Database from all Users
@@ -39,19 +42,20 @@ export class BigMessages {
       (user) => (`<b>- ${user.username}</b>`),
     ).join('\n');
 
-    const providerName = getChatbotNameByKey(provider);
     const providerKey = Object.keys(PROVIDERS)
-      .find((key) => PROVIDERS[key].NAME === providerName);
+      .find((key) => PROVIDERS[key].ID === provider);
 
     return `
 <b>PROVIDER RELATED</b>
-<b>Provider:</b> ${PROVIDERS[providerKey].NAME}
-<b>Prefix:</b> ${PROVIDERS[providerKey].PREFIX}
+<b>Provider:</b> ${PROVIDERS[providerKey]?.NAME}
+<b>Prefix:</b> ${PROVIDERS[providerKey]?.PREFIX}
 <b>Discord enabled:</b> ${PROVIDERS.DISCORD.ENABLE}
 <b>Telegram enabled:</b> ${PROVIDERS.TELEGRAM.ENABLE}
 <b>Slack enabled:</b> ${PROVIDERS.SLACK.ENABLE}
+
 <b>DATABASE RELATED</b>
 <b>User Count:</b> ${users.length}
+
 <b>USER LIST</b>
 ${userNameList}
     `;
@@ -96,6 +100,7 @@ ${EMOJI.RED_CIRCLE} Hard - <b>${CML.HARD_POINTS} points</b>
     } = user.computed.problemsSolved;
 
     return `<b>${user.name || 'No name'}</b> - <b>${user.link}</b>
+
 Solved Problems:
 ${EMOJI.GREEN_CIRCLE} Easy - <b>${easy}</b>
 ${EMOJI.YELLOW_CIRCLE} Medium - <b>${medium}</b>
@@ -122,6 +127,24 @@ ${EMOJI.BLUE_DIAMOND} Cumulative - <b>${cumulative}</b>`;
     const prefix = `${emoji} Problems solved by <b>${username}</b> in:\n`;
 
     return prefix + lpcText;
+  }
+
+  static contestRatingText(users: User[]): string {
+    if (!users || users.length === 0) {
+      return SmallMessages.noUsers;
+    }
+
+    const sortedContestRating = users
+      .map((user) => ({
+        username: user.username,
+        rating: Math.round(user.contestData?.userContestRanking?.rating ?? 0),
+      }))
+      .sort((user1, user2) => user2.rating - user1.rating)
+      .filter((user) => !!user.rating);
+
+    return `${constants.EMOJI.CUP} Contest Rating \n\n${sortedContestRating.map(
+      (user, index) => (`${index + 1}. <b>${user.username}</b> ${user.rating}`),
+    ).join('\n')}`;
   }
 
   // static subscriptionsText(subscriptions: LBBSubscription[]): string {
