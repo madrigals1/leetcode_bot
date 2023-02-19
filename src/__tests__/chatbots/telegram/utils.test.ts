@@ -17,7 +17,7 @@ import {
 
 jest.mock('node-telegram-bot-api');
 
-describe.only('chatbots.telegram.utils - reply function', () => {
+describe('chatbots.telegram.utils - reply function', () => {
   const _bot = new TelegramBot('', {});
 
   async function testReply({

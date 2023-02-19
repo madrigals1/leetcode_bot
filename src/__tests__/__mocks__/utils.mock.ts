@@ -22,9 +22,9 @@ export async function mockGetLeetcodeDataFromUsername(
 }
 
 export async function mockTableForSubmissions(
-  user: User,
+  user?: User,
 ): Promise<VizapiResponse> {
-  if (!user.submitStats) {
+  if (!user?.submitStats) {
     const error = 'placeholder';
 
     return {
