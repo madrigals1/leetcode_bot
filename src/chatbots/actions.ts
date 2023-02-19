@@ -335,7 +335,7 @@ export default class Actions {
       type: ButtonContainerType.MultipleButtons,
     }];
 
-    return BigMessages.userText(user);
+    return BigMessages.userProfileText(user);
   }
 
   @action({

@@ -62,13 +62,6 @@ export class BigMessages {
 ${userNameList}`;
   }
 
-  static cmlHeader = `Cumulative Rating:
-${EMOJI.GREEN_CIRCLE} Easy - <b>${CML.EASY_POINTS} points</b>
-${EMOJI.YELLOW_CIRCLE} Medium - <b>${CML.MEDIUM_POINTS} points</b>
-${EMOJI.RED_CIRCLE} Hard - <b>${CML.HARD_POINTS} points</b>
-
-`;
-
   static ratingText(users: User[]): string {
     if (!users || users.length === 0) {
       return SmallMessages.noUsers;
@@ -83,7 +76,12 @@ ${EMOJI.RED_CIRCLE} Hard - <b>${CML.HARD_POINTS} points</b>
       return SmallMessages.noUsers;
     }
 
-    const rating = this.cmlHeader;
+    const rating = `Cumulative Rating:
+${EMOJI.GREEN_CIRCLE} Easy - <b>${CML.EASY_POINTS} points</b>
+${EMOJI.YELLOW_CIRCLE} Medium - <b>${CML.MEDIUM_POINTS} points</b>
+${EMOJI.RED_CIRCLE} Hard - <b>${CML.HARD_POINTS} points</b>
+
+`;
     const cmlText = users.map(
       (user, index) => {
         const cmlForUser = user.computed.problemsSolved.cumulative;
@@ -95,7 +93,7 @@ ${EMOJI.RED_CIRCLE} Hard - <b>${CML.HARD_POINTS} points</b>
     return rating + cmlText;
   }
 
-  static userText(user: User): string {
+  static userProfileText(user: User): string {
     const {
       easy, medium, hard, all, cumulative,
     } = user.computed.problemsSolved;
