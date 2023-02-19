@@ -177,7 +177,7 @@ export class UserCache {
     this.lastRefreshedAt = now;
 
     // Log when refresh started
-    log(RefreshMessages.startedRefresh);
+    log(RefreshMessages.refreshWasRequested);
 
     try {
       // Load all Users from Database
