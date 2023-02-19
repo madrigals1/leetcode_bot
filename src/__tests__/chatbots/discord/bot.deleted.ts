@@ -3,7 +3,6 @@ import { jest } from '@jest/globals';
 
 import createBot from '../../../chatbots/discord/bot';
 import { constants } from '../../../utils/constants';
-import { SERVER_MESSAGES as SM } from '../../../utils/dictionary';
 import DiscordBotInstance from '../../../chatbots/discord';
 
 jest.setTimeout(30000);
@@ -23,14 +22,10 @@ test('chatbots.discord.bot.createBot function', async () => {
   expect(bot instanceof DiscordBot.Client).toBe(true);
 
   // eslint-disable-next-line no-console
-  expect(console.log).toHaveBeenCalledWith(
-    SM.DISCORD_BOT_IS_CONNECTED,
-  );
+  expect(console.log).toHaveBeenCalledWith('>>> Discord BOT is connected!');
 
   await DiscordBotInstance.run();
 
   // eslint-disable-next-line no-console
-  expect(console.log).toHaveBeenCalledWith(
-    SM.DISCORD_BOT_IS_RUNNING,
-  );
+  expect(console.log).toHaveBeenCalledWith('>>> Discord BOT is running!');
 });

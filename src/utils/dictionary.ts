@@ -1,68 +1,8 @@
 import { LanguageProblemCount, User } from '../leetcode/models';
 import { getCmlFromUsers } from '../leetcode/utils';
 import { ChatbotProvider } from '../chatbots';
-import { ChannelKey } from '../cache/models';
 
 import { constants } from './constants';
-
-export const SERVER_MESSAGES = {
-  // ERROR
-  ERROR_ON_THE_SERVER(error: Error | string): string {
-    return `${constants.EMOJI.ERROR} Error on the server: ${error}`;
-  },
-
-  // REFRESHING
-  DATABASE_STARTED_REFRESH(time: string): string {
-    return `Database started refresh at ${time}`;
-  },
-  DATABASE_FINISHED_REFRESH(time: string): string {
-    return `Database is refreshed at ${time}`;
-  },
-  USERNAME_WAS_REFRESHED(username: string): string {
-    return `${username} was refreshed`;
-  },
-  USERNAME_WAS_NOT_REFRESHED(username: string): string {
-    return `${username} was not refreshed`;
-  },
-  CACHE_ALREADY_REFRESHED: `${constants.EMOJI.ERROR} Cache was refreshed less than 5 minutes ago`,
-
-  // CONNECTION TO DB
-  CONNECTION_STATUS: {
-    SUCCESSFUL: '>>> Database connection successful!',
-    ERROR(error: Error | string): string {
-      return `>>> Database connection error: ${error}`;
-    },
-  },
-  IS_CONNECTING(providerName: string): string {
-    return `>>> Connecting to ${providerName}`;
-  },
-
-  // BOT LOGS
-  DISCORD_BOT_IS_CONNECTED: '>>> Discord BOT is connected!',
-  DISCORD_BOT_IS_RUNNING: '>>> Discord BOT is running!',
-  TELEGRAM_BOT_IS_CONNECTED: '>>> Telegram BOT is connected!',
-  TELEGRAM_BOT_IS_RUNNING: '>>> Telegram BOT is running!',
-  SLACK_BOT_IS_CONNECTED: '>>> Slack BOT is connected!',
-  SLACK_BOT_IS_RUNNING: '>>> Slack BOT is running!',
-
-  // LOGGING
-  IMAGE_WAS_CREATED: 'The image was created',
-  IMAGE_WAS_NOT_CREATED(err: Error | string): string {
-    return `The image was NOT created: ${err}`;
-  },
-
-  // TABLE API
-  API_NOT_WORKING: 'api_not_working',
-  NO_SUBMISSIONS: 'no_submissions',
-
-  // Channel errors
-  CHANNEL_DOES_NOT_EXIST: (channelKey: ChannelKey): string =>
-    // eslint-disable-next-line implicit-arrow-linebreak
-    `Channel does not exist - ${channelKey}`,
-
-  // MISC
-  INCORRECT_BOT_TYPE: 'Incorrect bot type',
-};
 
 const NO_USERS = `${constants.EMOJI.ERROR} No users found in database`;
 const CML_HEADER = `Cumulative Rating:

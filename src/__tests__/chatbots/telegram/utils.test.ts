@@ -7,9 +7,6 @@ import {
 } from '../../../chatbots/decorators/utils';
 import { ChatbotProvider } from '../../../chatbots';
 import {
-  SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
-} from '../../../utils/dictionary';
-import {
   ButtonContainer,
   ButtonContainerType,
   Options,
@@ -304,8 +301,8 @@ describe('chatbots.telegram.utils - reply function', () => {
     });
 
     // eslint-disable-next-line no-console
-    expect(console.log).toHaveBeenCalledWith(SM.INCORRECT_BOT_TYPE);
-    expect(response).toBe(BM.ERROR_ON_THE_SERVER);
+    expect(console.log).toHaveBeenCalledWith('Incorrect bot type');
+    expect(response).toBe('❗ Error on the server');
   });
 
   it('Error on sendMessage', async () => {
@@ -315,7 +312,7 @@ describe('chatbots.telegram.utils - reply function', () => {
 
     // eslint-disable-next-line no-console
     expect(console.log).toHaveBeenCalledWith(new Error('fake error message 1'));
-    expect(response).toBe(BM.ERROR_ON_THE_SERVER);
+    expect(response).toBe('❗ Error on the server');
   });
 
   it('Error on sendPhoto', async () => {
@@ -325,6 +322,6 @@ describe('chatbots.telegram.utils - reply function', () => {
 
     // eslint-disable-next-line no-console
     expect(console.log).toHaveBeenCalledWith(new Error('fake error message 2'));
-    expect(response).toBe(BM.ERROR_ON_THE_SERVER);
+    expect(response).toBe('❗ Error on the server');
   });
 });

@@ -2,7 +2,6 @@ import { App } from '@slack/bolt';
 
 import Actions, { registeredActions } from '../actions';
 import { constants } from '../../utils/constants';
-import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
@@ -79,7 +78,7 @@ class Slack {
       }
     });
 
-    log(SM.SLACK_BOT_IS_RUNNING);
+    log('>>> Slack BOT is running!');
   }
 }
 

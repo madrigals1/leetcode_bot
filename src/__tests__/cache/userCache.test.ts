@@ -4,9 +4,6 @@ import * as dayjs from 'dayjs';
 import { mockGetLeetcodeDataFromUsername } from '../__mocks__/utils.mock';
 import MockDatabaseProvider from '../__mocks__/database.mock';
 import { users, user2, user1 } from '../__mocks__/data.mock';
-import {
-  SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
-} from '../../utils/dictionary';
 import { constants } from '../../utils/constants';
 import { User } from '../../leetcode/models';
 import { delay } from '../../utils/helper';
@@ -59,7 +56,8 @@ describe('cache.UserCache - addUser method', () => {
     // Add one User
     const result = await UserCache.addUser(realUsername1);
     expect(result.status).toBe(constants.STATUS.SUCCESS);
-    expect(result.detail).toBe(BM.USERNAME_WAS_ADDED(realUsername1));
+    expect(result.detail)
+      .toBe(`<b>${realUsername1}</b> - ✅ User is successfully added\n`);
     expect(result).not.toBeNull();
 
     // Check User data
@@ -74,14 +72,16 @@ describe('cache.UserCache - addUser method', () => {
     // Add first User
     const firstResult = await UserCache.addUser(realUsername1);
     expect(firstResult.status).toBe(constants.STATUS.SUCCESS);
-    expect(firstResult.detail).toBe(BM.USERNAME_WAS_ADDED(realUsername1));
+    expect(firstResult.detail)
+      .toBe(`<b>${realUsername1}</b> - ✅ User is successfully added\n`);
     expect(firstResult.user).not.toBeNull();
 
     // Add second User
     const secondResult = await UserCache.addUser(realUsername2);
     expect(secondResult).not.toBeNull();
     expect(secondResult.status).toBe(constants.STATUS.SUCCESS);
-    expect(secondResult.detail).toBe(BM.USERNAME_WAS_ADDED(realUsername2));
+    expect(secondResult.detail)
+      .toBe(`<b>${realUsername2}</b> - ✅ User is successfully added\n`);
     expect(secondResult.user).not.toBeNull();
 
     // Check first User data
@@ -101,7 +101,8 @@ describe('cache.UserCache - addUser method', () => {
     const result = await UserCache.addUser(fakeUsername);
 
     expect(result.status).toBe(constants.STATUS.ERROR);
-    expect(result.detail).toBe(BM.USERNAME_NOT_FOUND_ON_LEETCODE(fakeUsername));
+    expect(result.detail)
+      .toBe(`<b>${fakeUsername}</b> - ❗ User not found in Leetcode`);
     expect(result.user).toBeNull();
   });
 
@@ -113,7 +114,8 @@ describe('cache.UserCache - addUser method', () => {
     const result = await UserCache.addUser(realUsername1);
 
     expect(result.status).toBe(constants.STATUS.ERROR);
-    expect(result.detail).toBe(BM.USERNAME_ALREADY_EXISTS(realUsername1));
+    expect(result.detail)
+      .toBe(`<b>${realUsername1}</b> - ❗ User already exists in this channel\n`);
     expect(result.user).toBe(null);
   });
 
@@ -129,7 +131,7 @@ describe('cache.UserCache - addUser method', () => {
 
     expect(result.status).toBe(constants.STATUS.ERROR);
     expect(result.detail)
-      .toBe(BM.USERNAME_ADDING_ERROR(fakeUsername));
+      .toBe(`<b>${fakeUsername}</b> - ❗ Error on the server`);
     expect(result.user).toBe(null);
     UserCache.getLeetcodeDataFromUsername = mockGetLeetcodeDataFromUsername;
   });
@@ -268,20 +270,22 @@ describe('cache.UserCache - refresh method', () => {
 
     // Should throw error
     expect(result.status).toBe(constants.STATUS.ERROR);
-    expect(result.detail).toBe(BM.CACHE_ALREADY_REFRESHED);
+    expect(result.detail)
+      .toBe('❗ Cache was refreshed less than 5 minutes ago');
     // eslint-disable-next-line no-console
-    expect(console.log).toHaveBeenCalledWith(SM.CACHE_ALREADY_REFRESHED);
+    expect(console.log)
+      .toHaveBeenCalledWith('❗ Cache was refreshed less than 5 minutes ago');
 
     UserCache.lastRefreshedAt = undefined;
   });
 
   test('Incorrect case - User is deleted from LeetCode', async () => {
     // Add fake User
-    const fakeUsernameX = randomString();
-    const fakeUser = { ...user1, username: fakeUsernameX };
+    const fakeUsername2 = randomString();
+    const fakeUser = { ...user1, username: fakeUsername2 };
     users.push(fakeUser);
 
-    await UserCache.addUser(fakeUsernameX);
+    await UserCache.addUser(fakeUsername2);
 
     // "Delete" User from LeetCode
     fakeUser.exists = false;
@@ -291,9 +295,9 @@ describe('cache.UserCache - refresh method', () => {
 
     // eslint-disable-next-line no-console
     expect(console.log)
-      .toHaveBeenCalledWith(SM.USERNAME_WAS_NOT_REFRESHED(fakeUsernameX));
+      .toHaveBeenCalledWith(`${fakeUsername2} was not refreshed`);
 
-    _.remove(users, { username: fakeUsernameX });
+    _.remove(users, { username: fakeUsername2 });
 
     UserCache.lastRefreshedAt = undefined;
   });
@@ -410,7 +414,8 @@ describe('cache.UserCache.removeUser method', () => {
     // Remove existing User
     const result = await UserCache.removeUser(realUsername1);
     expect(result.status).toBe(constants.STATUS.SUCCESS);
-    expect(result.detail).toBe(BM.USERNAME_WAS_DELETED(realUsername1));
+    expect(result.detail)
+      .toBe(`✅ User <b>${realUsername1}</b> was successfully deleted`);
     expect(UserCache.userAmount).toBe(0);
   });
 
@@ -427,7 +432,8 @@ describe('cache.UserCache.removeUser method', () => {
     // Remove first User
     const result1 = await UserCache.removeUser(realUsername1);
     expect(result1.status).toBe(constants.STATUS.SUCCESS);
-    expect(result1.detail).toBe(BM.USERNAME_WAS_DELETED(realUsername1));
+    expect(result1.detail)
+      .toBe(`✅ User <b>${realUsername1}</b> was successfully deleted`);
     expect(UserCache.userAmount).toBe(1);
 
     // Should only be able to get Existing User
@@ -437,7 +443,8 @@ describe('cache.UserCache.removeUser method', () => {
     // Remove first User
     const result2 = await UserCache.removeUser(realUsername2);
     expect(result2.status).toBe(constants.STATUS.SUCCESS);
-    expect(result2.detail).toBe(BM.USERNAME_WAS_DELETED(realUsername2));
+    expect(result2.detail)
+      .toBe(`✅ User <b>${realUsername2}</b> was successfully deleted`);
     expect(UserCache.userAmount).toBe(0);
 
     // Should not be able to get any Users
@@ -453,7 +460,8 @@ describe('cache.UserCache.removeUser method', () => {
     // Remove unexisting User
     const result = await UserCache.removeUser(fakeUsername);
     expect(result.status).toBe(constants.STATUS.ERROR);
-    expect(result.detail).toBe(BM.USERNAME_NOT_FOUND(fakeUsername));
+    expect(result.detail)
+      .toBe(`❗ User <b>${fakeUsername}</b> does not exist in this channel`);
     expect(UserCache.userAmount).toBe(1);
   });
 
@@ -470,7 +478,7 @@ describe('cache.UserCache.removeUser method', () => {
 
     // Check result
     expect(result.status).toBe(constants.STATUS.ERROR);
-    expect(result.detail).toBe(BM.ERROR_ON_THE_SERVER);
+    expect(result.detail).toBe('❗ Error on the server');
 
     // Check error being logged
     // eslint-disable-next-line no-console

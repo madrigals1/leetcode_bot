@@ -3,9 +3,6 @@ import * as _ from 'lodash';
 import { ButtonOptions, Context } from '../../chatbots/models';
 import { VizapiResponse } from '../../vizapi/models';
 import { LanguageStats, User } from '../../leetcode/models';
-import {
-  SERVER_MESSAGES as SM, BOT_MESSAGES as BM,
-} from '../../utils/dictionary';
 import { generateString } from '../../utils/helper';
 import ArgumentManager from '../../chatbots/argumentManager';
 import { ChatbotProvider } from '../../chatbots';
@@ -25,18 +22,16 @@ export async function mockTableForSubmissions(
   user?: User,
 ): Promise<VizapiResponse> {
   if (!user?.submitStats) {
-    const error = 'placeholder';
-
     return {
-      error,
-      reason: SM.ERROR_ON_THE_SERVER(error),
+      error: 'placeholder',
+      reason: '❗ Error on the server: placehoder',
     };
   }
 
   if (user.submitStats.acSubmissionNum.length === 0) {
     return {
-      error: BM.USER_NO_SUBMISSIONS(user.username!),
-      reason: SM.NO_SUBMISSIONS,
+      error: `❗ User <b>${user.username}</b> does not have any submissions`,
+      reason: 'no_submissions',
     };
   }
 
