@@ -1,7 +1,6 @@
 import { DataTypes, Sequelize, Op } from 'sequelize';
 
 import { log } from '../../utils/helper';
-import { SERVER_MESSAGES as SM } from '../../utils/dictionary';
 import DatabaseProvider from '../database.proto';
 import { DatabaseUser, DatabaseChannelUser, DatabaseChannel } from '../models';
 import {
@@ -10,6 +9,7 @@ import {
 import { constants } from '../../utils/constants';
 import { usernameFindOptions, usernameUpdateOptions } from '../utils';
 import { User as LeetCodeUser } from '../../leetcode/models';
+import { SmallMessages } from '../../global/messages';
 
 class SQLite extends DatabaseProvider {
   providerName = 'SQLite';
@@ -82,7 +82,7 @@ class SQLite extends DatabaseProvider {
       },
     }, { sequelize: this.sequelize, modelName: 'channel_users' });
 
-    log(SM.IS_CONNECTING(this.providerName));
+    log(SmallMessages.isConnectingTo(this.providerName));
   }
 
   // Connect to Database
@@ -291,7 +291,9 @@ class SQLite extends DatabaseProvider {
   ): Promise<ChannelUser> {
     const channel = await this.getChannel(channelKey);
 
-    if (!channel) throw new Error(SM.CHANNEL_DOES_NOT_EXIST(channelKey));
+    if (!channel) {
+      throw new Error(SmallMessages.channelDoesNotExist(channelKey));
+    }
 
     const usersInChannel = await this.getUsersForChannel(channelKey);
 
