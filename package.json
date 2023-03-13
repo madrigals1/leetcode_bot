@@ -29,7 +29,7 @@
     "prom-client": "^14.1.0",
     "restana": "^4.9.6",
     "rimraf": "^3.0.2",
-    "sequelize": "^6.25.3",
+    "sequelize": "^6.29.0",
     "sqlite3": "5.1.2",
     "typescript": "^4.8.4"
   },
