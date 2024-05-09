@@ -268,7 +268,7 @@ describe('chatbots.actions - stats action', () => {
 <b>PROVIDER RELATED</b>
 <b>Provider:</b> Mockbot
 <b>Prefix:</b> /
-<b>Discord enabled:</b> true
+<b>Discord enabled:</b> false
 <b>Telegram enabled:</b> true
 <b>Slack enabled:</b> false
 
