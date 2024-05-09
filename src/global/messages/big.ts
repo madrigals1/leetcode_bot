@@ -1,5 +1,5 @@
 import { LBBUsernameResponse } from '../../backend/models';
-import { ChatbotProvider } from '../../chatbots/models';
+import { ChatbotProvider } from '../../chatbots';
 import { LanguageProblemCount, User } from '../../leetcode/models';
 import { constants } from '../constants';
 

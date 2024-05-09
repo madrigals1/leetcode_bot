@@ -1,7 +1,7 @@
 import {
   LBBChannel, LBBChannelKey, LBBUser, LBBUsernameResponse,
 } from '../models';
-import { ChatbotProvider } from '../../chatbots/models';
+import { ChatbotProvider } from '../../chatbots';
 
 import { Service, Requests } from './requests';
 
