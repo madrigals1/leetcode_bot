@@ -26,7 +26,7 @@
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
     "node-schedule": "^2.1.0",
-    "node-telegram-bot-api": "^0.63.0",
+    "node-telegram-bot-api": "^0.65.1",
     "prom-client": "^14.1.0",
     "restana": "^4.9.6",
     "rimraf": "^3.0.2",
