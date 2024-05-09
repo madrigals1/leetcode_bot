@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export interface SlackField {
   title: string;
   value: string;

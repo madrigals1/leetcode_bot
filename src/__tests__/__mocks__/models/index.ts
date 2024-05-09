@@ -1,3 +1,5 @@
-import { OtherModel, ArgumentTestCase } from './mockData.model';
+import {
+  MockDatabaseInterface, OtherModel, ArgumentTestCase,
+} from './mockData.model';
 
-export { OtherModel, ArgumentTestCase };
+export { MockDatabaseInterface, OtherModel, ArgumentTestCase };

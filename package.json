@@ -9,7 +9,6 @@
     "test": "jest --forceExit",
     "test:coverage": "jest --forceExit --coverage",
     "test:ci": "jest --ci --coverage",
-    "test:leaks": "jest --detectOpenHandles",
     "lint": "eslint ./src --ext .js,.ts"
   },
   "keywords": [],

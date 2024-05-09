@@ -91,11 +91,8 @@ export async function discordIReply(
     ephemeral: true,
   };
 
-  // Create message payload for Discord follow ups
-  const messagePayload = new MessagePayload(interaction, messageOptions);
-
   // Send message
-  await interaction.followUp(messagePayload).catch((err) => log(err));
+  await interaction.followUp(messageOptions).catch((err) => log(err));
 }
 
 export function reply(message: string, context: Context): Promise<string> {

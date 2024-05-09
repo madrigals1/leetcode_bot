@@ -1,7 +1,6 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 
 import { log } from '../../utils/helper';
-import { ErrorMessages, SmallMessages } from '../../globals/messages';
 import MockBotTelegram from '../../__tests__/__mocks__/chatbots/telegram.mock';
 import { Context, ButtonContainer } from '../models';
 

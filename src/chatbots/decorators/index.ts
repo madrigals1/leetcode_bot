@@ -1,13 +1,8 @@
 import { Context } from '../models';
 import { registeredActions } from '../actions';
 import ArgumentManager from '../argumentManager';
-<<<<<<< HEAD
-import { ArgumentsError, InputError } from '../../utils/errors';
-import { ErrorMessages, UserMessages } from '../../globals/messages';
-=======
 import { ArgumentsError, InputError } from '../../global/errors';
 import { ErrorMessages } from '../../global/messages';
->>>>>>> master
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
@@ -36,11 +31,7 @@ export function action(actionContext: ActionContext): (
       const replyHandler = new ReplyHandler(actionName, context);
 
       // Add Channel to Context
-      context.channelId = await getOrCreateChannel({
-        chat_id: context.channelKey.chat_id,
-        provider: context.channelKey.provider,
-        user_limit: 1000,
-      });
+      context.channelCache = await getOrCreateChannel(context.channelKey);
 
       // Create mutable argumentManager, so that we can apply try-catch on it
       let argumentManager: ArgumentManager;
@@ -56,11 +47,7 @@ export function action(actionContext: ActionContext): (
 
         // If error is caused by codebase issues, throw generic Error
         if (e instanceof ArgumentsError) {
-<<<<<<< HEAD
-          return replyHandler.handleError(ErrorMessages.server);
-=======
           return replyHandler.handleError(ErrorMessages.errorOnTheServer());
->>>>>>> master
         }
 
         // If error is not known, throw it
@@ -70,18 +57,6 @@ export function action(actionContext: ActionContext): (
       // Add args to the context
       const updatedContext = { ...context, args: argumentManager };
 
-<<<<<<< HEAD
-      // Check admin rights if action is Admin Action
-      if (isAdminAction) {
-        const isMessageFromAdmin = await context.isAdmin;
-
-        if (!isMessageFromAdmin) {
-          return replyHandler.handleError(UserMessages.noAdminRights);
-        }
-      }
-
-=======
->>>>>>> master
       // Run action to get message
       const message = await originalMethod(
         updatedContext,

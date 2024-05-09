@@ -12,7 +12,7 @@ import { ProviderMessages } from '../../global/messages';
 
 import { reply } from './utils';
 
-class Telegram {
+export default class Telegram {
   token: string = constants.PROVIDERS.TELEGRAM.TOKEN;
 
   options: Options = { polling: true };
@@ -60,7 +60,7 @@ class Telegram {
       prefix: constants.PROVIDERS.TELEGRAM.PREFIX,
       options: { parse_mode: 'HTML' },
       channelKey: {
-        chat_id: message.chat.id.toString(),
+        chatId: message.chat.id.toString(),
         provider: this.id,
       },
       isAdmin: new Promise((resolve) => {
@@ -145,5 +145,3 @@ class Telegram {
     log(ProviderMessages.telegramBotIsRunning);
   }
 }
-
-export default new Telegram();

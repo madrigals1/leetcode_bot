@@ -1,10 +1,10 @@
-import { Context, ChatbotProvider } from '../../../chatbots/models';
+import { Context } from '../../../chatbots/models';
 import Actions, { registeredActions } from '../../../chatbots/actions';
 import { constants } from '../../../global/constants';
 import {
   getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
-import { randomString } from '../randomUtils.mock';
+import { ChatbotProvider } from '../../../chatbots';
 
 export default class Mockbot {
   output: string[] = [];
@@ -16,11 +16,9 @@ export default class Mockbot {
   prefix = constants.PROVIDERS.MOCKBOT.PREFIX;
 
   channelKey = {
-    chat_id: randomString(15),
+    chatId: 'unique_chat_id',
     provider: ChatbotProvider.Mockbot,
   };
-
-  channelId: number;
 
   async send(message: string, isAdmin = false): Promise<void> {
     // If message is not command, ignore it
@@ -53,7 +51,6 @@ export default class Mockbot {
           chatId: 123123123,
           prefix: this.prefix,
           channelKey: this.channelKey,
-          channelId: this.channelId,
           options: {},
         };
 
