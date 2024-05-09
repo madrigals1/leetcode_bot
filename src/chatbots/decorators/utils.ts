@@ -249,14 +249,24 @@ export function getPositionalParsedArguments(
   return argumentManager;
 }
 
-export async function getOrCreateChannel(
-  channelKey: ChannelKey,
-): Promise<ChannelCache> {
-  const existingChannelCache = Cache.getChannel(channelKey);
+export async function getOrCreateChannel(channel: LBBChannel): Promise<number> {
+  const channelKey: LBBChannelKey = {
+    chat_id: channel.chat_id,
+    provider: channel.provider,
+  };
 
-  if (existingChannelCache) return existingChannelCache;
+  const existingChannelId = Cache.getChannelId(channelKey);
 
-  const newChannelCache = await Cache.registerChannel(channelKey);
+  if (existingChannelId) return existingChannelId;
 
-  return newChannelCache;
+  const newChannel = await ApiService
+    .createChannel(channel)
+    .catch((err) => log(err));
+
+  if (newChannel) {
+    Cache.addChannelId(channelKey, newChannel.id);
+    return newChannel.id;
+  }
+
+  return 0;
 }

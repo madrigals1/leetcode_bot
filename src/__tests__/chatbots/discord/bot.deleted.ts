@@ -1,15 +1,9 @@
 import * as DiscordBot from 'discord.js';
-import { jest } from '@jest/globals';
 
 import createBot from '../../../chatbots/discord/bot';
 import { constants } from '../../../global/constants';
 import DiscordBotInstance from '../../../chatbots/discord';
-
-jest.setTimeout(30000);
-
-afterAll(async () => {
-  jest.setTimeout(5000);
-});
+import { ProviderMessages } from '../../../globals/messages';
 
 test('chatbots.discord.bot.createBot function', async () => {
   expect(typeof createBot).toBe('function');

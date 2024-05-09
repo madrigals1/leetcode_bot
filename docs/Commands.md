@@ -245,3 +245,65 @@ Admin action, that shows some lets us see some part of data, only accessible by 
 | Request | Response |
 | --- | --- |
 | `/stats` | ![Stats](https://i.imgur.com/2i9ssej.png) |
+
+---
+
+### Subscribe
+
+Admin action, that shows menu for Subscriptions. Subscriptions are used to notify users on:
+- **Daily Stats** - Daily statictics for each User in this Channel.
+- **Contest** - Notifications for LeetCode Contests. 
+
+| Name | Stats |
+| --- | --- |
+| Arguments | [1] `type` - type of Subscription |
+| Telegram | Yes |
+| Discord | Yes |
+| Slack | Yes |
+| Admin | Yes |
+
+| Request | Response |
+| --- | --- |
+| `/subscribe` | ![Subscribe](https://i.imgur.com/LD4jRjF.png) |
+| `/subscribe type` | ![Subscribe](https://i.imgur.com/5KDbKQv.png) |
+
+---
+
+### Unsubscribe
+
+Admin action, that lets you Unsubscribe from existing Subscriptions. Subscriptions are used to notify users on:
+- **Daily Stats** - Daily statictics for each User in this Channel.
+- **Contest** - Notifications for LeetCode Contests. 
+
+| Name | Stats |
+| --- | --- |
+| Arguments | [1] `type` - type of Subscription |
+| Telegram | Yes |
+| Discord | Yes |
+| Slack | Yes |
+| Admin | Yes |
+
+| Request | Response |
+| --- | --- |
+| `/unsubscribe` | ![Unsubscribe](https://i.imgur.com/zNGP1ih.png) |
+| `/unsubscribe type` | ![Unsubscribe](https://i.imgur.com/lRG5KE1.png) |
+
+---
+
+### Subscriptions
+
+Show existing Subscriptions. Subscriptions are used to notify users on:
+- **Daily Stats** - Daily statictics for each User in this Channel.
+- **Contest** - Notifications for LeetCode Contests. 
+
+| Name | Stats |
+| --- | --- |
+| Arguments | - |
+| Telegram | Yes |
+| Discord | Yes |
+| Slack | Yes |
+| Admin | Yes |
+
+| Request | Response |
+| --- | --- |
+| `/subscriptions` | ![Subscriptions](https://i.imgur.com/KLrShnt.png) |

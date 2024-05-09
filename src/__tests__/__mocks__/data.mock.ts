@@ -4,12 +4,10 @@ import {
 import { constants } from '../../global/constants';
 import { User } from '../../leetcode/models';
 
-import { MockDatabaseInterface } from './models';
-
 export const user1: User = {
   exists: true,
   name: 'Random User Name',
-  link: getLeetcodeUsernameLink('random_username'),
+  link: 'https://leetcode.com/random_username',
   username: 'random_username',
   solved: 124,
   all: 1700,
@@ -29,7 +27,7 @@ export const user1: User = {
   computed: {
     submissions: [
       {
-        link: getLeetcodeProblemLink('random_problem_slug'),
+        link: 'https://leetcode.com/problems/random_problem_slug',
         status: constants.SUBMISSION_STATUS_MAP.Accepted,
         language: 'cpp',
         name: 'Random Problem Name',
@@ -38,7 +36,7 @@ export const user1: User = {
         runtime: '28 ms',
       },
       {
-        link: getLeetcodeProblemLink('random_problem_slug_2'),
+        link: 'https://leetcode.com/problems/random_problem_slug_2',
         status: constants.SUBMISSION_STATUS_MAP['Runtime Error'],
         language: 'python',
         name: 'Random Problem Name 2',
@@ -113,7 +111,7 @@ export const user1: User = {
 export const user2: User = {
   exists: true,
   name: 'Random User Name 2',
-  link: getLeetcodeUsernameLink('random_username_2'),
+  link: 'https://leetcode.com/random_username_2',
   username: 'random_username_2',
   solved: 752,
   all: 1700,
@@ -133,7 +131,7 @@ export const user2: User = {
   computed: {
     submissions: [
       {
-        link: getLeetcodeProblemLink('random_problem_slug_3'),
+        link: 'https://leetcode.com/problems/random_problem_slug_3',
         status: constants.SUBMISSION_STATUS_MAP.Accepted,
         language: 'java',
         name: 'Random Problem Name 3',
@@ -142,7 +140,7 @@ export const user2: User = {
         runtime: '44 ms',
       },
       {
-        link: getLeetcodeProblemLink('random_problem_slug_4'),
+        link: 'https://leetcode.com/problems/random_problem_slug_4',
         status: constants.SUBMISSION_STATUS_MAP['Runtime Error'],
         language: 'javascript',
         name: 'Random Problem Name 4',
@@ -215,15 +213,3 @@ export const user2: User = {
 };
 
 export const users: User[] = [user1, user2];
-
-export const mockDatabaseData: MockDatabaseInterface = {
-  users: [],
-  channels: [],
-  channelUsers: [],
-  mockUser1() { return this.users[0]; },
-  savedUsers() {
-    return this.users.map((user: User) => (
-      { ...this.mockUser1(), username: user.username }
-    ));
-  },
-};

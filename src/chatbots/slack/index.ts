@@ -5,6 +5,7 @@ import { constants } from '../../global/constants';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
+import { ProviderMessages } from '../../globals/messages';
 
 import { reply } from './utils';
 import createBot from './bot';
@@ -40,7 +41,7 @@ class Slack {
             send: say,
           },
           channelKey: {
-            chatId: command.channel_id,
+            chat_id: command.channel_id,
             provider: this.id,
           },
           provider: this.id,

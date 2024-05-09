@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import {
   Client,
   TextChannel,
@@ -11,13 +10,12 @@ import {
 } from 'discord.js';
 import TelegramBot from 'node-telegram-bot-api';
 
-import { ChatbotProvider } from '..';
-import { ChannelCache } from '../../cache/channel';
-import { ChannelKey } from '../../cache/models';
+import { LBBChannelKey } from '../../backend/models';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
 import MockBotTelegram from '../../__tests__/__mocks__/chatbots/telegram.mock';
 
+import { ChatbotProvider } from './chatbot.model';
 import { ButtonContainer } from './buttons.model';
 
 export interface Options {

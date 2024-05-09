@@ -57,7 +57,7 @@ class Discord {
           provider: id,
           prefix: constants.PROVIDERS.DISCORD.PREFIX,
           channelKey: {
-            chatId: interaction.channelId,
+            chat_id: interaction.channelId,
             provider: id,
           },
           isAdmin: new Promise((resolve) => {

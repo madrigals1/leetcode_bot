@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import { constants } from '../globals/constants';
+=======
 import { constants } from '../global/constants';
+>>>>>>> master
 import { User } from '../leetcode/models';
 
 import {
