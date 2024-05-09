@@ -4,7 +4,8 @@
   "description": "LeetCode BOT for checking rating of users",
   "scripts": {
     "build": "rimraf dist && tsc --project tsconfig.prod.json",
-    "start": "npm run build && node dist/index.js",
+    "start": "npm run build && node dist/src/index.js",
+    "start:v2": "npm run build && node dist/v2/index.js",
     "fix": "eslint --fix src/*",
     "test": "jest --forceExit",
     "test:coverage": "jest --forceExit --coverage",

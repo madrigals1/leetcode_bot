@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "rootDirs": ["./src", "./v2"],
         "outDir": "./dist",
         "allowJs": true,
         "target": "ES2017",
@@ -9,6 +10,5 @@
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true
     },
-    "include": ["./src/**/*"],
     "exclude": ["./src/__tests__"]
 }
