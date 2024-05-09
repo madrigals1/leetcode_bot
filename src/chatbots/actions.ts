@@ -252,7 +252,7 @@ export default class Actions {
       }
 
       // If image link was not achieved from VizAPI
-      return ErrorMessages.server();
+      return ErrorMessages.errorOnTheServer();
     }
 
     // Contest Rating
@@ -426,7 +426,7 @@ export default class Actions {
       }
 
       // If image link was not achieved from VizAPI
-      return ErrorMessages.server();
+      return ErrorMessages.errorOnTheServer();
     }
 
     const { users } = context.channelCache;
@@ -485,7 +485,7 @@ export default class Actions {
       }
 
       // If image link was not achieved from VizAPI
-      return ErrorMessages.server();
+      return ErrorMessages.errorOnTheServer();
     }
 
     const { users } = context.channelCache;
@@ -590,7 +590,7 @@ export default class Actions {
     }
 
     // If image link was not achieved from VizAPI
-    return ErrorMessages.server();
+    return ErrorMessages.errorOnTheServer();
   }
 
   @action({
