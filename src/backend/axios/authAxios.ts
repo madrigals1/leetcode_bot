@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig } from 'axios';
 
 import { log } from '../../utils/helper';
 import { constants } from '../../global/constants';
@@ -15,7 +15,7 @@ const authAxios = axios.create({
 });
 
 authAxios.interceptors.request.use(
-  async (config) => {
+  (config: InternalAxiosRequestConfig) => {
     const token = `${LBB.USERNAME}:${LBB.PASSWORD}`;
     const encodedToken = Buffer.from(token).toString('base64');
     return {
@@ -24,7 +24,7 @@ authAxios.interceptors.request.use(
         ...config.headers,
         Authorization: `Basic ${encodedToken}`,
       },
-    };
+    } as InternalAxiosRequestConfig;
   },
   (error) => log(error),
 );
