@@ -3,7 +3,6 @@ import {
 } from './profile.model';
 import { Contest } from './contest.model';
 import { SubmissionData } from './submissionData.model';
-import { LanguageProblemCount } from './languageStats.model';
 
 export interface UserProblemsSolvedData {
   easy: number;
@@ -29,6 +28,5 @@ export interface User {
   contributions?: UserContributionNode;
   contestData?: Contest;
   submitStats?: UserSubmitStatsNode;
-  languageStats?: LanguageProblemCount[];
   computed?: UserComputedData;
 }

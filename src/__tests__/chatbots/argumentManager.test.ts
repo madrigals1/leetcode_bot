@@ -1,6 +1,6 @@
 import ArgumentManager from '../../chatbots/argumentManager';
 import { ParsedArgument } from '../../chatbots/decorators/models';
-import { randomNumber, randomString } from '../__mocks__/randomUtils.mock';
+import { randomNumber, randomString } from '../__mocks__/randomUtils.test';
 
 function generateArgument(): ParsedArgument {
   return new ParsedArgument(

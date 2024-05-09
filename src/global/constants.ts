@@ -1,11 +1,7 @@
 import * as dotenv from 'dotenv';
 import TelegramBot from 'node-telegram-bot-api';
 
-<<<<<<<< HEAD:src/globals/constants.ts
-import { ChatbotProvider } from '../chatbots/models';
-========
 import { ChatbotProvider } from '../chatbots';
->>>>>>>> master:src/global/constants.ts
 
 dotenv.config();
 
@@ -37,8 +33,6 @@ const {
   PORT,
 
   // ---------------------------------------------------------------------------
-<<<<<<<< HEAD:src/globals/constants.ts
-========
   // Database settings
   // ---------------------------------------------------------------------------
 
@@ -46,7 +40,6 @@ const {
   SQLITE3_FILENAME,
 
   // ---------------------------------------------------------------------------
->>>>>>>> master:src/global/constants.ts
   // MISC
   // ---------------------------------------------------------------------------
 
@@ -57,6 +50,11 @@ const {
   CML_EASY_POINTS,
   CML_MEDIUM_POINTS,
   CML_HARD_POINTS,
+
+  // System settings
+  LEETCODE_URL,
+  USER_REQUEST_DELAY_MS,
+  USERS_REFRESH_DELAY,
 } = process.env;
 
 const EMOJI = {
@@ -83,10 +81,7 @@ const EMOJI = {
   THINK: '🤔',
   FEAR: '😱',
   PROGRAMMER: '👨‍💻',
-<<<<<<<< HEAD:src/globals/constants.ts
-========
   CUP: '🏆',
->>>>>>>> master:src/global/constants.ts
   BELL: '🔔',
   CAMERA: '📷',
 };
@@ -99,6 +94,11 @@ const SUBMISSION_STATUS_MAP = {
   'Time Limit Exceeded': `${EMOJI.SWEAR} Time Limit Exceeded`,
   'Memory Limit Exceeded': `${EMOJI.THINK} Memory Limit Exceeded`,
   'Output Limit Exceeded': `${EMOJI.FEAR} Output Limit Exceeded`,
+};
+
+const STATUS = {
+  ERROR: 'error',
+  SUCCESS: 'success',
 };
 
 const TYPING: TelegramBot.ChatAction = 'typing';
@@ -156,6 +156,11 @@ const CML = {
 };
 
 const SYSTEM = {
+  LEETCODE_URL: LEETCODE_URL || 'https://leetcode.com',
+  USER_REQUEST_DELAY_MS: USER_REQUEST_DELAY_MS
+    ? Number(USER_REQUEST_DELAY_MS)
+    : 4000,
+  USERS_REFRESH_DELAY: USERS_REFRESH_DELAY || '*/30 * * * *',
   DATE_FORMAT: 'YYYY-MM-DD hh:mm a',
 };
 
@@ -168,15 +173,13 @@ const LBB = {
 export const constants = {
   PROVIDERS,
   LBB,
-<<<<<<<< HEAD:src/globals/constants.ts
-========
   SQLITE3_FILENAME,
->>>>>>>> master:src/global/constants.ts
   PORT,
   CML,
   SYSTEM,
-  VIZAPI_LINK,
+  VIZAPI_LINK: VIZAPI_LINK || 'https://vizapi.madrigal.pro',
   SUBMISSION_STATUS_MAP,
   EMOJI,
+  STATUS,
   CHAT_STATUS,
 };

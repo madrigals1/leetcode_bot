@@ -8,6 +8,8 @@ services:
       context: .
       dockerfile: ./deployment/Dockerfile
     image: leetcode_bot
+    ports:
+      - "${PORT}:${PORT}"
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
