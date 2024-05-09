@@ -1,6 +1,6 @@
 import { Context, ChatbotProvider } from '../../../chatbots/models';
 import Actions, { registeredActions } from '../../../chatbots/actions';
-import { constants } from '../../../globals/constants';
+import { constants } from '../../../global/constants';
 import {
   getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
@@ -9,7 +9,7 @@ import { randomString } from '../randomUtils.mock';
 export default class Mockbot {
   output: string[] = [];
 
-  context: Context;
+  context?: Context;
 
   id = constants.PROVIDERS.MOCKBOT.ID;
 
@@ -18,7 +18,7 @@ export default class Mockbot {
   channelKey = {
     chat_id: randomString(15),
     provider: ChatbotProvider.Mockbot,
-  }
+  };
 
   channelId: number;
 
@@ -42,17 +42,13 @@ export default class Mockbot {
       if (name === command) {
         const context: Context = {
           text: message,
-          reply: (msg: string, ctx: Context): Promise<string> => {
-            const promise: Promise<string> = new Promise((resolve) => {
-              this.setOutput(msg);
-              this.setContext(ctx);
-              return resolve('');
-            });
-
-            return promise;
+          reply: async (msg: string, ctx: Context): Promise<string> => {
+            this.setOutput(msg);
+            this.setContext(ctx);
+            return '';
           },
           argumentParser: getPositionalParsedArguments,
-          isAdmin: new Promise((resolve) => resolve(isAdmin)),
+          isAdmin: Promise.resolve(isAdmin),
           provider: this.id,
           chatId: 123123123,
           prefix: this.prefix,
@@ -86,12 +82,12 @@ export default class Mockbot {
     this.context = context;
   }
 
-  getContext(): Context {
+  getContext(): Context|undefined {
     return this.context;
   }
 
   clear(): void {
     this.output = [];
-    this.context = null;
+    this.context = undefined;
   }
 }

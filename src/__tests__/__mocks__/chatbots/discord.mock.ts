@@ -1,7 +1,7 @@
 import { Options } from '../../../chatbots/models';
 
 export class MockBotDiscord {
-  formattedMessage: string = null;
+  formattedMessage = '';
 
   options: Options = {};
 

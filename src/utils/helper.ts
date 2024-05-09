@@ -9,7 +9,8 @@ export function error(...args: unknown[]): void {
 }
 
 export function delay(msTime: number): Promise<void> {
-  return new Promise((res) => setTimeout(res, msTime));
+  // eslint-disable-next-line no-promise-executor-return
+  return new Promise((resolve) => setTimeout(resolve, msTime));
 }
 
 export function isTrue(value: string | number | boolean): boolean {

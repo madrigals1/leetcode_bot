@@ -1,11 +1,11 @@
-import { Client, Intents } from 'discord.js';
+import { Client, GatewayIntentBits } from 'discord.js';
 
 import { log } from '../../utils/helper';
-import { ProviderMessages } from '../../globals/messages';
+import { ProviderMessages } from '../../global/messages';
 
 const createBot = async (token: string): Promise<Client> => {
   // Create bot and use Token to Login
-  const bot = new Client({ intents: [Intents.FLAGS.GUILDS] });
+  const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
   await bot.login(token);
 
   log(ProviderMessages.discordBotIsConnected);

@@ -1,11 +1,13 @@
 import axios from 'axios';
 
-import { constants } from '../globals/constants';
+import { constants } from '../global/constants';
 import { log, error } from '../utils/helper';
 import { User } from '../leetcode/models';
 import {
-  ErrorMessages, ImageMessages, SmallMessages, UserMessages,
-} from '../globals/messages';
+  ErrorMessages,
+  ImageMessages,
+  UserMessages,
+} from '../global/messages';
 
 import { VizapiResponse, CompareUser } from './models';
 
@@ -52,7 +54,8 @@ export function getCompareDataFromUser(user: User): CompareUser {
 }
 
 export async function compareMenu(
-  leftUser: User, rightUser: User,
+  leftUser: User,
+  rightUser: User,
 ): Promise<VizapiResponse> {
   return axios
     .post(`${constants.VIZAPI_LINK}/compare`, {
@@ -65,16 +68,21 @@ export async function compareMenu(
     })
     .catch((err) => {
       error(ImageMessages.imageWasNotCreated(err));
-      return { error: err, reason: SmallMessages.apiNotWorkingKey };
+      return { error: err, reason: 'api_not_working' };
     });
 }
 
-export async function tableForSubmissions(user: User): Promise<VizapiResponse> {
+export async function tableForSubmissions(
+  user?: User,
+): Promise<VizapiResponse> {
   if (!user) {
-    return new Promise((resolve) => resolve({
-      error: 'Username not found',
-      reason: ErrorMessages.server,
-    }));
+    const errorMessage = 'Username not found';
+    return new Promise((resolve) => {
+      resolve({
+        error: errorMessage,
+        reason: ErrorMessages.errorOnTheServer(errorMessage),
+      });
+    });
   }
 
   const userSubmissionData = user.computed.submissions.map((submission) => ({
@@ -93,15 +101,15 @@ export async function tableForSubmissions(user: User): Promise<VizapiResponse> {
       const errorMsg = 'Please, provide non-empty \'table\' in request body';
       if (res.data.failure === errorMsg) {
         return {
-          error: UserMessages.noSubmissions(user.username),
-          reason: SmallMessages.noSubmissionsKey,
+          error: UserMessages.userHasNoSubmissions(user.username),
+          reason: 'no_submissions',
         };
       }
       return { link: res.data.link };
     })
     .catch((err) => {
       error(ImageMessages.imageWasNotCreated(err));
-      return { error: err, reason: SmallMessages.apiNotWorkingKey };
+      return { error: err, reason: 'api_not_working' };
     });
 }
 
@@ -147,7 +155,7 @@ export async function solvedProblemsChart(user: User): Promise<VizapiResponse> {
     })
     .catch((err) => {
       error(ImageMessages.imageWasNotCreated(err));
-      return { error: err, reason: SmallMessages.apiNotWorkingKey };
+      return { error: err, reason: 'api_not_working' };
     });
 }
 
@@ -214,6 +222,6 @@ export async function ratingGraph(users: User[]): Promise<VizapiResponse> {
     })
     .catch((err) => {
       error(ImageMessages.imageWasNotCreated(err));
-      return { error: err, reason: SmallMessages.apiNotWorkingKey };
+      return { error: err, reason: 'api_not_working' };
     });
 }

@@ -15,7 +15,9 @@ export class Requests {
   }
 
   static async post(
-    url: string, body: unknown, config?: AxiosRequestConfig,
+    url: string,
+    body: unknown,
+    config?: AxiosRequestConfig,
   ): Promise<any> {
     return authAxios
       .post(url, body, config)
@@ -31,7 +33,9 @@ export class Requests {
   }
 
   static async patch(
-    url: string, body: unknown, config?: AxiosRequestConfig,
+    url: string,
+    body: unknown,
+    config?: AxiosRequestConfig,
   ): Promise<any> {
     return authAxios
       .patch(url, body, config)
@@ -68,7 +72,9 @@ export class Service<M> {
   }
 
   async update(
-    id: number, instance: M, config?: AxiosRequestConfig,
+    id: number,
+    instance: M,
+    config?: AxiosRequestConfig,
   ): Promise<M> {
     return Requests
       .patch(`${this.url}/${id}/`, instance, config);

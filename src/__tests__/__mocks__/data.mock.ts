@@ -1,4 +1,7 @@
-import { constants } from '../../globals/constants';
+import {
+  getLeetcodeProblemLink, getLeetcodeUsernameLink,
+} from '../../leetcode/utils';
+import { constants } from '../../global/constants';
 import { User } from '../../leetcode/models';
 
 export const user1: User = {

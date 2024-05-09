@@ -1,11 +1,8 @@
-import { LBBSubscription } from './subscription';
-
 export interface LBBChannel {
   id?: number;
   url?: string;
   chat_id: string;
   provider: string;
-  subscriptions?: LBBSubscription[];
   user_limit?: number;
   created_at?: string;
   updated_at?: string;

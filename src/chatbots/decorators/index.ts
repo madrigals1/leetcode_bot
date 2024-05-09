@@ -1,8 +1,13 @@
 import { Context } from '../models';
 import { registeredActions } from '../actions';
 import ArgumentManager from '../argumentManager';
+<<<<<<< HEAD
 import { ArgumentsError, InputError } from '../../utils/errors';
 import { ErrorMessages, UserMessages } from '../../globals/messages';
+=======
+import { ArgumentsError, InputError } from '../../global/errors';
+import { ErrorMessages } from '../../global/messages';
+>>>>>>> master
 
 import { ReplyHandler } from './replyHandler';
 import { ActionContext } from './models';
@@ -21,7 +26,6 @@ export function action(actionContext: ActionContext): (
     const {
       name: actionName,
       args: requestedArgs,
-      isAdmin: isAdminAction,
     } = actionContext;
 
     const originalMethod = descriptor.value;
@@ -52,7 +56,11 @@ export function action(actionContext: ActionContext): (
 
         // If error is caused by codebase issues, throw generic Error
         if (e instanceof ArgumentsError) {
+<<<<<<< HEAD
           return replyHandler.handleError(ErrorMessages.server);
+=======
+          return replyHandler.handleError(ErrorMessages.errorOnTheServer());
+>>>>>>> master
         }
 
         // If error is not known, throw it
@@ -62,6 +70,7 @@ export function action(actionContext: ActionContext): (
       // Add args to the context
       const updatedContext = { ...context, args: argumentManager };
 
+<<<<<<< HEAD
       // Check admin rights if action is Admin Action
       if (isAdminAction) {
         const isMessageFromAdmin = await context.isAdmin;
@@ -71,8 +80,14 @@ export function action(actionContext: ActionContext): (
         }
       }
 
+=======
+>>>>>>> master
       // Run action to get message
-      const message = await originalMethod(updatedContext);
+      const message = await originalMethod(
+        updatedContext,
+        context.channelCache,
+        context.provider,
+      );
 
       // Reply message with Grafana logging
       return replyHandler.reply(message, updatedContext);
@@ -84,6 +99,35 @@ export function action(actionContext: ActionContext): (
       args: requestedArgs,
       property: propertyKey,
     });
+
+    return descriptor;
+  };
+}
+
+export function admin(): (
+  target: unknown,
+  propertyKey: string,
+  descriptor: PropertyDescriptor,
+) => PropertyDescriptor {
+  return (
+    target: unknown,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) => {
+    const originalMethod = descriptor.value;
+
+    // eslint-disable-next-line no-param-reassign
+    descriptor.value = async (context: Context) => {
+      // Check admin rights if action is Admin Action
+      const isMessageFromAdmin = await context.isAdmin;
+
+      if (!isMessageFromAdmin) {
+        return context.reply(ErrorMessages.youNeedAdminRights, context);
+      }
+
+      // Run original method
+      return originalMethod(context);
+    };
 
     return descriptor;
   };

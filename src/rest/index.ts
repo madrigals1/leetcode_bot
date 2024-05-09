@@ -1,6 +1,6 @@
 import * as restana from 'restana';
 
-import { constants } from '../globals/constants';
+import { constants } from '../global/constants';
 import { log } from '../utils/helper';
 
 import { addRoutes } from './routes';

@@ -1,7 +1,7 @@
 import { App } from '@slack/bolt';
 
 import Actions, { registeredActions } from '../actions';
-import { constants } from '../../globals/constants';
+import { constants } from '../../global/constants';
 import { error, log } from '../../utils/helper';
 import { Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
@@ -10,16 +10,18 @@ import { ProviderMessages } from '../../globals/messages';
 import { reply } from './utils';
 import createBot from './bot';
 
+const { SLACK } = constants.PROVIDERS;
+
 class Slack {
-  token: string = constants.PROVIDERS.SLACK.TOKEN;
+  token: string = SLACK.TOKEN;
 
-  signingSecret: string = constants.PROVIDERS.SLACK.SIGNING_SECRET;
+  signingSecret: string = SLACK.SIGNING_SECRET;
 
-  appToken: string = constants.PROVIDERS.SLACK.APP_TOKEN;
+  appToken: string = SLACK.APP_TOKEN;
 
   bot: App;
 
-  id = constants.PROVIDERS.SLACK.ID;
+  id = SLACK.ID;
 
   async run() {
     // Create Bot with Slack credentials
@@ -77,7 +79,7 @@ class Slack {
       }
     });
 
-    log(ProviderMessages.slackBotIsRunning);
+    log('>>> Slack BOT is running!');
   }
 }
 

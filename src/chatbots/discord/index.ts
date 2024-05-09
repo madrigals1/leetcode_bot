@@ -3,21 +3,21 @@ import {
   Client,
   CommandInteraction,
   Interaction,
-  Permissions,
+  PermissionFlagsBits,
   SelectMenuInteraction,
 } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 
-import { constants } from '../../globals/constants';
+import { constants } from '../../global/constants';
 import { log, error } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
 import { Context, ComplexInteraction } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
 import ArgumentManager from '../argumentManager';
 import { Argument } from '../decorators/models';
-import { ProviderMessages } from '../../globals/messages';
+import { ProviderMessages } from '../../global/messages';
 
 import createBot from './bot';
 import { getKeyBasedParsedArguments, reply } from './utils';
@@ -61,7 +61,7 @@ class Discord {
             provider: id,
           },
           isAdmin: new Promise((resolve) => {
-            const adminPerm = Permissions.FLAGS.ADMINISTRATOR;
+            const adminPerm = PermissionFlagsBits.Administrator;
             const userIsAdmin = interaction.memberPermissions.has(adminPerm);
             resolve(userIsAdmin);
           }),

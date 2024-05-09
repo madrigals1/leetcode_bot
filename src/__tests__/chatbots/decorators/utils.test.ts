@@ -2,8 +2,7 @@
 import {
   getArgs, getPositionalParsedArguments,
 } from '../../../chatbots/decorators/utils';
-import { ArgumentMessages } from '../../../globals/messages';
-import { ArgumentsError, InputError } from '../../../utils/errors';
+import { ArgumentsError, InputError } from '../../../global/errors';
 import { ArgumentTestCase } from '../../__mocks__/models';
 import { generateMockContext } from '../../__mocks__/utils.mock';
 
@@ -32,7 +31,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
     name: 'Requested empty args, provided empty args',
     input: {
       providedArgs: [],
-      requestedArgs: undefined,
+      requestedArgs: [],
     },
     output: {
       byKey: {},
@@ -1385,7 +1384,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byIndex: {},
     },
     error: new ArgumentsError(
-      ArgumentMessages.duplicateKeysInArgs(['tc21_argument1']),
+      '❗ Duplicate keys tc21_argument1 are found in arguments',
     ),
   };
 
@@ -1449,8 +1448,8 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byIndex: {},
     },
     error: new ArgumentsError(
-      // eslint-disable-next-line max-len
-      ArgumentMessages.duplicateKeysInArgs(['tc22_argument1', 'tc22_argument2', 'tc22_argument3']),
+      '❗ Duplicate keys tc22_argument1,tc22_argument2,tc22_argument3 are found '
+        + 'in arguments',
     ),
   };
 
@@ -1478,7 +1477,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byIndex: {},
     },
     error: new ArgumentsError(
-      ArgumentMessages.duplicateIndexesInArgs([0]),
+      '❗ Duplicate indexes 0 are found in arguments',
     ),
   };
 
@@ -1542,7 +1541,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byIndex: {},
     },
     error: new ArgumentsError(
-      ArgumentMessages.duplicateIndexesInArgs([0, 1, 2]),
+      '❗ Duplicate indexes 0,1,2 are found in arguments',
     ),
   };
 
@@ -1563,7 +1562,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: Error(ArgumentMessages.insufficientArgsInMessage),
+    error: Error('❗ Insufficient arguments in message'),
   };
 
   const test26: ArgumentTestCase = {
@@ -1583,7 +1582,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError(ArgumentMessages.shouldNotRequestMoreThan100Args),
+    error: new ArgumentsError('❗ Should not request more than 100 arguments'),
   };
 
   const test27: ArgumentTestCase = {
@@ -1603,7 +1602,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: new InputError(ArgumentMessages.shouldNotProvideMoreThan100Args),
+    error: new InputError('❗ Should not provide more than 100 arguments'),
   };
 
   const test28: ArgumentTestCase = {
@@ -1636,7 +1635,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byIndex: {},
     },
     error: new ArgumentsError(
-      ArgumentMessages.shouldNotHaveRequiredArgsAfterOptional,
+      '❗ Should not have required arguments after optional arguments',
     ),
   };
 
@@ -1650,7 +1649,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: new InputError(ArgumentMessages.messageShouldHaveNoArgs),
+    error: new InputError('❗ Message should not have any arguments'),
   };
 
   const test30: ArgumentTestCase = {
@@ -1676,7 +1675,7 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError(ArgumentMessages.indexShouldBePresentInArgs(1)),
+    error: new ArgumentsError('❗ Index 1 should be present in arguments'),
   };
 
   const test31: ArgumentTestCase = {
@@ -1714,14 +1713,14 @@ describe('chatbots.decorators.utils - getParsedArguments function', () => {
       byKey: {},
       byIndex: {},
     },
-    error: new ArgumentsError(ArgumentMessages.argIsNotProvided(3)),
+    error: new ArgumentsError('❗ Argument 3 is not provided'),
   };
 
   const test32: ArgumentTestCase = {
     name: 'Branches: requestedArgs can be null',
     input: {
       providedArgs: [],
-      requestedArgs: null,
+      requestedArgs: [],
     },
     output: {
       byKey: {},

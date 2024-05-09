@@ -1,17 +1,11 @@
 /* eslint-disable class-methods-use-this */
-import { SubscriptionType } from '../chatbots/models';
-import { KontestContest } from '../scheduler/kontest/models';
-
 import {
   ChannelService,
   ChannelUserService,
-  SubscriptionService,
   UserService,
-  ContestService,
 } from './api';
 import { handleAPIError } from './api/errors';
 import {
-  LBBSubscription,
   LBBUser,
   LBBUsernameResponse,
   LBBUserOnlyUsername,
@@ -80,7 +74,8 @@ class ApiService {
   }
 
   async bulkAddUsersToChannel(
-    channelId: number, usernames: string[],
+    channelId: number,
+    usernames: string[],
   ): Promise<LBBUsernameResponse[]> {
     return ChannelService
       .bulkAddUsers(channelId, usernames)
@@ -88,7 +83,8 @@ class ApiService {
   }
 
   async findUserInChannel(
-    channelId: number, username: string,
+    channelId: number,
+    username: string,
   ): Promise<LBBUser> {
     return ChannelService
       .findUser(channelId, username)
@@ -96,7 +92,8 @@ class ApiService {
   }
 
   async deleteUserFromChannelByUsername(
-    channelId: number, username: string,
+    channelId: number,
+    username: string,
   ): Promise<LBBUsernameResponse> {
     return ChannelService
       .deleteUser(channelId, username)
@@ -104,7 +101,8 @@ class ApiService {
   }
 
   async fetchUsersForChannel(
-    channelId: number, sortBy = '-solved',
+    channelId: number,
+    sortBy = '-solved',
   ): Promise<LBBUser[]> {
     return ChannelService
       .fetchUsers(channelId, sortBy)
@@ -142,7 +140,8 @@ class ApiService {
   }
 
   async updateChannelUser(
-    id: number, channelUser: LBBChannelUser,
+    id: number,
+    channelUser: LBBChannelUser,
   ): Promise<LBBChannelUser> {
     return ChannelUserService
       .update(id, channelUser)
@@ -153,38 +152,6 @@ class ApiService {
     return ChannelUserService
       .delete(id)
       .catch(handleAPIError);
-  }
-
-  // ---------------------------------------------------------------------------
-  // Subscription
-  // ---------------------------------------------------------------------------
-
-  createSubscription(subscription: LBBSubscription): Promise<LBBSubscription> {
-    return SubscriptionService.create(subscription);
-  }
-
-  getSubscription(id: number): Promise<LBBSubscription> {
-    return SubscriptionService.get(id);
-  }
-
-  fetchSubscriptions(): Promise<LBBSubscription[]> {
-    return SubscriptionService.fetch();
-  }
-
-  updateSubscription(
-    id: number, subscription: LBBSubscription,
-  ): Promise<LBBSubscription> {
-    return SubscriptionService.update(id, subscription);
-  }
-
-  deleteSubscription(id: number): Promise<boolean> {
-    return SubscriptionService.delete(id);
-  }
-
-  deleteSubscriptionByType(
-    type: SubscriptionType, channelId: number,
-  ): Promise<boolean> {
-    return SubscriptionService.deleteByType(type, channelId);
   }
 
   // ---------------------------------------------------------------------------
@@ -217,14 +184,6 @@ class ApiService {
 
   fetchUsersOnlyUsernames(): Promise<LBBUserOnlyUsername[]> {
     return UserService.fetchOnlyUsernames();
-  }
-
-  // ---------------------------------------------------------------------------
-  // Contest
-  // ---------------------------------------------------------------------------
-
-  fetchClosestContests(): Promise<KontestContest[]> {
-    return ContestService.fetchClosest();
   }
 }
 

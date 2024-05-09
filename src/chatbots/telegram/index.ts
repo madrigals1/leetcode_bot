@@ -5,10 +5,10 @@ import * as TelegramBot from 'node-telegram-bot-api';
 
 import { log } from '../../utils/helper';
 import Actions, { registeredActions } from '../actions';
-import { constants } from '../../globals/constants';
+import { constants } from '../../global/constants';
 import { Options, Context } from '../models';
 import { getPositionalParsedArguments } from '../decorators/utils';
-import { ProviderMessages } from '../../globals/messages';
+import { ProviderMessages } from '../../global/messages';
 
 import { reply } from './utils';
 
@@ -44,7 +44,9 @@ class Telegram {
   }
 
   getContext(
-    message: TelegramBot.Message, userId: number, text: string = null,
+    message: TelegramBot.Message,
+    userId: number,
+    text: string = null,
   ): Context {
     const textCorrect = text || message.text;
     const chatId = message.chat.id;

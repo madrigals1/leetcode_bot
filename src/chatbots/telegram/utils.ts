@@ -36,30 +36,32 @@ export function getReplyMarkupFromButtons(
 }
 
 export async function reply(
-  message: string, context: Context,
+  message: string,
+  context: Context,
 ): Promise<string> {
   const {
     chatId, options, bot, photoUrl,
   } = context;
 
   if (!(bot instanceof TelegramBot) && !(bot instanceof MockBotTelegram)) {
-    log(SmallMessages.incorrectBotType);
-    return ErrorMessages.server;
+    log('Incorrect bot type');
+    return '❗ Error on the server';
   }
 
-  const replyMarkupOptions = options.buttons
+  const replyMarkupOptions = options?.buttons
     ? { reply_markup: getReplyMarkupFromButtons(options.buttons) }
     : {};
 
   // Update options with Telegram specific data
   const updatedOptions = { ...options, ...replyMarkupOptions };
+  updatedOptions.buttons = undefined;
 
   if (photoUrl) {
     return bot.sendPhoto(chatId, photoUrl, { caption: message })
       .then((res) => res.text)
       .catch((err) => {
         log(err);
-        return ErrorMessages.server;
+        return '❗ Error on the server';
       });
   }
 
@@ -67,6 +69,6 @@ export async function reply(
     .then((res) => res.text)
     .catch((err) => {
       log(err);
-      return ErrorMessages.server;
+      return '❗ Error on the server';
     });
 }

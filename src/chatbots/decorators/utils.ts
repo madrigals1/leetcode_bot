@@ -2,12 +2,11 @@ import * as _ from 'lodash';
 
 import ArgumentManager from '../argumentManager';
 import { Context } from '../models';
-import { ArgumentsError, InputError } from '../../utils/errors';
-import { LBBChannel, LBBChannelKey } from '../../backend/models';
-import Cache from '../../backend/cache';
-import ApiService from '../../backend/apiService';
-import { log } from '../../utils/helper';
-import { ArgumentMessages } from '../../globals/messages';
+import { ArgumentsError, InputError } from '../../global/errors';
+import Cache from '../../cache';
+import { ChannelKey } from '../../cache/models';
+import { ChannelCache } from '../../cache/channel';
+import { ArgumentMessages } from '../../global/messages';
 
 import { Argument, ParsedArgument } from './models';
 
@@ -51,7 +50,8 @@ function confirmNoDuplicates(sortedArgs: Argument[]): void {
 }
 
 function confirmValidArgCount(
-  maxIndexInRequestedArgs: number, providedArgCount: number,
+  maxIndexInRequestedArgs: number,
+  providedArgCount: number,
 ): void {
   if (maxIndexInRequestedArgs > providedArgCount) {
     const reason = ArgumentMessages.insufficientArgsInMessage;
@@ -87,7 +87,8 @@ function confirmNoRequiredAfterOptional(sortedArgs: Argument[]): void {
 }
 
 export function getPositionalParsedArguments(
-  providerContext: Context, requestedArgs: Argument[] = [],
+  providerContext: Context,
+  requestedArgs: Argument[] = [],
 ): ArgumentManager {
   // Get provided args from Context
   const { text } = providerContext;
