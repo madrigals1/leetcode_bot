@@ -64,7 +64,7 @@ export default class ArgumentManager {
 
       return {
         status: Status.SUCCESS,
-        code: 200,
+        code: 204,
         message: 'Argument succesfully removed',
       };
     }
@@ -91,8 +91,8 @@ export default class ArgumentManager {
 
     return {
       status: Status.SUCCESS,
-      code: 200,
-      message: 'Both index and key maps are successfully cleared',
+      code: 204,
+      message: 'All arguments are removed',
     };
   }
 
