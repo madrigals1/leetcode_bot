@@ -1,3 +1,4 @@
+import { REGISTERED_ACTIONS } from '../actions';
 import { ActionContext, Context } from '../models';
 
 import { ReplyHandler } from './replyHandler';
@@ -14,6 +15,7 @@ export function action(actionContext: ActionContext): (
   ) => {
     const {
       name: actionName,
+      args: requestedArgs,
     } = actionContext;
 
     const originalMethod = descriptor.value;
@@ -32,6 +34,13 @@ export function action(actionContext: ActionContext): (
       // Reply message with Grafana logging
       return replyHandler.reply(message, context);
     };
+
+    // Register action
+    REGISTERED_ACTIONS.push({
+      name: actionName,
+      args: requestedArgs,
+      property: propertyKey,
+    });
 
     return descriptor;
   };
