@@ -1,3 +1,11 @@
+export interface RequestedArgument {
+  key: string;
+  name: string;
+  index?: number; // 0 by default
+  isRequired?: boolean;
+  isMultiple?: boolean;
+}
+
 export class Argument {
   public index: number;
 

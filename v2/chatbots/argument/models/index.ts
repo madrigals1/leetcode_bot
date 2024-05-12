@@ -1,3 +1,3 @@
-import { Argument } from './argument';
+import { Argument, RequestedArgument } from './argument';
 
-export { Argument };
+export { Argument, RequestedArgument };
