@@ -10,6 +10,4 @@ export interface Context {
     context: Context, requestedArgs: RequestedArgument[],
   ) => ArgumentManager;
   provider: ChatbotProvider;
-  prefix: string;
-  chatId?: number;
 }
