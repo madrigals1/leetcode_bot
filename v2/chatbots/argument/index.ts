@@ -1,3 +1,4 @@
 import ArgumentManager from './argumentManager';
+import { Argument, RequestedArgument } from './models';
 
-export { ArgumentManager };
+export { Argument, ArgumentManager, RequestedArgument };
