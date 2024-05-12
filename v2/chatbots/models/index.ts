@@ -1,6 +1,9 @@
 import { RequestedArgument } from '../argument';
 
+import { ActionContext } from './actionContext.model';
 import { Context } from './context.model';
 import { ChatbotProvider } from './provider.model';
 
-export { ChatbotProvider, Context, RequestedArgument };
+export {
+  ActionContext, ChatbotProvider, Context, RequestedArgument,
+};
