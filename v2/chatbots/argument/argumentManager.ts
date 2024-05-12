@@ -39,7 +39,7 @@ export default class ArgumentManager {
       return {
         status: Status.SUCCESS,
         code: 200,
-        message: 'Argument succesfully removed',
+        message: 'Argument found',
         payload: foundArgument,
       };
     }
