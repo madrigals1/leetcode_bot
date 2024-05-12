@@ -97,10 +97,10 @@ export default class ArgumentManager {
   }
 
   /** Update existing argument or create new one */
-  public addOrUpdate(argument: Argument): Response<void>[] {
-    const responseList: Response<void>[] = [];
+  public addOrUpdate(argument: Argument): Response<Argument>[] {
+    const responseList: Response<Argument>[] = [];
 
-    const argumentByKey = this.getInternal(argument.key);
+    const argumentByKey = this.keyMap.get(argument.key);
 
     if (argumentByKey) {
       this.removeInternal(argumentByKey);
@@ -109,18 +109,20 @@ export default class ArgumentManager {
         status: Status.SUCCESS,
         code: 200,
         message: `Replaced existing argument with key: ${argument.key}`,
+        payload: argument,
       });
     } else {
       responseList.push({
         status: Status.SUCCESS,
-        code: 200,
+        code: 201,
         message: `Created new argument with key: ${argument.key}`,
+        payload: argument,
       });
     }
 
     this.keyMap.set(argument.key, argument);
 
-    const argumentByIndex = this.getInternal(argument.key);
+    const argumentByIndex = this.indexMap.get(argument.index);
 
     if (argumentByIndex) {
       this.removeInternal(argumentByIndex);
@@ -129,12 +131,14 @@ export default class ArgumentManager {
         status: Status.SUCCESS,
         code: 200,
         message: `Replaced existing argument with index: ${argument.index}`,
+        payload: argument,
       });
     } else {
       responseList.push({
         status: Status.SUCCESS,
-        code: 200,
+        code: 201,
         message: `Created new argument with index: ${argument.index}`,
+        payload: argument,
       });
     }
 
