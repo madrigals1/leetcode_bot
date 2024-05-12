@@ -1,4 +1,4 @@
-import { Status } from './status';
+import { Status } from './status.model';
 
 export interface Response<T> {
   status: Status;
