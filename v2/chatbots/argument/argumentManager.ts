@@ -18,9 +18,9 @@ import { Argument } from './models';
  * in both maps.
  */
 export default class ArgumentManager {
-  keyMap = new Map<string, Argument>();
+  private keyMap = new Map<string, Argument>();
 
-  indexMap = new Map<number, Argument>();
+  private indexMap = new Map<number, Argument>();
 
   /** Get the amount of all arguments */
   public get count(): number {
@@ -28,20 +28,35 @@ export default class ArgumentManager {
   }
 
   /** Get the argument by key or index */
-  public get(key: string): Argument;
+  public get(key: string): Response<Argument>;
 
-  public get(index: number): Argument;
+  public get(index: number): Response<Argument>;
 
-  public get(keyOrIndex: string | number): Argument {
-    return this.getInternal(keyOrIndex);
+  public get(keyOrIndex: string | number): Response<Argument> {
+    const foundArgument = this.getInternal(keyOrIndex);
+
+    if (foundArgument) {
+      return {
+        status: Status.SUCCESS,
+        code: 200,
+        message: 'Argument succesfully removed',
+        payload: foundArgument,
+      };
+    }
+
+    return {
+      status: Status.FAILURE,
+      code: 404,
+      message: 'Argument not found',
+    };
   }
 
   /** Remove the argument by key or index */
-  public remove(key: string): Response;
+  public remove(key: string): Response<void>;
 
-  public remove(index: number): Response;
+  public remove(index: number): Response<void>;
 
-  public remove(keyOrIndex: string | number): Response {
+  public remove(keyOrIndex: string | number): Response<void> {
     const element = this.getInternal(keyOrIndex);
 
     if (element) {
@@ -70,7 +85,7 @@ export default class ArgumentManager {
   }
 
   /** Remove all arguments */
-  public clear(): Response {
+  public clear(): Response<void> {
     this.indexMap.clear();
     this.keyMap.clear();
 
@@ -82,8 +97,8 @@ export default class ArgumentManager {
   }
 
   /** Update existing argument or create new one */
-  public upsert(argument: Argument): Response[] {
-    const responseList: Response[] = [];
+  public addOrUpdate(argument: Argument): Response<void>[] {
+    const responseList: Response<void>[] = [];
 
     const argumentByKey = this.getInternal(argument.key);
 
@@ -129,7 +144,7 @@ export default class ArgumentManager {
   }
 
   /** Get argument from specific map by the key/index, that we provide. */
-  private getInternal(keyOrIndex: string | number): Argument {
+  private getInternal(keyOrIndex: string | number): Argument | undefined {
     if (typeof keyOrIndex === 'number') {
       return this.indexMap.get(keyOrIndex);
     }
