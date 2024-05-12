@@ -1,9 +1,9 @@
 export class Argument {
-  index: number;
+  public index: number;
 
-  key: string;
+  public key: string;
 
-  name: string;
+  public name: string;
 
   private _value: string | string[];
 
