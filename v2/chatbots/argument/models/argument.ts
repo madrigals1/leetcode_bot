@@ -7,26 +7,17 @@ export class Argument {
 
   private _value: string | string[];
 
-  constructor(
-    index: number,
-    key: string,
-    name: string,
-    value: string,
-  );
-
-  constructor(
-    index: number,
-    key: string,
-    name: string,
-    value: string[],
-  );
-
-  constructor(
-    index: number,
-    key: string,
-    name: string,
-    value: string | string[],
-  ) {
+  constructor({
+    index,
+    key,
+    name,
+    value,
+  }: {
+    index: number;
+    key: string;
+    name: string;
+    value: string | string[];
+  }) {
     this.index = index;
     this.key = key;
     this.name = name;
