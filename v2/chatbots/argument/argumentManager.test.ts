@@ -4,10 +4,18 @@ import ArgumentManager from './argumentManager';
 import { Argument } from './models';
 
 const ARGUMENT_1 = new Argument({
-  key: 'key1', index: 1, name: 'placeholder', value: 'value1',
+  key: 'key1',
+  index: 1,
+  name: 'placeholder',
+  size: 1,
+  value: 'value1',
 });
 const ARGUMENT_2 = new Argument({
-  key: 'key2', index: 2, name: 'placeholder', value: 'value2',
+  key: 'key2',
+  index: 2,
+  name: 'placeholder',
+  size: 1,
+  value: 'value2',
 });
 
 describe('ArgumentManager', () => {
@@ -36,7 +44,11 @@ describe('ArgumentManager', () => {
       it('should replace existing argument', () => {
         const argumentManager = initWithOneArgument();
         const updatedArgument = new Argument({
-          key: 'key1', index: 2, name: 'placeholder', value: 'placeholder',
+          key: 'key1',
+          index: 2,
+          name: 'placeholder',
+          size: 0,
+          value: 'placeholder',
         });
 
         const response = argumentManager.addOrUpdate(updatedArgument);
@@ -83,7 +95,11 @@ describe('ArgumentManager', () => {
       it('should replace existing argument', () => {
         const argumentManager = initWithOneArgument();
         const updatedArgument = new Argument({
-          key: 'key2', index: 1, name: 'placeholder', value: 'placeholder',
+          key: 'key2',
+          index: 1,
+          name: 'placeholder',
+          size: 1,
+          value: 'placeholder',
         });
 
         const response = argumentManager.addOrUpdate(updatedArgument);

@@ -13,22 +13,27 @@ export class Argument {
 
   public name: string;
 
+  public size: number;
+
   private _value: string | string[];
 
   constructor({
     index,
     key,
     name,
+    size,
     value,
   }: {
     index: number;
     key: string;
     name: string;
+    size: number;
     value: string | string[];
   }) {
     this.index = index;
     this.key = key;
     this.name = name;
+    this.size = size;
 
     // All arguments should be converted to lowercase
     if (typeof value === 'string') {

@@ -4,7 +4,11 @@ describe('Argument class', () => {
   describe('constructor method', () => {
     function init() {
       return new Argument({
-        index: 1, key: 'key', name: 'Name', value: 'placeholder',
+        index: 1,
+        key: 'key',
+        name: 'Name',
+        size: 1,
+        value: 'placeholder',
       });
     }
 
@@ -25,12 +29,22 @@ describe('Argument class', () => {
 
       expect(arg.name).toBe('Name');
     });
+
+    it('should have correct size', () => {
+      const arg = init();
+
+      expect(arg.name).toBe('Name');
+    });
   });
 
   describe('values: ', () => {
     function initWithValue(value: string | string[]) {
       return new Argument({
-        index: 1, key: 'placeholder', name: 'placeholder', value,
+        index: 1,
+        key: 'placeholder',
+        name: 'placeholder',
+        size: 1,
+        value,
       });
     }
 
